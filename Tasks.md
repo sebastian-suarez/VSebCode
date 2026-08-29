@@ -58,13 +58,18 @@ Re-briefed 2026-08-29: minimal-first, one concern per commit, screenshot checkpo
 
 Phase A — base look (three commits, delegated):
 
-- [ ] `titleBarStyle: 'hiddenInset'` + `trafficLightPosition: {x: 18, y: 16}` in
+- [x] `titleBarStyle: 'hiddenInset'` + `trafficLightPosition: {x: 18, y: 16}` in
   `defaultBrowserWindowOptions` (macOS); `forceNativeTitlebar` windows (devtools, GPU-info,
-  process explorer) keep stock chrome
-- [ ] `vibrancy: 'under-window'` + `backgroundColor: '#00000000'`; deliberately no
-  `visualEffectState` (D6c/D9)
-- [ ] Splash-repaint guard: `themeMainServiceImpl.ts` `updateBackgroundColor` early-return
-  on macOS; splash storage writes untouched
+  process explorer) keep stock chrome — `2875caf`, 2026-08-29
+- [x] `vibrancy: 'under-window'` + `backgroundColor: '#00000000'`; deliberately no
+  `visualEffectState` (D6c/D9) — `2b18b09`
+- [x] Splash-repaint guard: `themeMainServiceImpl.ts` `updateBackgroundColor` early-return
+  on macOS; splash storage writes + `updateSystemColorTheme` verified untouched — `0773be2`
+
+Phase A notes: the `overrides?.transparent` path (windows.ts ~266) would combine with our
+vibrancy but has zero in-tree callers today — watch it if a transparent auxiliary window
+ever appears. Expect NO visible blur in a default-settings profile until Phase B — the
+workbench still paints opaque; Phase A's visible change is the inset centered lights.
 - [ ] Screenshot checkpoint (isolated dev instance) → Sebastian's base-look pass
 
 Phase B — only after the base look is approved:
@@ -110,6 +115,9 @@ Post-sweep tail (surfaced 2026-08-29, pending approval — M7 otherwise closed):
 - [ ] Dangling doc links to the deleted copilot-instructions.md (`AGENTS.md:5`,
   `agentHost/node/claude/phase13-plan.md:135`) and the stale dir name in the
   pr-linux-test musl step comment
+- [ ] `vscode/.claude/CLAUDE.md` is now a dangling symlink (its target was
+  `.github/copilot-instructions.md`, deleted in the sweep) — remove the symlink, or land
+  our own agent guidelines there
 
 ## M2 — Workbench layout in source (kills `zoom-css-vars.js`)
 
