@@ -14,22 +14,19 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M0 — Prove the toolchain (redo under D7)**: Sebastian runs `npm i` / watch / `code.sh` /
-  gulp himself; acceptance = dev instance and packaged `Code - OSS.app` both boot
+- **M7 — Copilot leftovers sweep** (in progress): CI files + `.vscode` copilot tasks
+  approved and delegated 2026-08-29; eslint-allowlist + doc-comment items and the agentHost
+  test run still pending approval — checklist in Tasks.md
+- **M1 — Window patches (redo)**: hiddenInset + centered lights, `under-window` vibrancy,
+  statusbar drag — as commits on `vsebcode`. Awaiting Sebastian's re-brief
+  (previous attempt rolled back after manual review, 2026-08-28)
 
 ## Next
 
-- **M1 — Window patches (redo)**: hiddenInset + centered lights, `under-window` vibrancy,
-  statusbar drag — as commits on `vsebcode`. Scope to be re-briefed with Sebastian first
-  (previous attempt rolled back after manual review, 2026-08-28)
-- **M7 — Copilot leftovers sweep**: delete the inert remnants surfaced during the excision
-  (dead `.vscode/tasks.json` tasks, MS CI/dev files, eslint allowlist entries, stale
-  doc-comment refs) — unblocked, independent of M1; checklist in Tasks.md
-
-## Later
-
 - **M2 — Workbench layout in source**: 46pt bar, full-height tabs, sidebar-header view
   switcher, breadcrumbs row — kills `zoom-css-vars.js`
+
+## Later
 - **M3 — Tree & type polish**: sticky-header mask, source-list rows, HN UI font — both
   extensions uninstalled
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3)
@@ -64,6 +61,10 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   restored for its live callers, type-only `@anthropic-ai/sdk` imports satisfied via
   `src/typings/anthropic-sdk.d.ts`. `npm run compile` exit 0, typecheck/layers/gulp all
   clean — SKIP_PRELAUNCH caveat retired
+- 2026-08-29 — **M0 complete (redo under D7/D8)**: Sebastian drove the whole loop by hand —
+  `npm i`, watch, dev boot, `npm run gulp vscode-darwin-arm64`, packaged `Code - OSS.app`
+  booted with an isolated short-path profile — and hands-on acceptance passed on the
+  patched, Copilot-free tree
 
 ## Decisions
 

@@ -46,10 +46,10 @@ Harness-era-only notes (kept in case VSCodium's build scripts ever return): `car
 - [x] `cd vscode && npm i` *(Sebastian, 2026-08-28)*
 - [x] `npm run watch` reaches "Finished compilation" *(Sebastian, 2026-08-28)*
 - [x] `./scripts/code.sh` boots the dev instance *(Sebastian, 2026-08-28)*
-- [ ] `npm run gulp vscode-darwin-arm64` packages `Code - OSS.app`; boots with an isolated,
-  short-path `--user-data-dir` *(Sebastian)*
-- [ ] Hands-on acceptance: open a project, run an integrated-terminal task, edit + save.
-  (No marketplace in vanilla `product.json` — extension installs arrive with M4/D3.)
+- [x] `npm run gulp vscode-darwin-arm64` packages `Code - OSS.app`; boots with an isolated,
+  short-path `--user-data-dir` *(Sebastian, 2026-08-29)*
+- [x] Hands-on acceptance passed *(Sebastian, 2026-08-29)* — on the patched, Copilot-free
+  tree. (No marketplace in vanilla `product.json` — extension installs arrive with M4/D3.)
 
 ## M1 — Window patches (redo) — scope TBD
 
