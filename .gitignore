@@ -1,0 +1,6 @@
+# Build output: `npm run gulp vscode-darwin-*` inside vscode/ writes here, to the umbrella root
+/VSCode-darwin-*/
+
+# macOS Finder droppings
+.DS_Store
+._*

@@ -1,0 +1,8 @@
+[submodule "vscodium"]
+	path = vscodium
+	url = https://github.com/VSCodium/vscodium.git
+	branch = master
+[submodule "vscode"]
+	path = vscode
+	url = git@github.com:sebastian-suarez/vscode.git
+	branch = vsebcode
