@@ -22,6 +22,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 - **M1 — Window patches (redo)**: hiddenInset + centered lights, `under-window` vibrancy,
   statusbar drag — as commits on `vsebcode`. Scope to be re-briefed with Sebastian first
   (previous attempt rolled back after manual review, 2026-08-28)
+- **M7 — Copilot leftovers sweep**: delete the inert remnants surfaced during the excision
+  (dead `.vscode/tasks.json` tasks, MS CI/dev files, eslint allowlist entries, stale
+  doc-comment refs) — unblocked, independent of M1; checklist in Tasks.md
 
 ## Later
 

@@ -58,6 +58,25 @@ any work: what to keep or change versus the old approach (hiddenInset + traffic 
 {18,16}, `under-window` vibrancy, splash-repaint guard, statusbar drag region). Work lands as
 commits on `vsebcode`.
 
+## M7 — Copilot leftovers sweep (unblocked; independent of M1)
+
+Inert remnants surfaced by the excision commits (`8e8353bf`, `4dce613`) — one delegated
+commit deleting:
+
+- [ ] `.vscode/tasks.json`: the dead "Copilot - Build" / "Kill Copilot - Build" tasks (their
+  `watch-copilotd` npm script no longer exists)
+- [ ] `.vscode-test.js`: the copilot suite entry
+- [ ] MS-internal CI/dev files: `build/azure-pipelines/copilot/*`, `product-copilot*.yml`,
+  `downloadCopilotVsix.ts`, `build/copilot-migrate-pr.ts`, the 7 copilot
+  `.github/workflows/*.yml`
+- [ ] `eslint.config.js`: the two `@github/copilot-sdk` allowlist mentions (~lines 1534,
+  1683) — the `@anthropic-ai/sdk` entries must stay (typings shim depends on them)
+- [ ] Stale doc-comment references to deleted files: `claude/claudeToolDisplay.ts`,
+  `shared/editChunkExtractor.ts` (6 spots)
+- [ ] **Acceptance**: `npm run compile` still exit 0; `npm run gulp --tasks` still loads;
+  run the pruned agentHost unit tests once (they type-check but have not been executed
+  since the pruning)
+
 ## M2 — Workbench layout in source (kills `zoom-css-vars.js`)
 
 Port the `custom-ui-style.stylesheet` block from Settings/settings.json piece by piece;
