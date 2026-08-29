@@ -51,12 +51,29 @@ Harness-era-only notes (kept in case VSCodium's build scripts ever return): `car
 - [x] Hands-on acceptance passed *(Sebastian, 2026-08-29)* — on the patched, Copilot-free
   tree. (No marketplace in vanilla `product.json` — extension installs arrive with M4/D3.)
 
-## M1 — Window patches (redo) — scope TBD
+## M1 — Window patches (redo per D9)
 
-Previous attempt rolled back 2026-08-28 after manual review. Re-brief with Sebastian before
-any work: what to keep or change versus the old approach (hiddenInset + traffic lights at
-{18,16}, `under-window` vibrancy, splash-repaint guard, statusbar drag region). Work lands as
-commits on `vsebcode`.
+Re-briefed 2026-08-29: minimal-first, one concern per commit, screenshot checkpoints. D6c
+(dim when unfocused) reaffirmed; the old rejection was visual details + structure.
+
+Phase A — base look (three commits, delegated):
+
+- [ ] `titleBarStyle: 'hiddenInset'` + `trafficLightPosition: {x: 18, y: 16}` in
+  `defaultBrowserWindowOptions` (macOS); `forceNativeTitlebar` windows (devtools, GPU-info,
+  process explorer) keep stock chrome
+- [ ] `vibrancy: 'under-window'` + `backgroundColor: '#00000000'`; deliberately no
+  `visualEffectState` (D6c/D9)
+- [ ] Splash-repaint guard: `themeMainServiceImpl.ts` `updateBackgroundColor` early-return
+  on macOS; splash storage writes untouched
+- [ ] Screenshot checkpoint (isolated dev instance) → Sebastian's base-look pass
+
+Phase B — only after the base look is approved:
+
+- [ ] Workbench root transparent (`.monaco-workbench.mac:not(.web)`) with editor/statusbar/
+  panel pinned opaque; per-part translucent hexes stay user-side
+- [ ] Statusbar drag region (`.statusbar` drag / `.statusbar-item` no-drag, macOS-scoped)
+- [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
+  and a packaged app
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 
@@ -71,23 +88,28 @@ commit deleting:
   and the 2 copilot-only workflows (`copilot-setup-steps.yml`; `chat-lib-package.yml` —
   copilot-only by content despite the "chat-lib" name). The "~7 workflows" turned out mixed —
   see new item below
-- [ ] `eslint.config.js`: the two `@github/copilot-sdk` allowlist mentions (~lines 1534,
-  1683) — the `@anthropic-ai/sdk` entries must stay (typings shim depends on them)
-- [ ] Stale doc-comment references to deleted files: `claude/claudeToolDisplay.ts`,
-  `shared/editChunkExtractor.ts` (6 spots)
-- [ ] *(pending approval)* 15 dangling `build/azure-pipelines/**` references to the deleted
-  files (`downloadCopilotVsix` ×10 across the per-OS product-build ymls, `product-copilot.yml`
-  stage ×2, `test-integration-steps` ×3) — prune the referring blocks, or accept the dangling
-  state (dead MS-internal CI either way)
-- [ ] *(pending approval)* 7 mixed workflows with now-broken copilot jobs/steps (`pr.yml`,
-  `pr-node-modules.yml`, `pr-{linux,darwin,win32}-test.yml`, `chat-perf.yml`,
-  `no-engineering-system-changes.yml`) — decide: prune the copilot jobs, delete the files, or
-  leave (Actions are off by default on the fork)
-- [ ] *(pending approval)* `.vscode/launch.json:24` stale `extensions/copilot/dist` outFiles
-  glob; `.github/copilot-instructions.md` + `.github/ISSUE_TEMPLATE/copilot_bug_report.md`
-- [ ] **Acceptance**: `npm run compile` still exit 0; `npm run gulp --tasks` still loads;
-  run the pruned agentHost unit tests once (they type-check but have not been executed
-  since the pruning)
+- [x] `eslint.config.js` `@github/copilot-sdk` lines removed; `@anthropic-ai/*` intact —
+  done 2026-08-29 (`77a7f3ee`)
+- [x] 6 stale doc-comment refs in `claudeToolDisplay.ts` / `editChunkExtractor.ts` — done
+- [x] All 15 dangling `build/azure-pipelines/**` refs pruned (sweep grep returns nothing) —
+  done
+- [x] Mixed workflows: copilot jobs/steps pruned from `pr.yml` (4 jobs — a 4th dead one
+  found beyond the survey), `pr-node-modules.yml`, `pr-{linux,darwin,win32}-test.yml`;
+  `chat-perf.yml` deleted whole (cannot function without the extension);
+  `no-engineering-system-changes.yml` copilot-bot branches removed, core guard intact — done
+- [x] `.vscode/launch.json` glob + `.github/copilot-instructions.md` + copilot issue
+  template removed — done
+- [x] **Acceptance**: compile exit 0; gulp task list loads; agentHost unit suite executed —
+  1927 passing / 54 pending / 0 failing (2026-08-29)
+
+Post-sweep tail (surfaced 2026-08-29, pending approval — M7 otherwise closed):
+
+- [ ] `scripts/chat-simulation/**` orphaned Copilot-Chat perf harness (+ `perf:chat*` npm
+  scripts, 5 `.eslint-allowed-javascript-files` entries, `.github/skills/chat-perf/`) —
+  NOT a clean delete: `test/smoke/src/utils.ts:129` imports its mock-llm-server
+- [ ] Dangling doc links to the deleted copilot-instructions.md (`AGENTS.md:5`,
+  `agentHost/node/claude/phase13-plan.md:135`) and the stale dir name in the
+  pr-linux-test musl step comment
 
 ## M2 — Workbench layout in source (kills `zoom-css-vars.js`)
 

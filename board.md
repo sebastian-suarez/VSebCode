@@ -14,13 +14,10 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M7 — Copilot leftovers sweep** (in progress): CI-files + `.vscode`-tasks slice landed
-  (`6c05931`). Remaining, pending approval: eslint allowlist, doc-comment refs, agentHost
-  test run, 15 dangling azure-pipelines refs, the 7 mixed-workflow decision, launch.json
-  glob + .github copilot docs — checklist in Tasks.md
-- **M1 — Window patches (redo)**: hiddenInset + centered lights, `under-window` vibrancy,
-  statusbar drag — as commits on `vsebcode`. Awaiting Sebastian's re-brief
-  (previous attempt rolled back after manual review, 2026-08-28)
+- **M1 — Window patches (redo, D9)**: re-briefed 2026-08-29 — minimal-first (window options
+  + splash guard), one concern per commit, screenshot checkpoints before Sebastian's visual
+  pass; root transparency + statusbar drag follow only after the base look is approved.
+  Phase A delegated
 
 ## Next
 
@@ -72,6 +69,13 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   content despite its name); `.vscode/tasks.json` copilot tasks + dangling `dependsOn` refs
   and the `.vscode-test.js` suite entry removed. JSONC/node/gulp checks green. Surfaced for
   approval: 15 dangling MS-CI refs, 7 mixed workflows, launch.json glob, .github copilot docs
+- 2026-08-29 — **M7 complete** (`77a7f3ee`, delegated; diff reviewed): eslint copilot-sdk
+  allowlist lines, 6 stale doc-comments, all 15 dangling azure-pipelines refs, copilot jobs
+  pruned from the mixed workflows (a 4th dead job in pr.yml caught beyond the brief),
+  `chat-perf.yml` deleted (cannot function without the extension), launch.json glob +
+  `.github` copilot docs removed. Acceptance: compile exit 0, gulp task list loads, and the
+  pruned agentHost unit suite executed for the first time — 1927 passing / 0 failing. Small
+  post-sweep tail recorded in Tasks.md, pending approval
 
 ## Decisions
 
@@ -104,6 +108,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   baked at M4). One commit per patch, named `[vscodium] <name>`, mapping 1:1 to the library
   for future rebases (carry each, or drop-and-reimport the updated copy). *Decided by
   Sebastian 2026-08-29.*
+- **D9 M1 redo approach** — the old M1's rejection causes: **visual details** and the
+  **patch-era approach/structure** (not the unfocused dimming — D6c dim-when-unfocused is
+  reaffirmed). Redo minimal-first: Phase A = hiddenInset + lights {18,16} (D6b carve-out
+  kept), `under-window` vibrancy + transparent background (no `visualEffectState`),
+  splash-repaint guard (D6e) — one concern per commit, screenshot checkpoints from an
+  isolated dev instance before Sebastian's visual pass. Phase B (workbench-root
+  transparency with pinned parts, statusbar drag) only after the base look is approved.
+  *Decided by Sebastian 2026-08-29.*
 
 ## Risks / known limits
 
