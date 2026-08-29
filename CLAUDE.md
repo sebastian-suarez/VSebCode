@@ -11,6 +11,10 @@ editor changes are normal commits there; `vscodium/` → submodule, read-only pi
 pin-bump commit in this repo. Builds, watch, and the dev loop are executed by **Sebastian by
 hand** — sessions set up, brief, and review, and only run builds when he explicitly asks.
 
+Work rhythm: **one milestone phase per session**. Before a session ends, persist everything
+the next session needs into board.md / Tasks.md (state, pending verdicts, exact resume
+commands) — sessions start cold from these files.
+
 ## Session policy: orchestrate, don't type code
 
 Every main session — whatever model it runs on — works as an orchestrator: plan, scope

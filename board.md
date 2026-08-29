@@ -14,10 +14,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M1 — Window patches (redo, D9)**: re-briefed 2026-08-29 — minimal-first (window options
-  + splash guard), one concern per commit, screenshot checkpoints before Sebastian's visual
-  pass; root transparency + statusbar drag follow only after the base look is approved.
-  Phase A delegated
+- **M1 — Window patches (redo, D9)**: Phase A landed (`0773be2`, three commits — inset
+  titlebar + lights, vibrancy plumbing, splash guard) and the screenshot checkpoint was
+  delivered 2026-08-29 — **awaiting Sebastian's base-look verdict**. Next session: on pass
+  → Phase B (root transparency + statusbar drag); on adjust → fix commit first. One phase
+  per session (CLAUDE.md)
 
 ## Next
 
