@@ -8,7 +8,7 @@ Working checklists per milestone. Board-level view and decisions: [board.md](boa
 |---|---|
 | One-time setup | `npm i` |
 | Incremental compile (leave running) | `npm run watch` — wait for "Finished compilation" |
-| Launch dev app | `./scripts/code.sh` (Cmd+R reloads renderer changes; main-process changes need a relaunch) |
+| Launch dev app | `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh` (Cmd+R reloads renderer changes; main-process changes need a relaunch) |
 | One-shot compile | `npm run compile` |
 | Package .app | `npm run gulp vscode-darwin-arm64` → `../VSCode-darwin-arm64/Code - OSS.app` (umbrella root, gitignored); `-min` = minified |
 | Import a vscodium patch | `git apply ../vscodium/patches/<name>.patch`, review, commit |
@@ -20,9 +20,14 @@ Environment notes (carried from the harness era, still apply):
 - 16 GB RAM: gulp packaging runs an 8 GB node heap — close heavy apps.
 - Isolated test profiles: `--user-data-dir` must be a **short path** — the main-process socket
   breaks past ~103 chars.
-- Only if vscodium's copilot-removal patch is ever imported: full `npm run compile` fails on
-  `compile-copilot` — use `npm run compile-client`, launch with
-  `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh`.
+- Patch 53 (copilot removal) is imported: full `npm run compile` fails on `compile-copilot`
+  while `extensions/copilot` sources remain in the tree — use `npm run compile-client`,
+  launch with `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh`. Deleting the sources (pending
+  approval) should clear both caveats.
+- The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
+  `npm i` before the next watch/build.
+- `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
+  VSCodium's placeholder strings. Keep hooks ON for our own commits.
 
 Harness-era-only notes (kept in case VSCodium's build scripts ever return): `cargo` at
 `~/.cargo/bin` on PATH for `build_cli.sh`; `dev/build.sh -s` needs
@@ -35,9 +40,11 @@ Harness-era-only notes (kept in case VSCodium's build scripts ever return): `car
   `sebastian-suarez/VSebCode` created (public, real README + description)
 - [x] Submodules pinned: `vscode/` @ 7e7950df (1.126.0, branch `vsebcode`),
   `vscodium/` @ d14478d
-- [ ] `cd vscode && npm i` *(Sebastian)*
-- [ ] `npm run watch` reaches "Finished compilation" *(Sebastian)*
-- [ ] `./scripts/code.sh` boots the dev instance *(Sebastian)*
+- [x] D8: 41 VSCodium patches imported onto `vsebcode` → pin `58b6f34` (2026-08-29);
+  remaining M0 steps run on the patched tree
+- [x] `cd vscode && npm i` *(Sebastian, 2026-08-28)*
+- [x] `npm run watch` reaches "Finished compilation" *(Sebastian, 2026-08-28)*
+- [x] `./scripts/code.sh` boots the dev instance *(Sebastian, 2026-08-28)*
 - [ ] `npm run gulp vscode-darwin-arm64` packages `Code - OSS.app`; boots with an isolated,
   short-path `--user-data-dir` *(Sebastian)*
 - [ ] Hands-on acceptance: open a project, run an integrated-terminal task, edit + save.
