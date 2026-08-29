@@ -28,7 +28,13 @@ Environment notes (carried from the harness era, still apply):
 - The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
   `npm i` before the next watch/build.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
-  VSCodium's placeholder strings. Keep hooks ON for our own commits.
+  VSCodium's placeholder strings. Keep hooks ON for our own commits. **Known exception**
+  (approved 2026-08-29): `browser/media/style.css` and `statusbar/media/statusbarpart.css`
+  carry vendored `00-ui-custom-font` sections that fail the whole-file hygiene lint
+  (97 errors: 4-space indents + unregistered `--vscode-workbench-*-font-*` vars), so ANY
+  commit touching them needs `--no-verify` until the pre-M2 hygiene fix lands — verify your
+  own lines against `build/hygiene.ts` rules out-of-band (tabs; vars must be in
+  `build/lib/stylelint/vscode-known-variables.json`).
 
 Harness-era-only notes (kept in case VSCodium's build scripts ever return): `cargo` at
 `~/.cargo/bin` on PATH for `build_cli.sh`; `dev/build.sh -s` needs
@@ -78,11 +84,25 @@ workbench still paints opaque; Phase A's visible change is the inset centered li
 
 Phase B — only after the base look is approved:
 
-- [ ] Workbench root transparent (`.monaco-workbench.mac:not(.web)`) with editor/statusbar/
-  panel pinned opaque; per-part translucent hexes stay user-side
-- [ ] Statusbar drag region (`.statusbar` drag / `.statusbar-item` no-drag, macOS-scoped)
+- [x] Workbench root transparent (`.monaco-workbench.mac:not(.web)`) with editor/statusbar/
+  panel pinned opaque; per-part translucent hexes stay user-side — `81f7eaa`, 2026-08-29.
+  Static CSS in `browser/media/style.css` out-specifies the dynamic root rule
+  (`style.ts:19`, untouched — Windows subpixel-AA); the pins are a `var(--vscode-editor-background)`
+  backstop UNDER the parts' inline theme styles (editorPart/panelPart/statusbarPart all
+  self-paint with `|| ''` fallbacks). Splash chain verified: its opaque body style is
+  removed on load (`partsSplash.ts:110-121`)
+- [x] Statusbar drag region (`.statusbar` drag / `.statusbar-item` no-drag, macOS-scoped)
+  — `7d29890`. Flat selectors on purpose (nested lists expand per outer selector and
+  silently miss). Delta vs the old injection block: its drag rules also sat under
+  `:not(.fullscreen)` — omitted per the minimal spec since dragging is inert in fullscreen;
+  re-add if fullscreen ever misbehaves
 - [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
-  and a packaged app
+  and a packaged app. Checkpoint plan: Sebastian runs `npm run watch` (CSS must reach
+  `out/` — the launcher only compiles when `out/` is missing); session launches via the
+  launch skill, seeds the throwaway profile's settings with the four translucent hexes
+  (sideBar/sideBarTitle/activityBar/activityBarTop @ `#1e1e1e4d` — kit ready in session
+  scratchpad), verifies computed styles over CDP, screenshots via `screencapture`
+  (CDP shots cannot capture vibrancy — compositor-level only), then kill pid + rm runDir
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 
@@ -127,6 +147,14 @@ Post-sweep tail (surfaced 2026-08-29, pending approval — M7 otherwise closed):
 
 Port the `custom-ui-style.stylesheet` block from Settings/settings.json piece by piece;
 delete each piece from settings as it lands.
+
+- [ ] **Pre-M2 gate (pending approval, surfaced 2026-08-29)**: hygiene-fix commit —
+  reindent the vendored `00-ui-custom-font` sections in `browser/media/style.css` +
+  `statusbar/media/statusbarpart.css` to tabs and register the three
+  `--vscode-workbench-*-font-*` vars in `build/lib/stylelint/vscode-known-variables.json`,
+  so hooks stay genuinely ON for every M2 commit touching these files (today they fail
+  whole-file lint on the vendored content; Phase B landed `--no-verify`). Cost: mechanical
+  redo if that vscodium patch is ever drop-and-reimported
 
 - [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants
 - [ ] Sidebar header as view switcher (activityBar top) at 46pt: traffic-light left inset,

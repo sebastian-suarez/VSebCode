@@ -14,11 +14,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M1 — Window patches (redo, D9)**: Phase A landed (`0773be2` — inset titlebar + lights,
-  vibrancy plumbing, splash guard) and **passed Sebastian's base-look checkpoint
-  2026-08-29**. Next session: Phase B — workbench-root transparency (editor/statusbar/panel
-  pinned opaque) + statusbar drag region, then a screenshot checkpoint with visible blur →
-  full M1 acceptance. One phase per session (CLAUDE.md)
+- **M1 — Window patches (redo, D9)**: Phase A passed its checkpoint. **Phase B commits
+  landed 2026-08-29**: `81f7eaa` (transparent workbench root, editor/panel/statusbar pinned
+  opaque via backstop) + `7d29890` (statusbar drag region); pin `ae5036b`. Committed
+  `--no-verify` per Sebastian's approval — whole-file hygiene fails on pre-existing vendored
+  `00-ui-custom-font` content (97 errors, none in our 22 lines; ours lint-verified
+  out-of-band); durable fix recorded as pre-M2 gate in Tasks.md, pending approval.
+  **Remaining for M1**: Sebastian runs `npm run watch` → session screenshot checkpoint with
+  visible blur (throwaway profile seeded with the translucent hexes) → Sebastian's visual
+  pass on dev instance + packaged app = acceptance
 
 ## Next
 
