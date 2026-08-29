@@ -50,6 +50,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   patch 53 (that's what wrote `~/.copilot` + `agent-host-config.json` on boot);
   `extensions/copilot` sources still in tree (deletion pending approval). Imports committed
   `--no-verify` — vscode's husky hygiene rejects VSCodium's placeholder files
+- 2026-08-29 — **Copilot excised** (approved): `extensions/copilot` (4,159 files) + remaining
+  build wiring removed in `8e8353bf` (delegated; diff reviewed); also fixed patch 53's
+  dangling task ref that broke `npm run gulp vscode-darwin-arm64` task loading; 2.3 GB of
+  untracked copilot build junk cleared from disk. `@vscode/copilot-api` dep kept (used by
+  agentHost/claude glue). Known red: `npm run compile` still fails from patch-53 residue in
+  `src/vs/platform/agentHost/**` — cleanup task pending approval
 
 ## Decisions
 

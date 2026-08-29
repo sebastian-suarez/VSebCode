@@ -20,10 +20,11 @@ Environment notes (carried from the harness era, still apply):
 - 16 GB RAM: gulp packaging runs an 8 GB node heap — close heavy apps.
 - Isolated test profiles: `--user-data-dir` must be a **short path** — the main-process socket
   breaks past ~103 chars.
-- Patch 53 (copilot removal) is imported: full `npm run compile` fails on `compile-copilot`
-  while `extensions/copilot` sources remain in the tree — use `npm run compile-client`,
-  launch with `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh`. Deleting the sources (pending
-  approval) should clear both caveats.
+- Copilot is fully removed (patch 53 + commit `8e8353bf` deleting sources/build wiring), but
+  `npm run compile` still exits 1 from **patch 53 residue**: `src/vs/platform/agentHost/**`
+  still imports deps patch 53 deleted (`@github/copilot-sdk`, `@anthropic-ai/sdk` — 149 TS
+  errors, pre-existing, none from our removal). Until the proposed agentHost cleanup lands,
+  keep `npm run compile-client` and `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh`.
 - The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
   `npm i` before the next watch/build.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
