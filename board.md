@@ -56,6 +56,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   untracked copilot build junk cleared from disk. `@vscode/copilot-api` dep kept (used by
   agentHost/claude glue). Known red: `npm run compile` still fails from patch-53 residue in
   `src/vs/platform/agentHost/**` — cleanup task pending approval
+- 2026-08-29 — **agentHost residue cleaned** (`4dce613`, delegated; diff reviewed): dead
+  Copilot CLI agent subtree deleted (43 files, −24k lines), `buildForwardedChatError`
+  restored for its live callers, type-only `@anthropic-ai/sdk` imports satisfied via
+  `src/typings/anthropic-sdk.d.ts`. `npm run compile` exit 0, typecheck/layers/gulp all
+  clean — SKIP_PRELAUNCH caveat retired
 
 ## Decisions
 

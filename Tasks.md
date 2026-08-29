@@ -8,7 +8,7 @@ Working checklists per milestone. Board-level view and decisions: [board.md](boa
 |---|---|
 | One-time setup | `npm i` |
 | Incremental compile (leave running) | `npm run watch` — wait for "Finished compilation" |
-| Launch dev app | `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh` (Cmd+R reloads renderer changes; main-process changes need a relaunch) |
+| Launch dev app | `./scripts/code.sh` (Cmd+R reloads renderer changes; main-process changes need a relaunch) |
 | One-shot compile | `npm run compile` |
 | Package .app | `npm run gulp vscode-darwin-arm64` → `../VSCode-darwin-arm64/Code - OSS.app` (umbrella root, gitignored); `-min` = minified |
 | Import a vscodium patch | `git apply ../vscodium/patches/<name>.patch`, review, commit |
@@ -20,11 +20,11 @@ Environment notes (carried from the harness era, still apply):
 - 16 GB RAM: gulp packaging runs an 8 GB node heap — close heavy apps.
 - Isolated test profiles: `--user-data-dir` must be a **short path** — the main-process socket
   breaks past ~103 chars.
-- Copilot is fully removed (patch 53 + commit `8e8353bf` deleting sources/build wiring), but
-  `npm run compile` still exits 1 from **patch 53 residue**: `src/vs/platform/agentHost/**`
-  still imports deps patch 53 deleted (`@github/copilot-sdk`, `@anthropic-ai/sdk` — 149 TS
-  errors, pre-existing, none from our removal). Until the proposed agentHost cleanup lands,
-  keep `npm run compile-client` and `VSCODE_SKIP_PRELAUNCH=1 ./scripts/code.sh`.
+- Copilot is fully removed (patch 53 + `8e8353bf` sources/wiring + `4dce613` agentHost
+  cleanup). Full `npm run compile` is green — plain `./scripts/code.sh` works, no
+  `VSCODE_SKIP_PRELAUNCH` needed. `src/typings/anthropic-sdk.d.ts` stands in for the
+  type-only `@anthropic-ai/sdk` imports patch 53 de-installed; delete that shim if the
+  dependency ever returns.
 - The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
   `npm i` before the next watch/build.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
