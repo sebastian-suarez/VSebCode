@@ -14,9 +14,10 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M7 — Copilot leftovers sweep** (in progress): CI files + `.vscode` copilot tasks
-  approved and delegated 2026-08-29; eslint-allowlist + doc-comment items and the agentHost
-  test run still pending approval — checklist in Tasks.md
+- **M7 — Copilot leftovers sweep** (in progress): CI-files + `.vscode`-tasks slice landed
+  (`6c05931`). Remaining, pending approval: eslint allowlist, doc-comment refs, agentHost
+  test run, 15 dangling azure-pipelines refs, the 7 mixed-workflow decision, launch.json
+  glob + .github copilot docs — checklist in Tasks.md
 - **M1 — Window patches (redo)**: hiddenInset + centered lights, `under-window` vibrancy,
   statusbar drag — as commits on `vsebcode`. Awaiting Sebastian's re-brief
   (previous attempt rolled back after manual review, 2026-08-28)
@@ -65,6 +66,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   `npm i`, watch, dev boot, `npm run gulp vscode-darwin-arm64`, packaged `Code - OSS.app`
   booted with an isolated short-path profile — and hands-on acceptance passed on the
   patched, Copilot-free tree
+- 2026-08-29 — **M7 slice landed** (`6c05931`, delegated; diff reviewed): deleted
+  `azure-pipelines/copilot/`, `product-copilot*.yml`, `downloadCopilotVsix.ts`,
+  `copilot-migrate-pr.ts`, 2 copilot-only workflows (`chat-lib-package.yml` copilot-only by
+  content despite its name); `.vscode/tasks.json` copilot tasks + dangling `dependsOn` refs
+  and the `.vscode-test.js` suite entry removed. JSONC/node/gulp checks green. Surfaced for
+  approval: 15 dangling MS-CI refs, 7 mixed workflows, launch.json glob, .github copilot docs
 
 ## Decisions
 

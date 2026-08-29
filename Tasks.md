@@ -63,16 +63,28 @@ commits on `vsebcode`.
 Inert remnants surfaced by the excision commits (`8e8353bf`, `4dce613`) — one delegated
 commit deleting:
 
-- [ ] `.vscode/tasks.json`: the dead "Copilot - Build" / "Kill Copilot - Build" tasks (their
-  `watch-copilotd` npm script no longer exists)
-- [ ] `.vscode-test.js`: the copilot suite entry
-- [ ] MS-internal CI/dev files: `build/azure-pipelines/copilot/*`, `product-copilot*.yml`,
-  `downloadCopilotVsix.ts`, `build/copilot-migrate-pr.ts`, the 7 copilot
-  `.github/workflows/*.yml`
+- [x] `.vscode/tasks.json`: the dead "Copilot - Build" / "Kill Copilot - Build" tasks — done
+  2026-08-29 (`6c05931`), incl. their two dangling `dependsOn` refs
+- [x] `.vscode-test.js`: the copilot suite entry — done 2026-08-29
+- [x] MS-internal CI/dev files — done 2026-08-29: `build/azure-pipelines/copilot/*`,
+  `product-copilot*.yml`, `common/downloadCopilotVsix.ts`, `build/copilot-migrate-pr.ts`,
+  and the 2 copilot-only workflows (`copilot-setup-steps.yml`; `chat-lib-package.yml` —
+  copilot-only by content despite the "chat-lib" name). The "~7 workflows" turned out mixed —
+  see new item below
 - [ ] `eslint.config.js`: the two `@github/copilot-sdk` allowlist mentions (~lines 1534,
   1683) — the `@anthropic-ai/sdk` entries must stay (typings shim depends on them)
 - [ ] Stale doc-comment references to deleted files: `claude/claudeToolDisplay.ts`,
   `shared/editChunkExtractor.ts` (6 spots)
+- [ ] *(pending approval)* 15 dangling `build/azure-pipelines/**` references to the deleted
+  files (`downloadCopilotVsix` ×10 across the per-OS product-build ymls, `product-copilot.yml`
+  stage ×2, `test-integration-steps` ×3) — prune the referring blocks, or accept the dangling
+  state (dead MS-internal CI either way)
+- [ ] *(pending approval)* 7 mixed workflows with now-broken copilot jobs/steps (`pr.yml`,
+  `pr-node-modules.yml`, `pr-{linux,darwin,win32}-test.yml`, `chat-perf.yml`,
+  `no-engineering-system-changes.yml`) — decide: prune the copilot jobs, delete the files, or
+  leave (Actions are off by default on the fork)
+- [ ] *(pending approval)* `.vscode/launch.json:24` stale `extensions/copilot/dist` outFiles
+  glob; `.github/copilot-instructions.md` + `.github/ISSUE_TEMPLATE/copilot_bug_report.md`
 - [ ] **Acceptance**: `npm run compile` still exit 0; `npm run gulp --tasks` still loads;
   run the pruned agentHost unit tests once (they type-check but have not been executed
   since the pruning)
