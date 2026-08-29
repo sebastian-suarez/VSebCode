@@ -70,13 +70,11 @@ Phase A notes: the `overrides?.transparent` path (windows.ts ~266) would combine
 vibrancy but has zero in-tree callers today — watch it if a transparent auxiliary window
 ever appears. Expect NO visible blur in a default-settings profile until Phase B — the
 workbench still paints opaque; Phase A's visible change is the inset centered lights.
-- [ ] Screenshot checkpoint: **delivered 2026-08-29** (full screen + lights zoom sent in
-  chat; throwaway instance cleaned up) — **base-look verdict pending from Sebastian**.
-  Next session: on pass → Phase B; on adjust → targeted fix commit first. To relaunch a
-  checkpoint instance: `vscode/.claude/skills/launch/scripts/launch.sh` from `vscode/`
-  (prints JSON with pid/ports; kill pid + rm runDir when done). `out/` is compiled at
-  `0773be2`; devtools carve-out check: Help menu → Toggle Developer Tools → that window
-  should keep the normal macOS title bar
+- [x] Screenshot checkpoint **passed** (Sebastian, 2026-08-29) — Phase A base look approved
+  (screenshots also on Desktop as `vsebcode-m1-phaseA-*.png`). For Phase B's checkpoint:
+  relaunch via `vscode/.claude/skills/launch/scripts/launch.sh` from `vscode/` (prints JSON
+  with pid/ports; kill pid + rm runDir when done); `out/` compiled at `0773be2`; devtools
+  carve-out check: Help → Toggle Developer Tools keeps the normal macOS title bar
 
 Phase B — only after the base look is approved:
 

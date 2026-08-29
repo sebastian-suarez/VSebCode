@@ -14,11 +14,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M1 — Window patches (redo, D9)**: Phase A landed (`0773be2`, three commits — inset
-  titlebar + lights, vibrancy plumbing, splash guard) and the screenshot checkpoint was
-  delivered 2026-08-29 — **awaiting Sebastian's base-look verdict**. Next session: on pass
-  → Phase B (root transparency + statusbar drag); on adjust → fix commit first. One phase
-  per session (CLAUDE.md)
+- **M1 — Window patches (redo, D9)**: Phase A landed (`0773be2` — inset titlebar + lights,
+  vibrancy plumbing, splash guard) and **passed Sebastian's base-look checkpoint
+  2026-08-29**. Next session: Phase B — workbench-root transparency (editor/statusbar/panel
+  pinned opaque) + statusbar drag region, then a screenshot checkpoint with visible blur →
+  full M1 acceptance. One phase per session (CLAUDE.md)
 
 ## Next
 
