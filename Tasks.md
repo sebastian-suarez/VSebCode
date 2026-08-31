@@ -27,6 +27,13 @@ Environment notes (carried from the harness era, still apply):
   dependency ever returns.
 - The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
   `npm i` before the next watch/build.
+- **Watch anatomy** (learned 2026-08-29): `npm run watch` = 3 parallel lanes via
+  npm-run-all2; ONLY the `watch-client-transpile` lane (`node build/next/index.ts
+  transpile --watch`) writes `out/` — gulp `watch-client` is typecheck/codicons only
+  (`build/gulpfile.ts:40`) and keeps printing happily even when the transpile lane has
+  died. If `out/` goes stale under a "running" watch, `ps aux | grep build/next` — no
+  process = the transpile lane crashed; restart the watch or one-shot `npm run compile`.
+  Also: dev workbench loads CSS/JS from `out/` (not `src/`), so CSS edits need that lane.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
   VSCodium's placeholder strings. Keep hooks ON for our own commits. **Known exception**
   (approved 2026-08-29): `browser/media/style.css` and `statusbar/media/statusbarpart.css`
