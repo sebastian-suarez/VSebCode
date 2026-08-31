@@ -14,10 +14,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M2 — Workbench layout in source** (next session): 46pt bar, full-height tabs,
-  sidebar-header view switcher, breadcrumbs row — kills `zoom-css-vars.js`. Gated on the
-  **pre-M2 hygiene fix** (Tasks.md, still pending approval). Also pending approval:
-  **M7 post-sweep tail** (3 items, Tasks.md)
+- **M2 — Workbench layout in source** (in progress since 2026-08-31): 46pt bar,
+  full-height tabs, sidebar-header view switcher, breadcrumbs row — kills
+  `zoom-css-vars.js`. UNGATED: pre-M2 hygiene fix landed (`64b030dc`) and the M7 tail is
+  closed (`4553778`). Pending approval: 3 post-gate follow-ups (Tasks.md — 23-file
+  hygiene sweep, gitignore line, dead smoke helper)
 
 ## Next
 
@@ -32,6 +33,16 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **Pre-M2 gate + M7 fully closed** (both delegated; diffs reviewed; hooks
+  ON, no `--no-verify`): `64b030dc` brings the vendored ui-custom-font CSS under hygiene
+  (tabs reindent, whitespace-only; 6 vars registered — 3 more than briefed, required to
+  pass). `4553778` deletes the chat-simulation harness FULLY per Sebastian's verdict —
+  incl. its 3 dependent smoke suites (agents-window coverage consciously dropped), the
+  Copilot helpers in smoke utils, npm/eslint/skill wiring — and fixes the dangling
+  copilot-instructions links (−8,924 lines). Untracked `.claude/CLAUDE.md` symlink
+  removed. Smoke typecheck + targeted eslint green. Fallout: 23 more CSS files carry the
+  same hygiene residue (incl. M2/M3-path `paneCompositePart.css`, `searchview.css`) —
+  sweep pending approval (Tasks.md)
 - 2026-08-31 — **M1 complete (redo per D9, finished per D10)**: Phase A `2875caf`/`2b18b09`/
   `0773be2` (hiddenInset + inset lights, under-window vibrancy + transparent window, splash
   guard), Phase B `81f7eaa`/`7d29890` (transparent workbench root with editor/panel/

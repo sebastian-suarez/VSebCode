@@ -36,12 +36,16 @@ Environment notes (carried from the harness era, still apply):
   process = the transpile lane crashed; restart the watch or one-shot `npm run compile`.
   Also: dev workbench loads CSS/JS from `out/` (not `src/`), so CSS edits need that lane.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
-  VSCodium's placeholder strings. Keep hooks ON for our own commits. **Known exception**
-  (approved 2026-08-29): `browser/media/style.css` and `statusbar/media/statusbarpart.css`
-  carry vendored `00-ui-custom-font` sections that fail the whole-file hygiene lint
-  (97 errors: 4-space indents + unregistered `--vscode-workbench-*-font-*` vars), so ANY
-  commit touching them needs `--no-verify` until the pre-M2 hygiene fix lands — verify your
-  own lines against `build/hygiene.ts` rules out-of-band (tabs; vars must be in
+  VSCodium's placeholder strings. Keep hooks ON for our own commits. The old two-file
+  exception is retired — `browser/media/style.css` + `statusbar/media/statusbarpart.css`
+  were brought under hygiene by the pre-M2 fix (`64b030dc`, 2026-08-31). **Still failing
+  whole-file lint** (surfaced by that fix, sweep pending approval): 23 other CSS files
+  with the same vendored-font residue — worst: `contrib/scm/browser/media/scm.css` (73
+  refs), `browser/parts/media/paneCompositePart.css` (52),
+  `contrib/search/browser/media/searchview.css` (44),
+  `editor/contrib/find/browser/findWidget.css` (39); plus
+  `--vscode-workbench-bottompane-font-size` still unregistered. Commits touching those
+  still need `--no-verify` + out-of-band checks (tabs; vars in
   `build/lib/stylelint/vscode-known-variables.json`).
 
 Harness-era-only notes (kept in case VSCodium's build scripts ever return): `cargo` at
@@ -175,30 +179,44 @@ commit deleting:
 - [x] **Acceptance**: compile exit 0; gulp task list loads; agentHost unit suite executed —
   1927 passing / 54 pending / 0 failing (2026-08-29)
 
-Post-sweep tail (surfaced 2026-08-29, pending approval — M7 otherwise closed):
+Post-sweep tail — resolved 2026-08-31, **M7 fully closed**:
 
-- [ ] `scripts/chat-simulation/**` orphaned Copilot-Chat perf harness (+ `perf:chat*` npm
-  scripts, 5 `.eslint-allowed-javascript-files` entries, `.github/skills/chat-perf/`) —
-  NOT a clean delete: `test/smoke/src/utils.ts:129` imports its mock-llm-server
-- [ ] Dangling doc links to the deleted copilot-instructions.md (`AGENTS.md:5`,
-  `agentHost/node/claude/phase13-plan.md:135`) and the stale dir name in the
-  pr-linux-test musl step comment
-- [ ] `vscode/.claude/CLAUDE.md` is now a dangling symlink (its target was
-  `.github/copilot-instructions.md`, deleted in the sweep) — remove the symlink, or land
-  our own agent guidelines there
+- [x] `scripts/chat-simulation/**` deleted FULLY per Sebastian's call (accepting the loss
+  of agents-window smoke coverage): harness (17 files), `perf:chat*` npm scripts, 5
+  eslint-allowlist entries, `.github/skills/chat-perf/`, the 3 dependent smoke suites
+  (`copilotCli`/`chatSessions`/`agentsWindow` — all needed its mock-llm-server + Copilot
+  auth-bypass env), their `main.ts` wiring, and the 4 Copilot helpers in
+  `test/smoke/src/utils.ts` — `4553778` (−8,924 lines). `chatDisabled` suite kept.
+  Verified: `cd test/smoke && npm run compile` exit 0, targeted eslint clean, hooks ON
+- [x] Dangling copilot-instructions.md links fixed in the same commit (`AGENTS.md`,
+  `phase13-plan.md`); pr-linux-test musl comment reworded to current reality (the SDK is
+  a root devDependency consumed by `agentHost`; the step itself is still needed)
+- [x] `vscode/.claude/CLAUDE.md` dangling symlink removed (was untracked — no commit)
 
 ## M2 — Workbench layout in source (kills `zoom-css-vars.js`)
 
 Port the `custom-ui-style.stylesheet` block from Settings/settings.json piece by piece;
 delete each piece from settings as it lands.
 
-- [ ] **Pre-M2 gate (pending approval, surfaced 2026-08-29)**: hygiene-fix commit —
-  reindent the vendored `00-ui-custom-font` sections in `browser/media/style.css` +
-  `statusbar/media/statusbarpart.css` to tabs and register the three
-  `--vscode-workbench-*-font-*` vars in `build/lib/stylelint/vscode-known-variables.json`,
-  so hooks stay genuinely ON for every M2 commit touching these files (today they fail
-  whole-file lint on the vendored content; Phase B landed `--no-verify`). Cost: mechanical
-  redo if that vscodium patch is ever drop-and-reimported
+- [x] **Pre-M2 gate — landed 2026-08-31** (`64b030dc`, delegated; diff reviewed): vendored
+  `00-ui-custom-font` sections in the two CSS files reindented to tabs (whitespace-only —
+  `git diff -w` empty) and SIX vars registered in `vscode-known-variables.json` (the
+  briefed three + `--monaco-font` / `--vscode-workbench-font-family` /
+  `--vscode-workbench-font-size` — same patch, same file; hooks could not pass with only
+  three). Commit made with hooks ON. Cost stands: mechanical redo if the patch is ever
+  drop-and-reimported. Fallout → "Post-gate follow-ups" below
+
+Post-gate follow-ups (surfaced 2026-08-31, pending approval):
+
+- [ ] Sweep the remaining 23 CSS files with the same vendored-font hygiene residue
+  (reindent + register `--vscode-workbench-bottompane-font-size`) so hooks stay ON when
+  M2/M3 touch them — `paneCompositePart.css` (52 refs) and `searchview.css` (44) sit
+  directly on the M2/M3 path
+- [ ] Drop `.gitignore:29` `.chat-simulation-data` — inert ignore rule for the deleted
+  harness's output dir
+- [ ] Remove `test/smoke/src/utils.ts` `dumpFailureDiagnostics` — now dead (its only
+  callers were the deleted suites; its doc comment tails a `GitHub Copilot Chat.log` no
+  build produces)
 
 - [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants
 - [ ] Sidebar header as view switcher (activityBar top) at 46pt: traffic-light left inset,
