@@ -19,9 +19,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   `zoom-css-vars.js`. UNGATED: pre-M2 hygiene fix landed (`64b030dc`) and the M7 tail is
   closed (`4553778`); post-gate follow-ups landed (`59c5366`, `4efaa11`); layer pocket
   resolved by rewrite (`166727b`/`f84e5e9`/`913e32d`) — hygiene 874 → 0, hooks ON
-  everywhere. M2 slices 1+2 LANDED (`7f3a2be` zoom/gate infra, `ef54f60` 46pt bar,
-  diffs reviewed; visual pending the slice-3 checkpoint — plan in Tasks.md). Two gate
-  refinements pending decision (fullscreen semantics, headerless title row)
+  everywhere. M2 slices 1–3 LANDED + gate refinements (`7f3a2be` zoom/gate infra,
+  `ef54f60` 46pt bar, `e24dd1b` config-gate + header-conditioned caption, `17f5378`
+  view-switcher pills; all diffs reviewed, pushed). **NEXT: the dev-instance
+  checkpoint** (plan + watch-list in Tasks.md — Sebastian starts `npm run watch`,
+  session drives launch/CDP/screenshots, Sebastian judges). Then slices 4–6 (tab
+  nudge, breadcrumbs 25px, drag regions + variants)
 
 ## Next
 

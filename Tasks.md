@@ -254,12 +254,27 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
   (~12px off true center — judge at checkpoint; injection had it too);
   `multiEditorTabsControl.ts:1957` offsetHeight===tabHeight compare breaks on
   fractional heights with `wrapTabs` on (pre-existing for non-13 font sizes)
-- [ ] Sidebar header as view switcher (activityBar top) at 46pt: traffic-light left inset,
-  centered 34×28 pills, 20px glyphs, badge pinned top-right, indicator off (slice 3;
-  must also register `--traffic-lights-width` in vscode-known-variables.json with its
-  first consumer)
-- [ ] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`) — var
-  infra landed with slice 1; the header padding consumer lands with slice 3
+- [x] **Gate refinements landed** (`e24dd1b`, delegated; diff reviewed): config-semantics
+  gate via new `isCustomTitleBarDisabled()` in layoutService.ts (shouldShowCustomTitleBar
+  minus both fullscreen terms — virgin profiles never flip; our config keeps 46pt tabs
+  in fullscreen like the injection); fullscreen/part-visibility listeners dropped, config
+  listener covers the predicate's full setting set. Caption conditioned on the header
+  EXISTING via new `Part.hasHeaderArea` (not the location setting — agent proved the
+  setting desyncs when the activity bar is hidden/auto-hidden and that the cached
+  position field is stale mid-relayout); CSS mirrors with `:has(> .header-or-footer.header)`
+- [x] **Slice 3 landed** (`17f5378`, delegated; diff reviewed): view-switcher pills —
+  traffic-light inset as header `padding-left: var(--traffic-lights-width)` PLUS the
+  JS width math: `layoutCompositeBar`'s bare `16:8` literals promoted to named
+  constants behind a new `protected getCompositeBarPadding()`; `SidebarPart` override
+  returns 86/zoom + 4 under the gate (inset replaces the stock left padding) so pill
+  overflow math agrees with the screen. Pills as gated CSS (no `!important` — each
+  stock rule it overrides identified individually): 34×28, 20px glyphs
+  (+ `--activity-bar-icon-size: 20px` for masked URI icons — one deliberate addition
+  beyond the literal spec), indicator off, badge top-right. Item widths are
+  DOM-measured (`compositeSize: 0`) so no JS pill constants needed.
+  `--traffic-lights-width` registered. activitybarPart tests 15/15, glob 260 passing
+- [x] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`) — var
+  infra in slice 1, JS width math + CSS consumer in slice 3
 - [ ] Tabs: the −1px optical text nudge (text container only)
 - [ ] Breadcrumbs: 25px row, background on the full-width wrapper, hairline ending the active
   tab at the bar (D11: real 25px layout constant — editor lays out honestly, no
@@ -306,12 +321,17 @@ Roles per D7: Sebastian runs watch + judges; the session drives launch/CDP/scree
    slim 24px band; nothing double-painted; zoom levels feel identical physically.
 7. **Cleanup**: kill pid, `rm -rf` runDir; Sebastian stops the watch when done.
 
-Expected-rough per stage (do NOT fail the checkpoint on these): after slice 2 — view
-switcher pills unstyled (slice 3), tab text ~1px low (slice 4), breadcrumbs still 22px
-(slice 5), no drag surfaces beyond statusbar (slice 6), traffic-light left inset in
-the header missing (slice 3). Packaged-app pass: once at M2 close, not per slice
-(gulp build + virgin profile must show STOCK layout per D13 + seeded profile shows
-the bar).
+Expected-rough per stage (do NOT fail the checkpoint on these): after slice 3 — tab
+text ~1px low (slice 4), breadcrumbs still 22px (slice 5), no drag surfaces beyond
+statusbar (slice 6). Watch-list items from the slice 2+3 reviews to JUDGE at the
+checkpoint: `.title-label` stock 12px padding-left puts the centered caption ~12px
+right of true center (injection had it too — decide keep/fix); pill `border-radius`
+is shape-without-fill (stock `background: none !important` on codicon labels — the
+rounding only shows if hover/checked paints; if a filled pill is wanted, that rule is
+the one to gate); `.action-item.icon` stays 35px tall (label centers fine — revisit
+only if the hit target feels wrong). Packaged-app pass: once at M2 close, not per
+slice (gulp build + virgin profile must show STOCK layout per D13 + seeded profile
+shows the bar).
 
 ## M3 — Tree & type polish (kills `tree-sticky-mask.js`; both extensions uninstalled)
 
