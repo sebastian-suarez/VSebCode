@@ -36,17 +36,19 @@ Environment notes (carried from the harness era, still apply):
   process = the transpile lane crashed; restart the watch or one-shot `npm run compile`.
   Also: dev workbench loads CSS/JS from `out/` (not `src/`), so CSS edits need that lane.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
-  VSCodium's placeholder strings. Keep hooks ON for our own commits. The old two-file
-  exception is retired — `browser/media/style.css` + `statusbar/media/statusbarpart.css`
-  were brought under hygiene by the pre-M2 fix (`64b030dc`, 2026-08-31). **Still failing
-  whole-file lint** (surfaced by that fix, sweep pending approval): 23 other CSS files
-  with the same vendored-font residue — worst: `contrib/scm/browser/media/scm.css` (73
-  refs), `browser/parts/media/paneCompositePart.css` (52),
-  `contrib/search/browser/media/searchview.css` (44),
-  `editor/contrib/find/browser/findWidget.css` (39); plus
-  `--vscode-workbench-bottompane-font-size` still unregistered. Commits touching those
-  still need `--no-verify` + out-of-band checks (tabs; vars in
-  `build/lib/stylelint/vscode-known-variables.json`).
+  VSCodium's placeholder strings. Keep hooks ON for our own commits. The vendored
+  `00-ui-custom-font` residue is swept: pre-M2 fix `64b030dc` (2 files) + sweep
+  `59c5366` (18 more files, all pure whitespace; 13 vars registered in total —
+  unknown-variable errors across the whole patch now 0). **Last `--no-verify` pocket**
+  (pending decision): 8 files under `src/vs/base/browser/ui/**` +
+  `src/vs/editor/contrib/find/browser/findWidget.css` — the patch put
+  `.monaco-workbench` selectors there and stylelint's layer-checker forbids that class
+  below the workbench layer (244 errors: 160 indent + 84 layer; reindent alone doesn't
+  unblock them). Options: file-level `/* stylelint-disable layer-checker */` (documented
+  opt-out in `build/stylelint.ts`) + reindent, or move those rules to workbench-layer
+  CSS (semantic). Also: `base/browser/ui/codicons/codicon/codicon.css` is silently
+  EXEMPT from hygiene (`!**/codicon/**`, `build/filters.ts:130`) — its vendored lines
+  are invisible to the checker.
 
 Harness-era-only notes (kept in case VSCodium's build scripts ever return): `cargo` at
 `~/.cargo/bin` on PATH for `build_cli.sh`; `dev/build.sh -s` needs
@@ -206,30 +208,38 @@ delete each piece from settings as it lands.
   three). Commit made with hooks ON. Cost stands: mechanical redo if the patch is ever
   drop-and-reimported. Fallout → "Post-gate follow-ups" below
 
-Post-gate follow-ups (surfaced 2026-08-31, pending approval):
+Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
 
-- [ ] Sweep the remaining 23 CSS files with the same vendored-font hygiene residue
-  (reindent + register `--vscode-workbench-bottompane-font-size`) so hooks stay ON when
-  M2/M3 touch them — `paneCompositePart.css` (52 refs) and `searchview.css` (44) sit
-  directly on the M2/M3 path
-- [ ] Drop `.gitignore:29` `.chat-simulation-data` — inert ignore rule for the deleted
-  harness's output dir
-- [ ] Remove `test/smoke/src/utils.ts` `dumpFailureDiagnostics` — now dead (its only
-  callers were the deleted suites; its doc comment tails a `GitHub Copilot Chat.log` no
-  build produces)
+- [x] Hygiene sweep `59c5366` (delegated; diff reviewed): 18 CSS files reindented — pure
+  whitespace (`git diff -w` empty; per-file vendored provenance verified by
+  reconstructing each pre-patch file and running hygiene's indent predicate on both) +
+  7 more vars registered → unknown-variable errors across the whole patch now 0; 618 of
+  874 starting errors cleared. Two transform rules needed (4-space AND one stray
+  space+tab line in `auxiliaryBarPart.css:32`). Hooks ON
+- [x] `.gitignore` `.chat-simulation-data` line dropped — `4efaa11`
+- [x] `dumpFailureDiagnostics` removed from smoke utils (−92 lines incl. the `fs` import
+  that became unused with it; remaining imports verified live) — `4efaa11`; smoke
+  compile + eslint green, hooks ON
+- [ ] **Layer-checker pocket (pending decision)**: the 8 base/editor-layer files (see
+  the reference-section note) — suppress-and-reindent vs workbench-layer rewrite vs
+  leave on `--no-verify`
 
-- [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants
+- [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants (D11:
+  true constants — header 46/zoom, sidebar title row FIXED at 24px, not the injection's
+  70 − 46/zoom remainder)
 - [ ] Sidebar header as view switcher (activityBar top) at 46pt: traffic-light left inset,
   centered 34×28 pills, 20px glyphs, badge pinned top-right, indicator off
 - [ ] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`)
 - [ ] Tabs: the −1px optical text nudge (text container only)
 - [ ] Breadcrumbs: 25px row, background on the full-width wrapper, hairline ending the active
-  tab at the bar
+  tab at the bar (D11: real 25px layout constant — editor lays out honestly, no
+  under-statusbar air)
 - [ ] Drag regions into part CSS (`activitybar`, statusbar, banner holes) — keep the
   inert-native-strip caveat as a comment
 - [ ] No-sidebar / fullscreen / banner variants
-- [ ] **Acceptance**: `custom-ui-style.stylesheet` block fully empty; layout correct at
-  zoom 0 / ±1 / ±2
+- [ ] **Acceptance**: `custom-ui-style.stylesheet` block reduced to M3-only leftovers
+  (sidebar source-list rows, sticky mask, indent guides, scroll shadow, pane-header,
+  search view — the block mixes M2 and M3 material); layout correct at zoom 0 / ±1 / ±2
 
 ## M3 — Tree & type polish (kills `tree-sticky-mask.js`; both extensions uninstalled)
 

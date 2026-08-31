@@ -17,8 +17,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 - **M2 — Workbench layout in source** (in progress since 2026-08-31): 46pt bar,
   full-height tabs, sidebar-header view switcher, breadcrumbs row — kills
   `zoom-css-vars.js`. UNGATED: pre-M2 hygiene fix landed (`64b030dc`) and the M7 tail is
-  closed (`4553778`). Pending approval: 3 post-gate follow-ups (Tasks.md — 23-file
-  hygiene sweep, gitignore line, dead smoke helper)
+  closed (`4553778`); post-gate follow-ups landed (`59c5366`, `4efaa11`). Pending
+  decision: the layer-checker pocket — 8 base/editor CSS files still hygiene-red
+  (Tasks.md)
 
 ## Next
 
@@ -26,6 +27,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   extensions uninstalled
 
 ## Later
+- **M8 — Claude ghost text**: inline completions backed by Sebastian's Claude
+  subscription via the Claude Code / Agent SDK glue already in `platform/agentHost`
+  (persistent host process; subscription auth rides the Claude Code login — no API-key
+  billing). Dedicated design session after M2/M3: in-core provider vs bundled
+  extension, prompted-completion design (Claude has no FIM API), latency prototype
+  first. *Recorded 2026-08-31 (D12).*
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3)
 - **M5 — Signing & updates**: Developer ID signature, updater story
 - **M6 — Sync ritual**: rebase `vsebcode` onto the next stable tag, bump pins (see README)
@@ -33,6 +40,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **Post-gate follow-ups landed** (delegated; diffs reviewed; hooks ON):
+  `59c5366` sweeps the remaining vendored ui-custom-font CSS — 18 files pure-whitespace
+  reindent (vendored provenance verified against the pre-patch tree) + 7 vars → 618/874
+  errors cleared, unknown-variable class extinguished. `4efaa11` drops the
+  chat-simulation ignore rule and dead `dumpFailureDiagnostics` (+ its newly-unused
+  `fs` import). Remaining: 244 errors across 8 base/editor-layer files hit stylelint's
+  layer-checker (`.monaco-workbench` below the workbench layer) — decision pending;
+  `codicon.css` found silently hygiene-exempt
 - 2026-08-31 — **Pre-M2 gate + M7 fully closed** (both delegated; diffs reviewed; hooks
   ON, no `--no-verify`): `64b030dc` brings the vendored ui-custom-font CSS under hygiene
   (tabs reindent, whitespace-only; 6 vars registered — 3 more than briefed, required to
@@ -139,6 +154,20 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   2026-08-31 (Sebastian) after the first implementation left sidebar bodies opaque.* Supersedes Phase B's
   "per-part translucent hexes stay user-side". Editor/panel/statusbar stay pinned opaque
   per D9. *Decided by Sebastian 2026-08-31.*
+- **D12 Chat substrate stays; ghost text recorded as M8** — the remaining chat surface
+  ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
+  incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
+  without a provider, no M6 rebase burden, and the designated substrate for M8 ghost
+  text. Smoke `areas/task/` (core task system, not Copilot residue) and
+  `chatDisabled.test.ts` also keep. *Decided by Sebastian 2026-08-31.*
+- **D11 M2 true-constants** — M2 ports the injection look with honest layout math, not CSS
+  overrides fighting stock JS: the sidebar title row is FIXED at 24px (dropping the
+  injection-era 70 − 46/zoom grow-when-zoomed behavior; identical at the daily zoom 0),
+  and breadcrumbs get a real 25px layout constant (editor bottom lands exactly on the
+  statusbar; the old ~8px "cheap air" push under the statusbar at full scroll is dropped).
+  Also approved same round: full 23-file hygiene sweep before M2 code, plus the two
+  chat-sim trivia deletions (`.gitignore` line, dead `dumpFailureDiagnostics`). *Decided
+  by Sebastian 2026-08-31.*
 - **D9 M1 redo approach** — the old M1's rejection causes: **visual details** and the
   **patch-era approach/structure** (not the unfocused dimming — D6c dim-when-unfocused is
   reaffirmed). Redo minimal-first: Phase A = hiddenInset + lights {18,16} (D6b carve-out
