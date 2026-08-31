@@ -26,7 +26,8 @@ Environment notes (carried from the harness era, still apply):
   type-only `@anthropic-ai/sdk` imports patch 53 de-installed; delete that shim if the
   dependency ever returns.
 - The patch import changed `package.json`/`package-lock.json` (root and `remote/`) — re-run
-  `npm i` before the next watch/build.
+  `npm i` before the next watch/build. *Done — Sebastian ran it; the resulting lockfile
+  drift is committed (`cc871b7`, 2026-08-31).*
 - **Watch anatomy** (learned 2026-08-29): `npm run watch` = 3 parallel lanes via
   npm-run-all2; ONLY the `watch-client-transpile` lane (`node build/next/index.ts
   transpile --watch`) writes `out/` — gulp `watch-client` is typecheck/codicons only
@@ -109,7 +110,15 @@ Phase B — only after the base look is approved:
   launch skill, seeds the throwaway profile's settings with the four translucent hexes
   (sideBar/sideBarTitle/activityBar/activityBarTop @ `#1e1e1e4d` — kit ready in session
   scratchpad), verifies computed styles over CDP, screenshots via `screencapture`
-  (CDP shots cannot capture vibrancy — compositor-level only), then kill pid + rm runDir
+  (CDP shots cannot capture vibrancy — compositor-level only), then kill pid + rm runDir.
+  **State 2026-08-31**: screenshots taken (Desktop `vsebcode-m1-phaseB-01-default` /
+  `-02-sidebar-panel`) and session-reviewed — transparency works on the four seeded
+  surfaces, pinned parts opaque; blur itself is not judgeable against a featureless
+  backdrop (put a busy window/wallpaper behind the app for the visual pass). Scope
+  confirmed vs Settings/settings.json: the daily look alphas ONLY the four side-rail
+  surfaces @ `4d` (+ overlay widgets @ `e6`) — opaque titlebar/tabs/editor/panel/statusbar
+  is the target look, not a Phase B gap. Pending: Sebastian's dev-instance verdict, then
+  the packaged-app pass
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 
@@ -198,6 +207,10 @@ data-migration tasks. All changes are commits to `product.json` and resources in
   identity fields
 - [ ] `extensionsGallery` → VS Code Marketplace: the 8 values recorded in D3
 - [ ] Icons/images: generate with Nano Banana Pro via the `agy` CLI; regenerate `.icns`
+- [ ] `!!APP_NAME!!` literals (surfaced 2026-08-31, pending approval): imported vscodium
+  patches embed VSCodium's build-harness placeholder verbatim — we skip their substitution
+  step, so it shows raw in the UI (seen in the SCM-viewlet welcome text, Phase B
+  screenshot 02). Sweep/replace during the rebrand
 - [ ] Check window title, About dialog, dock name, CLI binary name
 - [ ] **Acceptance**: app presents as VSebCode everywhere; an MS-marketplace-only extension
   installs; settings + extensions re-added by hand in the new profile

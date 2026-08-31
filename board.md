@@ -20,9 +20,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   `--no-verify` per Sebastian's approval — whole-file hygiene fails on pre-existing vendored
   `00-ui-custom-font` content (97 errors, none in our 22 lines; ours lint-verified
   out-of-band); durable fix recorded as pre-M2 gate in Tasks.md, pending approval.
-  **Remaining for M1**: Sebastian runs `npm run watch` → session screenshot checkpoint with
-  visible blur (throwaway profile seeded with the translucent hexes) → Sebastian's visual
-  pass on dev instance + packaged app = acceptance
+  **Checkpoint delivered 2026-08-31**: screenshots on Desktop (`vsebcode-m1-phaseB-01/02`),
+  session-reviewed — the four seeded surfaces render translucent, pinned parts opaque.
+  Scope Q&A (Sebastian asked about the opaque surround): titlebar/tabs/editor/panel/
+  statusbar staying opaque is the intended look — his daily hexes (verified in
+  Settings/settings.json) alpha ONLY sideBar/sideBarTitle/activityBar/activityBarTop.
+  **Remaining for M1**: Sebastian's visual verdict on the dev instance (busy backdrop
+  behind the window to judge blur) → packaged-app pass = acceptance. Housekeeping
+  2026-08-31: lockfile refresh `cc871b7` committed + pinned (`cecf1e9`); stray root
+  lockfile deleted; `.obsidian/` gitignored
 
 ## Next
 
