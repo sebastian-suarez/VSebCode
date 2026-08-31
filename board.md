@@ -27,9 +27,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   Settings/settings.json) alpha ONLY sideBar/sideBarTitle/activityBar/activityBarTop.
   **D10 pivot 2026-08-31**: the packaged-app pass surfaced that settings-side hexes aren't
   the wanted model — translucency now bakes into the product (D10: side rail + titlebar @
-  absolute 30% alpha in TS). **Remaining for M1**: D10 commit (delegated) → Sebastian
-  re-verifies the dev instance (no profile seeding needed anymore) + repackages →
-  acceptance. Housekeeping
+  absolute 30% alpha in TS). **D10 landed 2026-08-31** (`f727c45`, pin `636a69b`;
+  delegated, diff reviewed, probe-verified; survey fallout recorded in Tasks.md).
+  **Remaining for M1**: Sebastian re-verifies the dev instance — `out/` is already
+  compiled at `f727c45` and the change is renderer-only, so Cmd+R in the running dev
+  window suffices; no profile seeding — then repackages via gulp → acceptance.
+  Housekeeping
   2026-08-31: lockfile refresh `cc871b7` committed + pinned (`cecf1e9`); stray root
   lockfile deleted; `.obsidian/` gitignored
 

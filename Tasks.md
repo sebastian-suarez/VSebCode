@@ -104,13 +104,23 @@ Phase B — only after the base look is approved:
   silently miss). Delta vs the old injection block: its drag rules also sat under
   `:not(.fullscreen)` — omitted per the minimal spec since dragging is inert in fullscreen;
   re-add if fullscreen ever misbehaves
-- [ ] D10 — baked-in translucency (decided 2026-08-31, supersedes "hexes stay user-side"):
-  macOS native only (`isMacintosh && isNative`), absolute 0.30 alpha for sideBar /
-  sideBarTitle / activityBar / activityBarTop / titleBar.active+inactiveBackground,
-  applied at theme color resolution (value-level, so list bodies/sticky/splash/aux bar
-  inherit — refined 2026-08-31 after seam-level v1 `e7e6e056421` left sidebar bodies
-  opaque; that commit gets reworked in place, unpushed); titlebar keeps a makeOpaque-skip;
-  editor/panel/statusbar pins untouched; delegated to opus-coder
+- [x] D10 — baked-in translucency (decided + landed 2026-08-31, supersedes "hexes stay
+  user-side"): absolute 0.30 alpha for sideBar / sideBarTitle / activityBar /
+  activityBarTop / titleBar.active+inactiveBackground, applied at theme color resolution
+  (`ColorThemeData.getColor` wraps private `resolveColor`; helper + `MAC_TRANSLUCENT_SURFACES`
+  set in `common/theme.ts`; titlebar makeOpaque-skip kept; macOS native only) — `f727c45`,
+  pin `636a69b`. Delegated; diff reviewed; compile exit 0; targeted theme tests 48/0;
+  runtime probe verified defaults, customization-tint-preserved-alpha-forced, CSS vars.
+  Value-level ⇒ list bodies, sticky scroll, splash first frame and aux bar inherit
+  translucency, as the old settings hexes did. Survey fallout, accepted as-is:
+  `diffEditor.unchangedRegionBackground` + `notebook.cellEditorBackground` derive from
+  sideBar.background → now a 0.3 tint over the opaque editor (cosmetic; re-register their
+  defaults if unwanted); sessions-window agents colors derive too (unverified there);
+  issue-reporter window styles from sideBar.background with no vibrancy behind it;
+  activitybar icon-strip CSS `inherit` double-paints ~0.51 behind the icon column —
+  matches the old injection look, one-line fix exists if the eye disagrees; titlebar
+  `.light` class never set on mac (`fromHex` can't parse rgba) — harmless,
+  Windows/Linux-only rule. Watch all of these at M6 rebases
 - [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
   and a packaged app. Checkpoint plan: Sebastian runs `npm run watch` (CSS must reach
   `out/` — the launcher only compiles when `out/` is missing); session launches via the
