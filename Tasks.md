@@ -19,7 +19,11 @@ Environment notes (carried from the harness era, still apply):
 - Node pin `.nvmrc` = 24.15; local 24.19 satisfies it.
 - 16 GB RAM: gulp packaging runs an 8 GB node heap — close heavy apps.
 - Isolated test profiles: `--user-data-dir` must be a **short path** — the main-process socket
-  breaks past ~103 chars.
+  breaks past ~103 chars. **This bites the launch skill** (learned 2026-08-31): its default
+  runDir under `$TMPDIR` (`/var/folders/...`) is ~105 chars → main dies with
+  `listen EINVAL ... 1.12-main.sock` right after CDP comes up. Always launch with
+  `TMPDIR=/tmp` so runDirs land at `/tmp/code-oss-dev/...`. Also: the dev app's GUI
+  process name for AppleScript/frontmost is `Code - OSS`, not `Electron`.
 - Copilot is fully removed (patch 53 + `8e8353bf` sources/wiring + `4dce613` agentHost
   cleanup). Full `npm run compile` is green — plain `./scripts/code.sh` works, no
   `VSCODE_SKIP_PRELAUNCH` needed. `src/typings/anthropic-sdk.d.ts` stands in for the
@@ -275,13 +279,25 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
   `--traffic-lights-width` registered. activitybarPart tests 15/15, glob 260 passing
 - [x] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`) — var
   infra in slice 1, JS width math + CSS consumer in slice 3
-- [ ] Tabs: the −1px optical text nudge (text container only)
-- [ ] Breadcrumbs: 25px row, background on the full-width wrapper, hairline ending the active
-  tab at the bar (D11: real 25px layout constant — editor lays out honestly, no
-  under-statusbar air)
-- [ ] Drag regions into part CSS (`activitybar`, statusbar, banner holes) — keep the
-  inert-native-strip caveat as a comment
-- [ ] No-sidebar / fullscreen / banner variants
+- [x] Tabs: the −1px optical text nudge — `1a7b14c` (gated, text container only, rationale
+  kept; noted: under `tabSizing: shrink/fixed` the overflow-gradient `::after` re-anchors
+  to the text container — spec-exact port, glance if tab sizing ever changes)
+- [x] Breadcrumbs 25px row — `8c35fbd` (D11 honest constant: `breadcrumbsHeight` getter
+  feeds BOTH `EditorTitleControl` readers, 25 gated / 22 stock; relayout rides the tabs
+  control's existing gate listener; scoped to `.breadcrumbs-below-tabs` only — the spec's
+  unscoped selector would have silently diverged on single-tab inline breadcrumbs;
+  `background: transparent !important` dropped as a proven no-op. Hairline is the spec's
+  literal `rgba(204,204,204,0.2)` — NOT theme-tokenized; revisit if a light theme ever
+  matters)
+- [x] Drag regions + variants — `2811166` (one gated block in style.css, flat selectors,
+  `:not(.fullscreen)` per the injection; banner inset + holes; M1 statusbar drag untouched).
+  **Nosidebar fix included** (Sebastian's live find: lights over the first tab →
+  `padding-left: calc(--traffic-lights-width + 8px)`, measurement-followed, no JS twin
+  needed). Spec correction: the header no-drag hole cut at `.composite-bar`, not its
+  container (container is full-width since slice 3 — would have killed the drag surface).
+  Caveat attribution RESOLVED (stale injection prose from the bottom-band era): the
+  native ~45.5pt strip covers header+tabs (inert-but-kept for y ≤ 12 rollback); the LIVE
+  CSS drag surfaces are the 24px caption row + statusbar — verify by hand at the pass
 - [ ] **Acceptance**: `custom-ui-style.stylesheet` block reduced to M3-only leftovers
   (sidebar source-list rows, sticky mask, indent guides, scroll shadow, pane-header,
   search view — the block mixes M2 and M3 material); layout correct at zoom 0 / ±1 / ±2
@@ -300,7 +316,9 @@ Roles per D7: Sebastian runs watch + judges; the session drives launch/CDP/scree
    FULL relaunch (same runDir) — `window.titleBarStyle` is read at window creation, a
    renderer reload is not enough:
    `{ "window.titleBarStyle": "native", "window.customTitleBarVisibility": "never",
-   "workbench.activityBar.location": "top", "workbench.colorTheme": "Dark+" }`
+   "workbench.activityBar.location": "top", "workbench.colorTheme": "Dark 2026" }`
+   (Sebastian 2026-08-31: Dark 2026 primary, Dark Modern secondary. Dark 2026 verified
+   live: D10 alpha composes — sideBar.background arrives as the theme color @ 0.3)
    (D13: without the first two the gate class must stay OFF and geometry stock — that
    itself is a checkpoint assertion.)
 4. **Session, over CDP** (structure only — CDP cannot see vibrancy):
