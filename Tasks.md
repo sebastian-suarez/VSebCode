@@ -234,12 +234,32 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
   deleted — `913e32d`, no-op proven via ESM import order (codicon.css always precedes
   `style.css:381`'s identical winning copy). Patch-wide hygiene: 874 → 0
 
-- [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants (D11:
-  true constants — header 46/zoom, sidebar title row FIXED at 24px, not the injection's
-  70 − 46/zoom remainder)
+- [x] **Slice 1 landed** (`7f3a2be`, delegated; diff reviewed): TS-owned zoom + gate
+  infra — `inlineTitleBar.ts` (constants 46/86/24, per-window state mirroring
+  `WindowManager`) + `InlineTitleBarLayout` contribution (BlockStartup; sets
+  `--zoom-factor` on every container incl. aux windows; toggles `.inline-titlebar`
+  from `isVisible(TITLEBAR_PART)` main / `shouldShowCustomTitleBar` aux; reacts to
+  zoom, part visibility, fullscreen, the two D13 settings); CSS vars
+  `--titlebar-height`/`--traffic-lights-width` under
+  `.monaco-workbench.mac:not(.web).inline-titlebar` in `style.css`. Replaces
+  `zoom-css-vars.js` polling with `getZoomFactor`/`onDidChangeZoomLevel`
+- [x] **Slice 2 landed** (`ef54f60`, delegated; diff reviewed): 46pt bar as true
+  constants — the "70px" site is `PartLayout.HEADER_HEIGHT/TITLE_HEIGHT` (35+35,
+  `part.ts:217`); new `headerHeight()`/`titleHeight()` option callbacks (borderWidth
+  idiom); `SidebarPart` feeds 46/zoom + 24 when gated & LEFT; tabs: `tabHeight` getter
+  returns physical 46/zoom under the gate (compact stock; JS is the single source,
+  CSS var follows via `updateTabHeight`); zoom/gate listeners re-apply per window.
+  Unit: part.test.ts 4/4, workbench browser glob 260 passing. VISUAL PENDING the
+  slice-3 checkpoint. Quirks noted: `.title-label` keeps stock 12px padding-left
+  (~12px off true center — judge at checkpoint; injection had it too);
+  `multiEditorTabsControl.ts:1957` offsetHeight===tabHeight compare breaks on
+  fractional heights with `wrapTabs` on (pre-existing for non-13 font sizes)
 - [ ] Sidebar header as view switcher (activityBar top) at 46pt: traffic-light left inset,
-  centered 34×28 pills, 20px glyphs, badge pinned top-right, indicator off
-- [ ] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`)
+  centered 34×28 pills, 20px glyphs, badge pinned top-right, indicator off (slice 3;
+  must also register `--traffic-lights-width` in vscode-known-variables.json with its
+  first consumer)
+- [ ] Traffic-light inset computed from the zoom factor in TS (`getZoomFactor`) — var
+  infra landed with slice 1; the header padding consumer lands with slice 3
 - [ ] Tabs: the −1px optical text nudge (text container only)
 - [ ] Breadcrumbs: 25px row, background on the full-width wrapper, hairline ending the active
   tab at the bar (D11: real 25px layout constant — editor lays out honestly, no
