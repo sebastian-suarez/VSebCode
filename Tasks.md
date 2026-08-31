@@ -104,6 +104,11 @@ Phase B — only after the base look is approved:
   silently miss). Delta vs the old injection block: its drag rules also sat under
   `:not(.fullscreen)` — omitted per the minimal spec since dragging is inert in fullscreen;
   re-add if fullscreen ever misbehaves
+- [ ] D10 — baked-in translucency (decided 2026-08-31, supersedes "hexes stay user-side"):
+  macOS native only (`isMacintosh && isNative`), absolute 0.30 alpha of the resolved theme
+  color applied in TS at the paint seams for sideBar / sideBarTitle / activityBar /
+  activityBarTop / titleBar.activeBackground + titleBar.inactiveBackground;
+  editor/panel/statusbar pins untouched; delegated to opus-coder
 - [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
   and a packaged app. Checkpoint plan: Sebastian runs `npm run watch` (CSS must reach
   `out/` — the launcher only compiles when `out/` is missing); session launches via the
@@ -125,7 +130,8 @@ Phase B — only after the base look is approved:
   commits: `hiddenInset`/`under-window`/`trafficLightPosition`/`#00000000` in
   `Resources/app/out/main.js`, root-transparency selectors + statusbar drag in
   `out/vs/workbench/workbench.desktop.main.css`. Seed the four hexes in that profile to
-  judge the look
+  judge the look. *Superseded by D10 (2026-08-31): post-D10 builds show the translucency
+  natively — no profile seeding anywhere in the checkpoint flow anymore*
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 

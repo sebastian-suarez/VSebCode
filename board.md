@@ -25,8 +25,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   Scope Q&A (Sebastian asked about the opaque surround): titlebar/tabs/editor/panel/
   statusbar staying opaque is the intended look — his daily hexes (verified in
   Settings/settings.json) alpha ONLY sideBar/sideBarTitle/activityBar/activityBarTop.
-  **Remaining for M1**: Sebastian's visual verdict on the dev instance (busy backdrop
-  behind the window to judge blur) → packaged-app pass = acceptance. Housekeeping
+  **D10 pivot 2026-08-31**: the packaged-app pass surfaced that settings-side hexes aren't
+  the wanted model — translucency now bakes into the product (D10: side rail + titlebar @
+  absolute 30% alpha in TS). **Remaining for M1**: D10 commit (delegated) → Sebastian
+  re-verifies the dev instance (no profile seeding needed anymore) + repackages →
+  acceptance. Housekeeping
   2026-08-31: lockfile refresh `cc871b7` committed + pinned (`cecf1e9`); stray root
   lockfile deleted; `.obsidian/` gitignored
 
@@ -119,6 +122,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   baked at M4). One commit per patch, named `[vscodium] <name>`, mapping 1:1 to the library
   for future rebases (carry each, or drop-and-reimport the updated copy). *Decided by
   Sebastian 2026-08-29.*
+- **D10 Baked-in translucency (macOS-only product)** — the translucent look ships as a
+  product default like Xcode's vibrant chrome, NOT via user settings: sideBar, sideBarTitle,
+  activityBar, activityBarTop AND titleBar (active+inactive) paint at **absolute 30% alpha**
+  of their resolved theme color, applied in TS at the parts' style-resolution seams
+  (updateStyles-level) — themes and setting re-tints keep working, alpha is forced to 0.30;
+  macOS native only (`isMacintosh && isNative`), web untouched. Supersedes Phase B's
+  "per-part translucent hexes stay user-side". Editor/panel/statusbar stay pinned opaque
+  per D9. *Decided by Sebastian 2026-08-31.*
 - **D9 M1 redo approach** — the old M1's rejection causes: **visual details** and the
   **patch-era approach/structure** (not the unfocused dimming — D6c dim-when-unfocused is
   reaffirmed). Redo minimal-first: Phase A = hiddenInset + lights {18,16} (D6b carve-out
