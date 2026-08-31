@@ -121,7 +121,7 @@ Phase B — only after the base look is approved:
   matches the old injection look, one-line fix exists if the eye disagrees; titlebar
   `.light` class never set on mac (`fromHex` can't parse rgba) — harmless,
   Windows/Linux-only rule. Watch all of these at M6 rebases
-- [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
+- [x] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
   and a packaged app. Checkpoint plan: Sebastian runs `npm run watch` (CSS must reach
   `out/` — the launcher only compiles when `out/` is missing); session launches via the
   launch skill, seeds the throwaway profile's settings with the four translucent hexes
@@ -143,7 +143,10 @@ Phase B — only after the base look is approved:
   `Resources/app/out/main.js`, root-transparency selectors + statusbar drag in
   `out/vs/workbench/workbench.desktop.main.css`. Seed the four hexes in that profile to
   judge the look. *Superseded by D10 (2026-08-31): post-D10 builds show the translucency
-  natively — no profile seeding anywhere in the checkpoint flow anymore*
+  natively — no profile seeding anywhere in the checkpoint flow anymore.*
+  **Accepted 2026-08-31**: Sebastian approved the D10 baked look on the dev instance and
+  a fresh `14:41` packaged build (bundle grep-verified to carry Phase A + B + D10) —
+  **M1 closed**
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 

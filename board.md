@@ -14,36 +14,17 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M1 — Window patches (redo, D9)**: Phase A passed its checkpoint. **Phase B commits
-  landed 2026-08-29**: `81f7eaa` (transparent workbench root, editor/panel/statusbar pinned
-  opaque via backstop) + `7d29890` (statusbar drag region); pin `ae5036b`. Committed
-  `--no-verify` per Sebastian's approval — whole-file hygiene fails on pre-existing vendored
-  `00-ui-custom-font` content (97 errors, none in our 22 lines; ours lint-verified
-  out-of-band); durable fix recorded as pre-M2 gate in Tasks.md, pending approval.
-  **Checkpoint delivered 2026-08-31**: screenshots on Desktop (`vsebcode-m1-phaseB-01/02`),
-  session-reviewed — the four seeded surfaces render translucent, pinned parts opaque.
-  Scope Q&A (Sebastian asked about the opaque surround): titlebar/tabs/editor/panel/
-  statusbar staying opaque is the intended look — his daily hexes (verified in
-  Settings/settings.json) alpha ONLY sideBar/sideBarTitle/activityBar/activityBarTop.
-  **D10 pivot 2026-08-31**: the packaged-app pass surfaced that settings-side hexes aren't
-  the wanted model — translucency now bakes into the product (D10: side rail + titlebar @
-  absolute 30% alpha in TS). **D10 landed 2026-08-31** (`f727c45`, pin `636a69b`;
-  delegated, diff reviewed, probe-verified; survey fallout recorded in Tasks.md).
-  **Remaining for M1**: Sebastian re-verifies the dev instance — `out/` is already
-  compiled at `f727c45` and the change is renderer-only, so Cmd+R in the running dev
-  window suffices; no profile seeding — then repackages via gulp → acceptance.
-  Housekeeping
-  2026-08-31: lockfile refresh `cc871b7` committed + pinned (`cecf1e9`); stray root
-  lockfile deleted; `.obsidian/` gitignored
+- **M2 — Workbench layout in source** (next session): 46pt bar, full-height tabs,
+  sidebar-header view switcher, breadcrumbs row — kills `zoom-css-vars.js`. Gated on the
+  **pre-M2 hygiene fix** (Tasks.md, still pending approval). Also pending approval:
+  **M7 post-sweep tail** (3 items, Tasks.md)
 
 ## Next
 
-- **M2 — Workbench layout in source**: 46pt bar, full-height tabs, sidebar-header view
-  switcher, breadcrumbs row — kills `zoom-css-vars.js`
-
-## Later
 - **M3 — Tree & type polish**: sticky-header mask, source-list rows, HN UI font — both
   extensions uninstalled
+
+## Later
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3)
 - **M5 — Signing & updates**: Developer ID signature, updater story
 - **M6 — Sync ritual**: rebase `vsebcode` onto the next stable tag, bump pins (see README)
@@ -51,6 +32,16 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **M1 complete (redo per D9, finished per D10)**: Phase A `2875caf`/`2b18b09`/
+  `0773be2` (hiddenInset + inset lights, under-window vibrancy + transparent window, splash
+  guard), Phase B `81f7eaa`/`7d29890` (transparent workbench root with editor/panel/
+  statusbar pinned opaque, statusbar drag), D10 `f727c45` (30% translucency baked at theme
+  resolution for side rail + titlebar — value-level, so list bodies/sticky scroll/splash/
+  aux bar inherit; survey fallout in Tasks.md). Final pin `636a69b`. Acceptance: Sebastian's
+  visual pass approved on the dev instance and a bundle-verified packaged build — no
+  settings anywhere; the injection stack's window look is fully superseded. Same-day
+  housekeeping: lockfile refresh `cc871b7`/`cecf1e9`, stray root lockfile deleted,
+  `.obsidian/` gitignored, `!!APP_NAME!!` literal surfaced for M4
 - 2026-08-28 — Prereqs: gh 2.98, rustup (Rust 1.98.0), jq 1.7.1, Node 24.19 (≥ pinned 24.15),
   full Xcode, 361 GB free
 - 2026-08-28 — **Rollback**: harness-era M0/M1 rejected on Sebastian's manual review. Old
