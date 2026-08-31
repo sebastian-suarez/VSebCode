@@ -105,9 +105,11 @@ Phase B — only after the base look is approved:
   `:not(.fullscreen)` — omitted per the minimal spec since dragging is inert in fullscreen;
   re-add if fullscreen ever misbehaves
 - [ ] D10 — baked-in translucency (decided 2026-08-31, supersedes "hexes stay user-side"):
-  macOS native only (`isMacintosh && isNative`), absolute 0.30 alpha of the resolved theme
-  color applied in TS at the paint seams for sideBar / sideBarTitle / activityBar /
-  activityBarTop / titleBar.activeBackground + titleBar.inactiveBackground;
+  macOS native only (`isMacintosh && isNative`), absolute 0.30 alpha for sideBar /
+  sideBarTitle / activityBar / activityBarTop / titleBar.active+inactiveBackground,
+  applied at theme color resolution (value-level, so list bodies/sticky/splash/aux bar
+  inherit — refined 2026-08-31 after seam-level v1 `e7e6e056421` left sidebar bodies
+  opaque; that commit gets reworked in place, unpushed); titlebar keeps a makeOpaque-skip;
   editor/panel/statusbar pins untouched; delegated to opus-coder
 - [ ] Screenshot checkpoint → **Acceptance**: Sebastian's visual pass on the dev instance
   and a packaged app. Checkpoint plan: Sebastian runs `npm run watch` (CSS must reach

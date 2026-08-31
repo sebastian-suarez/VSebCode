@@ -125,9 +125,13 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 - **D10 Baked-in translucency (macOS-only product)** — the translucent look ships as a
   product default like Xcode's vibrant chrome, NOT via user settings: sideBar, sideBarTitle,
   activityBar, activityBarTop AND titleBar (active+inactive) paint at **absolute 30% alpha**
-  of their resolved theme color, applied in TS at the parts' style-resolution seams
-  (updateStyles-level) — themes and setting re-tints keep working, alpha is forced to 0.30;
-  macOS native only (`isMacintosh && isNative`), web untouched. Supersedes Phase B's
+  of their resolved theme color, applied at **theme color resolution**
+  (`ColorThemeData.getColor`) so EVERY consumer paints translucent — part chrome, sidebar
+  tree/list bodies, sticky scroll, splash persistence, aux bar via shared/derived colors,
+  global `--vscode-*` vars — replicating what the settings hexes effectively did; themes
+  and setting re-tints keep working, alpha is forced to 0.30; macOS native only
+  (`isMacintosh && isNative`), web untouched. *Refined from seam-level to value-level
+  2026-08-31 (Sebastian) after the first implementation left sidebar bodies opaque.* Supersedes Phase B's
   "per-part translucent hexes stay user-side". Editor/panel/statusbar stay pinned opaque
   per D9. *Decided by Sebastian 2026-08-31.*
 - **D9 M1 redo approach** — the old M1's rejection causes: **visual details** and the
