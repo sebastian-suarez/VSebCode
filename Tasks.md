@@ -36,19 +36,19 @@ Environment notes (carried from the harness era, still apply):
   process = the transpile lane crashed; restart the watch or one-shot `npm run compile`.
   Also: dev workbench loads CSS/JS from `out/` (not `src/`), so CSS edits need that lane.
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
-  VSCodium's placeholder strings. Keep hooks ON for our own commits. The vendored
-  `00-ui-custom-font` residue is swept: pre-M2 fix `64b030dc` (2 files) + sweep
-  `59c5366` (18 more files, all pure whitespace; 13 vars registered in total —
-  unknown-variable errors across the whole patch now 0). **Last `--no-verify` pocket**
-  (pending decision): 8 files under `src/vs/base/browser/ui/**` +
-  `src/vs/editor/contrib/find/browser/findWidget.css` — the patch put
-  `.monaco-workbench` selectors there and stylelint's layer-checker forbids that class
-  below the workbench layer (244 errors: 160 indent + 84 layer; reindent alone doesn't
-  unblock them). Options: file-level `/* stylelint-disable layer-checker */` (documented
-  opt-out in `build/stylelint.ts`) + reindent, or move those rules to workbench-layer
-  CSS (semantic). Also: `base/browser/ui/codicons/codicon/codicon.css` is silently
-  EXEMPT from hygiene (`!**/codicon/**`, `build/filters.ts:130`) — its vendored lines
-  are invisible to the checker.
+  VSCodium's placeholder strings. Keep hooks ON for our own commits — since 2026-08-31
+  that works EVERYWHERE: the `00-ui-custom-font` hygiene arc (874 → 0 errors) landed as
+  `64b030dc` (2 files) + `59c5366` (18 files) + `166727b` (8 base/editor files restored
+  to pristine upstream; their rules relocated to
+  `workbench/browser/media/uiCustomFontWidgets.css`, wired via `style.ts` — rebase
+  instructions live in its header) + `f84e5e9` (component fixtures load it too) +
+  `913e32d` (codicon's duplicate sidebar rule deleted). Remaining vendored foothold
+  outside the workbench layer: 2 rules in `codicon.css`, kept BY DECISION — the file is
+  hygiene-exempt (`!**/codicon/**`, `build/filters.ts:130`) and its early base-layer
+  load position is LOAD-BEARING: its broad rules tie ~110 selectors at equal
+  specificity and lose all of them purely by document order; relocating would flip
+  reachable ties (e.g. sessions chat codicon sizes). Mind both facts at every M6
+  reimport of the font patch.
 
 Harness-era-only notes (kept in case VSCodium's build scripts ever return): `cargo` at
 `~/.cargo/bin` on PATH for `build_cli.sh`; `dev/build.sh -s` needs
@@ -220,9 +220,19 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
 - [x] `dumpFailureDiagnostics` removed from smoke utils (−92 lines incl. the `fs` import
   that became unused with it; remaining imports verified live) — `4efaa11`; smoke
   compile + eslint green, hooks ON
-- [ ] **Layer-checker pocket (pending decision)**: the 8 base/editor-layer files (see
-  the reference-section note) — suppress-and-reindent vs workbench-layer rewrite vs
-  leave on `--no-verify`
+- [x] **Layer-checker pocket — resolved by workbench-layer rewrite** (Sebastian's call
+  2026-08-31; delegated, diffs reviewed, hooks ON): `166727b` restores all 8
+  base/editor files byte-identical to pre-patch upstream and moves their 369 vendored
+  lines into `uiCustomFontWidgets.css` (cascade audit: no reachable order-dependent
+  change; the one equal-specificity co-match is dominated by a higher-specificity rule
+  in the same group). `f84e5e9` routes the stylesheet to component fixtures (they
+  render in `.monaco-workbench`/`.part` wrappers but don't load `style.ts`; brief's
+  3-file premise corrected en route — only `fixtureUtils.ts` needed the import, the
+  sessions fixtures inherit it via the module graph). codicon.css full relocation
+  REJECTED on audit evidence (110 equal-specificity ties resolved today by its early
+  load position, some provably reachable); only its duplicate sidebar/auxbar rule
+  deleted — `913e32d`, no-op proven via ESM import order (codicon.css always precedes
+  `style.css:381`'s identical winning copy). Patch-wide hygiene: 874 → 0
 
 - [ ] 46pt bar: tab-row height and sidebar-header height as real layout constants (D11:
   true constants — header 46/zoom, sidebar title row FIXED at 24px, not the injection's

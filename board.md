@@ -17,9 +17,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 - **M2 — Workbench layout in source** (in progress since 2026-08-31): 46pt bar,
   full-height tabs, sidebar-header view switcher, breadcrumbs row — kills
   `zoom-css-vars.js`. UNGATED: pre-M2 hygiene fix landed (`64b030dc`) and the M7 tail is
-  closed (`4553778`); post-gate follow-ups landed (`59c5366`, `4efaa11`). Pending
-  decision: the layer-checker pocket — 8 base/editor CSS files still hygiene-red
-  (Tasks.md)
+  closed (`4553778`); post-gate follow-ups landed (`59c5366`, `4efaa11`); layer pocket
+  resolved by rewrite (`166727b`/`f84e5e9`/`913e32d`) — hygiene 874 → 0, hooks ON
+  everywhere. Next: M2 code slices (zoom infra + 46pt bar)
 
 ## Next
 
@@ -40,6 +40,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **Layer pocket resolved — hygiene arc complete (874 → 0, hooks ON
+  everywhere)** (delegated; diffs reviewed): `166727b` workbench-layer rewrite — 8
+  base/editor files byte-identical to pre-patch upstream again, their 369 vendored
+  lines now in `workbench/browser/media/uiCustomFontWidgets.css` (provenance + rebase
+  notes in the header; cascade audit clean). `f84e5e9` loads it in component fixtures.
+  `913e32d` drops codicon.css's duplicate sidebar rule (no-op proven via import order).
+  codicon full relocation REJECTED on audit evidence: its early load position resolves
+  ~110 equal-specificity ties, some reachable — its 2 remaining vendored rules stay by
+  decision; fragility recorded for M6 reimports
 - 2026-08-31 — **Post-gate follow-ups landed** (delegated; diffs reviewed; hooks ON):
   `59c5366` sweeps the remaining vendored ui-custom-font CSS — 18 files pure-whitespace
   reindent (vendored provenance verified against the pre-patch tree) + 7 vars → 618/874
