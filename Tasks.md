@@ -359,14 +359,72 @@ shows the bar).
 
 ## M3 — Tree & type polish (kills `tree-sticky-mask.js`; both extensions uninstalled)
 
-- [ ] Sticky-scroll mask inside the tree widget (`src/vs/base/browser/ui/tree/`)
-- [ ] Sidebar lists: inset rounded rows, indent-guide 3px shift onto chevrons, pane-header
-  padding, scroll shadow off
-- [ ] Search view: widget padding + replace-toggle anchored to the first input row
-- [ ] HN UI font: ship the `hn-weight-shift.css` @font-face weight map in product CSS;
-  workbench font-family → 'HN UI'
-- [ ] **Acceptance**: Custom UI Style and Vibrancy uninstalled, both JS shims retired,
-  UI pixel-identical
+Governing decision: D14 (macOS-native always, no D13 gate; sticky colors value-level
+alpha-0; dead search padding rule dropped). Slices approved 2026-08-31, delegated one
+commit each, diff-reviewed:
+
+- [x] **S1 landed** (`fff7895`, delegated; diff reviewed): `StickyScrollController`
+  publishes `--tree-sticky-scroll-clip` (= scrollTop + sticky-widget height) on the
+  `.monaco-list` root from `update()` on both paths, last-value guard, removed on
+  controller disposal (covers sticky-off flips); var registered. Replaces
+  `tree-sticky-mask.js`'s MutationObserver + 2s polling. Compile 0 errors, tree
+  browser suite 78/78, hooks ON. Review verified `rerender()` can't move the height
+  (same state object; real height changes arrive via onDidChangeContentHeight).
+  Noted, not fixed (pre-existing upstream): sticky state is one step stale on find
+  widget open/close until the next scroll — the clip stays consistent with the
+  widget either way; clip math itself proven paddingTop-independent. No sticky unit
+  harness exists anywhere upstream — a real test = new ~60-line suite, skipped by
+  brief's escape hatch; behavior gets exercised live at the checkpoint battery.
+- [x] **S2 landed** (`9237487`, delegated; diff reviewed): style.css M3 block
+  (`.monaco-workbench.mac:not(.web) .part.sidebar`, deliberately no gate class) —
+  mask on `.monaco-list-rows` from the S1 var, inset rounded rows (sticky rows
+  inherit by specificity over tree.css), indent translateX(3px), scroll shadows off,
+  pane-header 12px; zero `!important` (specificity table verified). Plus
+  `MAC_TRANSPARENT_SURFACES` {sideBarStickyScroll.background, .shadow} forced to
+  alpha 0 via new `transparentSurfaceOnMac` — exact D10 shape, same
+  `ColorThemeData.getColor` site, both consumption paths verified (theme CSS vars +
+  per-tree overrideStyles). Compile 0, tree 78/78, theme suites 3+8 passing,
+  stylelint 0, hooks ON. Watch items: (1) upstream `styleOverrides` contrib
+  (`workbench.experimental.modernUI`, default false) would tie our pane-header
+  padding (0,6,0 vs 0,6,0, source order decides) and double-inset rows via its
+  left/right offsets if ever enabled — inert today, decide if that setting ever
+  turns on; (2) aux-bar sticky headers turn see-through (color-level force) without
+  the mask → rows ghost there exactly as in the injection era — judge at checkpoint
+  whether to extend the mask to `.part.auxiliarybar`.
+- [x] **S3 landed** (`b679985`, delegated; diff reviewed): mac-scoped
+  `height: 26px` override right after the stock toggle-replace rule in
+  searchview.css (stock `top: 0` kept → anchored+centered on the first input row;
+  (0,6,0) beats stock (0,3,0), no `!important`; the padding rule dropped per D14 —
+  dead in the daily look). Stylelint 0, hooks ON. Parity note: 26px is a literal,
+  same as the injection rule — under a non-default sidebar font size the
+  custom-font block rescales textarea height but not this; revisit only if scaled
+  sidebars ever matter. Replace-hidden state verified a no-op (widget collapses to
+  the 26px row anyway).
+- [x] **S4 landed** (`2c380fb`, delegated; diff reviewed): new
+  `browser/media/hnUiFont.css` — the 10 @font-face rules verbatim from
+  `hn-weight-shift.css` (all local(), no font files) + mac-scoped
+  `--vscode-workbench-font-family: "HN UI", -apple-system, BlinkMacSystemFont,
+  sans-serif` (tail mirrors stock mac `--monaco-font`); imported third in
+  `style.ts`. Cascade contract documented in-file: vscodium's
+  `workbench.experimental.fontFamily` still wins (inline var beats stylesheet).
+  Compile 0, stylelint 0, hooks ON. Parity note: the mac CJK `--monaco-font`
+  `:lang()` variants are shadowed by our always-set var (CJK glyphs fall through to
+  -apple-system) — same behavior as the injection era; add four `:lang()`
+  companions only if CJK UI ever matters.
+- [ ] **Checkpoint** (M2-style roles: Sebastian runs watch + judges; session drives):
+  launch skill with `TMPDIR=/tmp`; CDP battery — clip var tracks scroll/sticky height,
+  mask boundary sits under the sticky widget, row inset 8/…/7px incl. sticky rows,
+  indent-guide shift, pane-header 12px, no scroll shadows, toggle-replace 26px on the
+  first row, computed workbench font-family resolves HN UI faces, no D13-gate coupling
+  (M3 look present with stock titlebar settings too); `screencapture` shots; then
+  Sebastian's visual pass.
+- [ ] **Packaged pass** (carries M2's one-time verification): gulp build; virgin
+  profile = STOCK geometry per D13 while showing M1/D10 dressing + M3 trees/font per
+  D14; M2-seeded profile = the full 46pt bar.
+- [ ] **Acceptance**: UI pixel-identical to the injection daily look; both JS shims
+  retired. Sebastian's own follow-ups at daily-driver switch: uninstall Custom UI
+  Style + Vibrancy, apply the settings edit (M2 doc + M3 pieces: vibrancy settings,
+  `font.sansSerif`, remaining external imports, stylesheet block, sticky zero-hexes)
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 

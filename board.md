@@ -185,6 +185,17 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   changes, so the gate is live). Virgin profiles keep stock geometry + M1 window
   dressing. Window/activity-bar settings stay user-side; baking them as product
   defaults is deferred to M4. *Decided by Sebastian 2026-08-31.*
+- **D14 M3 gating & sticky bake** — M3's tree/type cosmetics ship D10-style: **macOS-native
+  always** (`.monaco-workbench.mac:not(.web)` CSS scope / `isMacintosh && isNative`), NOT
+  D13-gated — virgin profiles show stock geometry (D13) + M1/D10 dressing + M3 trees/font.
+  `sideBarStickyScroll.background` + `.shadow` **forced to alpha 0 at theme resolution**
+  (value-level, extending D10's mechanism, macOS native only) — the in-source mask +
+  transparent sticky fix a real D10 artifact (0.51 double-tint band + rows ghosting behind
+  sticky headers in today's virgin builds). The injection spec's search-view padding rule
+  (`.search-widget-container`, singular) verified DEAD in the daily VSCodium bundle (real
+  class is plural `search-widgets-container`) → dropped; only the toggle-replace anchor
+  ports (its `bottom: auto` also dead — the effective piece is `height: 26px` over stock
+  `height: 100%`). *Decided by Sebastian 2026-08-31.*
 - **D12 Chat substrate stays; ghost text recorded as M8** — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
