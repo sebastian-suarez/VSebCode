@@ -118,7 +118,14 @@ Phase B — only after the base look is approved:
   confirmed vs Settings/settings.json: the daily look alphas ONLY the four side-rail
   surfaces @ `4d` (+ overlay widgets @ `e6`) — opaque titlebar/tabs/editor/panel/statusbar
   is the target look, not a Phase B gap. Pending: Sebastian's dev-instance verdict, then
-  the packaged-app pass
+  the packaged-app pass. **Packaged-app gotcha (2026-08-31)**: the .app runs its own fresh
+  profile at `~/Library/Application Support/Code - OSS` (dev uses `code-oss-dev`) — with no
+  settings there, ALL surfaces paint opaque by design, so "no transparency" in a virgin
+  packaged app is expected, not a build defect. Bundle verified to contain all five M1
+  commits: `hiddenInset`/`under-window`/`trafficLightPosition`/`#00000000` in
+  `Resources/app/out/main.js`, root-transparency selectors + statusbar drag in
+  `out/vs/workbench/workbench.desktop.main.css`. Seed the four hexes in that profile to
+  judge the look
 
 ## M7 — Copilot leftovers sweep (unblocked; independent of M1)
 
