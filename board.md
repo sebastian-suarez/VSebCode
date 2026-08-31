@@ -163,6 +163,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   2026-08-31 (Sebastian) after the first implementation left sidebar bodies opaque.* Supersedes Phase B's
   "per-part translucent hexes stay user-side". Editor/panel/statusbar stay pinned opaque
   per D9. *Decided by Sebastian 2026-08-31.*
+- **D13 M2 geometry gating** — the baked 46pt layout applies CONDITIONALLY: macOS native
+  AND the custom titlebar row hidden (Sebastian's daily `window.titleBarStyle: "native"`
+  + `customTitleBarVisibility: "never"`; the workbench re-layouts on these config
+  changes, so the gate is live). Virgin profiles keep stock geometry + M1 window
+  dressing. Window/activity-bar settings stay user-side; baking them as product
+  defaults is deferred to M4. *Decided by Sebastian 2026-08-31.*
 - **D12 Chat substrate stays; ghost text recorded as M8** — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant

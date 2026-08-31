@@ -251,6 +251,48 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
   (sidebar source-list rows, sticky mask, indent guides, scroll shadow, pane-header,
   search view — the block mixes M2 and M3 material); layout correct at zoom 0 / ±1 / ±2
 
+### M2 checkpoint plan (written 2026-08-31; primary checkpoint after slice 3, quick
+sanity peek after slice 2 optional)
+
+Roles per D7: Sebastian runs watch + judges; the session drives launch/CDP/screenshots.
+
+1. **Sebastian**: from `vscode/`, `npm run watch` → wait for "Finished compilation"
+   (CSS/TS must reach `out/` — the launcher only compiles when `out/` is missing; if
+   `out/` seems stale: `ps aux | grep build/next`, no process = transpile lane died).
+2. **Session**: launch via the launch skill
+   (`vscode/.claude/skills/launch/scripts/launch.sh`, prints JSON pid/ports/runDir).
+3. **Session**: seed the throwaway profile's `User/settings.json` with the M2 kit, then
+   FULL relaunch (same runDir) — `window.titleBarStyle` is read at window creation, a
+   renderer reload is not enough:
+   `{ "window.titleBarStyle": "native", "window.customTitleBarVisibility": "never",
+   "workbench.activityBar.location": "top", "workbench.colorTheme": "Dark+" }`
+   (D13: without the first two the gate class must stay OFF and geometry stock — that
+   itself is a checkpoint assertion.)
+4. **Session, over CDP** (structure only — CDP cannot see vibrancy):
+   - gate class present on `.monaco-workbench`; `--zoom-factor` var == real zoom
+   - tab row height ≈ 46 CSS px at zoom 0; `--editor-group-tab-height` follows
+   - sidebar composite header ≈ 46; title caption row = 24; sidebar content bottom
+     flush with statusbar top (46 + 24 = 70)
+   - zoom cycle via `workbench.action.zoomIn/Out` to +1/+2/−1/−2: each level, CSS px
+     heights = 46 / zoomFactor (physical 46pt constant)
+   - gate flip: set `customTitleBarVisibility: "auto"` in the seeded settings → class
+     drops + stock geometry returns live; revert to "never" (a `titleBarStyle` flip
+     needs a relaunch — out of scope for the live check)
+5. **Session**: `screencapture` shots (compositor-level, captures vibrancy — CDP shots
+   cannot): zoom 0 + one zoomed level, with a busy window/wallpaper behind the app so
+   translucency and the 46pt bar read against something.
+6. **Sebastian, visual pass** (the real acceptance): lights vertically centered in the
+   46pt bar; tab text sits right in the full-height tabs; title caption row reads as a
+   slim 24px band; nothing double-painted; zoom levels feel identical physically.
+7. **Cleanup**: kill pid, `rm -rf` runDir; Sebastian stops the watch when done.
+
+Expected-rough per stage (do NOT fail the checkpoint on these): after slice 2 — view
+switcher pills unstyled (slice 3), tab text ~1px low (slice 4), breadcrumbs still 22px
+(slice 5), no drag surfaces beyond statusbar (slice 6), traffic-light left inset in
+the header missing (slice 3). Packaged-app pass: once at M2 close, not per slice
+(gulp build + virgin profile must show STOCK layout per D13 + seeded profile shows
+the bar).
+
 ## M3 — Tree & type polish (kills `tree-sticky-mask.js`; both extensions uninstalled)
 
 - [ ] Sticky-scroll mask inside the tree widget (`src/vs/base/browser/ui/tree/`)
