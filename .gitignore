@@ -4,3 +4,6 @@
 # macOS Finder droppings
 .DS_Store
 ._*
+
+# Obsidian workspace state (local-only)
+.obsidian/
