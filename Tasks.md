@@ -298,9 +298,15 @@ Post-gate follow-ups (approved 2026-08-31 with D11 — landed same day):
   Caveat attribution RESOLVED (stale injection prose from the bottom-band era): the
   native ~45.5pt strip covers header+tabs (inert-but-kept for y ≤ 12 rollback); the LIVE
   CSS drag surfaces are the 24px caption row + statusbar — verify by hand at the pass
-- [ ] **Acceptance**: `custom-ui-style.stylesheet` block reduced to M3-only leftovers
-  (sidebar source-list rows, sticky mask, indent guides, scroll shadow, pane-header,
-  search view — the block mixes M2 and M3 material); layout correct at zoom 0 / ±1 / ±2
+- [x] **Acceptance — M2 CLOSED 2026-08-31**: dev-instance visual pass accepted by
+  Sebastian (Dark 2026 seeded; structural battery all-green: 46/24/70 exact, zoom
+  0/±1/±2 tracks 46 physical pt with caption constant 24, gate flips live both ways,
+  nudge −1px, breadcrumbs 25+1 hairline with title total 72, drag map as designed,
+  nosidebar clearance 94px). Remaining tails, owned as follows: the settings.json
+  reduction is **Sebastian's to apply when he switches daily driving** — exact edit in
+  [settings-m2-reduction.md](settings-m2-reduction.md); the one-time packaged-build
+  verification **rides with M3's packaged pass** (virgin profile must show STOCK
+  layout per D13; seeded profile the full bar)
 
 ### M2 checkpoint plan (written 2026-08-31; primary checkpoint after slice 3, quick
 sanity peek after slice 2 optional)
@@ -400,6 +406,10 @@ data-migration tasks. All changes are commits to `product.json` and resources in
 
 ## Settings repo follow-up (after M1–M3)
 
+- [ ] **M2 slice available now** (Sebastian applies, at daily-driver switch):
+  [settings-m2-reduction.md](settings-m2-reduction.md) — drops the electron block,
+  the zoom shim import, all M2 stylesheet material + the D10-superseded side-rail
+  hexes; keeps M3-pending pieces
 - [ ] Strip the title-bar hack block + `custom-ui-style.external.imports` from
   `settings.json`; tag the last injection-era commit first
 - [ ] Retire `zoom-css-vars.js` / `tree-sticky-mask.js` / `hn-weight-shift.css` from the

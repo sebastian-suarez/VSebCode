@@ -14,22 +14,18 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M2 — Workbench layout in source** (in progress since 2026-08-31): 46pt bar,
-  full-height tabs, sidebar-header view switcher, breadcrumbs row — kills
-  `zoom-css-vars.js`. UNGATED: pre-M2 hygiene fix landed (`64b030dc`) and the M7 tail is
-  closed (`4553778`); post-gate follow-ups landed (`59c5366`, `4efaa11`); layer pocket
-  resolved by rewrite (`166727b`/`f84e5e9`/`913e32d`) — hygiene 874 → 0, hooks ON
-  everywhere. M2 slices 1–3 LANDED + gate refinements (`7f3a2be` zoom/gate infra,
-  `ef54f60` 46pt bar, `e24dd1b` config-gate + header-conditioned caption, `17f5378`
-  view-switcher pills; all diffs reviewed, pushed). **NEXT: the dev-instance
-  checkpoint** (plan + watch-list in Tasks.md — Sebastian starts `npm run watch`,
-  session drives launch/CDP/screenshots, Sebastian judges). Then slices 4–6 (tab
-  nudge, breadcrumbs 25px, drag regions + variants)
+- **M3 — Tree & type polish** (next session): sticky-header mask in the tree widget,
+  source-list rows, HN UI font — retires `tree-sticky-mask.js` +
+  `hn-weight-shift.css`, uninstalls both extensions. Source spec: the M3-only
+  leftovers in Settings/settings.json (see settings-m2-reduction.md for exactly which
+  pieces remain). M3's packaged pass also carries M2's one-time packaged
+  verification (virgin profile = stock layout per D13)
 
 ## Next
 
-- **M3 — Tree & type polish**: sticky-header mask, source-list rows, HN UI font — both
-  extensions uninstalled
+- **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3).
+  Candidate rider (Sebastian 2026-08-31, undecided): Dark 2026 as the product default
+  theme
 
 ## Later
 - **M8 — Claude ghost text**: inline completions backed by Sebastian's Claude
@@ -45,6 +41,21 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **M2 complete — workbench layout in source** (six slices + two gate
+  refinements, all delegated, diff-reviewed, hooks ON; pins `a292612`→`b0c05c1`):
+  `7f3a2be` zoom/gate infra (`InlineTitleBarLayout`, `--zoom-factor`, D13 gate class),
+  `ef54f60` 46pt tab row + sidebar header 46/zoom with fixed 24px caption (D11; the
+  70px site was `PartLayout.HEADER/TITLE_HEIGHT`), `e24dd1b` config-semantics gate
+  (`isCustomTitleBarDisabled`) + caption keyed off `Part.hasHeaderArea`, `17f5378`
+  view-switcher pills (34×28/20px, JS width math via `getCompositeBarPadding`),
+  `1a7b14c` −1px tab-text lift, `8c35fbd` honest 25px breadcrumbs row, `2811166` drag
+  surfaces + nosidebar clearance (Sebastian's live find at the checkpoint) + banner.
+  Acceptance: CDP structural battery all-green at zoom 0/±1/±2, gate flips live both
+  ways, Dark 2026 composing with D10 alpha; Sebastian's dev-instance visual pass
+  accepted. `zoom-css-vars.js` superseded. Tails: settings.json reduction = Sebastian
+  applies at daily-driver switch (settings-m2-reduction.md); packaged verification
+  rides with M3. Checkpoint learnings recorded (launch skill needs `TMPDIR=/tmp`;
+  drag-caveat attribution resolved: live surfaces = caption row + statusbar)
 - 2026-08-31 — **Layer pocket resolved — hygiene arc complete (874 → 0, hooks ON
   everywhere)** (delegated; diffs reviewed): `166727b` workbench-layer rewrite — 8
   base/editor files byte-identical to pre-patch upstream again, their 369 vendored
