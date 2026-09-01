@@ -53,18 +53,20 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   (2) which-key → (3) flash jumps → (4) oil.nvim-style buffer file-ops;
   trouble list + harpoon revisit stay candidates, not green-lit (harpoon
   excluded from view 1 by choice). One page + own artifact URL per view from
-  here on. **View 2 (telescope) BUILT + PUBLISHED, v1 (2026-09-01)** →
+  here on. **View 2 (telescope) APPROVED at v1 (Sebastian, 2026-09-01 —
+  all 5 flags approved as mocked; the session's cursor-row note not taken
+  up, stays as mocked)** →
   https://claude.ai/code/artifact/6eedd738-db38-4d42-8745-ca0ed2c936cc
-  (`m10-nvim-telescope.html` at the umbrella root, untracked until
-  approved; label `telescope-v1`): find_files in the shipped picker
-  vocabulary over the approved v3 scene — 920×405 prompt-bottom horizontal
-  panel, real 184/8196 fuzzy corpus with true greedy highlights, byte-real
-  `titlebarPart.ts:90-107` preview @ 21px, lualine INSERT handoff.
-  Authored per the D19 exception (Fable-max agent; artifact-design +
-  macos-design + design-philosophy); session review GREEN — paths, counts,
-  highlight positions, geometry arithmetic and all 9 new theme colors
-  re-verified independently. PENDING Sebastian's flag round (5 flags + 1
-  session note, list in Tasks § M10) + whole-view verdict.
+  (`m10-nvim-telescope.html`, committed on approval; same path = same
+  URL): find_files in the shipped picker vocabulary over the v3 scene —
+  920×405 prompt-bottom horizontal panel @ 0.90 coat, no backdrop dim,
+  lualine INSERT handoff, real 184/8196 fuzzy corpus, byte-real
+  `titlebarPart.ts:90-107` preview @ 21px; verdicts durable as § D19
+  amendments round 2 (the overlay vocabulary is now the M10 panel
+  language). **View 3 (which-key) IN PROGRESS**: `m10-nvim-whichkey.html`
+  (untracked until approved), same D19 pipeline over the v3 NORMAL
+  moment — the LEADER MAP drawn is itself the central design proposal
+  for the flag round; review/publish pending.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -464,6 +466,23 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   horizontal padding — generic, so explorer/search/git all inherit; combined
   with the M3 8px row inset, rows land 16px from the rail edges and
   header/labels/footer share one text column.
+- **D19 amendments round 2 (view-2 telescope verdicts — Sebastian 2026-09-01,
+  all five flags approved as mocked)**: (1) finder layout = telescope
+  horizontal, prompt at the BOTTOM, descending sort — best match adjacent to
+  the prompt; (2) the finder is a window-centered 920px panel on the
+  0.90-alpha overlay coat (quickInput.background) — at implementation this
+  REPLACES stock's 600px opaque top-drop quick open; (3) overlays do NOT dim
+  the world behind them; (4) focus handoff: while a prompt owns focus the
+  lualine block flips to INSERT (green, editorGutter.addedBackground-class
+  tint approved) and the editor loses its block cursor (one cursor total —
+  the prompt beam), while Ln/Col + scroll% keep reporting the background
+  editor; (5) picker/panel rows wear the M3 inset-row cosmetics (22px, 7px
+  radius), query/keys render mono vs UI-font rows, label-OR-path match
+  highlighting, read-only previews show absolute line numbers and no
+  whitespace glyphs. The overlay vocabulary (quickInput*/pickerGroup tokens,
+  radius 12, shadow-xl, #202122 @ 0.90) is the M10 panel language from here
+  on. Session's cursor-row note (explorer keyboard-cursor row keeps its
+  active tint under finder focus) not taken up — stays as mocked.
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
