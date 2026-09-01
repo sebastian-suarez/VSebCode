@@ -848,12 +848,14 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   findings + M10 A/B recorded in the board M11 entry. `pipeline.sh` re-runs
   the slice/key/trace steps; tools installed: imagemagick + potrace (brew),
   vtracer 0.6.5 (cargo). Dir stays untracked until the gate ruling
-- [ ] **Sebastian's style checkpoint on the pilot** — the gate for all mass
-  work; session recommends: NBP sheet = locked style bible, production SVGs
-  hand-authored in the M10 language with per-icon optical sizing (evidence:
-  checkpoint §1 A/B + §4 true-16px grid)
-- [ ] Mass generation of the core tier (grid-sheet batches) + long-tail fallback
-  mapping to category generics
+- [x] **Gate RULED 2026-09-01** — both session recommendations accepted
+  ("use your recommendations"; D20 amendment): style bible locked,
+  production = hand-authored SVGs in the M10 language
+- [ ] Batched hand-authoring of the production set (~185 core + ~10 category
+  generics; ~24/batch by family; contact-sheet review gate per batch;
+  spec + letter-path toolkit ride with batch 1) — batch 1 IN FLIGHT
+  2026-09-01 (`m11-icons/production/`)
+- [ ] Icon-theme JSON assembly from core-tier matchers + generics fallback map
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)
 - [ ] Acceptance: virgin build boots with the VSebCode icon set as default

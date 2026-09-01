@@ -96,7 +96,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   the 7 marginals. SESSION RECOMMENDATION at the gate: lock NBP sheet B as
   the STYLE BIBLE, HAND-AUTHOR the production SVGs in the M10 language with
   per-icon optical sizing (raster→trace rejected on 16px + file-weight
-  evidence). GATE: Sebastian's verdict PENDING — mass work holds.
+  evidence). **GATE RULED 2026-09-01 — both recommendations ACCEPTED**
+  ("use your recommendations"; D20 amendment): style signed off, NBP sheet B
+  locked as style bible (markdown+css cells corrected to M10 canon),
+  production = hand-authored SVGs. **Production phase OPEN**: ~185 core
+  concepts + ~10 category generics in review-gated batches (~24/batch by
+  family; opus-coder); toolkit (Inter-Bold letter-path generator — no <text>
+  in shipped SVGs — + contact-sheet builder) rides with batch 1; then
+  icon-theme JSON assembly from core-tier matchers; then fork packaging
+  (built-in extension + default flip, D15-style).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -453,7 +461,18 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   curated core tier (~140 file + ~40 folder concepts) gets bespoke icons, the
   long tail maps to category generics (as the source themes themselves do);
   PILOT CHECKPOINT (16 icons end-to-end incl. 16px gate) before any mass
-  generation.. Design-intent deltas vs today's
+  generation.
+- **D20 amendment — gate ruling** (Sebastian 2026-09-01: "use your
+  recommendations", both questions): style SIGNED OFF with the pilot's
+  palette transfer; NBP sheet B = locked STYLE BIBLE, its markdown + css
+  cells corrected to the approved M10 designs before any reuse; production
+  route = HAND-AUTHORED SVGs in the M10 language — per-icon optical sizing
+  (never uniform bounding boxes), 16px pixel-grid discipline, flat fills
+  only, letters as PATHS (Inter Bold, SIL OFL, generated via opentype
+  tooling — no <text> nodes and no font-family in shipped SVGs), <2KB
+  target / 4KB hard cap per icon, the M10 six carried as canon (letterforms
+  re-rendered as paths, geometry/hexes untouched). NBP retained for
+  ideation only, never shipped assets.. Design-intent deltas vs today's
   shipped product, to be baked at M10 implementation: **caption row** = dim
   foreground (#8C8C8C-class) + true row-centering (also settles the M2
   watch-list ~12px off-center quirk — judged now); **full-height sidebar** —
