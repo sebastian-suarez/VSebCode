@@ -471,7 +471,29 @@ commit each, diff-reviewed:
   sideBar/titleBar at rgba(…,0.3). Noted for approval, not done:
   `COLOR_THEME_LIGHT_INITIAL_COLORS` has the identical staleness vs Light 2026
   (dormant while dark is the sole default; mechanical re-run if wanted).
-- [ ] **Checkpoint round 2** (M2-style roles: Sebastian runs watch + judges; session drives):
+- [x] **Checkpoint round 2 — battery green, visual verdict: 3 changes** (2026-08-31).
+  Compile saga resolved (two false "finished" = the watch's typecheck message; real
+  `npm run compile` verified by marker-grep in out/ before launching — adopt that as
+  standard practice). Virgin-profile battery all-green: D15 out of the box (gate ON,
+  46/24 exact, pills 20px safe-center, Dark 2026 #121314, indent-16 guides always,
+  HN UI), F1 tab fully visible (title 46 on Welcome, breadcrumbs correctly absent),
+  F4 accordion transparent, F5 caption 16px, F6 tint+hairline+fade live, sticky clip
+  exact under live scroll (1px probe delta = the hairline border, covered by itself),
+  search toggle 26 centered, suites 78/3/8 + full node sweep 10896 passing (8
+  pre-existing failures in the vscodium patch's own font.test.js — untouched since
+  D8 import, first-ever run of that suite; decision pending). Sheet probe
+  inconclusive visually (modern macOS Open panel presentation) — code path proven.
+  Sebastian's verdict → round-2 fixes: (1) banner steals the lights row → banner
+  moves to the BOTTOM (above statusbar, mac-native, grid change + CSS inset
+  removal); (2) sticky 0.15 tint REJECTED on sight → fully transparent, hairline +
+  fade only (row plates die with it); (3) D16: AI nuked — interim
+  `chat.disableAIFeatures: true` default now, full excision = M9 next session.
+- [ ] **Fix round 2 (delegated, two commits)**: banner-to-bottom + sticky alpha-0
+  revert; interim AI-off default. Then: Sebastian compiles (verify markers in out/
+  FIRST), relaunch virgin, re-verify (banner-at-bottom geometry with trust banner
+  visible, pills stay on the lights line, toasts/quick-input sanity, sticky bare,
+  no chat view), his final judge.
+- [ ] **Checkpoint round 3 / close** (M2-style roles: Sebastian runs watch + judges; session drives):
   launch skill with `TMPDIR=/tmp`; CDP battery — clip var tracks scroll/sticky height,
   mask boundary sits under the sticky widget, row inset 8/…/7px incl. sticky rows,
   indent-guide shift, pane-header 12px, no scroll shadows, toggle-replace 26px on the

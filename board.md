@@ -23,9 +23,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Next
 
+- **M9 — AI excision (D16, next session)**: dependency survey (who imports
+  contrib/chat, platform/agentHost, vs/sessions), then staged removal — code, wiring,
+  deps, tests; deletes the interim `chat.disableAIFeatures` default along with the
+  setting
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3).
-  Candidate rider (Sebastian 2026-08-31, undecided): Dark 2026 as the product default
-  theme
+  Theme rider resolved: Dark 2026 became the product default via D15
 
 ## Later
 - **M8 — Claude ghost text**: inline completions backed by Sebastian's Claude
@@ -218,7 +221,26 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   caption/pane action codicons restored to stock 16px glyphs via mac-scoped override
   (the vscodium patch's 11px scaling is daily-parity but reads under-sized next to the
   20px pills; vendored file stays pristine).
-- **D12 Chat substrate stays; ghost text recorded as M8** — the remaining chat surface
+- **D16 AI excision — NUKE, supersedes D12** (Sebastian 2026-08-31, M3 checkpoint round
+  2: "right now I don't want anything related with AI"): `contrib/chat`,
+  `platform/agentHost` (incl. the `node/claude` Agent-SDK glue), `src/vs/sessions`, and
+  all AI/chat wiring (views, commands, menus, settings, deps `@vscode/copilot-api` +
+  `@anthropic-ai/*` typings shim, `chatDisabled` smoke) get REMOVED — own next-session
+  phase (M9) with a dependency survey first (chat services have reverse deps across
+  contribs). Interim, landing in M3's round-2 fixes: `chat.disableAIFeatures`
+  defaults `true` product-side so the chat window is gone from the UI today; that
+  default dies with the setting at M9. M8 (Claude ghost text) is REshaped: no longer
+  rides dormant in-tree substrate — future design decides its own vehicle. M6 rebase
+  burden drops with the excised surface.
+- **D14 amendments round 2 (Sebastian 2026-08-31)**: sticky stack reverts to **fully
+  transparent** (alpha 0 — the 0.15 tint of round 1 rejected on sight; hairline +
+  140ms fade carry the differentiation alone; the double-painted sticky-row plates
+  die with it). **Banner moves to the BOTTOM of the workbench** (above the statusbar,
+  macOS native): any top banner steals the traffic-lights row and shoves the pills
+  off the lights line — the lights are immovable, so the strip above must always be
+  the sidebar header/tabs; banner CSS drops the traffic-light inset, keeps drag +
+  no-drag holes.
+- **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
   without a provider, no M6 rebase burden, and the designated substrate for M8 ghost
