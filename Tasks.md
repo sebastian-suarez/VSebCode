@@ -866,10 +866,16 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
 - [x] **Gate RULED 2026-09-01** — both session recommendations accepted
   ("use your recommendations"; D20 amendment): style bible locked,
   production = hand-authored SVGs in the M10 language
-- [ ] Batched hand-authoring of the production set (~185 core + ~10 category
-  generics; ~24/batch by family; contact-sheet review gate per batch;
-  spec + letter-path toolkit ride with batch 1) — batch 1 IN FLIGHT
-  2026-09-01 (`m11-icons/production/`)
+- [x] Batch 1 LANDED + review-green 2026-09-01 (`m11-icons/production/`):
+  spec.md + toolkit (letterpath/contact/validate + Inter Bold OFL) + 26
+  icons; canon drift measured per-pixel (3 bit-identical, 3
+  letterform-AA-only); validator 26/26; centring laws in spec. PENDING
+  Sebastian (non-blocking): yaml off-brand plum vs npm-twin brand red
+  (spec.md §9)
+- [ ] Batches 2-6 (files ranks 25-145 + generics + default file) + folders
+  batch (38 × closed/open, emblem template) — 6 agents IN FLIGHT in
+  parallel 2026-09-01; per-batch contact-sheet review, then cross-set
+  hue/monogram audit at assembly
 - [ ] Icon-theme JSON assembly from core-tier matchers + generics fallback map
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)

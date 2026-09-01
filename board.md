@@ -111,7 +111,23 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   family; opus-coder); toolkit (Inter-Bold letter-path generator — no <text>
   in shipped SVGs — + contact-sheet builder) rides with batch 1; then
   icon-theme JSON assembly from core-tier matchers; then fork packaging
-  (built-in extension + default flip, D15-style).
+  (built-in extension + default flip, D15-style). **Batch 1 LANDED +
+  review-green 2026-09-01** (26 icons: files ranks 1-24 + the 2 canon
+  folders; toolkit built): canon fidelity MEASURED per-pixel — folder /
+  folder-open / markdown bit-identical at 16/32/64, TS/css/npm differ only
+  on Inter-vs-SF letterform antialiasing (grid-searched fit, principled
+  optimum across all three sizes); validator 26/26, 16.5KB total (avg 634B,
+  max 1.4KB); two centring laws derived from the canon into spec.md (badge
+  letters sit low at ~41% below-baseline share; silhouette/glyph letters
+  cap-centred). ONE pending Sebastian yes/no (non-blocking, spec.md §9):
+  yaml shipped OFF-BRAND muted plum #7E6086 — brand red #CB171E is a
+  near-twin of canon npm red in the same repo roots; one-line revert if
+  vetoed. Noted weak pair (kept): reactts/reactjs as TSX/JSX cyan badges.
+  **Batches 2-6 (files ranks 25-145 + category generics + default file) and
+  the folders batch (38 concepts × closed+open, canon-base + emblem
+  template) IN FLIGHT in parallel, 6 opus-coder agents**; per-batch
+  contact-sheet review gates, then cross-set hue/monogram audit at
+  assembly.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
