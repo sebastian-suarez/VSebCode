@@ -37,6 +37,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-09-01 — **Agent-skills install audited + vendored (D18)**: 20-skill install
+  (8 microsoft/vscode + 12 emilkowalski/skills) audited against `8e8353bf` —
+  lock-tracked content verified byte-identical to live upstream main (gh api),
+  every post-baseline delta attributable to VS Code team PRs, zero
+  malicious/suspicious instructions. Kept upstream's new `!important`
+  prohibition; rewrote the three font-token sections to fork reality (delegated;
+  diff reviewed); removed `validate-ui-scenario`; committed umbrella-side —
+  submodules untouched, no pin change.
 - 2026-09-01 — **M9 complete — AI excision (D16/D17)**: 16 delegated,
   diff-reviewed commits on `vsebcode`, hooks ON (`988c87fc3ad`→`b3c3e98a4c7`
   code + `4df1eb7570c` lockfiles; pins `51dfa21`→`6d8ea15`+close): **3,547
@@ -304,6 +312,20 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   recorded in m9-excision-plan.md §4 (incl. the ~100 kept-file strip sites as new,
   mostly trivial, M6 conflict surface — traded against the deleted trees no longer
   conflicting at all).
+- **D18 Agent skills — umbrella-only, audited install** (Sebastian 2026-09-01): agent
+  skills live in the UMBRELLA repo alone (`.agents/skills/` + `.claude/skills/`
+  symlinks + `skills-lock.json`, committed) — `vscode/` stays AI-sterile: never add
+  skill/agent files there (its surviving non-AI upstream `.github/skills/` stay as
+  M9 left them). Installed copies get fork-accuracy edits where upstream drifts
+  from the fork — first case: upstream's generic `--vscode-fontSize/fontWeight-*`
+  ramp postdates base 1.126 (and M9 deleted the agents ramp), so
+  ux-css-layout / ux-theming / design-philosophy were rewritten to the fork's real
+  tokens (`--vscode-bodyFontSize`(-small/-xSmall) + literal 400/600 weights, M9
+  wording). `validate-ui-scenario` REJECTED (its `test/scenario/` runner absent
+  from the fork; references M9-deleted `test/mcp`). `hygiene` = manual vendored
+  copy of the fork's own file (upstream deleted the skill) — deliberately OUTSIDE
+  the lock, the skills CLI doesn't manage it. The 12 emilkowalski/skills entries
+  installed same day, unaudited (no baseline; audit on request).
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
