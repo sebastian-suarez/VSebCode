@@ -798,7 +798,11 @@ and the `2026-dark.json` include chain for every color.
   centering (settles the M2 watch-list ~12px off-center quirk); sidebar
   view-body padding 6px top / 8px horizontal on the pane/composite CONTENT
   container — generic across views (explorer/search/git), stacking on the
-  M3 8px row inset
+  M3 8px row inset; **tab row → stock (D19 r4)**: REVERT M2 slice-2's gated
+  tab-height surgery (`tabHeight` getter 46/zoom + listeners) and the
+  slice-4 −1px text nudge — keep the nosidebar lights-clearance padding and
+  the 25px breadcrumbs constant; the M3-deferred zoom-overflow fix dies
+  with the revert (stock tabs scale normally)
 - [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
   overlay → which-key → flash jumps → oil.nvim-style buffer file-ops (trouble
   diagnostics list · harpoon revisit = candidates, not green-lit)

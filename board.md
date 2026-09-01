@@ -77,7 +77,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   pipeline over the v3 NORMAL moment — labels on REAL pattern matches
   in the visible editor text; the flash dim-vs-no-dim call is the
   centerpiece flag; delegated-round protocol applies (session rules,
-  plain veto window to Sebastian).
+  plain veto window to Sebastian). **Geometry revision r4 same day**
+  (Sebastian: tabs "too big"): tab row → stock 35px, windows → 1280×859;
+  views 1–3 patched in-session + republished to their same URLs (view 1
+  via the url-update flow, favicon ⌨️ per the peer session), flash gets
+  the same patch at review — durable in § D19 amendments round 4.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -529,6 +533,23 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   radius 12, shadow-xl, #202122 @ 0.90) is the M10 panel language from here
   on. Session's cursor-row note (explorer keyboard-cursor row keeps its
   active tint under finder focus) not taken up — stays as mocked.
+- **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
+  "the tabs are too big"; two options offered — combine tabs+breadcrumbs
+  inside the 46 band, or drop the tab/top-bar alignment and take stock
+  tabs; session picked STOCK per the delegated-round protocol)**: the
+  editor column's tab row returns to the default 35px height; the 46pt
+  physical band remains ONLY as the rail header (lights + pills; 24px
+  caption unchanged); the honest 25px breadcrumbs row stays. Rationale:
+  the full-height rail (round 1) already retired the one-band-across-the-
+  seam story; stock tabs are a code DELETION at implementation (revert M2
+  slice-2's gated tab-height surgery + the slice-4 −1px nudge; KEEP the
+  nosidebar lights-clearance padding); and the M3-deferred zoom-overflow
+  bug dies with the fixed-physical tab height. Mockup set recalibrated:
+  window 1280×859 exact-fit (35 tabs + 25 crumbs + 777 editor + 22
+  statusbar), telescope panel top 166→163, which-key top 757→746; all
+  views updated + republished to their URLs, renders re-verified. Veto
+  window open: option A (compact tabs+crumbs combined inside the 46 band)
+  remains available if stock reads wrong.
 - **D19 amendments round 3 (view-3 which-key verdicts — round DELEGATED by
   Sebastian 2026-09-01, "take the decisions that fit the best"; session
   ruled, all as mocked)**: (1) the FIRST LEADER MAP is locked at prototype

@@ -3,7 +3,8 @@
 /* ================================================================
    VSebCode M10 — view 3: which-key-style leader panel over the
    approved first-view scene (Dark 2026, zoom 0). Chrome constants
-   stay the shipped 46 / 86 / 24 / 25 / 22 / 300; the panel wears
+   stay the shipped 46 rail header / 86 / 24 / 25 / 22 / 300 with
+   tabs at the stock 35px height (D19 r4); the panel wears
    the approved M10 panel vocabulary (view-2 verdicts: quickInput
    coat @ 0.90, radius 12, shadow-xl, no backdrop dim). The leader
    map drawn is the PROPOSAL: 3 leaves + 5 groups, every entry tied
@@ -58,7 +59,7 @@ body { margin: 0; background: #0c0d12; }
 .window {
   position: relative;
   width: 1280px;
-  height: 870px;   /* 46 tabs + 25 breadcrumbs (24+1px hairline) + 777 editor (37 × 21px) + 22 statusbar */
+  height: 859px;   /* 35 tabs (stock height, D19 r4) + 25 breadcrumbs (24+1px hairline) + 777 editor (37 × 21px) + 22 statusbar */
   margin: 0 auto;
   border-radius: 26px;             /* Tahoe titled-window rounding */
   overflow: hidden;
@@ -167,8 +168,8 @@ body { margin: 0; background: #0c0d12; }
    ================================================================= */
 .main { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 
-/* -- 46px full-height tab row ------------------------------------ */
-.tabsrow { flex: 0 0 46px; background: #191A1B; display: flex; align-items: stretch; min-width: 0; }
+/* -- 35px stock-height tab row (D19 r4) -------------------------- */
+.tabsrow { flex: 0 0 35px; background: #191A1B; display: flex; align-items: stretch; min-width: 0; }
 .tab {
   position: relative;
   display: flex; align-items: center;
@@ -297,7 +298,7 @@ body { margin: 0; background: #0c0d12; }
    the statusbar stays v3-verbatim (honest absence there).
    ================================================================= */
 .wk {
-  position: absolute; left: 308px; top: 757px;   /* 300 rail + 8; 870 − 22 statusbar − 8 gap − 83 */
+  position: absolute; left: 308px; top: 746px;   /* 300 rail + 8; 859 − 22 statusbar − 8 gap − 83 */
   width: 964px; height: 83px; box-sizing: border-box;   /* 980 editor column − 2×8 */
   border: 1px solid #333536;                 /* quickInput.border */
   border-radius: 12px;                       /* cornerRadius-xLarge — the M10 panel tier */
