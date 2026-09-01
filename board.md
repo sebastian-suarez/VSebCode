@@ -63,12 +63,30 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   icon theme, shipped as the product DEFAULT. Top-3 source themes fixed by
   install count (marketplace gallery API 2026-09-01): Material Icon Theme
   35.4M · vscode-icons 24.5M (Sebastian's favorite — naming reference) ·
-  VSCode Great Icons 2.3M. Phase 1 IN FLIGHT, two delegated opus-coder agents
-  writing `m11-icons/`: (a) inventory/ — merged concept list + curated core
-  tier (~140 file + ~40 folder; long tail → category generics); (b) pilot/ —
-  16-icon NBP grid sheet through the full pipeline (slice → key → vectorize →
-  16px legibility sheet). GATE: Sebastian's style checkpoint on the pilot
-  BEFORE mass generation.
+  VSCode Great Icons 2.3M. Phase 1 COMPLETE 2026-09-01: (a) **INVENTORY
+  LANDED** — 1534 merged concepts (1170 file / 364 folder; 189 in all three
+  sources, 344 in two) parsed from pinned upstream commits (Material's
+  filename DSL reimplemented, vsicons glob products expanded, 131 disabled
+  entries excluded), core tier 145 file + 40 folder ranked, 269 sparse-honest
+  brand colors, 54 core matcher collisions resolved (33 hand-pinned), long
+  tail annotated `generic-<category>`; (b) **PILOT LANDED
+  2026-09-01** → checkpoint artifact
+  https://claude.ai/code/artifact/b486caca-e065-4a3b-a997-c87921d05461
+  (M10 A/B, size ladders, true-16px pixel grid, both sheets, master prompt,
+  re-runnable pipeline.sh). Findings: agy invocation proven — headless
+  REQUIRES `--dangerously-skip-permissions` (image tool wants a `command`
+  permission print mode can't prompt; used scoped to generation runs); NBP
+  capped the sheet at 1024² (probe reached 2048² — per-request negotiation);
+  style drift across runs LOW; "flat" disobeyed at pixel level (12k+
+  colors/badge → posterize-5 before vtracer; traced SVGs 11–76KB vs <2KB
+  hand-authored); 16px verdict 8 survive / 7 marginal / 1 mush (rust). A/B
+  vs the approved M10 icons: uniform bounding box ≠ optical weight (M10 pads
+  per icon); the master prompt contradicted approved designs on markdown+css
+  (fix those cells before any reuse); M10 hand-authoring already solves 3 of
+  the 7 marginals. SESSION RECOMMENDATION at the gate: lock NBP sheet B as
+  the STYLE BIBLE, HAND-AUTHOR the production SVGs in the M10 language with
+  per-icon optical sizing (raster→trace rejected on 16px + file-weight
+  evidence). GATE: Sebastian's verdict PENDING — mass work holds.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

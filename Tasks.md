@@ -822,12 +822,22 @@ and the `2026-dark.json` include chain for every color.
 Own file-icon set in the M10 mockup icons' language, NBP-generated via `agy`,
 default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
 
-- [ ] Inventory: merged concept list from the top-3 themes + curated core tier
-  (`m11-icons/inventory/`) — delegated, IN FLIGHT 2026-09-01
-- [ ] Pilot: 16-icon NBP grid → slice → key → vectorize → 16px checkpoint sheet
-  (`m11-icons/pilot/`) — delegated, IN FLIGHT 2026-09-01
-- [ ] **Sebastian's style checkpoint on the pilot** — gate for mass generation
-  (also decides raster→trace vs hand-authored-SVG on the pilot's evidence)
+- [x] Inventory LANDED 2026-09-01 (`m11-icons/inventory/`, delegated;
+  session-reviewed): `merged-inventory.json` 1534 concepts,
+  `core-tier.json` 145 file + 40 folder ranked (+ 54 collision resolutions),
+  `stats.md` provenance/overlap; extraction scripts + raw upstream files kept
+  as provenance. Naming = vscode-icons with 11 audited overrides. Untracked
+  until the gate ruling
+- [x] Pilot LANDED 2026-09-01 (`m11-icons/pilot/`, delegated; session-reviewed +
+  published): 16-icon NBP sheet through the full pipeline; checkpoint page →
+  https://claude.ai/code/artifact/b486caca-e065-4a3b-a997-c87921d05461 —
+  findings + M10 A/B recorded in the board M11 entry. `pipeline.sh` re-runs
+  the slice/key/trace steps; tools installed: imagemagick + potrace (brew),
+  vtracer 0.6.5 (cargo). Dir stays untracked until the gate ruling
+- [ ] **Sebastian's style checkpoint on the pilot** — the gate for all mass
+  work; session recommends: NBP sheet = locked style bible, production SVGs
+  hand-authored in the M10 language with per-icon optical sizing (evidence:
+  checkpoint §1 A/B + §4 true-16px grid)
 - [ ] Mass generation of the core tier (grid-sheet batches) + long-tail fallback
   mapping to category generics
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
