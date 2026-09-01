@@ -769,6 +769,42 @@ the plan's S2–S12 sections.
   `b3c3e98`), `6d8ea15` (lockfile pin → `4df1eb7`), plus the close-out docs
   commit; all pushed
 
+## M10 — NeoVim keyboard UX (D19; design phase)
+
+Prototype-first: static HTML mockups of the nvim-inspired UX on the shipped design,
+one view per round, Sebastian judges each. Source of truth = `m10-nvim-prototype.html`
+(umbrella root); iterate by editing that file and re-publishing — the SAME file path
+keeps the SAME artifact URL. View 1 references: his `~/Projects/Settings/settings.json`
+(relative numbers, minimap off, Error Lens, inline blame, Liga SFMono NF, vscode-icons)
+and the `2026-dark.json` include chain for every color.
+
+- [x] First view built + published 2026-09-01 (delegated to a Fable-5-max agent per
+  the D19 exception; session diff-review + headless-render verification): activity
+  pills + neo-tree-style explorer + stock tabs/breadcrumbs + vim-dressed editor
+  (real `inlineTitleBar.ts` snippet) + lualine statusbar, Dark 2026 —
+  https://claude.ai/code/artifact/e76ac6e0-22f4-494b-8e72-6325de42466c
+- [x] Flagged calls resolved 2026-09-01 (1–3 delegated to the session, 4–5
+  Sebastian): theme-resolved tints · real 21px line-height + taller window ·
+  staged guide deleted · caption as mocked · full-height sidebar with
+  editor-scoped statusbar — verdicts + ground rules in board § D19 amendments
+- [x] Sebastian's verdict on the first view as a whole — **APPROVED 2026-09-01 at
+  v3** (verdict round + breathing-room padding applied; same artifact URL)
+- [ ] Product follow-ups for the implementation phase (accepted design intents,
+  NOT started): workbench grid surgery — full-height sidebar owning the
+  bottom-left corner + statusbar starting at the editor column's left edge
+  (stock statusbar is full-width); caption row → dim foreground + true
+  centering (settles the M2 watch-list ~12px off-center quirk); sidebar
+  view-body padding 6px top / 8px horizontal on the pane/composite CONTENT
+  container — generic across views (explorer/search/git), stacking on the
+  M3 8px row inset
+- [ ] Pick + green-light later views: telescope overlay · which-key · flash jumps ·
+  oil.nvim-style buffer file-ops · trouble diagnostics list · harpoon revisit
+- [ ] Only after mockups are accepted: scope the implementation milestones
+  (keyboard tree navigation is the first candidate — the one capability VS Code
+  genuinely lacks today)
+- Resume cold: open the artifact URL above; the html file at the umbrella root is
+  the source; `git status` should show it untracked until the view is approved
+
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 
 Baseline: the old install was fresh (settings + extensions only, re-added by hand) — no

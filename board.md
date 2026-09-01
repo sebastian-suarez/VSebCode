@@ -14,6 +14,43 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
+- **M10 — NeoVim keyboard UX — OPENED 2026-09-01, design phase (D19)**: first-view
+  prototype BUILT + published — `m10-nvim-prototype.html` (umbrella root, untracked
+  until approved) → artifact
+  https://claude.ai/code/artifact/e76ac6e0-22f4-494b-8e72-6325de42466c (private,
+  label `first-view-v1`; same file path re-publishes to the same URL). Authored per
+  the D19 exception (Fable-5-max agent; macos-design + design-philosophy +
+  artifact-design skills), session-reviewed: geometry contract (46/86/24/25+1/22,
+  300 rail, 34×28 pills @20px, lights {18,16}), single-painter rail coat
+  rgba(25,26,27,.30) + blur(52)/sat(1.9), palette resolved from the 2026-dark
+  include chain, real `inlineTitleBar.ts` content, coherent numbers (Ln 35/Col 48 =
+  the block cursor's true position; +6 ~2 −1 ↔ drawn gutter hunks; SCM badge 3 ↔ 3
+  git-flagged rows), headless-render verified, zero external refs, no attribution.
+  Flagged-call VERDICTS (Sebastian delegated 1–3 to the session, ruled 4–5
+  himself, 2026-09-01): (1) git tints = THEME-RESOLVED (modified `#e5ba7d`;
+  rule: every mockup color resolves through the 2026-dark chain); (2)
+  line-height = the REAL 21px (`fontInfo.ts:14` golden ratio 1.5 × fontSize 14
+  on mac) with a taller window — the 800px height was a tilde-spec, nothing
+  gets cut; (3) staged active-scope guide DELETED — honest absence; demo it in
+  a later view whose cursor sits inside a real block; (4) caption stays as
+  mocked (dim #8C8C8C, true-center) — M10 design intent, product change at
+  implementation; (5) NEW, Sebastian live: sidebar rail FULL HEIGHT owning the
+  bottom-left corner, statusbar starts at the editor column's left edge (the
+  NORMAL block was clipped by the corner radius; Xcode anatomy) —
+  implementation-side grid surgery recorded in Tasks § M10. Fix round LANDED
+  same day (same Fable-max agent; session re-review: render + greps green —
+  single coat, `#e5ba7d` in / `#E2C08D` out, 21px, staged guide gone, no
+  attribution/external refs); **v2 published to the same URL**, window now
+  1280×870 exact-fit (editor body 777 = 37×21; hairline lives INSIDE the 25px
+  breadcrumbs constant). Round 3 same day (Sebastian: sidebar content "too
+  close to the borders"): view-CONTAINER padding 6px top / 8px sides — rows
+  read 16px from the rail edges; VSCODE header, tree labels and the hint
+  footer align on one x20 text column; **v3 published, same URL**.
+  **APPROVED by Sebastian 2026-09-01 — first view CLOSED at v3**; prototype +
+  docs committed umbrella-side. Follow-on directive same day: complete FILE
+  ICON SET in the mockup icons' style → recorded as M11/D20. Candidate later views (each needs a green-light): telescope
+  overlay · which-key · flash jumps · oil.nvim-style buffer file-ops · trouble
+  list · harpoon revisit (excluded from view 1 by choice)
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -331,6 +368,43 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   copy of the fork's own file (upstream deleted the skill) — deliberately OUTSIDE
   the lock, the skills CLI doesn't manage it. The 12 emilkowalski/skills entries
   installed same day, unaudited (no baseline; audit on request).
+- **D19 M10 — NeoVim keyboard-first UX, prototype phase** (Sebastian 2026-09-01):
+  new milestone M10 — an IDE UX inspired by his old NeoVim rig, layered ON the
+  shipped M1–M3 design (chrome/material/geometry unchanged; palette = Dark 2026,
+  NOT an nvim colorscheme). First-view scope: (1) neo-tree-style explorer —
+  keyboard cursor row, per-row git letter glyphs + tinted filenames, devicon-style
+  file icons, keymap hint footer (`j/k · h/l · a · r · d · /`); (2) lualine-style
+  statusbar — NORMAL mode block, branch, diff counts, diagnostics, position
+  cluster; flat segments, NO powerline chevrons; (3) full vim editor dressing —
+  hybrid relative line numbers, slim gitsigns gutter bars, active indent-scope
+  guide (all three already live in the daily settings.json; Error Lens + inline
+  git blame virtual text ride along as faithful extras). EXCLUDED from view 1:
+  harpoon pins / bufferline tab restyle (revisitable). Overlay surfaces
+  (telescope, which-key, flash, oil.nvim, trouble) = candidate later views, each
+  individually green-lit. Medium: static HTML mockup pages at the umbrella root,
+  published as artifacts. Authoring exception for M10 prototypes ONLY: Fable 5
+  max or Opus 5 max allowed, session's call — the opus-coder delegation policy
+  stands everywhere else. *Decided by Sebastian 2026-09-01 (prototype-brief
+  Q&A).*
+- **D19 amendments (first-view verdicts, 2026-09-01)**: mockup ground rules set
+  by the flag round — every color THEME-RESOLVED through the 2026-dark include
+  chain (no stock-VS-Code hexes: modified tint is `#e5ba7d`, not `#E2C08D`);
+  metrics honest to the product (editor line-height = mac golden-ratio 21px @
+  fontSize 14 — grow the frame, never fudge the metric); NO staged elements (a
+  dressing feature the real editor would not draw stays absent — the scope
+  guide waits for a view whose cursor sits inside a block). Design-intent deltas vs today's
+  shipped product, to be baked at M10 implementation: **caption row** = dim
+  foreground (#8C8C8C-class) + true row-centering (also settles the M2
+  watch-list ~12px off-center quirk — judged now); **full-height sidebar** —
+  the rail owns the window's bottom-left corner and the **statusbar spans only
+  the editor column** (Sebastian, live: the NORMAL block was clipped by the
+  corner radius; Xcode's full-height source list is the reference) — stock
+  paints the statusbar full-width, so this is workbench grid surgery.
+  **Sidebar view-body padding** (round 3, Sebastian: content "too close to the
+  borders"): the pane/composite CONTENT container gets 6px top / 8px
+  horizontal padding — generic, so explorer/search/git all inherit; combined
+  with the M3 8px row inset, rows land 16px from the rail edges and
+  header/labels/footer share one text column.
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
