@@ -14,46 +14,56 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M9 — AI excision (D16/D17) — CODE COMPLETE 2026-09-01, acceptance pending**:
-  15 delegated commits `988c87fc3ad`→`b3c3e98a4c7` on `vsebcode` (**3,547 files,
-  +1,414/−806,834**), every phase diff-reviewed, hooks ON, zero new test
-  failures at every step (all build checks 0; remaining failures = the
-  pre-existing vscodium-patch font tests, `!!APP_NAME!!`/`!!ORG_NAME!!`
-  placeholder artifacts, one upstream disposable leak). Everything AI is gone:
-  the three roots + 17 more trees, extension-facing API (`vscode.{lm,chat,ai,speech}`,
-  d.ts block, 39 proposals), sessions-window machinery, Copilot
-  entitlement/policy/managed-settings + default-account stack, MCP everywhere,
-  CLI `chat`/`agent`/`--agents`, deps (`@vscode/copilot-api`,
-  `@anthropic-ai/claude-agent-sdk`, `@openai/codex`, `zod`) + typings shims,
-  smoke/automation/test-mcp harness, CI + .github AI docs; C3 folded in the two
-  approved M3 round-3 hygiene fixes. Site map + per-phase hand-offs:
-  [m9-excision-plan.md](m9-excision-plan.md); ledger in Tasks.md § M9.
-  **REMAINING, Sebastian by hand (runbook in Tasks.md § M9 acceptance)**: push
-  `vsebcode` (session's push permission-blocked), `npm i` (lockfile
-  regeneration → session commits drift), compile + virgin dev boot + packaged
-  build with absence greps, verdict; then umbrella pins + board close. NOTE:
-  no gulp packaging on any commit before `b93b80a9edd` (build entries moved
-  mid-stack)
+- **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
+  Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
+  via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
+  vscodium placeholders (UI + the 21 pre-existing build-script test failures),
+  `!!GH_REPO_PATH!!` announcements 404, icons via Nano Banana Pro (`agy` CLI)
 
 ## Next
 
-- **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3).
-  Theme rider resolved: Dark 2026 became the product default via D15
+- **M5 — Signing & updates**: Developer ID signature, updater story
 
 ## Later
 - **M8 — Claude ghost text**: inline completions backed by Sebastian's Claude
-  subscription via the Claude Code / Agent SDK glue already in `platform/agentHost`
-  (persistent host process; subscription auth rides the Claude Code login — no API-key
-  billing). Dedicated design session after M2/M3: in-core provider vs bundled
-  extension, prompted-completion design (Claude has no FIM API), latency prototype
-  first. *Recorded 2026-08-31 (D12).*
-- **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3)
-- **M5 — Signing & updates**: Developer ID signature, updater story
+  subscription (no API-key billing). RESHAPED by D16 and emptied of substrate by
+  M9: the in-tree Agent-SDK glue is gone — a future design session decides its
+  own vehicle (bundled extension is the natural candidate; the editor
+  inline-completions ENGINE was deliberately preserved through M9). Claude has
+  no FIM API — prompted-completion design + latency prototype first. *Recorded
+  2026-08-31 (D12); reshaped by D16.*
 - **M6 — Sync ritual**: rebase `vsebcode` onto the next stable tag, bump pins (see README)
 - **Settings repo cleanup**: strip the hack block from `settings.json` once M1–M3 land
 
 ## Done
 
+- 2026-09-01 — **M9 complete — AI excision (D16/D17)**: 16 delegated,
+  diff-reviewed commits on `vsebcode`, hooks ON (`988c87fc3ad`→`b3c3e98a4c7`
+  code + `4df1eb7570c` lockfiles; pins `51dfa21`→`6d8ea15`+close): **3,547
+  files, +1,414/−806,834** plus −286 lockfile lines. Survey-first per D16 (4
+  parallel agents, one session), scope ratified as D17 + C-phase verdicts; the
+  execution reordered mid-flight after a mutual-import check (kept-file strips
+  + leaf consumers first, provider trees with the roots, machinery last — the
+  full site map, hand-offs and phase ledger live in
+  [m9-excision-plan.md](m9-excision-plan.md) + Tasks.md § M9). Gone: the three
+  D16 roots + 17 more AI trees, the extension-facing AI API (namespaces, d.ts
+  block, 39 proposals; unknown manifest contribution points verified silently
+  ignored), sessions-window machinery to the last context key, Copilot
+  entitlement/policy/managed-settings + default-account stack, MCP at every
+  layer, CLI `chat`/`agent`/`--agents`, 4 npm deps + both typings shims,
+  smoke/automation/test-mcp harness, AI CI/docs; C3 folded in the two approved
+  M3 round-3 hygiene fixes (aux-bar repaint rule, dead composite-bar colors).
+  Zero new test failures at every step (stash-verified baselines; remaining
+  failures pre-date M9: vscodium font tests ×4, `!!APP_NAME!!`/`!!ORG_NAME!!`
+  placeholder artifacts, one upstream disposable leak). Notable saves during
+  review: proxy-identifier pairing (ext-host startup throw), the
+  `onboardingVariationA` module-level product assert (startup crash), live
+  notebook inlineDiff stack kept, action-widget header background restored
+  (had silently broken with the chat color), webContentExtractor eager-get
+  main-process crash avoided. Acceptance: dev boot approved; packaged
+  bundle marker-greps all green (AI absent, M1–M3 markers at packaged-era
+  counts, shipped product.json clean); virgin .app pass approved — **M9
+  CLOSED**. Accepted inert leftovers catalogued in Tasks.md § M9 tail.
 - 2026-08-31 — **M3 complete — tree & type polish + design-as-default** (four slices +
   three checkpoint fix-rounds, all delegated and diff-reviewed, hooks ON; pins
   `6bef040`→`a75746d`, final vscode `6f2061ab8cf`): `fff7895` native sticky clip var
@@ -322,6 +332,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 - Upstream churn on our surfaces (titlebar / tabs / activity bar) now surfaces as **rebase
   conflicts** at sync time — fixed in-tree with full context, instead of the harness era's
   patch-apply failures that blocked builds.
+- M9 changed the M6 rebase profile: the ~20 deleted AI trees conflict trivially
+  ("deleted by us" — re-delete whatever upstream adds there), but the ~100
+  strip-sites in kept files (extHost.protocol/api.impl, workbench mains,
+  notebook/terminal/scm, argv, buildfiles) are a permanent, mostly-trivial
+  conflict surface — m9-excision-plan.md is the reference for what was cut where.
 - Submodule tax: an editor change needs a commit+push in `vscode/` AND a pin-bump commit in
   the umbrella; forgetting the inner push leaves the umbrella pointing at an unpushed commit.
 - Electron/macOS limits ride along unchanged: CSS drag regions stay inert inside the native

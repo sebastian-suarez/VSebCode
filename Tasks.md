@@ -733,7 +733,14 @@ the plan's S2–S12 sections.
   `.gitignore` `.local.prompt.md` symmetry rows; `.vscode/settings.json`
   aiStats/azureMcp dev settings; frozen `McpGalleryServiceUrl` policy-renderer
   fixtures (decoupled golden data).
-- [ ] **Acceptance battery — Sebastian's runbook** (session side is done: every
+- [x] **ACCEPTANCE PASSED — M9 CLOSED 2026-09-01**: push + `npm i` (drift
+  `4df1eb7570c`) + compile done; out/ marker gate green (AI absent, M1 markers
+  in `windows.js` — dev `main.js` is just the loader, bundling is package-time);
+  dev boot APPROVED; packaged bundle greps all green (0 AI refs, hiddenInset +
+  under-window in bundled main.js, sticky-clip ×2 + HN UI ×11, product.json
+  clean); virgin .app APPROVED ("final design will come later" = future polish,
+  not an M9 reservation). Runbook kept below for reference:
+- [x] **Acceptance battery — Sebastian's runbook** (session side is done: every
   build check 0, sweeps clean, grep proofs recorded per slice above):
   1. Push the branch (session's push was permission-blocked):
      `git -C vscode push origin vsebcode`
@@ -758,8 +765,9 @@ the plan's S2–S12 sections.
      `../VSCode-darwin-arm64/Code - OSS.app` (executable `Contents/MacOS/Code - OSS`);
      bundle absence greps: `grep -c "agentHostMain\|chat.contribution\|sessions.desktop.main" "../VSCode-darwin-arm64/Code - OSS.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js"` → 0, and the sessions html absent from Resources.
   6. Verdict to the session → board close-out.
-- [ ] Pin-bump commits in the umbrella (after lockfile drift + acceptance;
-  session runs them once the vscode push exists)
+- [x] Pin-bump commits in the umbrella — done: `d33557a` (code-complete pin →
+  `b3c3e98`), `6d8ea15` (lockfile pin → `4df1eb7`), plus the close-out docs
+  commit; all pushed
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 
