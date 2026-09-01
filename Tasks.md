@@ -801,15 +801,35 @@ and the `2026-dark.json` include chain for every color.
 - [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
   overlay → which-key → flash jumps → oil.nvim-style buffer file-ops (trouble
   diagnostics list · harpoon revisit = candidates, not green-lit)
-- [ ] View 2 — telescope overlay (`m10-nvim-telescope.html`, own artifact URL):
-  IN PROGRESS 2026-09-01, Fable-max agent per the D19 exception — overlay over
-  the approved v3 scene (anatomy = telescope.nvim find_files: prompt line,
-  result list, preview pane; skin = Dark 2026 through the include chain;
-  coherent numbers: query fuzzy-matches REAL `vscode/` tree paths, preview =
-  real selected-file content @ 21px). Agent flags for the round: layout
-  variant + prompt position, backdrop treatment, lualine INSERT block while
-  the prompt has focus, picker story. Then: session review + publish, then
-  Sebastian's verdict
+- [ ] View 2 — telescope overlay **BUILT + PUBLISHED 2026-09-01** (Fable-max
+  agent per the D19 exception; session review green) →
+  https://claude.ai/code/artifact/6eedd738-db38-4d42-8745-ca0ed2c936cc
+  (label `telescope-v1`; same file path re-publishes to the same URL).
+  find_files over the approved v3 scene: 920×405 panel in the shipped picker
+  vocabulary (quickInput*/pickerGroup tokens from 2026-dark, radius 12,
+  shadow-xl, coat #202122 @ 0.90), left 400px = 16 × 22px M3 inset-style
+  result rows + 39px prompt strip (26px input constant), preview 517px =
+  25px title row + 18 REAL `titlebarPart.ts` lines 90–107 @ mono 14/21.
+  Coherence re-verified independently at review: 184/8196 = actual rg-files
+  subsequence counts, all 16 result paths exist on disk, both scattered-row
+  highlight sets hand-checked as true greedy match positions, preview
+  scrollbar = lines 90–107 of the real 1026, all 9 new colors resolve in
+  `2026-dark.json`. **PENDING Sebastian's flag round + verdict** — flags:
+  (1) layout = classic telescope horizontal, prompt BOTTOM, descending sort
+  (best match next to the prompt); (2) window-centered 920px panel @ 0.90
+  alpha coat — stock quick open is a 600px opaque top-drop, so this is a
+  product change at implementation; editor ghosts faintly through the
+  results column; (3) NO backdrop dim (neither telescope nor shipped quick
+  input dims — honest absence); (4) statusbar handoff split: lualine block
+  flips to INSERT (green = editorGutter.addedBackground, tint verdict
+  wanted), editor's NORMAL block cursor gone (the prompt beam owns the one
+  cursor), Ln 35/Col 48 + 33% stay on the background editor; (5) skin
+  details — M3 inset-row cosmetics tie results to the rail tree, query
+  renders mono / rows UI-font, label-OR-path match highlighting, absolute
+  line numbers + no whitespace glyphs in the read-only preview. Session
+  note for the same round: the explorer tree's keyboard-cursor row keeps
+  its ACTIVE selection tint while the finder owns focus — dim it
+  (inactive-selection honesty) or keep the approved-scene look?
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)

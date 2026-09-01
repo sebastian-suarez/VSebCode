@@ -53,10 +53,18 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   (2) which-key → (3) flash jumps → (4) oil.nvim-style buffer file-ops;
   trouble list + harpoon revisit stay candidates, not green-lit (harpoon
   excluded from view 1 by choice). One page + own artifact URL per view from
-  here on. **View 2 (telescope) IN PROGRESS**: `m10-nvim-telescope.html` at
-  the umbrella root (untracked until approved), authored per the D19
-  exception (Fable-max agent) over the approved v3 scene — session
-  review/publish + flag round pending.
+  here on. **View 2 (telescope) BUILT + PUBLISHED, v1 (2026-09-01)** →
+  https://claude.ai/code/artifact/6eedd738-db38-4d42-8745-ca0ed2c936cc
+  (`m10-nvim-telescope.html` at the umbrella root, untracked until
+  approved; label `telescope-v1`): find_files in the shipped picker
+  vocabulary over the approved v3 scene — 920×405 prompt-bottom horizontal
+  panel, real 184/8196 fuzzy corpus with true greedy highlights, byte-real
+  `titlebarPart.ts:90-107` preview @ 21px, lualine INSERT handoff.
+  Authored per the D19 exception (Fable-max agent; artifact-design +
+  macos-design + design-philosophy); session review GREEN — paths, counts,
+  highlight positions, geometry arithmetic and all 9 new theme colors
+  re-verified independently. PENDING Sebastian's flag round (5 flags + 1
+  session note, list in Tasks § M10) + whole-view verdict.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
