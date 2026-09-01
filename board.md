@@ -151,11 +151,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   yaml shipped OFF-BRAND muted plum #7E6086 — brand red #CB171E is a
   near-twin of canon npm red in the same repo roots; one-line revert if
   vetoed. Noted weak pair (kept): reactts/reactjs as TSX/JSX cyan badges.
-  **Batches 2-6 (files ranks 25-145 + category generics + default file) and
-  the folders batch (38 concepts × closed+open, canon-base + emblem
-  template) IN FLIGHT in parallel, 6 opus-coder agents**; per-batch
-  contact-sheet review gates, then cross-set hue/monogram audit at
-  assembly.
+  **ALL SIX BATCHES LANDED + review-green same day**: 237 SVGs (145 core
+  files + 10 generics + default file + 40 folders × closed/open),
+  validator 237/237, ~107KB. Gate rulings R1-R11 recorded in Tasks § M11;
+  cross-batch hue twins known (batch-4 audit). **ASSEMBLY IN FLIGHT**:
+  set-wide reconciliation + spec errata + full-set checkpoint sheet (with
+  the human-pass flag list) + theme JSON (core matchers + long-tail →
+  generics). Then: Sebastian's full-set pass → fork packaging (built-in
+  extension + default flip).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

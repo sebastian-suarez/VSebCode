@@ -913,11 +913,23 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   letterform-AA-only); validator 26/26; centring laws in spec. PENDING
   Sebastian (non-blocking): yaml off-brand plum vs npm-twin brand red
   (spec.md §9)
-- [ ] Batches 2-6 (files ranks 25-145 + generics + default file) + folders
-  batch (38 × closed/open, emblem template) — 6 agents IN FLIGHT in
-  parallel 2026-09-01; per-batch contact-sheet review, then cross-set
-  hue/monogram audit at assembly
-- [ ] Icon-theme JSON assembly from core-tier matchers + generics fallback map
+- [x] ALL SIX parallel batches LANDED + review-green 2026-09-01: 237 SVGs
+  (145 core files + 10 category generics + default file + 40 folders ×
+  closed/open on the canon-base emblem system; no generic-folder asset by
+  ruling — canon pair serves the 324-concept fallback). Validator 237/237,
+  ~107KB total (avg ~500B/icon). Per-batch gate rulings accumulated (R1-R11:
+  family-rhyme sanction, ink-width badge law + descender/lowercase forms,
+  twin threshold Δh12/ΔL12/ΔS25 + neutral-lane exemption, form-collision
+  gate, logo-mark letterpath exemption; standing off-brands: yaml plum
+  [Sebastian veto open], powerpoint crimson, nim, astro, fsharp). Known
+  debt: cross-batch hue twins enumerated by batch 4's audit
+- [ ] ASSEMBLY IN FLIGHT 2026-09-01 (single agent, sole writer): set-wide
+  R7/R8 reconciliation (~10-20 retints, least-brand-anchored member moves,
+  logged in reconciliation.md), spec errata R1-R11, full-set checkpoint
+  sheet (incl. retint before/after + the human-pass flag list: yaml plum ·
+  swagger · maven MVN · clojure CLJ · erlang ERL · expo E · C-family badge
+  trio), theme JSON from core-tier matchers + long-tail→generics
+  (build-theme.mjs, structural self-check)
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)
 - [ ] Acceptance: virgin build boots with the VSebCode icon set as default
