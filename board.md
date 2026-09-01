@@ -103,7 +103,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   files). **Hints r9 same day** (Sebastian: text under the sidebar
   cropped by the window shape; follow-up ruling "Drop it"): rail-hints
   overflow fixed by DROPPING the `d delete` hint at stock size — the
-  session's interim metric shrink overruled; all four views republished
+  session's interim metric shrink overruled — then the line
+  RIGHT-ALIGNED to the rail's 16px inset (second follow-up: "still
+  getting too close to the rounded edge"); all four views republished
   — § D19 amendments round 9; found + fixed in passing: the flash
   artifact was still serving the pre-Geist r4 page (the r6 republish
   never landed there), now current.
@@ -626,7 +628,16 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   dropped instead; five hints survive in their original order
   ("j/k move · h/l fold · a add · r rename · / filter"), line ends
   ≈57px clear of the seam. Re-verified on headless renders of all four
-  views, all four artifacts republished to their URLs.
+  views, all four artifacts republished to their URLs. **Second
+  follow-up ruled by Sebastian (same day: "Still getting too close to
+  the rounded edge, align it to start from the right side")**: the
+  line is RIGHT-ALIGNED — anchored 16px off the rail's right edge (the
+  straight statusbar seam, no arc there; 16px = the rail's established
+  content inset) and growing leftward. It now starts ≈59px from the
+  window's left edge (the corner arc reaches 26px) and ends 16px
+  before the seam; the x20 left text-column tie is dropped for this
+  row only. Re-verified on headless renders of all four views, all
+  four artifacts republished.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:

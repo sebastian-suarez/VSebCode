@@ -149,8 +149,8 @@ body { margin: 0; background: #0c0d12; }
   flex: 0 0 22px;   /* aligns with the lualine bar across the material seam */
   border-top: 1px solid rgba(204,204,204,0.13);
   display: flex; align-items: center;
-  padding-left: 20px;   /* keys to the pane-header/row text column; clear of the bottom-left corner arc */
-  font-size: 10.5px; color: rgba(140,140,140,.72);   /* must clear the 300px rail with slack at the statusbar seam — five hints is the ceiling at this size (D19 r9) */
+  justify-content: flex-end; padding-right: 16px;   /* right-aligned to the rail's 16px content inset (D19 r9): the line grows leftward and must stay clear of the bottom-left corner arc */
+  font-size: 10.5px; color: rgba(140,140,140,.72);
   white-space: nowrap;
 }
 .rail-hints b { font-weight: 400; color: rgba(140,140,140,.34); padding: 0 5px; }
