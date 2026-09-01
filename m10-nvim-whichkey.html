@@ -1,0 +1,560 @@
+<title>VSebCode M10 Which-Key</title>
+<style>
+/* ================================================================
+   VSebCode M10 — view 3: which-key-style leader panel over the
+   approved first-view scene (Dark 2026, zoom 0). Chrome constants
+   stay the shipped 46 / 86 / 24 / 25 / 22 / 300; the panel wears
+   the approved M10 panel vocabulary (view-2 verdicts: quickInput
+   coat @ 0.90, radius 12, shadow-xl, no backdrop dim). The leader
+   map drawn is the PROPOSAL: 3 leaves + 5 groups, every entry tied
+   to a surface that exists in this fork today.
+   ================================================================ */
+
+/* ---- HN UI: weight-shifted Helvetica Neue via local() ---------- */
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-UltraLight"), local("Helvetica Neue UltraLight"); font-weight: 100 299; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-Thin"), local("Helvetica Neue Thin"); font-weight: 300 399; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-Light"), local("Helvetica Neue Light"); font-weight: 400 499; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue"), local("Helvetica Neue"); font-weight: 500 599; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-Medium"), local("Helvetica Neue Medium"); font-weight: 600 1000; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-UltraLightItalic"), local("Helvetica Neue UltraLight Italic"); font-weight: 100 299; font-style: italic; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-ThinItalic"), local("Helvetica Neue Thin Italic"); font-weight: 300 399; font-style: italic; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-LightItalic"), local("Helvetica Neue Light Italic"); font-weight: 400 499; font-style: italic; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-Italic"), local("Helvetica Neue Italic"); font-weight: 500 599; font-style: italic; }
+@font-face { font-family: "HN UI"; src: local("HelveticaNeue-MediumItalic"), local("Helvetica Neue Medium Italic"); font-weight: 600 1000; font-style: italic; }
+
+/* ---- Editor monospace: Liga SFMono Nerd Font via local() ------- */
+@font-face { font-family: "Liga SFMono Nerd Font"; src: local("Liga SFMono Nerd Font"), local("LigaSFMonoNerdFont-Regular"), local("Liga SFMono Nerd Font Regular"); font-weight: 400; }
+@font-face { font-family: "Liga SFMono Nerd Font"; src: local("Liga SFMono Nerd Font Italic"), local("LigaSFMonoNerdFont-Italic"), local("LigaSFMonoNerdFont-RegularItalic"); font-weight: 400; font-style: italic; }
+
+:root {
+  --ui: "HN UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: "Liga SFMono Nerd Font", "SF Mono", Menlo, monospace;
+}
+
+body { margin: 0; background: #0c0d12; }
+
+/* ---- Stage ----------------------------------------------------- */
+.scene { overflow-x: auto; }
+.desktop {
+  position: relative;
+  min-width: 1380px;
+  padding: 64px 50px 52px;
+  overflow: hidden;
+  background: #10142e;
+  font-family: var(--ui);
+  -webkit-font-smoothing: antialiased;
+}
+.wall, .wall i { position: absolute; pointer-events: none; }
+.wall { inset: 0; overflow: hidden; }
+.wall i { border-radius: 50%; filter: blur(80px); }
+.wall .b1 { width: 760px; height: 700px; left: -230px; top: -250px; background: radial-gradient(closest-side, #d97a50 0%, rgba(217,122,80,0) 72%); opacity: .62; }
+.wall .b2 { width: 980px; height: 860px; left: 26%; top: -28%; background: radial-gradient(closest-side, #6d4bd8 0%, rgba(109,75,216,0) 70%); opacity: .8; }
+.wall .b3 { width: 900px; height: 900px; right: -14%; top: 12%; background: radial-gradient(closest-side, #2f9fce 0%, rgba(47,159,206,0) 70%); opacity: .75; }
+.wall .b4 { width: 1000px; height: 780px; left: 8%; bottom: -34%; background: radial-gradient(closest-side, #a53e8c 0%, rgba(165,62,140,0) 70%); opacity: .7; }
+.wall .b5 { width: 900px; height: 700px; right: 16%; bottom: -22%; background: radial-gradient(closest-side, #27408f 0%, rgba(39,64,143,0) 72%); opacity: .9; }
+.wall .vig { inset: 0; border-radius: 0; filter: none; background: radial-gradient(120% 90% at 50% 32%, rgba(0,0,0,0) 52%, rgba(4,5,13,.55) 100%); }
+
+/* ---- Window ---------------------------------------------------- */
+.window {
+  position: relative;
+  width: 1280px;
+  height: 870px;   /* 46 tabs + 25 breadcrumbs (24+1px hairline) + 777 editor (37 × 21px) + 22 statusbar */
+  margin: 0 auto;
+  border-radius: 26px;             /* Tahoe titled-window rounding */
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 300px 1fr;   /* full-height rail | editor column (statusbar lives in the column) */
+  box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 1px 4px rgba(0,0,0,.40), 0 0 0 .5px rgba(0,0,0,.22);
+}
+
+/* =================================================================
+   LEFT RAIL — one translucent coat, single painter. Nothing inside
+   repaints a background; row highlights and pill fills are
+   intentional foreground tints only.
+   ================================================================= */
+.rail {
+  grid-column: 1; grid-row: 1;
+  display: flex; flex-direction: column;
+  min-height: 0;
+  background: rgba(25,26,27,0.30);
+  -webkit-backdrop-filter: blur(52px) saturate(1.9);
+  backdrop-filter: blur(52px) saturate(1.9);
+}
+
+/* -- 46px header row: traffic lights + view-switcher pills ------- */
+.rail-header { position: relative; flex: 0 0 46px; }
+.lights { position: absolute; left: 18px; top: 16px; display: flex; gap: 8px; }
+.lights span { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.12); }
+.lights span:nth-child(1) { background: #ff5c60; }
+.lights span:nth-child(2) { background: #fac800; }
+.lights span:nth-child(3) { background: #35c759; }
+
+.pillbar {
+  position: absolute; left: 86px; right: 0; top: 0; height: 46px;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.pill {
+  position: relative;
+  width: 34px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: #8C8C8C;
+}
+.pill.active { background: rgba(255,255,255,0.08); color: #bfbfbf; }
+.pill svg { width: 20px; height: 20px; display: block; }
+.pill .badge {
+  position: absolute; top: 1px; right: 1px;
+  min-width: 13px; height: 13px; line-height: 13px;
+  padding: 0 2px; box-sizing: border-box;
+  border-radius: 999px;
+  background: #3994BCF0; color: #FFFFFF;
+  font-size: 9px; font-weight: 600; text-align: center;
+}
+
+/* -- 24px caption row -------------------------------------------- */
+.rail-caption { position: relative; flex: 0 0 24px; display: flex; align-items: center; justify-content: flex-end; }
+.rail-caption .cap-title {
+  position: absolute; left: 0; right: 0; text-align: center;
+  font-size: 11px; line-height: 24px; letter-spacing: .06em;
+  text-transform: uppercase; color: #8C8C8C;
+}
+.rail-caption .cap-actions { position: relative; display: flex; gap: 2px; padding-right: 6px; }
+.rail-caption .cap-actions svg { width: 16px; height: 16px; display: block; color: #8C8C8C; padding: 2px; }
+
+/* -- Tree: shipped source-list cosmetics, nvim manners ----------- */
+.rail-tree { flex: 1 1 auto; position: relative; min-height: 0; overflow: hidden; padding: 6px 8px 0; }   /* view-content container air (D-M10): rows read 16px from the rail edges */
+.pane-header {
+  height: 22px; line-height: 22px; padding-left: 12px;
+  font-size: 11px; font-weight: 600; letter-spacing: .04em;
+  color: #bfbfbf;
+}
+.tree-rows { position: relative; }
+.trow {
+  height: 22px; margin-left: 8px; width: calc(100% - 16px);
+  box-sizing: border-box; border-radius: 7px;
+  display: flex; align-items: center;
+  padding: 0 6px 0 4px;
+  font-size: 13px; color: #bfbfbf;
+  position: relative; z-index: 1;
+}
+.trow.cursor { background: #3994BC26; }   /* list.activeSelectionBackground: keyboard cursor row */
+.trow .ind { flex: 0 0 auto; }
+.trow .tw { flex: 0 0 16px; height: 16px; color: #8C8C8C; }
+.trow .tw svg { width: 16px; height: 16px; display: block; }
+.trow .fico { flex: 0 0 16px; height: 16px; margin-left: 2px; }
+.trow .fico svg { width: 16px; height: 16px; display: block; }
+.trow .lbl { margin-left: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.trow .git { margin-left: auto; padding-left: 6px; font-size: 11px; font-weight: 600; }
+.trow .mod, .trow .lbl.mod { color: #e5ba7d; }   /* gitDecoration.modifiedResourceForeground (2026-dark) */
+.trow .unt, .trow .lbl.unt { color: #73C991; }
+.d1 .ind { width: 16px; } .d2 .ind { width: 32px; } .d3 .ind { width: 48px; } .d4 .ind { width: 64px; }
+/* Always-visible indent guides, +3px shifted onto the chevron centers */
+.tguides { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.tguides i { position: absolute; width: 1px; background: #585858; }
+
+/* -- Keyboard hint footer ---------------------------------------- */
+.rail-hints {
+  flex: 0 0 22px;   /* aligns with the lualine bar across the material seam */
+  border-top: 1px solid rgba(204,204,204,0.13);
+  display: flex; align-items: center;
+  padding-left: 20px;   /* keys to the pane-header/row text column; clear of the bottom-left corner arc */
+  font-size: 10.5px; color: rgba(140,140,140,.72);
+  white-space: nowrap;
+}
+.rail-hints b { font-weight: 400; color: rgba(140,140,140,.34); padding: 0 5px; }
+
+/* =================================================================
+   EDITOR COLUMN — opaque
+   ================================================================= */
+.main { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+
+/* -- 46px full-height tab row ------------------------------------ */
+.tabsrow { flex: 0 0 46px; background: #191A1B; display: flex; align-items: stretch; min-width: 0; }
+.tab {
+  position: relative;
+  display: flex; align-items: center;
+  padding: 0 12px;
+  border-right: 1px solid #2A2B2C;
+  font-size: 13px; color: #8C8C8C;
+  white-space: nowrap;
+}
+.tab.active { background: #121314; color: #bfbfbf; }
+.tab.active .abt { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: #3994BC; } /* tab.activeBorderTop */
+.tab .tico { width: 16px; height: 16px; margin-right: 6px; }
+.tab .tico svg { width: 16px; height: 16px; display: block; }
+.tab .cls { width: 16px; height: 16px; margin-left: 8px; color: #8C8C8C; }
+.tab .cls svg { width: 16px; height: 16px; display: block; }
+.tab .dirty { width: 16px; height: 16px; margin-left: 8px; position: relative; }
+.tab .dirty::after { content: ""; position: absolute; left: 4px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: #8C8C8C; }
+.tab .slot { width: 16px; height: 16px; margin-left: 8px; }
+.tabs-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; padding: 0 10px; color: #8C8C8C; }
+.tabs-actions svg { width: 16px; height: 16px; display: block; }
+
+/* -- 25px breadcrumbs row (1px hairline is its top border) ------- */
+.crumbs {
+  flex: 0 0 24px;
+  border-top: 1px solid rgba(204,204,204,0.2);
+  background: #121314;
+  display: flex; align-items: center;
+  padding: 0 10px;
+  font-size: 11px; color: #8C8C8C;
+  white-space: nowrap;
+}
+.crumbs .sep { width: 10px; height: 10px; margin: 0 3px; opacity: .55; }
+.crumbs .sep svg { width: 10px; height: 10px; display: block; }
+.crumbs .sym { width: 12px; height: 12px; margin-right: 4px; }
+.crumbs .sym svg { width: 12px; height: 12px; display: block; }
+.crumbs .last { display: flex; align-items: center; }
+
+/* -- Editor body ------------------------------------------------- */
+.editor {
+  flex: 1 1 auto; position: relative; min-height: 0;
+  background: #121314;
+  font-family: var(--mono);
+  font-size: 14px; line-height: 21px;   /* GOLDEN_LINE_HEIGHT_RATIO 1.5 on macOS */
+  font-variant-ligatures: contextual;
+  tab-size: 2;
+  color: #BBBEBF;
+  overflow: hidden;
+}
+.erow { display: flex; height: 21px; }
+.erow .g {
+  flex: 0 0 74px; box-sizing: border-box;
+  text-align: right; padding-right: 20px;
+  color: #858889;
+}
+.erow .g.cur { color: #BBBEBF; }
+.erow .code { flex: 1 1 auto; min-width: 0; white-space: pre; }
+.erow .code.hl { background: #242526; }                 /* editor.lineHighlightBackground */
+.erow .code.wl { background: rgba(204,167,0,0.045); }   /* Error Lens warm line tint */
+
+/* syntax — 2026 Dark resolved tokenColors */
+.k { color: #ff7b72; }  /* keyword / storage        */
+.s { color: #a5d6ff; }  /* string                   */
+.f { color: #d2a8ff; }  /* entity.name.function     */
+.t { color: #ffa657; }  /* class / interface names  */
+.c { color: #79c0ff; }  /* constants & numbers      */
+.m { color: #8b949e; }  /* comment                  */
+.w { color: rgba(140,140,140,0.12); }  /* whitespace middots, whisper level */
+
+.cur-block { background: #BBBEBF; color: #121314; }     /* NORMAL-mode block cursor */
+.sq {
+  text-decoration: underline; text-decoration-style: wavy;
+  text-decoration-color: rgba(204,167,0,.45);
+  text-decoration-thickness: 1px; text-underline-offset: 2px;
+  text-decoration-skip-ink: none;
+}
+.bl { font-style: italic; font-size: 11px; color: rgba(187,190,191,.32); }
+.el { font-style: italic; font-size: 11px; color: rgba(204,167,0,.5); }
+.el svg { width: 10px; height: 10px; display: inline-block; vertical-align: -1px; }
+
+/* gitsigns-style gutter marks + scrollbar */
+.gmarks { position: absolute; left: 0; top: 0; width: 74px; height: 100%; pointer-events: none; }
+.gmarks .add { position: absolute; left: 4px; width: 3px; border-radius: 1.5px; background: #72C892; }
+.gmarks .chg { position: absolute; left: 4px; width: 3px; border-radius: 1.5px; background: #0078D4; }
+.gmarks .del { position: absolute; left: 2px; width: 0; height: 0; border-left: 6px solid #F28772; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+.sbar { position: absolute; right: 2px; width: 6px; border-radius: 3px; background: rgba(168,169,170,.3); pointer-events: none; }
+
+/* =================================================================
+   STATUSBAR — 22px, opaque, lualine recomposition, flat segments
+   ================================================================= */
+.statusbar {
+  flex: 0 0 22px;
+  background: #191A1B; color: #8C8C8C;
+  display: flex; align-items: center;
+  font-size: 12px;
+  padding-right: 16px;   /* clear of the bottom-right corner arc */
+  min-width: 0;
+}
+.statusbar .mode {
+  margin: 3px 0 3px 3px;
+  height: 16px; line-height: 16px;
+  padding: 0 7px; border-radius: 4px;
+  background: #297AA0; color: #FFFFFF;
+  font-size: 11px; font-weight: 600; letter-spacing: .04em;
+}
+.statusbar .lgroup { display: flex; align-items: center; margin-left: 12px; }
+.statusbar .seg { display: flex; align-items: center; }
+.statusbar .dotsep { color: rgba(140,140,140,.35); padding: 0 9px; }
+.statusbar .bri { width: 12px; height: 12px; margin-right: 4px; }
+.statusbar .bri svg { width: 12px; height: 12px; display: block; }
+.statusbar .add { color: #72C892; }
+.statusbar .chg { color: #0078D4; }
+.statusbar .del { color: #F28772; }
+.statusbar .wrn { color: #CCA700; display: flex; align-items: center; }
+.statusbar .wrn svg { width: 12px; height: 12px; margin-right: 3px; }
+.statusbar .rgroup { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+
+/* =================================================================
+   WHICH-KEY PANEL — leader-pending continuations in the M10 panel
+   vocabulary (view-2 verdicts: quickInput coat #202122 @ 0.90,
+   border #333536, radius 12, shadow-xl; no backdrop dim). Bottom-
+   anchored to the editor column on the M3 8px grammar: 8px side
+   insets, 8px gap above the 22px statusbar. Panel 964×83 border-box
+   (962×81 inner = 25px title row + 6 + 2×22 entry rows + 6).
+   Entries fill column-major like which-key, byte-sorted keys,
+   4 columns × 2 rows. The pending prefix lives in the panel title
+   row — our showcmd; the lualine spec has no showcmd segment, so
+   the statusbar stays v3-verbatim (honest absence there).
+   ================================================================= */
+.wk {
+  position: absolute; left: 308px; top: 757px;   /* 300 rail + 8; 870 − 22 statusbar − 8 gap − 83 */
+  width: 964px; height: 83px; box-sizing: border-box;   /* 980 editor column − 2×8 */
+  border: 1px solid #333536;                 /* quickInput.border */
+  border-radius: 12px;                       /* cornerRadius-xLarge — the M10 panel tier */
+  background: rgba(32,33,34,0.90);           /* quickInput.background @ daily overlay alpha */
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);     /* --vscode-shadow-xl */
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  font-family: var(--ui);
+}
+.wk-title {
+  flex: 0 0 25px; box-sizing: border-box;    /* the breadcrumbs constant: 24 + 1px hairline */
+  border-bottom: 1px solid #2A2B2C;          /* pickerGroup.border */
+  display: flex; align-items: center;
+  padding: 0 12px;
+  font-family: var(--mono); font-size: 12px; color: #48A0C7;   /* pending-prefix breadcrumb — list.highlightForeground */
+}
+.wk-cols {
+  flex: 1 1 auto;
+  display: grid;
+  grid-auto-flow: column;                    /* which-key fills columns first */
+  grid-template-rows: repeat(2, 22px);
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 8px;
+  padding: 6px 8px;
+}
+.wk-row {
+  height: 22px; box-sizing: border-box; border-radius: 7px;   /* M3 inset-row cosmetics, same as rail tree + picker */
+  display: flex; align-items: center;
+  padding: 0 6px 0 4px;
+  font-size: 13px; color: #bfbfbf;
+  min-width: 0;
+}
+.wk-row .key { flex: 0 0 24px; text-align: right; font-family: var(--mono); font-size: 13px; color: #48A0C7; }   /* keys mono, picker-accent — the interactive-key language */
+.wk-row .sep { margin: 0 8px; font-family: var(--mono); color: rgba(140,140,140,0.35); }   /* the lualine dotsep treatment */
+.wk-row .desc { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.wk-row .grp { color: #d2a8ff; }             /* +group — 2026-dark tokenColors entity.name.function */
+
+/* ---- Legend ---------------------------------------------------- */
+.legend {
+  position: relative;
+  margin: 30px 0 0; text-align: center;
+  font-size: 12px; color: rgba(255,255,255,.5); letter-spacing: .02em;
+}
+.legend b { font-weight: 400; color: rgba(255,255,255,.26); padding: 0 7px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- codicons (real paths) -->
+    <symbol id="i-files" viewBox="0 0 24 24"><path fill="currentColor" d="M7.5 22.5H17.595C17.07 23.4 16.11 24 15 24H7.5C4.185 24 1.5 21.315 1.5 18V6C1.5 4.89 2.1 3.93 3 3.405V18C3 20.475 5.025 22.5 7.5 22.5ZM21 8.121V18C21 19.6545 19.6545 21 18 21H7.5C5.8455 21 4.5 19.6545 4.5 18V3C4.5 1.3455 5.8455 0 7.5 0H12.879C13.4715 0 14.0505 0.24 14.4705 0.6585L20.3415 6.5295C20.766 6.954 21 7.5195 21 8.121ZM13.5 6.75C13.5 7.164 13.8375 7.5 14.25 7.5H19.1895L13.5 1.8105V6.75ZM19.5 18V9H14.25C13.0095 9 12 7.9905 12 6.75V1.5H7.5C6.672 1.5 6 2.1735 6 3V18C6 18.8265 6.672 19.5 7.5 19.5H18C18.828 19.5 19.5 18.8265 19.5 18Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 16 16"><path fill="currentColor" d="M10.0195 10.7266C9.06578 11.5217 7.83875 12 6.5 12C3.46243 12 1 9.53757 1 6.5C1 3.46243 3.46243 1 6.5 1C9.53757 1 12 3.46243 12 6.5C12 7.83875 11.5217 9.06578 10.7266 10.0195L13.8535 13.1464C14.0488 13.3417 14.0488 13.6583 13.8535 13.8536C13.6583 14.0488 13.3417 14.0488 13.1464 13.8536L10.0195 10.7266ZM11 6.5C11 4.01472 8.98528 2 6.5 2C4.01472 2 2 4.01472 2 6.5C2 8.98528 4.01472 11 6.5 11C8.98528 11 11 8.98528 11 6.5Z"/></symbol>
+    <symbol id="i-scm" viewBox="0 0 24 24"><path fill="currentColor" d="M21 8.25C21 6.1815 19.3185 4.5 17.25 4.5C15.1815 4.5 13.5 6.1815 13.5 8.25C13.5 10.023 14.739 11.5035 16.395 11.892C16.116 12.819 15.2655 13.5 14.25 13.5H9.75C8.9025 13.5 8.1285 13.7925 7.5 14.268V7.4235C9.21 7.0755 10.5 5.5605 10.5 3.75C10.5 1.6815 8.8185 0 6.75 0C4.6815 0 3 1.6815 3 3.75C3 5.562 4.29 7.0755 6 7.4235V16.575C4.29 16.923 3 18.438 3 20.2485C3 22.317 4.6815 23.9985 6.75 23.9985C8.8185 23.9985 10.5 22.317 10.5 20.2485C10.5 18.4755 9.261 16.995 7.605 16.6065C7.884 15.6795 8.7345 14.9985 9.75 14.9985H14.25C16.0845 14.9985 17.61 13.6725 17.931 11.9295C19.674 11.607 21 10.0845 21 8.25ZM4.5 3.75C4.5 2.5095 5.5095 1.5 6.75 1.5C7.9905 1.5 9 2.5095 9 3.75C9 4.9905 7.9905 6 6.75 6C5.5095 6 4.5 4.9905 4.5 3.75ZM9 20.25C9 21.4905 7.9905 22.5 6.75 22.5C5.5095 22.5 4.5 21.4905 4.5 20.25C4.5 19.0095 5.5095 18 6.75 18C7.9905 18 9 19.0095 9 20.25ZM17.25 10.5C16.0095 10.5 15 9.4905 15 8.25C15 7.0095 16.0095 6 17.25 6C18.4905 6 19.5 7.0095 19.5 8.25C19.5 9.4905 18.4905 10.5 17.25 10.5Z"/></symbol>
+    <symbol id="i-debug" viewBox="0 0 24 24"><path fill="currentColor" d="M19.854 13.9605L13.2105 17.697C12.954 17.22 12.5505 16.8345 12.039 16.641L12.054 16.626L19.1175 12.6525C19.6275 12.366 19.6275 11.6325 19.1175 11.3445L7.11751 4.59599C6.61801 4.31399 6.00001 4.67549 6.00001 5.24999V10.5C5.46901 10.5 4.97401 10.6215 4.50001 10.791V5.24999C4.50001 3.52949 6.35251 2.44499 7.85251 3.28949L19.8525 10.0395C21.381 10.899 21.381 13.101 19.8525 13.962L19.854 13.9605ZM10.5 16.0605V18H11.25C11.664 18 12 18.336 12 18.75C12 19.164 11.664 19.5 11.25 19.5H10.5C10.5 20.076 10.3905 20.625 10.1925 21.132L11.781 22.7205C12.0735 23.013 12.0735 23.4885 11.781 23.781C11.634 23.928 11.442 24 11.25 24C11.058 24 10.866 23.9265 10.719 23.781L9.39151 22.4535C8.56651 23.4 7.35151 24.0015 6.00001 24.0015C4.64851 24.0015 3.43351 23.4015 2.60851 22.4535L1.28101 23.781C1.13401 23.928 0.942009 24 0.750009 24C0.558009 24 0.366009 23.9265 0.219009 23.781C-0.0734912 23.4885 -0.0734912 23.013 0.219009 22.7205L1.80751 21.132C1.60951 20.625 1.50001 20.076 1.50001 19.5H0.750009C0.336009 19.5 8.78423e-06 19.164 8.78423e-06 18.75C8.78423e-06 18.336 0.336009 18 0.750009 18H1.50001V16.0605L0.219009 14.7795C-0.0734912 14.487 -0.0734912 14.0115 0.219009 13.719C0.511509 13.4265 0.987009 13.4265 1.27951 13.719L2.56051 15H3.00001C3.00001 13.3455 4.34551 12 6.00001 12C7.65451 12 9.00001 13.3455 9.00001 15H9.43951L10.7205 13.719C11.013 13.4265 11.4885 13.4265 11.781 13.719C12.0735 14.0115 12.0735 14.487 11.781 14.7795L10.5 16.0605ZM4.50001 15H7.50001C7.50001 14.172 6.82801 13.5 6.00001 13.5C5.17201 13.5 4.50001 14.172 4.50001 15ZM9.00001 16.5H3.00001V19.5C3.00001 21.1545 4.34551 22.5 6.00001 22.5C7.65451 22.5 9.00001 21.1545 9.00001 19.5V16.5Z"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 16 16"><path fill="currentColor" d="M15 4.95703C15 4.58711 14.8563 4.24054 14.5949 3.97992L12.0096 1.39234C11.4879 0.86922 10.5788 0.86922 10.0571 1.39234L8 3.45119V3.32321C8 2.55068 7.37187 1.922 6.6 1.922H2.4C1.62813 1.922 1 2.55068 1 3.32321V13.5988C1 14.3713 1.62813 15 2.4 15H12.6667C13.4385 15 14.0667 14.3713 14.0667 13.5988V9.39514C14.0667 8.62261 13.4385 7.99393 12.6667 7.99393H12.5379L14.5949 5.93508C14.8553 5.67445 15 5.32602 15 4.95703ZM2.4 2.85521H6.6C6.85667 2.85521 7.06667 3.06446 7.06667 3.32228V7.99299H1.93333V3.32228C1.93333 3.06446 2.14333 2.85521 2.4 2.85521ZM1.93333 13.5979V8.92714H7.06667V14.0649H2.4C2.14333 14.0649 1.93333 13.8547 1.93333 13.5979ZM13.1333 9.39421V13.5979C13.1333 13.8547 12.9233 14.0649 12.6667 14.0649H8V8.92714H12.6667C12.9233 8.92714 13.1333 9.13638 13.1333 9.39421ZM8 7.99299V6.46287L9.5288 7.99299H8ZM13.9351 5.2737L11.3488 7.86221C11.1789 8.03223 10.8859 8.03223 10.716 7.86221L8.12973 5.2737C8.0448 5.18963 7.99813 5.07753 7.99813 4.95796C7.99813 4.83839 8.0448 4.7263 8.12973 4.64129L10.716 2.05278C10.8009 1.96777 10.9129 1.92106 11.0324 1.92106C11.1519 1.92106 11.2639 1.96777 11.3488 2.05278L13.9351 4.64129C14.02 4.72536 14.0667 4.83746 14.0667 4.95703C14.0667 5.0766 14.02 5.1887 13.9351 5.2737Z"/></symbol>
+    <symbol id="i-newfile" viewBox="0 0 16 16"><path fill="currentColor" d="M5 14C4.448 14 4 13.552 4 13V3C4 2.448 4.448 2 5 2H8V4.5C8 5.328 8.672 6 9.5 6H12V6.025C12.344 6.056 12.677 6.121 13 6.213V5.414C13 5.016 12.842 4.635 12.561 4.353L9.647 1.439C9.366 1.158 8.984 1 8.586 1H5C3.895 1 3 1.895 3 3V13C3 14.105 3.895 15 5 15H7.261C7.008 14.693 6.791 14.357 6.607 14H5ZM9 2.207L11.793 5H9.5C9.224 5 9 4.776 9 4.5V2.207ZM11.5 7C9.015 7 7 9.015 7 11.5C7 13.985 9.015 16 11.5 16C13.985 16 16 13.985 16 11.5C16 9.015 13.985 7 11.5 7ZM14 12H12V14C12 14.276 11.776 14.5 11.5 14.5C11.224 14.5 11 14.276 11 14V12H9C8.724 12 8.5 11.776 8.5 11.5C8.5 11.224 8.724 11 9 11H11V9C11 8.724 11.224 8.5 11.5 8.5C11.776 8.5 12 8.724 12 9V11H14C14.276 11 14.5 11.224 14.5 11.5C14.5 11.776 14.276 12 14 12Z"/></symbol>
+    <symbol id="i-newfolder" viewBox="0 0 16 16"><path fill="currentColor" d="M2 4.5V6H5.58579C5.71839 6 5.84557 5.94732 5.93934 5.85355L7.29289 4.5L5.93934 3.14645C5.84557 3.05268 5.71839 3 5.58579 3H3.5C2.67157 3 2 3.67157 2 4.5ZM1 4.5C1 3.11929 2.11929 2 3.5 2H5.58579C5.98361 2 6.36514 2.15804 6.64645 2.43934L8.20711 4H12.5C13.8807 4 15 5.11929 15 6.5V7.25716C14.6929 7.00353 14.3578 6.78261 14 6.59971V6.5C14 5.67157 13.3284 5 12.5 5H8.20711L6.64645 6.56066C6.36514 6.84197 5.98361 7 5.58579 7H2V11.5C2 12.3284 2.67157 13 3.5 13H6.20703C6.30564 13.3486 6.43777 13.6832 6.59971 14H3.5C2.11929 14 1 12.8807 1 11.5V4.5ZM16 11.5C16 13.9853 13.9853 16 11.5 16C9.01472 16 7 13.9853 7 11.5C7 9.01472 9.01472 7 11.5 7C13.9853 7 16 9.01472 16 11.5ZM12 9C12 8.72386 11.7761 8.5 11.5 8.5C11.2239 8.5 11 8.72386 11 9V11H9C8.72386 11 8.5 11.2239 8.5 11.5C8.5 11.7761 8.72386 12 9 12H11V14C11 14.2761 11.2239 14.5 11.5 14.5C11.7761 14.5 12 14.2761 12 14V12H14C14.2761 12 14.5 11.7761 14.5 11.5C14.5 11.2239 14.2761 11 14 11H12V9Z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 16 16"><path fill="currentColor" d="M3 8C3 5.23858 5.23858 3 8 3C9.63527 3 11.0878 3.78495 12.0005 5H10C9.72386 5 9.5 5.22386 9.5 5.5C9.5 5.77614 9.72386 6 10 6H12.8904C12.8973 6.00014 12.9041 6.00014 12.911 6H13C13.2761 6 13.5 5.77614 13.5 5.5V2.5C13.5 2.22386 13.2761 2 13 2C12.7239 2 12.5 2.22386 12.5 2.5V4.03138C11.4009 2.78613 9.79253 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14C11.1301 14 13.6999 11.6035 13.9756 8.54488C14.0003 8.26985 13.7975 8.0268 13.5225 8.00202C13.2474 7.97723 13.0044 8.1801 12.9796 8.45512C12.75 11.003 10.6079 13 8 13C5.23858 13 3 10.7614 3 8Z"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 16 16"><path fill="currentColor" d="M14 4.27051C14.5999 4.62053 15 5.26009 15 6V11C15 13.21 13.21 15 11 15H6C5.26009 15 4.62053 14.5999 4.27051 14H11C12.65 14 14 12.65 14 11V4.27051Z"/><path fill="currentColor" d="M9.5 7C9.776 7 10 7.224 10 7.5C10 7.776 9.776 8 9.5 8H5.5C5.224 8 5 7.776 5 7.5C5 7.224 5.224 7 5.5 7H9.5Z"/><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M11 2C12.103 2 13 2.897 13 4V11C13 12.103 12.103 13 11 13H4C2.897 13 2 12.103 2 11V4C2 2.897 2.897 2 4 2H11ZM4 3C3.449 3 3 3.449 3 4V11C3 11.552 3.449 12 4 12H11C11.551 12 12 11.552 12 11V4C12 3.449 11.551 3 11 3H4Z"/></symbol>
+    <symbol id="i-chevr" viewBox="0 0 16 16"><path fill="currentColor" d="M6.14601 3.14579C5.95101 3.34079 5.95101 3.65779 6.14601 3.85279L10.292 7.99879L6.14601 12.1448C5.95101 12.3398 5.95101 12.6568 6.14601 12.8518C6.34101 13.0468 6.65801 13.0468 6.85301 12.8518L11.353 8.35179C11.548 8.15679 11.548 7.83979 11.353 7.64478L6.85301 3.14479C6.65801 2.94979 6.34101 2.95079 6.14601 3.14579Z"/></symbol>
+    <symbol id="i-chevd" viewBox="0 0 16 16"><path fill="currentColor" d="M3.14598 5.85423L7.64598 10.3542C7.84098 10.5492 8.15798 10.5492 8.35298 10.3542L12.853 5.85423C13.048 5.65923 13.048 5.34223 12.853 5.14723C12.658 4.95223 12.341 4.95223 12.146 5.14723L7.99998 9.29323L3.85398 5.14723C3.65898 4.95223 3.34198 4.95223 3.14698 5.14723C2.95198 5.34223 2.95098 5.65923 3.14598 5.85423Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 16 16"><path fill="currentColor" d="M8.70701 8.00001L12.353 4.35401C12.548 4.15901 12.548 3.84201 12.353 3.64701C12.158 3.45201 11.841 3.45201 11.646 3.64701L8.00001 7.29301L4.35401 3.64701C4.15901 3.45201 3.84201 3.45201 3.64701 3.64701C3.45201 3.84201 3.45201 4.15901 3.64701 4.35401L7.29301 8.00001L3.64701 11.646C3.45201 11.841 3.45201 12.158 3.64701 12.353C3.74501 12.451 3.87301 12.499 4.00101 12.499C4.12901 12.499 4.25701 12.45 4.35501 12.353L8.00101 8.70701L11.647 12.353C11.745 12.451 11.873 12.499 12.001 12.499C12.129 12.499 12.257 12.45 12.355 12.353C12.55 12.158 12.55 11.841 12.355 11.646L8.70901 8.00001H8.70701Z"/></symbol>
+    <symbol id="i-split" viewBox="0 0 16 16"><path fill="currentColor" d="M12.5 1H3.5C2.122 1 1 2.122 1 3.5V12.5C1 13.878 2.122 15 3.5 15H12.5C13.878 15 15 13.878 15 12.5V3.5C15 2.122 13.878 1 12.5 1ZM2 12.5V3.5C2 2.673 2.673 2 3.5 2H7.5V14H3.5C2.673 14 2 13.327 2 12.5ZM14 12.5C14 13.327 13.327 14 12.5 14H8.5V2H12.5C13.327 2 14 2.673 14 3.5V12.5Z"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 16 16"><path fill="currentColor" d="M5 8C5 8.55229 4.55228 9 4 9C3.44772 9 3 8.55229 3 8C3 7.44772 3.44772 7 4 7C4.55228 7 5 7.44772 5 8ZM9 8C9 8.55229 8.55229 9 8 9C7.44772 9 7 8.55229 7 8C7 7.44772 7.44772 7 8 7C8.55229 7 9 7.44772 9 8ZM12 9C12.5523 9 13 8.55229 13 8C13 7.44772 12.5523 7 12 7C11.4477 7 11 7.44772 11 8C11 8.55229 11.4477 9 12 9Z"/></symbol>
+    <symbol id="i-symconst" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4.5 2C3.83696 2 3.20107 2.26339 2.73223 2.73223C2.26339 3.20107 2 3.83696 2 4.5V11.5C2 12.163 2.26339 12.7989 2.73223 13.2678C3.20107 13.7366 3.83696 14 4.5 14H11.5C12.163 14 12.7989 13.7366 13.2678 13.2678C13.7366 12.7989 14 12.163 14 11.5V4.5C14 3.83696 13.7366 3.20107 13.2678 2.73223C12.7989 2.26339 12.163 2 11.5 2H4.5ZM3 4.5C3 4.10218 3.15804 3.72064 3.43934 3.43934C3.72064 3.15804 4.10218 3 4.5 3H11.5C11.8978 3 12.2794 3.15804 12.5607 3.43934C12.842 3.72064 13 4.10218 13 4.5V11.5C13 11.8978 12.842 12.2794 12.5607 12.5607C12.2794 12.842 11.8978 13 11.5 13H4.5C4.10218 13 3.72064 12.842 3.43934 12.5607C3.15804 12.2794 3 11.8978 3 11.5V4.5Z"/><path fill="currentColor" d="M5 6.5C5 6.36739 5.05268 6.24021 5.14645 6.14645C5.24021 6.05268 5.36739 6 5.5 6H10.5C10.6326 6 10.7598 6.05268 10.8536 6.14645C10.9473 6.24021 11 6.36739 11 6.5C11 6.63261 10.9473 6.75979 10.8536 6.85355C10.7598 6.94732 10.6326 7 10.5 7H5.5C5.36739 7 5.24021 6.94732 5.14645 6.85355C5.05268 6.75979 5 6.63261 5 6.5ZM10.5 9H5.5C5.36739 9 5.24021 9.05268 5.14645 9.14645C5.05268 9.24021 5 9.36739 5 9.5C5 9.63261 5.05268 9.75979 5.14645 9.85355C5.24021 9.94732 5.36739 10 5.5 10H10.5C10.6326 10 10.7598 9.94732 10.8536 9.85355C10.9473 9.75979 11 9.63261 11 9.5C11 9.36739 10.9473 9.24021 10.8536 9.14645C10.7598 9.05268 10.6326 9 10.5 9Z"/></symbol>
+    <symbol id="i-branch" viewBox="0 0 16 16"><path fill="currentColor" d="M14 5.5C14 4.121 12.879 3 11.5 3C10.121 3 9 4.121 9 5.5C9 6.682 9.826 7.669 10.93 7.928C10.744 8.546 10.177 9 9.5 9H6.5C5.935 9 5.419 9.195 5 9.512V4.949C6.14 4.717 7 3.707 7 2.5C7 1.121 5.879 0 4.5 0C3.121 0 2 1.121 2 2.5C2 3.708 2.86 4.717 4 4.949V11.05C2.86 11.282 2 12.292 2 13.499C2 14.878 3.121 15.999 4.5 15.999C5.879 15.999 7 14.878 7 13.499C7 12.317 6.174 11.33 5.07 11.071C5.256 10.453 5.823 9.999 6.5 9.999H9.5C10.723 9.999 11.74 9.115 11.954 7.953C13.116 7.738 14 6.723 14 5.5ZM3 2.5C3 1.673 3.673 1 4.5 1C5.327 1 6 1.673 6 2.5C6 3.327 5.327 4 4.5 4C3.673 4 3 3.327 3 2.5ZM6 13.5C6 14.327 5.327 15 4.5 15C3.673 15 3 14.327 3 13.5C3 12.673 3.673 12 4.5 12C5.327 12 6 12.673 6 13.5ZM11.5 7C10.673 7 10 6.327 10 5.5C10 4.673 10.673 4 11.5 4C12.327 4 13 4.673 13 5.5C13 6.327 12.327 7 11.5 7Z"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 16 16"><path fill="currentColor" d="M14.831 11.965L9.206 1.714C8.965 1.274 8.503 1 8 1C7.497 1 7.035 1.274 6.794 1.714L1.169 11.965C1.059 12.167 1 12.395 1 12.625C1 13.383 1.617 14 2.375 14H13.625C14.383 14 15 13.383 15 12.625C15 12.395 14.941 12.167 14.831 11.965ZM13.625 13H2.375C2.168 13 2 12.832 2 12.625C2 12.561 2.016 12.5 2.046 12.445L7.671 2.195C7.736 2.075 7.863 2 8 2C8.137 2 8.264 2.075 8.329 2.195L13.954 12.445C13.984 12.501 14 12.561 14 12.625C14 12.832 13.832 13 13.625 13ZM8.75 11.25C8.75 11.664 8.414 12 8 12C7.586 12 7.25 11.664 7.25 11.25C7.25 10.836 7.586 10.5 8 10.5C8.414 10.5 8.75 10.836 8.75 11.25ZM7.5 9V5.5C7.5 5.224 7.724 5 8 5C8.276 5 8.5 5.224 8.5 5.5V9C8.5 9.276 8.276 9.5 8 9.5C7.724 9.5 7.5 9.276 7.5 9Z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 16 16"><path fill="currentColor" d="M7.99997 6C6.89497 6 5.99997 6.895 5.99997 8C5.99997 9.105 6.89497 10 7.99997 10C9.10497 10 9.99997 9.105 9.99997 8C9.99997 6.895 9.10497 6 7.99997 6ZM7.99997 9C7.44797 9 6.99997 8.552 6.99997 8C6.99997 7.448 7.44797 7 7.99997 7C8.55197 7 8.99997 7.448 8.99997 8C8.99997 8.552 8.55197 9 7.99997 9ZM14.565 9.715L13.279 8.628C13.245 8.599 13.213 8.567 13.184 8.533C12.888 8.186 12.931 7.667 13.279 7.372L14.565 6.285C14.693 6.177 14.742 6.003 14.691 5.844C14.386 4.903 13.882 4.04 13.219 3.308C13.139 3.22 13.027 3.172 12.912 3.172C12.865 3.172 12.818 3.18 12.773 3.196L11.186 3.761C11.144 3.776 11.1 3.788 11.056 3.796C11.006 3.805 10.956 3.81 10.907 3.81C10.515 3.81 10.167 3.532 10.094 3.134L9.79097 1.482C9.76097 1.318 9.63397 1.188 9.46997 1.153C8.98997 1.051 8.49897 1 8.00097 1C7.50297 1 7.01097 1.052 6.53097 1.153C6.36697 1.188 6.23997 1.318 6.20997 1.482L5.90797 3.134C5.89997 3.178 5.88797 3.221 5.87297 3.263C5.75197 3.6 5.43397 3.81 5.09397 3.81C5.00197 3.81 4.90797 3.794 4.81597 3.762L3.22897 3.197C3.18397 3.181 3.13597 3.173 3.08997 3.173C2.97497 3.173 2.86297 3.221 2.78297 3.309C2.11897 4.041 1.61597 4.904 1.30997 5.845C1.25797 6.004 1.30797 6.178 1.43597 6.286L2.72197 7.373C2.75597 7.402 2.78797 7.434 2.81697 7.468C3.11297 7.815 3.06997 8.334 2.72197 8.629L1.43597 9.716C1.30797 9.824 1.25897 9.998 1.30997 10.157C1.61497 11.098 2.11897 11.961 2.78297 12.693C2.86297 12.781 2.97497 12.829 3.08997 12.829C3.13697 12.829 3.18397 12.821 3.22897 12.805L4.81597 12.24C4.85797 12.225 4.90197 12.213 4.94597 12.205C4.99597 12.196 5.04597 12.192 5.09497 12.192C5.48697 12.192 5.83497 12.47 5.90797 12.868L6.20997 14.52C6.23997 14.684 6.36697 14.814 6.53097 14.849C7.01097 14.951 7.50297 15.002 8.00097 15.002C8.49897 15.002 8.99097 14.95 9.46997 14.849C9.63397 14.814 9.76097 14.684 9.79097 14.52L10.094 12.868C10.102 12.824 10.114 12.781 10.129 12.739C10.25 12.402 10.568 12.192 10.908 12.192C11 12.192 11.094 12.208 11.186 12.24L12.772 12.805C12.818 12.821 12.865 12.829 12.911 12.829C13.026 12.829 13.138 12.781 13.218 12.693C13.882 11.961 14.385 11.098 14.69 10.157C14.742 9.998 14.692 9.824 14.564 9.716L14.565 9.715ZM12.728 11.726L11.521 11.296C11.323 11.226 11.117 11.19 10.908 11.19C10.139 11.19 9.44697 11.676 9.18797 12.399C9.15397 12.492 9.12897 12.588 9.11097 12.686L8.88097 13.937C8.59097 13.979 8.29597 14 8.00097 14C7.70597 14 7.41097 13.979 7.11997 13.936L6.89097 12.685C6.73197 11.818 5.97697 11.189 5.09497 11.189C4.98697 11.189 4.87697 11.199 4.76597 11.219C4.66897 11.237 4.57397 11.262 4.47997 11.295L3.27297 11.725C2.90497 11.264 2.61097 10.759 2.39397 10.214L3.36797 9.391C3.74097 9.076 3.96797 8.634 4.00797 8.148C4.04797 7.662 3.89497 7.19 3.57797 6.818C3.51397 6.743 3.44297 6.672 3.36797 6.608L2.39397 5.785C2.61097 5.24 2.90497 4.734 3.27297 4.274L4.47997 4.704C4.67797 4.774 4.88397 4.81 5.09397 4.81C5.86297 4.81 6.55497 4.324 6.81397 3.601C6.84797 3.507 6.87297 3.411 6.89097 3.314L7.11997 2.063C7.41097 2.021 7.70597 1.999 8.00097 1.999C8.29597 1.999 8.59097 2.02 8.88097 2.062L9.10997 3.313C9.26897 4.18 10.024 4.809 10.906 4.809C11.014 4.809 11.124 4.799 11.234 4.779C11.331 4.761 11.427 4.736 11.521 4.703L12.728 4.273C13.096 4.733 13.39 5.239 13.607 5.784L12.634 6.607C12.261 6.922 12.033 7.364 11.994 7.85C11.954 8.336 12.107 8.809 12.424 9.18C12.489 9.256 12.559 9.326 12.635 9.39L13.609 10.213C13.392 10.758 13.098 11.264 12.73 11.724L12.728 11.726Z"/></symbol>
+    <!-- vscode-icons-flavoured file glyphs -->
+    <symbol id="i-folder" viewBox="0 0 16 16"><path fill="#BF9354" d="M1.5 4.1c0-.66.54-1.2 1.2-1.2h3.12c.34 0 .66.14.89.39l.95 1.01h5.64c.66 0 1.2.54 1.2 1.2v6.4c0 .66-.54 1.2-1.2 1.2H2.7c-.66 0-1.2-.54-1.2-1.2z"/><path fill="rgba(0,0,0,.14)" d="M1.5 5.55h13v.85h-13z"/></symbol>
+    <symbol id="i-foldero" viewBox="0 0 16 16"><path fill="#8F6D37" d="M1.5 4.1c0-.66.54-1.2 1.2-1.2h3.12c.34 0 .66.14.89.39l.95 1.01h4.94c.66 0 1.2.54 1.2 1.2v1h-12z"/><path fill="#C09553" d="M2.42 6.5h11.62c.78 0 1.35.73 1.17 1.49l-.98 3.9c-.13.54-.61.91-1.17.91H2.7c-.66 0-1.2-.54-1.2-1.2V7.7c0-.66.42-1.2.92-1.2z"/></symbol>
+    <symbol id="i-ts" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#3178C6"/><text x="8" y="11.4" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7.4" font-weight="700" fill="#FFFFFF">TS</text></symbol>
+    <symbol id="i-css" viewBox="0 0 16 16"><path fill="#1572B6" d="M2.6 1.5h10.8l-.98 11L8 14.5l-4.42-2z"/><text x="8" y="10.6" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7.2" font-weight="700" fill="#FFFFFF">3</text></symbol>
+    <symbol id="i-md" viewBox="0 0 16 16"><rect x="0.75" y="3.75" width="14.5" height="8.5" rx="1.6" fill="none" stroke="#519ABA" stroke-width="1.3"/><path fill="#519ABA" d="M2.9 10.4V5.9h1.35L5.6 7.6l1.35-1.7H8.3v4.5H6.95V7.9L5.6 9.6 4.25 7.9v2.5z"/><path fill="#519ABA" d="M10.55 5.9h1.5v2.3h1.35L11.3 10.7 9.2 8.2h1.35z"/></symbol>
+    <symbol id="i-npm" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="#CB3837"/><text x="8" y="10.4" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="5" font-weight="700" fill="#FFFFFF">npm</text></symbol>
+  </defs>
+</svg>
+
+<div class="scene">
+  <div class="desktop">
+    <div class="wall"><i class="b5"></i><i class="b2"></i><i class="b4"></i><i class="b3"></i><i class="b1"></i><i class="vig"></i></div>
+
+    <section class="window">
+
+      <!-- ======================= LEFT RAIL ======================= -->
+      <aside class="rail">
+
+        <div class="rail-header">
+          <div class="lights"><span></span><span></span><span></span></div>
+          <div class="pillbar">
+            <div class="pill active"><svg><use href="#i-files"/></svg></div>
+            <div class="pill"><svg><use href="#i-search"/></svg></div>
+            <div class="pill"><svg><use href="#i-scm"/></svg><span class="badge">3</span></div>
+            <div class="pill"><svg><use href="#i-debug"/></svg></div>
+            <div class="pill"><svg><use href="#i-ext"/></svg></div>
+          </div>
+        </div>
+
+        <div class="rail-caption">
+          <div class="cap-title">Explorer</div>
+          <div class="cap-actions">
+            <svg><use href="#i-newfile"/></svg>
+            <svg><use href="#i-newfolder"/></svg>
+            <svg><use href="#i-refresh"/></svg>
+            <svg><use href="#i-collapse"/></svg>
+          </div>
+        </div>
+
+        <div class="rail-tree">
+          <div class="pane-header">VSCODE</div>
+          <div class="tree-rows">
+            <div class="tguides">
+              <i style="left:20px; top:88px;  height:308px"></i>
+              <i style="left:36px; top:110px; height:286px"></i>
+              <i style="left:52px; top:198px; height:198px"></i>
+              <i style="left:68px; top:220px; height:176px"></i>
+            </div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">build</span></div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">extensions</span></div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">scripts</span></div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"><svg><use href="#i-chevd"/></svg></span><span class="fico"><svg><use href="#i-foldero"/></svg></span><span class="lbl">src</span></div>
+            <div class="trow d1"><span class="ind"></span><span class="tw"><svg><use href="#i-chevd"/></svg></span><span class="fico"><svg><use href="#i-foldero"/></svg></span><span class="lbl">vs</span></div>
+            <div class="trow d2"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">base</span></div>
+            <div class="trow d2"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">editor</span></div>
+            <div class="trow d2"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">platform</span></div>
+            <div class="trow d2"><span class="ind"></span><span class="tw"><svg><use href="#i-chevd"/></svg></span><span class="fico"><svg><use href="#i-foldero"/></svg></span><span class="lbl">workbench</span></div>
+            <div class="trow d3"><span class="ind"></span><span class="tw"><svg><use href="#i-chevd"/></svg></span><span class="fico"><svg><use href="#i-foldero"/></svg></span><span class="lbl">browser</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">actions</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">media</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-folder"/></svg></span><span class="lbl">parts</span></div>
+            <div class="trow d4 cursor"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-ts"/></svg></span><span class="lbl mod">inlineTitleBar.ts</span><span class="git mod">M</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-ts"/></svg></span><span class="lbl">layout.ts</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-ts"/></svg></span><span class="lbl mod">style.ts</span><span class="git mod">M</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-ts"/></svg></span><span class="lbl unt">workbench.inlineTitleBar.contribution.ts</span><span class="git unt">U</span></div>
+            <div class="trow d4"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-ts"/></svg></span><span class="lbl">workbench.ts</span></div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"><svg><use href="#i-chevr"/></svg></span><span class="fico"><svg><use href="#i-npm"/></svg></span><span class="lbl">package.json</span></div>
+            <div class="trow d0"><span class="ind"></span><span class="tw"></span><span class="fico"><svg><use href="#i-gear" style="color:#8C8C8C"/></svg></span><span class="lbl">product.json</span></div>
+          </div>
+        </div>
+
+        <div class="rail-hints">j/k move<b>·</b>h/l fold<b>·</b>a add<b>·</b>r rename<b>·</b>d delete<b>·</b>/ filter</div>
+      </aside>
+
+      <!-- ====================== EDITOR COLUMN ==================== -->
+      <div class="main">
+
+        <div class="tabsrow">
+          <div class="tab active"><span class="abt"></span><span class="tico"><svg><use href="#i-ts"/></svg></span>inlineTitleBar.ts<span class="cls"><svg><use href="#i-close"/></svg></span></div>
+          <div class="tab"><span class="tico"><svg><use href="#i-css"/></svg></span>style.css<span class="dirty"></span></div>
+          <div class="tab"><span class="tico"><svg><use href="#i-md"/></svg></span>board.md<span class="slot"></span></div>
+          <div class="tabs-actions">
+            <svg><use href="#i-split"/></svg>
+            <svg><use href="#i-dots"/></svg>
+          </div>
+        </div>
+
+        <div class="crumbs">
+          <span>src</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
+          <span>vs</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
+          <span>workbench</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
+          <span>browser</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
+          <span>inlineTitleBar.ts</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
+          <span class="last"><span class="sym"><svg><use href="#i-symconst"/></svg></span>INLINE_TITLE_BAR_CAPTION_HEIGHT</span>
+        </div>
+
+        <div class="editor">
+          <div class="gmarks">
+            <span class="del" style="top:59px"></span>
+            <span class="chg" style="top:378px; height:42px"></span>
+            <span class="add" style="top:714px; height:63px"></span>
+          </div>
+
+          <div class="erow"><span class="g">29</span><span class="code"><span class="k">import</span> { <span class="f">getZoomFactor</span> } <span class="k">from</span> <span class="s">'../../base/browser/browser.js'</span>;</span></div>
+          <div class="erow"><span class="g">28</span><span class="code wl"><span class="k">import</span> { <span class="t sq">CodeWindow</span> } <span class="k">from</span> <span class="s">'../../base/browser/window.js'</span>;<span class="el">  <svg><use href="#i-warn"/></svg> 'CodeWindow' is declared but its value is never read</span></span></div>
+          <div class="erow"><span class="g">27</span><span class="code"><span class="k">import</span> { <span class="t">Emitter</span> } <span class="k">from</span> <span class="s">'../../base/common/event.js'</span>;</span></div>
+          <div class="erow"><span class="g">26</span><span class="code"></span></div>
+          <div class="erow"><span class="g">25</span><span class="code"><span class="m">/**</span></span></div>
+          <div class="erow"><span class="g">24</span><span class="code"><span class="w">·</span><span class="m">* Class set on the workbench container of every window that lays out with an inline title</span></span></div>
+          <div class="erow"><span class="g">23</span><span class="code"><span class="w">·</span><span class="m">* bar, so that stylesheets can scope the geometry to it.</span></span></div>
+          <div class="erow"><span class="g">22</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
+          <div class="erow"><span class="g">21</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CLASS</span> = <span class="s">'inline-titlebar'</span>;</span></div>
+          <div class="erow"><span class="g">20</span><span class="code"></span></div>
+          <div class="erow"><span class="g">19</span><span class="code"><span class="m">/**</span></span></div>
+          <div class="erow"><span class="g">18</span><span class="code"><span class="w">·</span><span class="m">* Height of the row that hosts the native window controls, in physical points. The controls</span></span></div>
+          <div class="erow"><span class="g">17</span><span class="code"><span class="w">·</span><span class="m">* do not scale with the window zoom level, so the row is divided by the zoom factor to keep</span></span></div>
+          <div class="erow"><span class="g">16</span><span class="code"><span class="w">·</span><span class="m">* the same size on screen. Kept in sync with `--titlebar-height` in `media/style.css`.</span></span></div>
+          <div class="erow"><span class="g">15</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
+          <div class="erow"><span class="g">14</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_HEIGHT</span> = <span class="c">46</span>;</span></div>
+          <div class="erow"><span class="g">13</span><span class="code"></span></div>
+          <div class="erow"><span class="g">12</span><span class="code"><span class="m">/**</span></span></div>
+          <div class="erow"><span class="g">11</span><span class="code"><span class="w">·</span><span class="m">* Width the native window controls occupy, in physical points. Divided by the zoom factor</span></span></div>
+          <div class="erow"><span class="g">10</span><span class="code"><span class="w">·</span><span class="m">* for the same reason. Kept in sync with `--traffic-lights-width` in `media/style.css`.</span></span></div>
+          <div class="erow"><span class="g">9</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
+          <div class="erow"><span class="g">8</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CONTROLS_WIDTH</span> = <span class="c">86</span>;</span></div>
+          <div class="erow"><span class="g">7</span><span class="code"></span></div>
+          <div class="erow"><span class="g">6</span><span class="code"><span class="m">/**</span></span></div>
+          <div class="erow"><span class="g">5</span><span class="code"><span class="w">·</span><span class="m">* Height of the caption row that a side bar title shrinks to underneath the window controls</span></span></div>
+          <div class="erow"><span class="g">4</span><span class="code"><span class="w">·</span><span class="m">* row, in pixels. Unlike the row above it, neither zoom nor the workbench font size scales</span></span></div>
+          <div class="erow"><span class="g">3</span><span class="code"><span class="w">·</span><span class="m">* this one: it is what is left of the height the part layout reserves for a header and a</span></span></div>
+          <div class="erow"><span class="g">2</span><span class="code"><span class="w">·</span><span class="m">* title at zoom level 0.</span></span></div>
+          <div class="erow"><span class="g">1</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
+          <div class="erow"><span class="g cur">35</span><span class="code hl"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CAPTION_HEIGHT</span> = <span class="c"><span class="cur-block">2</span>4</span>;<span class="bl">  Sebastian Suarez, 3 days ago · M2 slice 2</span></span></div>
+          <div class="erow"><span class="g">1</span><span class="code"></span></div>
+          <div class="erow"><span class="g">2</span><span class="code"><span class="m">/**</span></span></div>
+          <div class="erow"><span class="g">3</span><span class="code"><span class="w">·</span><span class="m">* Height of the breadcrumbs row underneath a full height tab row, in pixels. That row carries</span></span></div>
+          <div class="erow"><span class="g">4</span><span class="code"><span class="w">·</span><span class="m">* content rather than the window controls, so unlike the row above it this is a plain size</span></span></div>
+          <div class="erow"><span class="g">5</span><span class="code"><span class="w">·</span><span class="m">* that the zoom level scales along with everything else.</span></span></div>
+          <div class="erow"><span class="g">6</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
+          <div class="erow"><span class="g">7</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_BREADCRUMBS_HEIGHT</span> = <span class="c">25</span>;</span></div>
+
+          <div class="sbar" style="top:37px; height:271px"></div>
+        </div>
+
+        <!-- ============= STATUSBAR (editor column only) ============ -->
+        <div class="statusbar">
+        <span class="mode">NORMAL</span>
+        <span class="lgroup">
+          <span class="seg"><span class="bri"><svg><use href="#i-branch"/></svg></span>vsebcode</span>
+          <span class="dotsep">·</span>
+          <span class="seg"><span class="add">+6</span>&nbsp;<span class="chg">~2</span>&nbsp;<span class="del">−1</span></span>
+          <span class="dotsep">·</span>
+          <span class="seg wrn"><svg><use href="#i-warn"/></svg>1</span>
+        </span>
+        <span class="rgroup">
+          <span>Ln 35, Col 48</span>
+          <span>33%</span>
+          <span>UTF-8</span>
+          <span>LF</span>
+          <span>TypeScript</span>
+        </span>
+        </div>
+      </div>
+
+      <!-- ================== WHICH-KEY PANEL ===================== -->
+      <!-- Leader (space) pressed from the v3 NORMAL moment; focus
+           stays in the editor (block cursor + NORMAL untouched).
+           The map below IS the proposed first leader map — 3 leaves
+           + 5 groups, every entry tied to a surface that exists
+           today: settings, find-in-files/live-grep, editors,
+           problems, the view-1 explorer, view-2 telescope pickers,
+           the SCM rail, editor-group splits. Column-major fill,
+           byte-sorted keys, no duplicates. -->
+      <div class="wk">
+        <div class="wk-title">SPC</div>
+        <div class="wk-cols">
+          <div class="wk-row"><span class="key">,</span><span class="sep">→</span><span class="desc">Settings</span></div>
+          <div class="wk-row"><span class="key">/</span><span class="sep">→</span><span class="desc">Grep in files</span></div>
+          <div class="wk-row"><span class="key">b</span><span class="sep">→</span><span class="desc grp">+buffer</span></div>
+          <div class="wk-row"><span class="key">d</span><span class="sep">→</span><span class="desc grp">+diagnostics</span></div>
+          <div class="wk-row"><span class="key">e</span><span class="sep">→</span><span class="desc">Explorer</span></div>
+          <div class="wk-row"><span class="key">f</span><span class="sep">→</span><span class="desc grp">+find</span></div>
+          <div class="wk-row"><span class="key">g</span><span class="sep">→</span><span class="desc grp">+git</span></div>
+          <div class="wk-row"><span class="key">w</span><span class="sep">→</span><span class="desc grp">+window</span></div>
+        </div>
+      </div>
+
+    </section>
+
+    <p class="legend">Which-key leader panel<b>·</b>Proposed first leader map<b>·</b>Shipped panel vocabulary</p>
+  </div>
+</div>

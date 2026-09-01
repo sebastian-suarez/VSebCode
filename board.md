@@ -63,17 +63,21 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   lualine INSERT handoff, real 184/8196 fuzzy corpus, byte-real
   `titlebarPart.ts:90-107` preview @ 21px; verdicts durable as § D19
   amendments round 2 (the overlay vocabulary is now the M10 panel
-  language). **View 3 (which-key) BUILT + PUBLISHED, v1 (2026-09-01)** →
+  language). **View 3 (which-key) APPROVED at v1 (2026-09-01 — round
+  DELEGATED by Sebastian: "take the decisions that fit the best";
+  session ruled the map + all 4 flags approved as mocked, durable as
+  § D19 amendments round 3)** →
   https://claude.ai/code/artifact/1c72b816-6134-4164-be0a-73befd1bfa49
-  (`m10-nvim-whichkey.html`, untracked until approved): 964×83 leader
+  (`m10-nvim-whichkey.html`, committed on approval): 964×83 leader
   panel bottom-anchored to the editor column in the approved overlay
   vocabulary, `SPC` breadcrumb in the title row as our showcmd,
-  statusbar v3-verbatim; the PROPOSED first leader map (`,` `/` `b` `d`
-  `e` `f` `g` `w` — 3 leaves + 5 groups, all grounded in existing
-  surfaces) is the centerpiece of the flag round; session review GREEN
-  (command ids, color provenance, scene diff, geometry re-verified).
-  PENDING Sebastian's flag round + whole-view verdict (full map + flags
-  in Tasks § M10).
+  statusbar v3-verbatim, first leader map `,` `/` `b` `d` `e` `f` `g`
+  `w` (3 leaves + 5 groups, grounded-only). **View 4 (flash jumps) IN
+  PROGRESS**: `m10-nvim-flash.html` (untracked until approved), same
+  pipeline over the v3 NORMAL moment — labels on REAL pattern matches
+  in the visible editor text; the flash dim-vs-no-dim call is the
+  centerpiece flag; delegated-round protocol applies (session rules,
+  plain veto window to Sebastian).
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -525,6 +529,25 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   radius 12, shadow-xl, #202122 @ 0.90) is the M10 panel language from here
   on. Session's cursor-row note (explorer keyboard-cursor row keeps its
   active tint under finder focus) not taken up — stays as mocked.
+- **D19 amendments round 3 (view-3 which-key verdicts — round DELEGATED by
+  Sebastian 2026-09-01, "take the decisions that fit the best"; session
+  ruled, all as mocked)**: (1) the FIRST LEADER MAP is locked at prototype
+  level — `,` Settings · `/` Grep in files · `b` +buffer · `d` +diagnostics
+  · `e` Explorer · `f` +find (telescope) · `g` +git · `w` +window (3 leaves
+  + 5 groups, byte-sorted, column-major); the grounded-only rule is durable:
+  keymap content may only reference surfaces that exist (no entries for
+  non-green-lit candidates); (2) leader-panel form = editor-column strip
+  floated on the M3 8px grammar (8px side insets + 8px above the statusbar),
+  not edge-to-edge — follows the editor-column logic of the full-height-rail
+  anatomy; (3) the pending-prefix breadcrumb in the panel's 25px title row
+  is the M10 showcmd home; the lualine gets NO showcmd segment (honest
+  absence, durable); (4) panel entry colors: keys `#48A0C7` (the
+  interactive-key accent), groups `#d2a8ff` (2026-dark tokenColors
+  entity.name.function), separator `→` U+2192 (Nerd-Font `➜` rejected),
+  leaf descriptions sentence case / groups lowercase `+noun`. Delegation
+  protocol recorded: when Sebastian delegates a round, the session rules it,
+  records the delegation per round, and leaves a plain veto window in the
+  reply.
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant

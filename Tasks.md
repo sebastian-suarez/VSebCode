@@ -774,7 +774,7 @@ the plan's S2–S12 sections.
 Prototype-first: static HTML mockups of the nvim-inspired UX on the shipped design,
 one view per round, Sebastian judges each. Source of truth = one page per view at the
 umbrella root (view 1: `m10-nvim-prototype.html`; view 2: `m10-nvim-telescope.html`;
-view 3: `m10-nvim-whichkey.html`);
+view 3: `m10-nvim-whichkey.html`; view 4: `m10-nvim-flash.html`);
 iterate by editing the view's file and re-publishing — the SAME file path keeps the
 SAME artifact URL, a NEW view gets its own file + URL. View 1 references: his `~/Projects/Settings/settings.json`
 (relative numbers, minimap off, Error Lens, inline blame, Liga SFMono NF, vscode-icons)
@@ -814,31 +814,30 @@ and the `2026-dark.json` include chain for every color.
   re-verified independently at review: 184/8196 = real rg counts, 16/16
   result paths on disk, true greedy highlight positions, byte-real
   `titlebarPart.ts` 90–107 of 1026
-- [ ] View 3 — which-key **BUILT + PUBLISHED 2026-09-01** (Fable-max agent per
-  the D19 exception; session review green) →
+- [x] View 3 — which-key **APPROVED at v1, 2026-09-01** — round DELEGATED by
+  Sebastian ("take the decisions that fit the best"); session ruled the
+  leader map + all 4 flags approved as mocked (durable in board § D19
+  amendments round 3). File committed on approval (same path = same URL) →
   https://claude.ai/code/artifact/1c72b816-6134-4164-be0a-73befd1bfa49
-  (label `whichkey-v1`; same path re-publishes to the same URL). Leader
-  panel over the v3 NORMAL moment (block cursor + NORMAL both back; focus
-  never leaves the editor): 964×83 strip bottom-anchored to the editor
-  column on the M3 8px grammar (left 300+8, top 870−22−8−83; 81 inner =
-  25 title + 6+2×22+6 entries), approved panel vocabulary (#202122 @ 0.90,
-  border #333536, radius 12, shadow-xl), 4×2 grid filled column-major,
-  byte-sorted keys. Review re-verified independently: openSettings /
-  findInFiles command ids real in the fork, #d2a8ff ×2 in 2026-dark.json,
-  diff vs the v3 scene = panel+title+legend only, window geometry
-  untouched, rail coat ×1, zero http/attribution. **PENDING Sebastian's
-  flag round + verdict** — the PROPOSED FIRST LEADER MAP is the
-  centerpiece: `,` Settings · `/` Grep in files · `b` +buffer · `d`
-  +diagnostics · `e` Explorer · `f` +find (telescope) · `g` +git · `w`
-  +window — 3 leaves + 5 groups, every entry grounded in an existing
-  surface (no trouble/harpoon per the staged-element rule). Other flags:
-  (1) panel form = editor-column strip floated on the 8px grammar, not
-  edge-to-edge; (2) pending-prefix breadcrumb `SPC` in the panel's 25px
-  title row = our showcmd — the statusbar stays v3-verbatim (the lualine
-  spec has no showcmd segment; honest absence); (3) groups purple #d2a8ff
-  (2026-dark tokenColors entity.name.function) vs keys #48A0C7; (4)
-  separator `→` U+2192 (which-key's `➜` is Nerd-Font-only), leaf
-  descriptions sentence case / groups lowercase `+noun`
+  Reference record: 964×83 strip bottom-anchored to the editor column on
+  the M3 8px grammar (left 300+8, top 870−22−8−83; 81 inner = 25 title +
+  6+2×22+6 entries), approved panel vocabulary (#202122 @ 0.90, border
+  #333536, radius 12, shadow-xl), 4×2 grid column-major, byte-sorted keys;
+  review re-verified independently: openSettings/findInFiles ids real,
+  #d2a8ff ×2 in 2026-dark.json, diff vs v3 scene = panel+title+legend
+  only, geometry untouched, rail coat ×1, zero http/attribution
+- [ ] View 4 — flash jumps (`m10-nvim-flash.html`, own artifact URL): IN
+  PROGRESS 2026-09-01, Fable-max agent per the D19 exception — flash.nvim
+  jump mid-flight over the v3 NORMAL moment (mode + block cursor stay; rail/
+  chrome untouched). Coherence bar: the typed pattern must REALLY occur in
+  the visible v3 editor text at every labeled position, label count = match
+  count, flash label-alphabet rules honored against the real lines.
+  Centerpiece flag: flash's unmatched-text DIM vs the round-2 no-dim
+  verdict (editor-foreground fade ≠ backdrop scrim — builder chooses +
+  justifies); secondary: pattern echo home (lualine has no cmdline —
+  honest-absence precedent), label + match-highlight theme provenance,
+  assignment scheme. Delegated-round protocol: session reviews, rules,
+  publishes, closes — plain veto window to Sebastian in the report
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
