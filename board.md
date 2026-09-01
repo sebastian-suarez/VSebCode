@@ -101,10 +101,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   (approved state = published state), trio committed with the doc fold;
   flash gets the motion pass next (the vocabulary lives in the three
   files). **Hints r9 same day** (Sebastian: text under the sidebar
-  cropped by the window shape): rail-hints footer compacted across all
-  four views + republished — § D19 amendments round 9; found + fixed in
-  passing: the flash artifact was still serving the pre-Geist r4 page
-  (the r6 republish never landed there), now current.
+  cropped by the window shape; follow-up ruling "Drop it"): rail-hints
+  overflow fixed by DROPPING the `d delete` hint at stock size — the
+  session's interim metric shrink overruled; all four views republished
+  — § D19 amendments round 9; found + fixed in passing: the flash
+  artifact was still serving the pre-Geist r4 page (the r6 republish
+  never landed there), now current.
   NEXT (Sebastian's calls): further views (trouble list ·
   harpoon stay candidates) and/or implementation scoping.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
@@ -618,7 +620,13 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   the pre-Geist r4 page (the r6 "all five republished" never actually
   landed on flash's URL — it still had the Helvetica-Neue face, likely
   where the crop read worst); flash's URL now serves the committed
-  Geist page with r9 baked.
+  Geist page with r9 baked. **Ruled by Sebastian (same day, on the
+  offered alternative: "Drop it")**: the metric shrink is OUT — hint
+  line back at stock 10.5px / 5px dot padding, and the `d delete` hint
+  dropped instead; five hints survive in their original order
+  ("j/k move · h/l fold · a add · r rename · / filter"), line ends
+  ≈57px clear of the seam. Re-verified on headless renders of all four
+  views, all four artifacts republished to their URLs.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:
