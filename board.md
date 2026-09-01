@@ -163,11 +163,27 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   **ALL SIX BATCHES LANDED + review-green same day**: 237 SVGs (145 core
   files + 10 generics + default file + 40 folders × closed/open),
   validator 237/237, ~107KB. Gate rulings R1-R11 recorded in Tasks § M11;
-  cross-batch hue twins known (batch-4 audit). **ASSEMBLY IN FLIGHT**:
-  set-wide reconciliation + spec errata + full-set checkpoint sheet (with
-  the human-pass flag list) + theme JSON (core matchers + long-tail →
-  generics). Then: Sebastian's full-set pass → fork packaging (built-in
-  extension + default flip).
+  cross-batch hue twins known (batch-4 audit). **ASSEMBLY LANDED +
+  session-verified 2026-09-01** → full-set checkpoint artifact
+  https://claude.ai/code/artifact/e3f8fc9e-9d7d-4ce3-98ba-f39b7a24cb83 :
+  reconciliation 26 retints + 3 mark redraws (55 R7 twins + 3 real R8
+  collisions → 0 open; 4 moves TOWARD brand; log in reconciliation.md; R7
+  form-qualified for silhouettes, R8 badge bar 0.92 — spec §10); errata
+  R1-R11 written; audit/raster/set-manifest tooling versioned. Theme JSON
+  self-check clean: 237 definitions · 2010 fileExtensions · 1668
+  fileNames · 624 languageIds · 368 folderNames(+Expanded) · 1015
+  long-tail concepts → generics; REAL BUG caught by the theme-resolved
+  explorer strips: VS Code resolves fileNames before fileExtensions, so
+  1554 generic name rules that would shadow core extension rules are
+  dropped by build-theme.mjs. Geist r6 checked: view-1 icon defs still
+  `-apple-system` — icon letterforms (Inter paths matched to the approved
+  canon) unaffected. **GATE: Sebastian's full-set pass** — flag list on
+  the sheet §5 (yaml plum veto · git↔claude dark-retint swap [session
+  recommends: restore git #E0603C, nudge claude] · swagger ring · maven
+  MVN vs feather · clojure/erlang letters vs marks · expo E · C-trio
+  post-retint read · css/html shared canon shield). Then fork packaging
+  (built-in extension + default flip; theme PATH_PREFIX one-string
+  change).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

@@ -923,13 +923,25 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   gate, logo-mark letterpath exemption; standing off-brands: yaml plum
   [Sebastian veto open], powerpoint crimson, nim, astro, fsharp). Known
   debt: cross-batch hue twins enumerated by batch 4's audit
-- [ ] ASSEMBLY IN FLIGHT 2026-09-01 (single agent, sole writer): set-wide
-  R7/R8 reconciliation (~10-20 retints, least-brand-anchored member moves,
-  logged in reconciliation.md), spec errata R1-R11, full-set checkpoint
-  sheet (incl. retint before/after + the human-pass flag list: yaml plum ·
-  swagger · maven MVN · clojure CLJ · erlang ERL · expo E · C-family badge
-  trio), theme JSON from core-tier matchers + long-tail→generics
-  (build-theme.mjs, structural self-check)
+- [x] ASSEMBLY LANDED + session-verified 2026-09-01: reconciliation 26
+  retints + 3 mark redraws → audit 0 open (2 accepted R8 residuals + 109
+  silhouette hue-neighbourhoods, reasons logged); spec errata R1-R11 +
+  §10 operative readings; tooling versioned (audit/raster/set-manifest/
+  contact-full/build-theme); theme JSON self-check clean (237 defs, 2010
+  ext, 1668 names, 624 langs, 368+368 folders, 1015 long-tail→generics;
+  1554 shadowing generic name rules dropped — VS Code resolves fileNames
+  before fileExtensions); full-set sheet →
+  https://claude.ai/code/artifact/e3f8fc9e-9d7d-4ce3-98ba-f39b7a24cb83 ;
+  validator 237/237 re-run by the session; Geist r6 checked — icon canon
+  letterforms unaffected (view-1 defs still -apple-system)
+- [ ] **GATE — Sebastian's full-set pass** (sheet §5 flag list; session
+  recommendations recorded on the board M11 entry). Known small calls:
+  requirements.txt → text not python (inventory matcher, one-line);
+  contact-full.png is 5.1MB (chat upload will fail; artifact is the view)
+- [ ] Fork packaging after the gate (delegated implementation): built-in
+  icon-theme extension in `vscode/` modeled on theme-seti, svg tree +
+  theme JSON (PATH_PREFIX → ./icons), product default flip D15-style;
+  hooks ON; then Sebastian compiles + virgin-boot verifies per house rules
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)
 - [ ] Acceptance: virgin build boots with the VSebCode icon set as default
