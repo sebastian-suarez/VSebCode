@@ -196,6 +196,28 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   class is plural `search-widgets-container`) → dropped; only the toggle-replace anchor
   ports (its `bottom: auto` also dead — the effective piece is `height: 26px` over stock
   `height: 100%`). *Decided by Sebastian 2026-08-31.*
+- **D15 Design as default — no configuration required** (supersedes D13's virgin-stock
+  stance and the M4 theme rider): a virgin profile boots into the FULL VSebCode design.
+  Product defaults (user-overridable, macOS-guarded where the setting is platform-shared):
+  `window.titleBarStyle: "native"` + `window.customTitleBarVisibility: "never"` (gate ON
+  by default), `workbench.activityBar.location: "top"`, `workbench.tree.indent: 16` +
+  `renderIndentGuides: "always"` (the M3 +3px guide shift is calibrated for indent 16 —
+  stock 8 puts guides through file icons), and Dark 2026 as the default color theme.
+  Packaged-pass criterion flips: virgin profile must show the full design; the D13 gate
+  still flips live when a user overrides the titlebar pair. *Decided by Sebastian
+  2026-08-31 at the M3 checkpoint ("you should not [add configurations], this should be
+  enabled by default").*
+- **D14 amendments (M3 checkpoint round 1, Sebastian 2026-08-31)**: sticky-header
+  differentiation — `sideBarStickyScroll.background` force moves from alpha 0 to a
+  **0.15 tint** of the theme color (no ghosting now that the mask hides rows beneath) +
+  1px bottom hairline `rgba(204,204,204,0.2)` + a 140ms opacity fade (strong ease-out,
+  transition not keyframes; per-row/scroll-linked motion rejected by the animation
+  frequency gate; empty-state `display:none` swapped for `opacity:0` mac-side; shadow
+  stays alpha 0). `sideBarSectionHeader.background` JOINS the alpha-0 force set
+  (accordion headers on bare translucency — Dark 2026 ships it opaque). Sidebar
+  caption/pane action codicons restored to stock 16px glyphs via mac-scoped override
+  (the vscodium patch's 11px scaling is daily-parity but reads under-sized next to the
+  20px pills; vendored file stays pristine).
 - **D12 Chat substrate stays; ghost text recorded as M8** — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant

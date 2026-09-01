@@ -411,7 +411,67 @@ commit each, diff-reviewed:
   `:lang()` variants are shadowed by our always-set var (CJK glyphs fall through to
   -apple-system) — same behavior as the injection era; add four `:lang()`
   companions only if CJK UI ever matters.
-- [ ] **Checkpoint** (M2-style roles: Sebastian runs watch + judges; session drives):
+- [ ] **Checkpoint round 1 — done 2026-08-31, verdict: fix round required.** CDP battery
+  all-green (clip math exact incl. live scroll: 424 = 380 + 44; mask tracks; forces
+  live; toggle 26px anchored; HN UI loaded; D14 no-gate split verified at stock
+  settings). Sebastian's visual pass surfaced, all root-caused: (1) tab clipped −26px —
+  LATENT M2 BUG: gated breadcrumbs CSS beats stock `.hidden` display:none on
+  no-breadcrumb editors (Welcome) while JS correctly excludes the row → group
+  auto-scrolls; M2 battery only measured with a file open. (2) pills can bleed under
+  the lights when inset+pills exceed a narrow/zoomed sidebar (flex `center` → needs
+  `safe center`; at default 299px nothing overflows through zoom +3, measured). (3)
+  caption icons 11px = vscodium patch parity (identical rule in daily bundle) but
+  under-sized next to 20px pills → 16px override approved. (4) guide-through-icon =
+  seed ran stock tree.indent 8, shift calibrated for 16 → D15 default. (5) accordion
+  header opaque = Dark 2026's sideBarSectionHeader.background, never in D10 sets →
+  alpha-0 force approved. (6) sticky differentiation too subtle → D14 amendment (0.15
+  tint + hairline + 140ms fade). Plus D15 recorded: design as default, no
+  configuration — seeded-kit checkpoints retire; virgin = full design. Launch-skill
+  learnings: relaunching the same profile needs full process-tree exit (port-free is
+  NOT exited — dying instance still writes state; premature relaunch triggers
+  single-instance arg-forwarding → ghost "Untitled (Workspace)" windows from revived
+  backups; purge Workspaces/Backups/workspaceStorage after full exit) and must go
+  through `./scripts/code.sh` (raw Electron lacks VSCODE_DEV env → workbench.html/NLS
+  errors). `!!GH_REPO_PATH!!` placeholder 404s announcements fetch — add to the M4
+  `!!APP_NAME!!` sweep.
+- [x] **Fix round landed** (`bf73bb4` visual + `d350494` D15 defaults; delegated,
+  diffs reviewed, hooks ON, tsgo-noEmit clean ×2, stylelint 0): F1 breadcrumbs
+  `:not(.hidden)` + `:has()` guard (real sites: editortitlecontrol.css, NOT
+  style.css); F2 `safe center` (sidebarpart.css); F4 sectionHeader → alpha-0 set;
+  F5 16px codicon override (beats vendored (0,5,0) at (0,8,0); pills keep 20px at
+  (0,14,0) — verified by count); F6 sticky → new `MAC_TINTED_STICKY_SURFACES` @
+  0.15 + hairline + 140ms fade (empty keeps display:block + pointer-events:none —
+  LOAD-BEARING: stale inline height persists at z-index 13; rows are torn out
+  synchronously so the fade reads as fade-IN only, by design). D15: titlebar pair
+  (desktop.contribution, `isMacintosh`), activityBar top + tree 16/always
+  (`isMacintosh && isNative`), theme needed NOTHING (Dark 2026 already
+  `ThemeSettingDefaults.COLOR_THEME_DARK`). No tests assert old defaults.
+  **DEV-LOOP CORRECTION (supersedes the 2026-08-29 watch-anatomy note)**: this fork
+  DISABLES esbuild transpile (`[vscodium] 00-build-disable-esbuild`,
+  `useEsbuildTranspile = false`) — `npm run watch` typechecks but NEVER writes
+  `out/`; every prior checkpoint ran on `out/` refreshed by per-slice agent
+  compiles. Dev loop = `npm run compile` after changes (or decide later to revert
+  that patch). Fix-round suites ran as baseline only (stale out/) — re-run after
+  compile. Accepted parity notes: multi-diff entry headers in the sessions UI
+  consume sectionHeader var → transparent on mac (dormant D12 surface); sticky-row
+  vs container compositing (~0.28 plate over 0.15 band in the 8px gutters) — judge
+  at round 2.
+- [x] **D15 tails landed** (`d5e6a6e`, delegated; diff reviewed; tsgo clean, hooks
+  ON): (a) `getTitleBarStyle` fallback → NATIVE on macOS (main-process registry
+  never sees renderer defaults; full 9-consumer main-side audit in the agent
+  report — all verdicts safe; bonus: kills a pre-existing stray
+  `titleBarOverlay: true` main/renderer WCO mismatch; `windows.ts:243-247` forced
+  hiddenInset unconditional, window chrome unchanged); (b)
+  `COLOR_THEME_DARK_INITIAL_COLORS` re-derived from 2026-dark.json's include
+  chain — 106/139 entries updated (full-palette coherence; consumer emits every
+  id), id set unchanged; splash path proven to flow through `getColor`, so D10/D14
+  alpha forces apply to the first frame automatically (plain hexes correct, the
+  constant stays platform-shared). Post-compile probes owed: sheet offset gone
+  (Save As sheet flush with window top), first-frame vars `#121314`/`#191A1B` with
+  sideBar/titleBar at rgba(…,0.3). Noted for approval, not done:
+  `COLOR_THEME_LIGHT_INITIAL_COLORS` has the identical staleness vs Light 2026
+  (dormant while dark is the sole default; mechanical re-run if wanted).
+- [ ] **Checkpoint round 2** (M2-style roles: Sebastian runs watch + judges; session drives):
   launch skill with `TMPDIR=/tmp`; CDP battery — clip var tracks scroll/sticky height,
   mask boundary sits under the sticky widget, row inset 8/…/7px incl. sticky rows,
   indent-guide shift, pane-header 12px, no scroll shadows, toggle-replace 26px on the
