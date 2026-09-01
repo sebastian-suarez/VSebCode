@@ -774,8 +774,8 @@ the plan's S2–S12 sections.
 Prototype-first: static HTML mockups of the nvim-inspired UX on the shipped design,
 one view per round, Sebastian judges each. Source of truth = one page per view at the
 umbrella root (view 1: `m10-nvim-prototype.html`; view 2: `m10-nvim-telescope.html`;
-view 3: `m10-nvim-whichkey.html`; view 4: `m10-nvim-flash.html`; view 5:
-`m10-nvim-oil.html`);
+view 3: `m10-nvim-whichkey.html`; view 4: `m10-nvim-flash.html`; view 5 was
+`m10-nvim-oil.html`, deleted on withdrawal — D19 r7);
 iterate by editing the view's file and re-publishing — the SAME file path keeps the
 SAME artifact URL, a NEW view gets its own file + URL. View 1 references: his `~/Projects/Settings/settings.json`
 (relative numbers, minimap off, Error Lens, inline blame, Liga SFMono NF, vscode-icons)
@@ -813,7 +813,8 @@ and the `2026-dark.json` include chain for every color.
   INSERT crossfade, beam blink 500ms halves, instant state steps
 - [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
   overlay → which-key → flash jumps → oil.nvim-style buffer file-ops (trouble
-  diagnostics list · harpoon revisit = candidates, not green-lit)
+  diagnostics list · harpoon revisit = candidates, not green-lit; oil later
+  withdrawn — D19 r7)
 - [x] View 2 — telescope overlay **APPROVED at v1, 2026-09-01** — all 5 flags
   approved as mocked (recorded durable in board § D19 amendments round 2);
   the session's cursor-row note not taken up → active tint stays as mocked.
@@ -853,23 +854,11 @@ and the `2026-dark.json` include chain for every color.
   foreground fade to comment tone #8b949e (FlashBackdrop→Comment, flash's
   own default link), label = flat char cell #48A0C7/#121314; builder's
   own render pass caught + fixed a dropped statusbar CSS section
-- [x] View 5 — oil.nvim buffer file-ops **APPROVED at v1, 2026-09-01**
-  (delegated round; session ruled all 6 flags as mocked; file committed on
-  approval) →
-  https://claude.ai/code/artifact/78c781ee-0660-4df3-9fb8-bc1125830183
-  Rulings: (1) tab = `browser/` + folder icon + dirty dot (basename
-  convention with oil's trailing-slash truth; full oil:// URI = tab
-  noise); (2) breadcrumbs end at the directory, no leaf/symbol; (3)
-  statusbar strips to NORMAL + branch + Ln 13,Col 6 + 54% (diff/
-  diagnostics/encoding/EOL/language are file-buffer segments — honest
-  absences); (4) edit story = case-toggle rename `panecomposite.ts` →
-  `paneComposite.ts` mid-flight, unwritten (the upstream file is
-  GENUINELY lowercase; `~` cursor position Col 6 coherent); (5)
-  name-only columns, no EOF tildes, no scrollbar (24<37), no git gutter
-  marks; (6) rail tree stays v3-verbatim, read as a scrolled viewport.
-  Verification: builder's oilcheck.py re-run at review — 24/24 rows =
-  the real `src/vs/workbench/browser` listing, ALL CHECKS PASS; greps
-  clean; r4 geometry honored by the builder unprompted
+- [x] View 5 — oil.nvim buffer file-ops: built + session-approved
+  2026-09-01, then **WITHDRAWN by Sebastian the same day** (ruled in the
+  animation session; mockup deleted — recoverable at `1436a80` — artifact
+  orphaned-private, OUT of M10 and implementation scope; § board D19
+  amendments round 7)
 - [x] **Font r6 — UI face → Geist (D19 amendments round 6; Sebastian
   confirmed live)** 2026-09-01: 9-candidate research specimen (committed
   as `m10-font-research.html`) →
@@ -889,7 +878,7 @@ and the `2026-dark.json` include chain for every color.
   demo. PENDING: that session's flag round with Sebastian (panel
   recipes, 120ms mode crossfade, beam blink, view-1 walk, replay
   control) → then the three files commit with its amendment text;
-  then flash/oil get the same pass. Rewrite guard: preserve the MOTION
+  then flash gets the same pass. Rewrite guard: preserve the MOTION
   sections + .play/.out/.kwalk/.mcov/.ecur hooks; walk geometry assumes
   22px tree rows
 - [ ] Only after mockups are accepted: scope the implementation milestones

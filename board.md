@@ -50,7 +50,8 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   docs committed umbrella-side. Follow-on directive same day: complete FILE
   ICON SET in the mockup icons' style → recorded as M11/D20. Later views
   GREEN-LIT (Sebastian, 2026-09-01), build order: (1) telescope overlay →
-  (2) which-key → (3) flash jumps → (4) oil.nvim-style buffer file-ops;
+  (2) which-key → (3) flash jumps → (4) oil.nvim-style buffer file-ops
+  (oil later built, then WITHDRAWN same day — § D19 amendments round 7);
   trouble list + harpoon revisit stay candidates, not green-lit (harpoon
   excluded from view 1 by choice). One page + own artifact URL per view from
   here on. **View 2 (telescope) APPROVED at v1 (Sebastian, 2026-09-01 —
@@ -79,15 +80,13 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   amendments round 5)** →
   https://claude.ai/code/artifact/18f2d6b7-5a9c-4ba0-8f28-59586cf45627
   (`m10-nvim-flash.html`, committed on approval; r4 baked pre-publish):
-  `s hei`, 9 machine-verified real matches. **View 5 (oil) APPROVED at
-  v1 (2026-09-01, delegated round — session ruled all 6 flags as
-  mocked; § Tasks M10 for the list)** →
-  https://claude.ai/code/artifact/78c781ee-0660-4df3-9fb8-bc1125830183
-  (`m10-nvim-oil.html`, committed on approval): the REAL
-  `src/vs/workbench/browser` listing as an oil buffer (24/24 rows
-  machine-checked), mid-flight case-toggle rename of the genuinely
-  lowercase upstream `panecomposite.ts`. **GREEN-LIT QUEUE COMPLETE** —
-  views 2–5 all built, reviewed, approved, published. **Geometry
+  `s hei`, 9 machine-verified real matches. **View 5 (oil) WITHDRAWN
+  (Sebastian 2026-09-01, ruled in the animation session — "I dont like
+  Oil, remove its mockup and anywhere that references it"): built +
+  session-approved earlier the same day, then mockup DELETED and oil
+  dropped from M10 scope and the implementation pipeline — § D19
+  amendments round 7.** **GREEN-LIT QUEUE CLOSED** — views 2–4 built,
+  reviewed, approved, published; view 5 built then withdrawn. **Geometry
   revision r4 same day** (Sebastian: tabs "too big"): tab row → stock
   35px, windows → 1280×859 — § D19 amendments round 4. **Font r6 same
   day**: UI face → GEIST (Sebastian confirmed live), all five views
@@ -100,7 +99,7 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   (transform/opacity only, PRODUCT vs PRESENTATION values documented
   in-file, reduced-motion variants, safe JS) + republished; that
   session's flag round is pending with Sebastian — the three animated
-  files commit with its verdicts; flash/oil get the motion pass after.
+  files commit with its verdicts; flash gets the motion pass after.
   NEXT (Sebastian's calls): further views (trouble list · harpoon
   stay candidates) and/or implementation scoping.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
@@ -571,6 +570,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   views updated + republished to their URLs, renders re-verified. Veto
   window open: option A (compact tabs+crumbs combined inside the 46 band)
   remains available if stock reads wrong.
+- **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
+  ruled in the animation session, relayed: "I dont like Oil, remove its
+  mockup and anywhere that references it to impolement" [implement])**:
+  overrules the same-day delegated approval — `m10-nvim-oil.html` deleted
+  (recoverable at `1436a80`), the oil artifact stays private/orphaned
+  (tooling cannot unpublish), oil.nvim-style buffer file-ops are OUT of
+  M10 and the implementation phase entirely. Flash stays fully in scope;
+  trouble/harpoon candidate status unchanged. Candidate-list history in
+  D19 stays as written per house amend-don't-rewrite style.
 - **D19 amendments round 6 — UI face = GEIST (research round; delegated
   pick CONFIRMED by Sebastian live: "Lets use Geist", 2026-09-01)**. His
   directive: HN Light "looks like a marketing product" — change to
