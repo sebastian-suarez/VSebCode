@@ -542,6 +542,143 @@ commit each, diff-reviewed:
   Style + Vibrancy, apply the settings edit (M2 doc + M3 pieces: vibrancy settings,
   `font.sansSerif`, remaining external imports, stylesheet block, sticky zero-hexes)
 
+## M9 — AI excision (D16/D17; site map in [m9-excision-plan.md](m9-excision-plan.md))
+
+Survey done 2026-08-31; scope ratified as D17. One delegated commit per slice, hooks
+ON, `Area: sentence` subjects, no AI attribution. Every slice: `npm run compile` exit
+0 + targeted eslint/suites + grep-proof of zero remaining imports of the removed area
+(this fork's watch never writes `out/` — compile by hand). NO gulp packaging until B1
+lands (build entry wiring is removed there). Resume cold: read the plan doc first.
+
+- [x] **S1 — Extension-facing API surface LANDED 2026-08-31** (`988c87fc3ad` api
+  surface −25,640 lines; `545746feae6` built-in extensions −1,812; delegated, diff
+  reviewed, hooks ON): 35 modules + 32 proxy IDs + shapes, 5 namespaces +
+  `createChatStatusItem` + `isAgentSessionsWorkspace` + `languageModelAccessInformation`,
+  ~110 returned exports + extHostTypes `//#region Chat` (101 exports), `vscode.d.ts`
+  19594–21226, 28 proposed dts deleted / 8 emptied to placeholders / 3 kept
+  (constraint #7 recorded — proposal names live until their last consumer),
+  `extensionsApiProposals` regen proven byte-stable under compile. Extensions: git
+  AI co-author feature + `agentsWindow` overrides, TS AI quick fixes
+  (`CompositeCommand` relocated), mermaid chat renderer (editor preview kept),
+  api-tests AI suites. Verified: compile 0, dts-compile-check 0, eslint 0, api
+  suites 614/0 + 67 + 8 + 78, per-extension typechecks green, grep proofs clean
+  (re-run at review). Follow-ups routed: aiTextSearchProvider + search AI members →
+  S7; git `_chat.editSessions.accept`/`_aiEdits.*` calls → S7; XAA orphan chain +
+  schema associations + placeholder deletion → S10; mcp.json association → S2.
+  Pre-existing (NOT ours): 4 failures in vscodium-patch `font.test.js` — known
+  since M3 round 2, decision still pending.
+Execution reordered 2026-08-31 after a mutual-import check (plan §3 "REVISED
+EXECUTION ORDER"): provider dirs the roots import (mcp, inlineChat, speech,
+agentsVoice, browserView, webContentExtractor, networkFilter, sandbox,
+editTelemetry-AI, chatEntitlementService) can only die WITH the roots in B1;
+kept-file strips + leaf consumers go early (A phases). Content inventories stay in
+the plan's S2–S12 sections.
+
+- [x] **A1 — Terminal AI consumers LANDED 2026-08-31** (`f37e1113ab3`, delegated;
+  diff reviewed; hooks ON; 146 files, −33,929): four dirs deleted +
+  terminal.all/contribExports/context-keys/menus/decorationAddon/tabbed-view
+  strips; `terminalTabsChatEntry` + its CSS removed (load-bearing catch: kept UI
+  injected the now-unregistered `ITerminalChatService` non-optionally);
+  `XtermTerminal` `resource` param dropped (7 call sites); chat command/setting
+  ids INLINED as literals in terminalContribExports with die-with-chat comments
+  (contrib/chat still reads them). Verified: compile 0 ×2, tsc noEmit (needs
+  `NODE_OPTIONS=--max-old-space-size=12288`), eslint 0, terminal suites 1858/0
+  with the −348 delta proven to be exactly the deleted dirs' suite labels.
+  DEFERRED to B1 (root importers verified): `agentHostTerminalService.ts` (11
+  chat/sessions importers) + `agentHostPty`/`ahpTerminalCommandSource`/
+  `chatTerminalCommandMirror` + tests + the `terminal.contribution.ts:49,60`
+  singleton + the inlined literal members + 4 orphaned sandbox re-exports.
+  Interim caveat live: `ITerminalChatService` declared-but-unregistered until B1.
+- [x] **A2 LANDED 2026-09-01** (`5c0a35fac30`, delegated; diff reviewed; hooks ON):
+  consumers unwired (commandsQuickAccess AI matching, preferencesSearch AI
+  provider, main-file imports); the trio DIRS deferred to B1 — THE RULE caught
+  `sessions.common.main.ts:79-81` importing all three (earlier "0 importers"
+  measurement was wrong)
+- [x] **A3 LANDED 2026-09-01** (`aeb58ae0e52`, delegated; diff reviewed; hooks ON;
+  173 files, −17,343): full S7 sweep + A1 hand-offs + editorDictation/voice
+  settings + git `_chat.editSessions.accept`/`_aiEdits.*` + welcomeAgentSessions
+  deleted; onboardingVariationA assert gone (C1 unblocked); aux-bar new-user
+  branch removed whole (behavior-preserving — mac `hidden` default untouched, no
+  path opens it for virgin windows); commandCenter always compact; relauncher
+  tests retargeted to a generic key. Verified: compile 0, tsc noEmit 0,
+  valid-layers-check 0, eslint 0, git ext tsc 0, workbench browser sweep
+  9332/60/15 vs baseline 9389/60/15 — the −57 exactly = deleted suites, the 15
+  failures byte-identical pre-existing dev-build artifacts (`!!APP_NAME!!`
+  substitution + mangled-name compares + 1 undisposed-disposable; predate M9).
+  DEFERRED to B1 by THE RULE: ai-services trio dirs, `scmHistoryChatContext.ts`
+  (+ SCMHistoryItemTransferData relocation still owed then),
+  `searchChatContext.ts`, `notebookChatUtils.ts`, `contrib/remoteCodingAgents`
+  (+ main-file line 422), `aiEditTelemetryService` (+ its
+  `mainThreadLanguageFeatures.ts:40` injection), Copilot PMF survey pane
+  (sessions mains import it; workbench registrations removed),
+  `componentFixtures/chat/{chatFixtureUtils,renderChatInput}.ts` +
+  `sessions/mockCodeReviewService.ts`, workbenchTestServices chat stubs,
+  `accessibility.contribution.ts:16` speech signal contribution +
+  `AccessibilityVoiceSettingId`/`SpeechTimeoutDefault` re-exports (chat voice
+  actions import them). PENDING SEBASTIAN: cellDiagnostics fate + stripped
+  welcomeOnboarding fate (asked at checkpoint)
+- [x] **A3-verdicts + A4 + A5 LANDED 2026-09-01** (`29233fda638` cellDiagnostics +
+  welcomeOnboarding deleted whole incl. build globs/i18n entry + dead setting;
+  `c63488449fc` Copilot entitlement/policy strip; `89e61fd1c54` process de-wiring;
+  delegated, diffs reviewed, hooks ON, roots-untouched verified by empty diff):
+  assignment Copilot filter, chat-enablement migration (only writer of
+  `chat.disableAIFeatures`), accountPolicyGate contribution, node
+  copilotManagedSettings impl + IPC + desktop client, copilotTokenInfo plumbing,
+  inline-completions SKU/telemetry/`github.copilot.nes` rename chain cut
+  (`RenameInferenceEngine` kept test-only pending C1 cut per D16 reshape);
+  app/sharedProcess/cli/server lost mcp+sandbox+networkFilter+webContentExtractor
+  +Playwright (webContentExtractor de-registration was load-bearing — eager
+  `accessor.get` = main-process crash), `--add-mcp` + MCP help category gone,
+  auth MCP actions + preferences McpSettingsRenderer + mcp.json schema
+  association + mcp/agents.md diagnostics tags gone. Verified per commit:
+  compile 0, eslint 0, valid-layers-check 0, suites 386/0 notebook (−2 = deleted
+  tests), 582/15 accounts-glob (−8 = deleted suites; 15 pre-existing), 780/0
+  platform-glob (zero delta). DEFERRED to B1 (blockers verified):
+  copilotManagedSettings common/ipc files (sessions.main + chat.shared import),
+  accountPolicyService.ts entirely (sessions.main ctor + policyBlocked contrib),
+  base defaultAccount copilot fields (chat/agentHost readers),
+  completionsEnablement.ts (chatStatus readers), LM provider extension tag,
+  profile mcpResource/SyncResource.Mcp (mcp+sessions read), managedSettings.ts,
+  defaultAccount defaultChatAgent pipeline (10 chat + 9 sessions readers; per
+  D17 the enterprise account-policy/managed-settings stack dies with it — B1/C1).
+  NEW C1 items routed: mainThreadLanguageFeatures:1516 isCopilotLikeExtension
+  read, RenameInferenceEngine cut, renameSymbol orphans (commandId, tracker
+  service singleton + its 2 main-file imports, emptyResponseInformation option,
+  supportsRename), notebook write-only error context keys, IProductOnboardingTheme
+  + product.json onboardingThemes, auth MCP data-table column, config-editing
+  mcp.json jsonc filename map, diagnostics claude/agent tags, developerActions
+  IAccountPolicyGateService read. Interim caveats live: sessions.main
+  getChannel('copilotManagedSettings') dead until B1; agent services
+  unregistered while dirs remain.
+- [ ] **B1 — THE ROOTS COMMIT** (chat, sessions, agentHost, agentPlugins,
+  services/agentHost + all mutual provider dirs + chatEntitlementService +
+  workbench main-file strips + theme/sizes hostages + electron-main agents-window/
+  agentHost blocks + CLI chat/agent/--agents/agent-* args + `?session=` handler +
+  buildfile/gulp/next/vite/i18n/stylelint/filters/eslint blocks +
+  `code-no-untyped-meta-access`; `themeMainServiceImpl.ts:377-389` is M1/D15
+  territory — surgical edit only)
+- [ ] **B2 — Sessions machinery full strip** (isSessionsWindow ~193 refs,
+  agentsWindow schema property, agents profiles, WindowEnablement,
+  IsSessionsWindowContext — compiler-guided once trees are gone)
+- [ ] **C1 — Platform residue + product** (plan S10: ~70 MenuIds,
+  menusExtensionPoint AI keys, activation events, chat signals + 2 MP3s,
+  editor/base residue, codicons, marshallingIds, product.json/product.ts AI fields
+  + OSS fallback, known-variables 80 vars, themes chat overrides, XAA orphan chain,
+  last proposal placeholders + extensionsApiProposals regen, orphan-closure sweep,
+  final straggler grep)
+- [ ] **C2 — Deps, tests, CI, docs** (plan S11; **lockfiles: Sebastian runs
+  `npm i`**, drift commit after)
+- [ ] **C3 — M3 round-3 hygiene fold-in** (plan S12: aux-bar embedded-editor
+  repaint rule; 4 dead ICompositeBarColors fields)
+- [ ] **Acceptance battery** (plan §4): compile + valid-layers-check + full node unit
+  sweep + smoke/automation typecheck + gulp task list; then Sebastian by hand: fresh
+  `npm i`, compile, dev boot — virgin profile shows M1–M3 design with ZERO AI
+  surface (palette/settings/Help/terminal/scm/debug/notebook checks), then packaged
+  build with absence marker-greps (`agentHost`, `chat.contribution`,
+  `sessions.desktop.main` gone from the bundle)
+- [ ] Pin-bump commits in the umbrella at meaningful checkpoints (at minimum: after
+  the A phases, after B1/B2, after C3/acceptance)
+
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 
 Baseline: the old install was fresh (settings + extensions only, re-added by hand) — no

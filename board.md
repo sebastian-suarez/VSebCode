@@ -14,21 +14,19 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M9 — AI excision (D16, this/next session)**: dependency survey first (who imports
-  `contrib/chat`, `platform/agentHost`, `src/vs/sessions`), then staged removal —
-  code, wiring, views/commands/menus, deps (`@vscode/copilot-api`,
-  `@anthropic-ai/*` typings shim), tests (`chatDisabled` smoke dies too); deletes
-  the interim `chat.disableAIFeatures` default along with the setting. Round-3
-  sweep pointers to fold in: aux-bar editor-background second coat
-  (`auxiliaryBarPart.css:11-15`), chat-interior sidebar-color fills (chat.css and
-  friends), dead composite-bar active/inactive color fields
+- **M9 — AI excision (D16/D17) — EXECUTING**: survey DONE 2026-08-31 (4 parallel
+  agents; true surface ≈2-3× D16's named list — MCP stack, inlineChat, voice/speech,
+  browserView, entitlements/managed-settings, sandbox/networkFilter, sessions-window
+  plumbing with ~193 `isSessionsWindow` refs, 35 ext-API modules + `vscode.d.ts` AI
+  block, CLI `chat`/`agent` subcommands). Scope ratified as D17 (full nuke, 4
+  verdicts). Canonical site map + 12-slice plan: [m9-excision-plan.md](m9-excision-plan.md);
+  slice tracker in Tasks.md § M9. Round-3 sweep pointers folded in as slice S12
+  (aux-bar repaint rule — survey corrected it to a `sideBar-background` coat over
+  embedded editors; dead composite-bar color fields; chat-interior fills die with
+  chat.css)
 
 ## Next
 
-- **M9 — AI excision (D16, next session)**: dependency survey (who imports
-  contrib/chat, platform/agentHost, vs/sessions), then staged removal — code, wiring,
-  deps, tests; deletes the interim `chat.disableAIFeatures` default along with the
-  setting
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code Marketplace (D3).
   Theme rider resolved: Dark 2026 became the product default via D15
 
@@ -269,6 +267,23 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   transparent set, and the sidebar list body stops re-painting `sideBar.background`
   (measured patchwork: caption + tree body composited 0.51 over the part's 0.30
   while pills row + pane headers sat at 0.30).
+- **D17 M9 scope ratification** (Sebastian 2026-08-31, at the survey checkpoint —
+  four verdicts on the survey's gray areas): (1) **full extended kill list** — every
+  AI-named/AI-only surface dies, incl. MCP (contrib+platform+services+CLI
+  `--add-mcp`), speech/voice + editor dictation, Copilot entitlement/managed-settings
+  plumbing, agent sandbox + network filter, `test/mcp`, deps (`@vscode/copilot-api`,
+  `@anthropic-ai/claude-agent-sdk`, `@openai/codex`, `zod`, both typings shims);
+  (2) **`browserView` deleted whole** (general embedded browser + its platform tiers
+  + webContentExtractor), not stripped; (3) **extension-facing API fully removed** —
+  `vscode.{lm,chat,ai,speech,interactive}` namespaces, ~100 type exports, the
+  contiguous `vscode.d.ts` AI block, ~39 proposed-API files; no inert stubs
+  (verified: unknown manifest contribution points are silently ignored; calls hit a
+  contained TypeError); (4) **sessions-window plumbing fully stripped** —
+  `isSessionsWindow` (~193 refs), `agentsWindow` config-schema property (~30 uses),
+  agents profile/window machinery, `WindowEnablement`. Accepted consequences
+  recorded in m9-excision-plan.md §4 (incl. the ~100 kept-file strip sites as new,
+  mostly trivial, M6 conflict surface — traded against the deleted trees no longer
+  conflicting at all).
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
