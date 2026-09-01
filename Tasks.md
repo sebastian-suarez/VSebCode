@@ -650,34 +650,116 @@ the plan's S2–S12 sections.
   IAccountPolicyGateService read. Interim caveats live: sessions.main
   getChannel('copilotManagedSettings') dead until B1; agent services
   unregistered while dirs remain.
-- [ ] **B1 — THE ROOTS COMMIT** (chat, sessions, agentHost, agentPlugins,
-  services/agentHost + all mutual provider dirs + chatEntitlementService +
-  workbench main-file strips + theme/sizes hostages + electron-main agents-window/
-  agentHost blocks + CLI chat/agent/--agents/agent-* args + `?session=` handler +
-  buildfile/gulp/next/vite/i18n/stylelint/filters/eslint blocks +
-  `code-no-untyped-meta-access`; `themeMainServiceImpl.ts:377-389` is M1/D15
-  territory — surgical edit only)
-- [ ] **B2 — Sessions machinery full strip** (isSessionsWindow ~193 refs,
-  agentsWindow schema property, agents profiles, WindowEnablement,
-  IsSessionsWindowContext — compiler-guided once trees are gone)
+- [x] **B1 — THE ROOTS COMMIT LANDED 2026-09-01** (`b93b80a9edd`, delegated; diff
+  reviewed; hooks ON; **2742 files, −697,069 lines**): all 20+ AI trees deleted +
+  every deferred hand-off + main-file/electron/shared/server/CLI/build wiring.
+  Verified: compile 0, tsgo noEmit 0, valid-layers-check 0, eslint 0, gulp 324
+  tasks load, smoke compile 0, browser sweep 4984/8 fail node 7241/5 fail — ZERO
+  new failures (drops = deleted suites; disappeared failures = deleted trees'
+  own; remaining 13 = pre-existing IssueReporter/CommandService/font.test set).
+  Uncataloged fallout fixed + cataloged (biggest: the `browsers` extension API
+  removed end-to-end; `build/lib/copilot.ts`'s non-AI ripgrep filter relocated to
+  new `build/lib/ripgrep.ts`; `SCMHistoryItemTransferData` relocated to
+  scm/common/history.ts). Shapes chosen and reviewed: `accountPolicyService`
+  DELETED whole (desktop → policyChannel ?? NullPolicyService; web → Null;
+  **MultiplexPolicyService now testless** — C2 may add a replacement test);
+  `IDefaultAccountService` KEPT reduced (enterprise marketplace/update/sign-in
+  readers are real; entitlements/policy/MCP-registry/managed-settings pipelines
+  gone; C1 must remove `product.defaultChatAgent` together with its remaining
+  read). themeMainServiceImpl surgery verified minimal (M1/D15 logic intact).
+  Accepted contained delta: light-theme floating-panels background editor→sidebar
+  under `workbench.experimental.modernUI` (default OFF, upstream feature —
+  D15 design unaffected); `--vscode-agents-fontWeight-semiBold` → literal 600
+  (identical computed value). Size/token registries KEPT (real kept consumers —
+  constraint #4 verified not-clean); design-token stylelint now path-only (weight
+  category gone). B2-forced early: mcp profile/config-layer closure,
+  `handleChatRequest`, `--agents`/`agent-plugins-dir` arg readers. 135
+  isSessionsWindow/agentsWindow/openAgentsWindow refs remain for B2.
+- [x] **B2 LANDED 2026-09-01** (`9e2d585f625`, delegated; diff reviewed; hooks ON;
+  114 files, +389/−1402): env member + 103 context-key guards + WindowEnablement
+  + agentsWindow schema property (44 override sites) + preferences override UI +
+  electron-main window/profile machinery (openAgentsWindow, sessions html path,
+  agents profile + prompts/languageModels/agentPlugins resources) + telemetry/
+  storage/ext-host propagation + issue-reporter AgentsWindow source + git
+  extension when-clauses + dangling proposed-dts tsconfig include. Verified:
+  compile/tsgo/layers/eslint 0, node 7238 (−3 = deleted tests) browser 13443
+  (−5), failing sets byte-identical to baseline (stash-verified). Behavior
+  guards honored: SYSTEM_PROFILES_HOME kept (deleting would purge a real user
+  dir), WindowKind assignment header preserved via constant, IssueReporter
+  template shape preserved exactly. Routed → C1: FallbackApplicationStorage
+  client/server orphan chain, `setFallbackStorage` dead param,
+  `MenuId.ModalEditorTitleContext` single-consumer orphan. → C2: re-check
+  extension tsconfigs for S1 dts leftovers.
 - [ ] **C1 — Platform residue + product** (plan S10: ~70 MenuIds,
   menusExtensionPoint AI keys, activation events, chat signals + 2 MP3s,
   editor/base residue, codicons, marshallingIds, product.json/product.ts AI fields
   + OSS fallback, known-variables 80 vars, themes chat overrides, XAA orphan chain,
   last proposal placeholders + extensionsApiProposals regen, orphan-closure sweep,
   final straggler grep)
-- [ ] **C2 — Deps, tests, CI, docs** (plan S11; **lockfiles: Sebastian runs
-  `npm i`**, drift commit after)
-- [ ] **C3 — M3 round-3 hygiene fold-in** (plan S12: aux-bar embedded-editor
-  repaint rule; 4 dead ICompositeBarColors fields)
-- [ ] **Acceptance battery** (plan §4): compile + valid-layers-check + full node unit
-  sweep + smoke/automation typecheck + gulp task list; then Sebastian by hand: fresh
-  `npm i`, compile, dev boot — virgin profile shows M1–M3 design with ZERO AI
-  surface (palette/settings/Help/terminal/scm/debug/notebook checks), then packaged
-  build with absence marker-greps (`agentHost`, `chat.contribution`,
-  `sessions.desktop.main` gone from the bundle)
-- [ ] Pin-bump commits in the umbrella at meaningful checkpoints (at minimum: after
-  the A phases, after B1/B2, after C3/acceptance)
+- [x] **C2 LANDED 2026-09-01** (`7f900966b65`, delegated; diff reviewed; hooks ON;
+  149 files, −14,683): default-account stack + `defaultChatAgent` field deleted
+  end-to-end (C-phase verdict 1; gallery SKU gate → plain manifest fetch,
+  mock-policy-server script deleted); agent-CLI shell types/title patterns/
+  setting nuked (verdict 2); diagnostics AI-tool tags + editsKept/editsUndone
+  signals + MP3s (verdict 3); rename-telemetry closure incl. monaco.d.ts +
+  styleOverrides dead selectors (verdict 4 — notebook inlineDiff stack KEPT: the
+  guard caught that it's LIVE behind non-AI `toggleInlineView()`, only chat
+  class names/scheme cleaned); deps dropped root+remote (lockfiles untouched —
+  Sebastian's `npm i`), both typings shims deleted, cglicenses row removed;
+  smoke chat area + automation chat/agentsWindow + test/mcp deleted (+ smoke
+  accessibility Chat block); sessions-e2e workflow, agent-sdk-produce.yml + 7
+  refs, .github AI docs/skills/classifier/commands/CODENOTIFY rows, saved-search
+  prune, .vscode tasks/launch/mcp entries, policyData.jsonc ALL 28 dead AI
+  policies + 2 empty categories + fixture (widened, accepted), terminal-suggest
+  dead flags, vite DomWidget branch; NEW MultiplexPolicyService test (5 tests —
+  replaces coverage lost in C1). Verified: all 7 build checks 0, node 7215/5
+  (+5 = new suite), browser 13370/12, failure sets byte-identical pre-existing;
+  grep proofs zero outside lockfiles (66+5 lockfile hits pending npm i).
+  KNOWN: component-explorer dev viewer resolved `zod` via root node_modules —
+  if a vite/rspack dev run breaks post-npm-i, add zod to
+  build/{vite,rspack}/package.json devDeps.
+- [x] **C3 LANDED 2026-09-01** (`99019ba270e`, delegated; diff reviewed; hooks
+  ON): aux-bar embedded-editor sideBar-background repaint rule deleted; 4 dead
+  ICompositeBarColors fields + their theme lookups removed across 4 parts
+  (read-check re-verified: zero property reads in src/; ACTIVITY_BAR_ACTIVE_*
+  colors stay live via theming participant + CSS vars). ActivitybarPart 14/14.
+- [x] **Tail commit LANDED 2026-09-01** (`b3c3e98a4c7`, delegated; diff reviewed;
+  hooks ON; 26 files, −943): all six approved leftovers gone; node + build-script
+  suites byte-identical (stash-verified pre-existing failures: FONT ×4,
+  CommandService, and the `!!ORG_NAME!!` ADMX placeholders from the vscodium
+  branding patch). **M9 CODE COMPLETE — 15 commits `988c87fc3ad`→`b3c3e98a4c7`,
+  3,547 files, +1,414/−806,834.** Accepted inert leftovers (noted, by choice):
+  `add-policy/SKILL.md` examples cite the two removed PolicyCategory members;
+  `.gitignore` `.local.prompt.md` symmetry rows; `.vscode/settings.json`
+  aiStats/azureMcp dev settings; frozen `McpGalleryServiceUrl` policy-renderer
+  fixtures (decoupled golden data).
+- [ ] **Acceptance battery — Sebastian's runbook** (session side is done: every
+  build check 0, sweeps clean, grep proofs recorded per slice above):
+  1. Push the branch (session's push was permission-blocked):
+     `git -C vscode push origin vsebcode`
+  2. From `vscode/`: `npm i` (regenerates root + remote lockfiles after the C2
+     dep drops; postinstall covers remote/). Then tell the session — it commits
+     the lockfile drift (M1 precedent `cc871b7`). If a component-explorer
+     vite/rspack dev run ever complains about `zod`, the fix is adding it to
+     `build/{vite,rspack}/package.json` devDeps.
+  3. `npm run compile` — then verify out/ markers BEFORE launching (M3 practice).
+     Absence checks: `grep -rc "chat.contribution\|agentHostMain\|sessions.desktop.main" out/vs | grep -v :0` should print nothing.
+  4. Dev boot `./scripts/code.sh`, fresh profile. Visual pass: M1–M3 design
+     intact out of the box (46pt bar, translucency single-coat, Dark 2026 first
+     frame, HN UI, tree polish); ZERO AI surface — palette finds nothing for
+     chat/copilot/mcp/agent, settings search `chat.` empty, Help menu has no
+     "Ask @vscode", Accounts menu has no sign-in-to-AI entry, aux bar still
+     toggles (Cmd+⌥+B, empty), watermark has no "Open Chat"; terminal / scm
+     (quick diff) / debug (action-widget header background — C1 restored it to
+     banner-background, glance it) / notebook / search / tasks all behave;
+     dialogs + quick input still rounded (size-token registration verified in
+     code — glance confirms).
+  5. Packaged: `npm run gulp vscode-darwin-arm64` → virgin boot of
+     `../VSCode-darwin-arm64/Code - OSS.app` (executable `Contents/MacOS/Code - OSS`);
+     bundle absence greps: `grep -c "agentHostMain\|chat.contribution\|sessions.desktop.main" "../VSCode-darwin-arm64/Code - OSS.app/Contents/Resources/app/out/vs/workbench/workbench.desktop.main.js"` → 0, and the sessions html absent from Resources.
+  6. Verdict to the session → board close-out.
+- [ ] Pin-bump commits in the umbrella (after lockfile drift + acceptance;
+  session runs them once the vscode push exists)
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 

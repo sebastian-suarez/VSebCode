@@ -472,6 +472,26 @@ configuration-editing `mcp.json` jsonc filename map (:58), diagnosticsService
   2312–2315, 2335–2359, 2431, 2474, 2498) + delete
   `.eslint-plugin-local/code-no-untyped-meta-access.ts` (exists solely for agentHost `_meta`).
 
+**B1 hand-offs (2026-09-01):** → C1 additionally: `defaultAccount.ts` still reads
+`productService.defaultChatAgent` — land its removal together with the product
+field; `PolicyDefinition.value`/`restrictedValue`/`managedSettings` +
+reduced `IPolicyData` orphan closure (their tests are load-bearing — coherent
+orphan job); `services/authentication/browser/authenticationMcp*.ts` ×3 (still
+registered `workbench.common.main.ts:112-114`, read by authenticationQueryService)
++ the dead commented `AuthenticationMcpContribution` block
+(`authentication.contribution.ts:167-181`); `ISCMHistoryProvider.resolveHistoryItem*ChatContext`
+members (extension-API job: mainThreadSCM/extHostSCM/git extension);
+`arcTelemetrySender.ts` `EditTelemetryReportEditArcForChatOrInlineChatSender`
+(dies with the textModelEditSource chat factories);
+`AccessibleViewProviderId.Survey` + `AccessibilityVerbositySettingId.Survey`
+(orphaned by PMF pane deletion); extensionQuery/extensions `agentPlugins`
+marketplace tags; mermaid `chat-webview-out` rename (10-min cosmetic job,
+deliberately left). → C2 additionally: `build/lib/policies/policyData.jsonc`
+networkFilter/agentHost rows; `extensions/terminal-suggest` dead
+`--inspect-agenthost` completions; optional `MultiplexPolicyService` replacement
+test (its only test was built on the deleted AccountPolicyService);
+`codex:gen-protocol` npm script already removed in B1.
+
 ### S10 — Platform residue + product identity
 - `platform/actions/common/actions.ts:255–325` (~70 chat/agent MenuIds) +
   `services/actions/common/menusExtensionPoint.ts:147–149,481–525` (AI menu keys);
@@ -517,6 +537,18 @@ configuration-editing `mcp.json` jsonc filename map (:58), diagnosticsService
   rename, not delete.
   Then a final repo grep: `chat|copilot|agentHost|mcp|languageModel` (case-insens.,
   word-ish) over `src/` to catch stragglers; report anything intentionally kept.
+
+**C-phase verdicts (Sebastian 2026-09-01, post-C1):** (1) default-account stack
+DELETED whole + the `defaultChatAgent` product field (sign-in entry, gallery SKU
+gate, internal-org update routing all go; IAuthenticationService extension auth
+unaffected); (2) terminal agent-CLI niceties NUKED for consistency
+(`GeneralShellType.{Claude,Codex,Gemini}`, `agentCliShellTypes`, OSC title
+patterns, `terminal.integrated.tabs.allowAgentCliTitle`); (3) remaining
+diagnostics AI-tool tags (cursorrules/clinerules/gemini.md/github-instructions/
+prompts dirs) AND reader-free `accessibility.signals.editsKept`/`editsUndone`
+removed; (4) borderline orphans all cleaned: rename-telemetry fields incl.
+monaco.d.ts surface, orphaned notebook inlineDiff files + chat-editing class
+names, styleOverrides dead AI selectors. All land in C2.
 
 ### S11 — Deps, tests, CI, docs
 - `package.json`: drop `@vscode/copilot-api`, `@anthropic-ai/claude-agent-sdk`,

@@ -14,16 +14,26 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M9 — AI excision (D16/D17) — EXECUTING**: survey DONE 2026-08-31 (4 parallel
-  agents; true surface ≈2-3× D16's named list — MCP stack, inlineChat, voice/speech,
-  browserView, entitlements/managed-settings, sandbox/networkFilter, sessions-window
-  plumbing with ~193 `isSessionsWindow` refs, 35 ext-API modules + `vscode.d.ts` AI
-  block, CLI `chat`/`agent` subcommands). Scope ratified as D17 (full nuke, 4
-  verdicts). Canonical site map + 12-slice plan: [m9-excision-plan.md](m9-excision-plan.md);
-  slice tracker in Tasks.md § M9. Round-3 sweep pointers folded in as slice S12
-  (aux-bar repaint rule — survey corrected it to a `sideBar-background` coat over
-  embedded editors; dead composite-bar color fields; chat-interior fills die with
-  chat.css)
+- **M9 — AI excision (D16/D17) — CODE COMPLETE 2026-09-01, acceptance pending**:
+  15 delegated commits `988c87fc3ad`→`b3c3e98a4c7` on `vsebcode` (**3,547 files,
+  +1,414/−806,834**), every phase diff-reviewed, hooks ON, zero new test
+  failures at every step (all build checks 0; remaining failures = the
+  pre-existing vscodium-patch font tests, `!!APP_NAME!!`/`!!ORG_NAME!!`
+  placeholder artifacts, one upstream disposable leak). Everything AI is gone:
+  the three roots + 17 more trees, extension-facing API (`vscode.{lm,chat,ai,speech}`,
+  d.ts block, 39 proposals), sessions-window machinery, Copilot
+  entitlement/policy/managed-settings + default-account stack, MCP everywhere,
+  CLI `chat`/`agent`/`--agents`, deps (`@vscode/copilot-api`,
+  `@anthropic-ai/claude-agent-sdk`, `@openai/codex`, `zod`) + typings shims,
+  smoke/automation/test-mcp harness, CI + .github AI docs; C3 folded in the two
+  approved M3 round-3 hygiene fixes. Site map + per-phase hand-offs:
+  [m9-excision-plan.md](m9-excision-plan.md); ledger in Tasks.md § M9.
+  **REMAINING, Sebastian by hand (runbook in Tasks.md § M9 acceptance)**: push
+  `vsebcode` (session's push permission-blocked), `npm i` (lockfile
+  regeneration → session commits drift), compile + virgin dev boot + packaged
+  build with absence greps, verdict; then umbrella pins + board close. NOTE:
+  no gulp packaging on any commit before `b93b80a9edd` (build entries moved
+  mid-stack)
 
 ## Next
 
