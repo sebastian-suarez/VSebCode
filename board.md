@@ -44,7 +44,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   malicious/suspicious instructions. Kept upstream's new `!important`
   prohibition; rewrote the three font-token sections to fork reality (delegated;
   diff reviewed); removed `validate-ui-scenario`; committed umbrella-side —
-  submodules untouched, no pin change.
+  submodules untouched, no pin change. Same-day follow-up (decisions delegated
+  by Sebastian; emil skills untouched): in-tree stale-AI cleanup in `vscode/` —
+  ux-theming agents-token rows → fork-accurate text, memory-leak-audit
+  chat-leak step dropped (`54962c7`, hooks ON, pushed); vendored copies aligned
+  byte-identical; design-philosophy's 3 links repointed through `vscode/`;
+  pin bumped; both repos pushed.
 - 2026-09-01 — **M9 complete — AI excision (D16/D17)**: 16 delegated,
   diff-reviewed commits on `vsebcode`, hooks ON (`988c87fc3ad`→`b3c3e98a4c7`
   code + `4df1eb7570c` lockfiles; pins `51dfa21`→`6d8ea15`+close): **3,547

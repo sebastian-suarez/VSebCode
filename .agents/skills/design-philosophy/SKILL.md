@@ -258,9 +258,9 @@ move in a review. Reach for them *after* you've named the feeling and the
 principle, never instead of it.
 
 The size and font tokens live in
-[`baseSizes.ts`](../../../src/vs/platform/theme/common/sizes/baseSizes.ts); the
+[`baseSizes.ts`](../../../vscode/src/vs/platform/theme/common/sizes/baseSizes.ts); the
 full reference is in
-[design-tokens.instructions.md](../../instructions/design-tokens.instructions.md).
+[design-tokens.instructions.md](../../../vscode/.github/instructions/design-tokens.instructions.md).
 
 <a id="design-tokens"></a>
 ### Tokens are the source of truth, not the pixel
@@ -390,7 +390,7 @@ Title Case - make it sentence case,"* a tone fix, not a reword.
 > intended modern-UI direction, but it **contradicts** the repo-wide coding
 > guideline that mandates title-style capitalization for command labels, buttons,
 > and menu items (see
-> [coding-guidelines.instructions.md](../../instructions/coding-guidelines.instructions.md),
+> [coding-guidelines.instructions.md](../../../vscode/.github/instructions/coding-guidelines.instructions.md),
 > "UI labels"). The two conventions have not yet been reconciled. Until they are,
 > **follow the existing title-case rule for shipped, non-experimental UI**, and
 > apply sentence case only within surfaces that have explicitly adopted the modern
