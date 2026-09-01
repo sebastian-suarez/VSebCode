@@ -814,16 +814,31 @@ and the `2026-dark.json` include chain for every color.
   re-verified independently at review: 184/8196 = real rg counts, 16/16
   result paths on disk, true greedy highlight positions, byte-real
   `titlebarPart.ts` 90–107 of 1026
-- [ ] View 3 — which-key (`m10-nvim-whichkey.html`, own artifact URL): IN
-  PROGRESS 2026-09-01, Fable-max agent per the D19 exception — leader-pending
-  panel over the v3 NORMAL moment (block cursor back; focus never leaves the
-  editor). The LEADER MAP shown is a design PROPOSAL grounded only in
-  existing M10-world surfaces (telescope pickers, real SCM/window/explorer
-  commands; no trouble/harpoon — the staged-element rule applies to keymap
-  content too) and gets ruled on at the flag round; panel skin = the
-  approved view-2 overlay vocabulary unless the bottom-anchored anatomy
-  argues otherwise (flagged). Then: session review + publish, then
-  Sebastian's round
+- [ ] View 3 — which-key **BUILT + PUBLISHED 2026-09-01** (Fable-max agent per
+  the D19 exception; session review green) →
+  https://claude.ai/code/artifact/1c72b816-6134-4164-be0a-73befd1bfa49
+  (label `whichkey-v1`; same path re-publishes to the same URL). Leader
+  panel over the v3 NORMAL moment (block cursor + NORMAL both back; focus
+  never leaves the editor): 964×83 strip bottom-anchored to the editor
+  column on the M3 8px grammar (left 300+8, top 870−22−8−83; 81 inner =
+  25 title + 6+2×22+6 entries), approved panel vocabulary (#202122 @ 0.90,
+  border #333536, radius 12, shadow-xl), 4×2 grid filled column-major,
+  byte-sorted keys. Review re-verified independently: openSettings /
+  findInFiles command ids real in the fork, #d2a8ff ×2 in 2026-dark.json,
+  diff vs the v3 scene = panel+title+legend only, window geometry
+  untouched, rail coat ×1, zero http/attribution. **PENDING Sebastian's
+  flag round + verdict** — the PROPOSED FIRST LEADER MAP is the
+  centerpiece: `,` Settings · `/` Grep in files · `b` +buffer · `d`
+  +diagnostics · `e` Explorer · `f` +find (telescope) · `g` +git · `w`
+  +window — 3 leaves + 5 groups, every entry grounded in an existing
+  surface (no trouble/harpoon per the staged-element rule). Other flags:
+  (1) panel form = editor-column strip floated on the 8px grammar, not
+  edge-to-edge; (2) pending-prefix breadcrumb `SPC` in the panel's 25px
+  title row = our showcmd — the statusbar stays v3-verbatim (the lualine
+  spec has no showcmd segment; honest absence); (3) groups purple #d2a8ff
+  (2026-dark tokenColors entity.name.function) vs keys #48A0C7; (4)
+  separator `→` U+2192 (which-key's `➜` is Nerd-Font-only), leaf
+  descriptions sentence case / groups lowercase `+noun`
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)

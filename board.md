@@ -63,10 +63,17 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   lualine INSERT handoff, real 184/8196 fuzzy corpus, byte-real
   `titlebarPart.ts:90-107` preview @ 21px; verdicts durable as § D19
   amendments round 2 (the overlay vocabulary is now the M10 panel
-  language). **View 3 (which-key) IN PROGRESS**: `m10-nvim-whichkey.html`
-  (untracked until approved), same D19 pipeline over the v3 NORMAL
-  moment — the LEADER MAP drawn is itself the central design proposal
-  for the flag round; review/publish pending.
+  language). **View 3 (which-key) BUILT + PUBLISHED, v1 (2026-09-01)** →
+  https://claude.ai/code/artifact/1c72b816-6134-4164-be0a-73befd1bfa49
+  (`m10-nvim-whichkey.html`, untracked until approved): 964×83 leader
+  panel bottom-anchored to the editor column in the approved overlay
+  vocabulary, `SPC` breadcrumb in the title row as our showcmd,
+  statusbar v3-verbatim; the PROPOSED first leader map (`,` `/` `b` `d`
+  `e` `f` `g` `w` — 3 leaves + 5 groups, all grounded in existing
+  surfaces) is the centerpiece of the flag round; session review GREEN
+  (command ids, color provenance, scene diff, geometry re-verified).
+  PENDING Sebastian's flag round + whole-view verdict (full map + flags
+  in Tasks § M10).
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
