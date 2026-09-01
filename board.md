@@ -48,9 +48,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   footer align on one x20 text column; **v3 published, same URL**.
   **APPROVED by Sebastian 2026-09-01 — first view CLOSED at v3**; prototype +
   docs committed umbrella-side. Follow-on directive same day: complete FILE
-  ICON SET in the mockup icons' style → recorded as M11/D20. Candidate later views (each needs a green-light): telescope
-  overlay · which-key · flash jumps · oil.nvim-style buffer file-ops · trouble
-  list · harpoon revisit (excluded from view 1 by choice)
+  ICON SET in the mockup icons' style → recorded as M11/D20. Later views
+  GREEN-LIT (Sebastian, 2026-09-01), build order: (1) telescope overlay →
+  (2) which-key → (3) flash jumps → (4) oil.nvim-style buffer file-ops;
+  trouble list + harpoon revisit stay candidates, not green-lit (harpoon
+  excluded from view 1 by choice). One page + own artifact URL per view from
+  here on. **View 2 (telescope) IN PROGRESS**: `m10-nvim-telescope.html` at
+  the umbrella root (untracked until approved), authored per the D19
+  exception (Fable-max agent) over the approved v3 scene — session
+  review/publish + flag round pending.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in

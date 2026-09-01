@@ -772,9 +772,10 @@ the plan's S2–S12 sections.
 ## M10 — NeoVim keyboard UX (D19; design phase)
 
 Prototype-first: static HTML mockups of the nvim-inspired UX on the shipped design,
-one view per round, Sebastian judges each. Source of truth = `m10-nvim-prototype.html`
-(umbrella root); iterate by editing that file and re-publishing — the SAME file path
-keeps the SAME artifact URL. View 1 references: his `~/Projects/Settings/settings.json`
+one view per round, Sebastian judges each. Source of truth = one page per view at the
+umbrella root (view 1: `m10-nvim-prototype.html`; view 2: `m10-nvim-telescope.html`);
+iterate by editing the view's file and re-publishing — the SAME file path keeps the
+SAME artifact URL, a NEW view gets its own file + URL. View 1 references: his `~/Projects/Settings/settings.json`
 (relative numbers, minimap off, Error Lens, inline blame, Liga SFMono NF, vscode-icons)
 and the `2026-dark.json` include chain for every color.
 
@@ -797,13 +798,24 @@ and the `2026-dark.json` include chain for every color.
   view-body padding 6px top / 8px horizontal on the pane/composite CONTENT
   container — generic across views (explorer/search/git), stacking on the
   M3 8px row inset
-- [ ] Pick + green-light later views: telescope overlay · which-key · flash jumps ·
-  oil.nvim-style buffer file-ops · trouble diagnostics list · harpoon revisit
+- [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
+  overlay → which-key → flash jumps → oil.nvim-style buffer file-ops (trouble
+  diagnostics list · harpoon revisit = candidates, not green-lit)
+- [ ] View 2 — telescope overlay (`m10-nvim-telescope.html`, own artifact URL):
+  IN PROGRESS 2026-09-01, Fable-max agent per the D19 exception — overlay over
+  the approved v3 scene (anatomy = telescope.nvim find_files: prompt line,
+  result list, preview pane; skin = Dark 2026 through the include chain;
+  coherent numbers: query fuzzy-matches REAL `vscode/` tree paths, preview =
+  real selected-file content @ 21px). Agent flags for the round: layout
+  variant + prompt position, backdrop treatment, lualine INSERT block while
+  the prompt has focus, picker story. Then: session review + publish, then
+  Sebastian's verdict
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
-- Resume cold: open the artifact URL above; the html file at the umbrella root is
-  the source (committed at `a884069` with the approval)
+- Resume cold: open the view artifacts (URLs in the view items above); each view's
+  html at the umbrella root is its source — view 1 committed at `a884069`, later
+  views stay untracked until approved
 
 ## M11 — VSebCode icon theme (D20)
 
