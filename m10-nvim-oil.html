@@ -1,12 +1,13 @@
-<title>VSebCode M10 Flash</title>
+<title>VSebCode M10 Oil</title>
 <style>
 /* ================================================================
-   VSebCode M10 — view 4: flash.nvim-style jump mid-flight over the
-   approved first-view scene (Dark 2026, zoom 0). Chrome constants
-   stay the shipped 46 rail header / 86 / 24 / 25 / 22 / 300 with
-   tabs at the stock 35px height (D19 r4); window geometry matches
-   the r4 v3 scene. The pattern "hei" truly occurs 9× in the
-   visible buffer text; every occurrence is labeled, nothing else.
+   VSebCode M10 — view 5: oil.nvim-style directory buffer over the
+   approved r4 scene (Dark 2026, zoom 0). Chrome constants stay the
+   shipped 46 rail header / 86 / 24 / 25 / 22 / 300 with tabs at the
+   stock 35px height (D19 r4). The buffer lists the REAL contents of
+   src/vs/workbench/browser (3 dirs + 20 files + ../ = 24 rows,
+   oil sort: dirs first, then files, alphabetical); one rename is
+   mid-flight (panecomposite.ts → paneComposite.ts, unwritten).
    ================================================================ */
 
 /* ---- Geist — bundled UI face (OFL; D19 r6), data-URI embedded ---- */
@@ -158,8 +159,8 @@ body { margin: 0; background: #0c0d12; }
    ================================================================= */
 .main { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 
-/* -- 46px full-height tab row ------------------------------------ */
-.tabsrow { flex: 0 0 35px; background: #191A1B; display: flex; align-items: stretch; min-width: 0; }   /* stock height, D19 r4 */
+/* -- 35px stock-height tab row (D19 r4) -------------------------- */
+.tabsrow { flex: 0 0 35px; background: #191A1B; display: flex; align-items: stretch; min-width: 0; }
 .tab {
   position: relative;
   display: flex; align-items: center;
@@ -218,7 +219,7 @@ body { margin: 0; background: #0c0d12; }
 .erow .code.hl { background: #242526; }                 /* editor.lineHighlightBackground */
 .erow .code.wl { background: rgba(204,167,0,0.045); }   /* Error Lens warm line tint */
 
-/* syntax — 2026 Dark resolved tokenColors */
+/* syntax — 2026 Dark resolved tokenColors (kept from the scene grammar) */
 .k { color: #ff7b72; }  /* keyword / storage        */
 .s { color: #a5d6ff; }  /* string                   */
 .f { color: #d2a8ff; }  /* entity.name.function     */
@@ -238,12 +239,25 @@ body { margin: 0; background: #0c0d12; }
 .el { font-style: italic; font-size: 11px; color: rgba(204,167,0,.5); }
 .el svg { width: 10px; height: 10px; display: inline-block; vertical-align: -1px; }
 
-/* gitsigns-style gutter marks + scrollbar */
+/* gitsigns-style gutter marks + scrollbar (grammar kept; an oil
+   buffer is not a git file, so no marks render and 24 rows need no
+   thumb — honest absences) */
 .gmarks { position: absolute; left: 0; top: 0; width: 74px; height: 100%; pointer-events: none; }
 .gmarks .add { position: absolute; left: 4px; width: 3px; border-radius: 1.5px; background: #72C892; }
 .gmarks .chg { position: absolute; left: 4px; width: 3px; border-radius: 1.5px; background: #0078D4; }
 .gmarks .del { position: absolute; left: 2px; width: 0; height: 0; border-left: 6px solid #F28772; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
 .sbar { position: absolute; right: 2px; width: 6px; border-radius: 3px; background: rgba(168,169,170,.3); pointer-events: none; }
+
+/* =================================================================
+   OIL BUFFER — the directory as editable text. Rows reuse the .erow
+   grammar (21px lines, hybrid numbers, cursorline, block cursor);
+   entries carry the established 16px file icons inline; directory
+   rows dim their trailing slash to descriptionForeground. No
+   colored buffer text: an oil listing is plain editor foreground.
+   ================================================================= */
+.code .oico { display: inline-block; width: 16px; height: 16px; margin-right: 6px; vertical-align: -3px; }
+.code .oico svg { width: 16px; height: 16px; display: block; }
+.code .dsl { color: #8C8C8C; }   /* trailing / on directory rows — descriptionForeground */
 
 /* =================================================================
    STATUSBAR — 22px, opaque, lualine recomposition, flat segments
@@ -274,30 +288,6 @@ body { margin: 0; background: #0c0d12; }
 .statusbar .wrn { color: #CCA700; display: flex; align-items: center; }
 .statusbar .wrn svg { width: 12px; height: 12px; margin-right: 3px; }
 .statusbar .rgroup { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-
-/* =================================================================
-   FLASH JUMP STATE — s hei: 9 live matches, 9 labels.
-   Backdrop: flash dims unmatched BUFFER text to the theme's resolved
-   comment tone #8b949e (FlashBackdrop → Comment, flash.nvim's own
-   default link) — a foreground fade, no scrim; gutter numbers, git
-   bars, cursorline, block cursor, virtual text and all chrome stay
-   untouched. Matches: editor.findMatchHighlightBackground #27678280
-   on all nine — bidirectional s-jump has no "current" match — and
-   matched text keeps its real token color. Labels: one flat char
-   cell AFTER each match (flash's label.after), cursor grammar (flat
-   cell, no radius — same family as .cur-block), ground #48A0C7 =
-   list.highlightForeground (the established M10 interactive-key
-   accent) with the editor ground #121314 as glyph. Label alphabet
-   skips `g` — the only continuation char ("hei" → "heig") — so the
-   nine labels run a s d f h j k l q, nearest-to-cursor first
-   (Δrow, then Δcol from Ln 35/Col 48).
-   ================================================================= */
-.editor.flash .code,
-.editor.flash .code .k, .editor.flash .code .s, .editor.flash .code .f,
-.editor.flash .code .t, .editor.flash .code .c { color: #8b949e; }
-.editor.flash .code .c.fm { color: #79c0ff; }        /* matched text undims to its token color */
-.editor.flash .code .fm { background: #27678280; }   /* editor.findMatchHighlightBackground */
-.editor.flash .code .fl { background: #48A0C7; color: #121314; }   /* jump label: flat cell, interactive-key accent */
 
 /* ---- Legend ---------------------------------------------------- */
 .legend {
@@ -408,7 +398,8 @@ body { margin: 0; background: #0c0d12; }
       <div class="main">
 
         <div class="tabsrow">
-          <div class="tab active"><span class="abt"></span><span class="tico"><svg><use href="#i-ts"/></svg></span>inlineTitleBar.ts<span class="cls"><svg><use href="#i-close"/></svg></span></div>
+          <div class="tab active"><span class="abt"></span><span class="tico"><svg><use href="#i-folder"/></svg></span>browser/<span class="dirty"></span></div>
+          <div class="tab"><span class="tico"><svg><use href="#i-ts"/></svg></span>inlineTitleBar.ts<span class="slot"></span></div>
           <div class="tab"><span class="tico"><svg><use href="#i-css"/></svg></span>style.css<span class="dirty"></span></div>
           <div class="tab"><span class="tico"><svg><use href="#i-md"/></svg></span>board.md<span class="slot"></span></div>
           <div class="tabs-actions">
@@ -421,57 +412,41 @@ body { margin: 0; background: #0c0d12; }
           <span>src</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
           <span>vs</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
           <span>workbench</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
-          <span>browser</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
-          <span>inlineTitleBar.ts</span><span class="sep"><svg><use href="#i-chevr"/></svg></span>
-          <span class="last"><span class="sym"><svg><use href="#i-symconst"/></svg></span>INLINE_TITLE_BAR_CAPTION_HEIGHT</span>
+          <span class="last">browser</span>
         </div>
 
-        <div class="editor flash">
-          <div class="gmarks">
-            <span class="del" style="top:59px"></span>
-            <span class="chg" style="top:378px; height:42px"></span>
-            <span class="add" style="top:714px; height:63px"></span>
-          </div>
-
-          <div class="erow"><span class="g">29</span><span class="code"><span class="k">import</span> { <span class="f">getZoomFactor</span> } <span class="k">from</span> <span class="s">'../../base/browser/browser.js'</span>;</span></div>
-          <div class="erow"><span class="g">28</span><span class="code wl"><span class="k">import</span> { <span class="t sq">CodeWindow</span> } <span class="k">from</span> <span class="s">'../../base/browser/window.js'</span>;<span class="el">  <svg><use href="#i-warn"/></svg> 'CodeWindow' is declared but its value is never read</span></span></div>
-          <div class="erow"><span class="g">27</span><span class="code"><span class="k">import</span> { <span class="t">Emitter</span> } <span class="k">from</span> <span class="s">'../../base/common/event.js'</span>;</span></div>
-          <div class="erow"><span class="g">26</span><span class="code"></span></div>
-          <div class="erow"><span class="g">25</span><span class="code"><span class="m">/**</span></span></div>
-          <div class="erow"><span class="g">24</span><span class="code"><span class="w">·</span><span class="m">* Class set on the workbench container of every window that lays out with an inline title</span></span></div>
-          <div class="erow"><span class="g">23</span><span class="code"><span class="w">·</span><span class="m">* bar, so that stylesheets can scope the geometry to it.</span></span></div>
-          <div class="erow"><span class="g">22</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
-          <div class="erow"><span class="g">21</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CLASS</span> = <span class="s">'inline-titlebar'</span>;</span></div>
-          <div class="erow"><span class="g">20</span><span class="code"></span></div>
-          <div class="erow"><span class="g">19</span><span class="code"><span class="m">/**</span></span></div>
-          <div class="erow"><span class="g">18</span><span class="code"><span class="w">·</span><span class="m">* <span class="fm">Hei</span><span class="fl">q</span>ht of the row that hosts the native window controls, in physical points. The controls</span></span></div>
-          <div class="erow"><span class="g">17</span><span class="code"><span class="w">·</span><span class="m">* do not scale with the window zoom level, so the row is divided by the zoom factor to keep</span></span></div>
-          <div class="erow"><span class="g">16</span><span class="code"><span class="w">·</span><span class="m">* the same size on screen. Kept in sync with `--titlebar-<span class="fm">hei</span><span class="fl">l</span>ht` in `media/style.css`.</span></span></div>
-          <div class="erow"><span class="g">15</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
-          <div class="erow"><span class="g">14</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_<span class="c fm">HEI</span><span class="fl">k</span>HT</span> = <span class="c">46</span>;</span></div>
-          <div class="erow"><span class="g">13</span><span class="code"></span></div>
-          <div class="erow"><span class="g">12</span><span class="code"><span class="m">/**</span></span></div>
-          <div class="erow"><span class="g">11</span><span class="code"><span class="w">·</span><span class="m">* Width the native window controls occupy, in physical points. Divided by the zoom factor</span></span></div>
-          <div class="erow"><span class="g">10</span><span class="code"><span class="w">·</span><span class="m">* for the same reason. Kept in sync with `--traffic-lights-width` in `media/style.css`.</span></span></div>
-          <div class="erow"><span class="g">9</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
-          <div class="erow"><span class="g">8</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CONTROLS_WIDTH</span> = <span class="c">86</span>;</span></div>
-          <div class="erow"><span class="g">7</span><span class="code"></span></div>
-          <div class="erow"><span class="g">6</span><span class="code"><span class="m">/**</span></span></div>
-          <div class="erow"><span class="g">5</span><span class="code"><span class="w">·</span><span class="m">* <span class="fm">Hei</span><span class="fl">h</span>ht of the caption row that a side bar title shrinks to underneath the window controls</span></span></div>
-          <div class="erow"><span class="g">4</span><span class="code"><span class="w">·</span><span class="m">* row, in pixels. Unlike the row above it, neither zoom nor the workbench font size scales</span></span></div>
-          <div class="erow"><span class="g">3</span><span class="code"><span class="w">·</span><span class="m">* this one: it is what is left of the <span class="fm">hei</span><span class="fl">d</span>ht the part layout reserves for a header and a</span></span></div>
-          <div class="erow"><span class="g">2</span><span class="code"><span class="w">·</span><span class="m">* title at zoom level 0.</span></span></div>
-          <div class="erow"><span class="g">1</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
-          <div class="erow"><span class="g cur">35</span><span class="code hl"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_CAPTION_<span class="c fm">HEI</span><span class="fl">a</span>HT</span> = <span class="c"><span class="cur-block">2</span>4</span>;<span class="bl">  Sebastian Suarez, 3 days ago · M2 slice 2</span></span></div>
-          <div class="erow"><span class="g">1</span><span class="code"></span></div>
-          <div class="erow"><span class="g">2</span><span class="code"><span class="m">/**</span></span></div>
-          <div class="erow"><span class="g">3</span><span class="code"><span class="w">·</span><span class="m">* <span class="fm">Hei</span><span class="fl">f</span>ht of the breadcrumbs row underneath a full <span class="fm">hei</span><span class="fl">s</span>ht tab row, in pixels. That row carries</span></span></div>
-          <div class="erow"><span class="g">4</span><span class="code"><span class="w">·</span><span class="m">* content rather than the window controls, so unlike the row above it this is a plain size</span></span></div>
-          <div class="erow"><span class="g">5</span><span class="code"><span class="w">·</span><span class="m">* that the zoom level scales along with everything else.</span></span></div>
-          <div class="erow"><span class="g">6</span><span class="code"><span class="w">·</span><span class="m">*/</span></span></div>
-          <div class="erow"><span class="g">7</span><span class="code"><span class="k">export</span> <span class="k">const</span> <span class="c">INLINE_TITLE_BAR_BREADCRUMBS_<span class="c fm">HEI</span><span class="fl">j</span>HT</span> = <span class="c">25</span>;</span></div>
-
-          <div class="sbar" style="top:37px; height:271px"></div>
+        <!-- OIL BUFFER — the real src/vs/workbench/browser listing:
+             ../ + 3 dirs + 19 files, oil default sort (type, name).
+             Rename mid-flight on row 13: panecomposite.ts on disk,
+             paneComposite.ts in the buffer (case-toggle via ~, cursor
+             advanced onto the o, Col 6). No gutter git marks, no
+             scrollbar thumb (24 rows < 37 viewport), nothing drawn
+             past EOF — the product editor has no tilde fill. -->
+        <div class="editor">
+          <div class="erow"><span class="g">12</span><span class="code"><span class="oico"><svg><use href="#i-folder"/></svg></span>..<span class="dsl">/</span></span></div>
+          <div class="erow"><span class="g">11</span><span class="code"><span class="oico"><svg><use href="#i-folder"/></svg></span>actions<span class="dsl">/</span></span></div>
+          <div class="erow"><span class="g">10</span><span class="code"><span class="oico"><svg><use href="#i-folder"/></svg></span>media<span class="dsl">/</span></span></div>
+          <div class="erow"><span class="g">9</span><span class="code"><span class="oico"><svg><use href="#i-folder"/></svg></span>parts<span class="dsl">/</span></span></div>
+          <div class="erow"><span class="g">8</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>codeeditor.ts</span></div>
+          <div class="erow"><span class="g">7</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>composite.ts</span></div>
+          <div class="erow"><span class="g">6</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>contextkeys.ts</span></div>
+          <div class="erow"><span class="g">5</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>dnd.ts</span></div>
+          <div class="erow"><span class="g">4</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>editor.ts</span></div>
+          <div class="erow"><span class="g">3</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>inlineTitleBar.ts</span></div>
+          <div class="erow"><span class="g">2</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>labels.ts</span></div>
+          <div class="erow"><span class="g">1</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>layout.ts</span></div>
+          <div class="erow"><span class="g cur">13</span><span class="code hl"><span class="oico"><svg><use href="#i-ts"/></svg></span>paneC<span class="cur-block">o</span>mposite.ts</span></div>
+          <div class="erow"><span class="g">1</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>part.ts</span></div>
+          <div class="erow"><span class="g">2</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>quickaccess.ts</span></div>
+          <div class="erow"><span class="g">3</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>style.ts</span></div>
+          <div class="erow"><span class="g">4</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>web.api.ts</span></div>
+          <div class="erow"><span class="g">5</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>web.factory.ts</span></div>
+          <div class="erow"><span class="g">6</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>web.main.ts</span></div>
+          <div class="erow"><span class="g">7</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>window.ts</span></div>
+          <div class="erow"><span class="g">8</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>workbench.contribution.ts</span></div>
+          <div class="erow"><span class="g">9</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>workbench.inlineTitleBar.contribution.ts</span></div>
+          <div class="erow"><span class="g">10</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>workbench.ts</span></div>
+          <div class="erow"><span class="g">11</span><span class="code"><span class="oico"><svg><use href="#i-ts"/></svg></span>workbench.zenMode.contribution.ts</span></div>
         </div>
 
         <!-- ============= STATUSBAR (editor column only) ============ -->
@@ -479,23 +454,16 @@ body { margin: 0; background: #0c0d12; }
         <span class="mode">NORMAL</span>
         <span class="lgroup">
           <span class="seg"><span class="bri"><svg><use href="#i-branch"/></svg></span>vsebcode</span>
-          <span class="dotsep">·</span>
-          <span class="seg"><span class="add">+6</span>&nbsp;<span class="chg">~2</span>&nbsp;<span class="del">−1</span></span>
-          <span class="dotsep">·</span>
-          <span class="seg wrn"><svg><use href="#i-warn"/></svg>1</span>
         </span>
         <span class="rgroup">
-          <span>Ln 35, Col 48</span>
-          <span>33%</span>
-          <span>UTF-8</span>
-          <span>LF</span>
-          <span>TypeScript</span>
+          <span>Ln 13, Col 6</span>
+          <span>54%</span>
         </span>
         </div>
       </div>
 
     </section>
 
-    <p class="legend">Flash-style jump<b>·</b>s hei — 9 real matches, labels skip g<b>·</b>Backdrop dims to the comment tone</p>
+    <p class="legend">Oil-style directory buffer<b>·</b>Real browser/ listing<b>·</b>Pending rename, unwritten</p>
   </div>
 </div>

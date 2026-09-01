@@ -79,15 +79,30 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   amendments round 5)** →
   https://claude.ai/code/artifact/18f2d6b7-5a9c-4ba0-8f28-59586cf45627
   (`m10-nvim-flash.html`, committed on approval; r4 baked pre-publish):
-  `s hei`, 9 machine-verified real matches. **View 5 (oil buffer
-  file-ops) IN PROGRESS**: `m10-nvim-oil.html` — a real fork directory
-  as an editable oil buffer; LAST green-lit view, further views /
-  implementation scoping return to Sebastian after it. **Geometry
+  `s hei`, 9 machine-verified real matches. **View 5 (oil) APPROVED at
+  v1 (2026-09-01, delegated round — session ruled all 6 flags as
+  mocked; § Tasks M10 for the list)** →
+  https://claude.ai/code/artifact/78c781ee-0660-4df3-9fb8-bc1125830183
+  (`m10-nvim-oil.html`, committed on approval): the REAL
+  `src/vs/workbench/browser` listing as an oil buffer (24/24 rows
+  machine-checked), mid-flight case-toggle rename of the genuinely
+  lowercase upstream `panecomposite.ts`. **GREEN-LIT QUEUE COMPLETE** —
+  views 2–5 all built, reviewed, approved, published. **Geometry
   revision r4 same day** (Sebastian: tabs "too big"): tab row → stock
-  35px, windows → 1280×859; views 1–3 patched in-session + republished
-  to their same URLs (view 1 via the url-update flow, favicon ⌨️ per
-  the peer session), flash patched at review as planned — durable in
-  § D19 amendments round 4.
+  35px, windows → 1280×859 — § D19 amendments round 4. **Font r6 same
+  day**: UI face → GEIST (Sebastian confirmed live), all five views
+  republished with it embedded — § D19 amendments round 6; research
+  page https://claude.ai/code/artifact/974a0e56-c878-4852-84c8-b7826dbf4de5
+  **Animation round IN FLIGHT (session vsebcode-15)**: demo motion
+  layered on views 1–3 per Sebastian ("add animations, use emil
+  skills"; his ruling: the Emil frequency gate is WAIVED — overlays DO
+  animate in the product; craft values stay), session-reviewed here
+  (transform/opacity only, PRODUCT vs PRESENTATION values documented
+  in-file, reduced-motion variants, safe JS) + republished; that
+  session's flag round is pending with Sebastian — the three animated
+  files commit with its verdicts; flash/oil get the motion pass after.
+  NEXT (Sebastian's calls): further views (trouble list · harpoon
+  stay candidates) and/or implementation scoping.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -556,6 +571,25 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   views updated + republished to their URLs, renders re-verified. Veto
   window open: option A (compact tabs+crumbs combined inside the 46 band)
   remains available if stock reads wrong.
+- **D19 amendments round 6 — UI face = GEIST (research round; delegated
+  pick CONFIRMED by Sebastian live: "Lets use Geist", 2026-09-01)**. His
+  directive: HN Light "looks like a marketing product" — change to
+  something that aligns with the app, research it, installed-on-Mac not
+  required. Research: 9-candidate specimen on the true-size chrome slice
+  → https://claude.ai/code/artifact/974a0e56-c878-4852-84c8-b7826dbf4de5
+  (HN baseline · SF system · SF light-shifted · Avenir Next · Seravek ·
+  Inter · Geist · Mona Sans · IBM Plex Sans). RULING: **Geist** —
+  Vercel's developer-interface face, OFL, Regular+SemiBold ≈ 92 KB;
+  SF-adjacent metrics sit native on the Mac with enough voice to read
+  chosen. The HN light-shift RETIRES (Apple HIG bars Light-weight UI
+  text; the airiness survives in the color hierarchy, untouched). SF Pro
+  system weights = recorded runner-up (a pure deletion, if ever
+  wanted). Editor mono (Liga SFMono NF) untouched. Mockups embed Geist
+  as data URIs (~124 KB/page; still zero external refs). PRODUCT
+  follow-up at implementation: replace M3 S4 (`hnUiFont.css` + its
+  style.ts import) with vendored Geist woff2 + the same
+  workbench-font-family registration; injection-era
+  `hn-weight-shift.css` fully superseded.
 - **D19 amendments round 5 (view-4 flash verdicts — delegated round, session
   ruled 2026-09-01, all as mocked)**: (1) flash's backdrop dim ships as an
   editor-FOREGROUND fade — unmatched buffer text flattens to the theme's

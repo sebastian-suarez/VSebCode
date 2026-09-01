@@ -803,7 +803,14 @@ and the `2026-dark.json` include chain for every color.
   tab-height surgery (`tabHeight` getter 46/zoom + listeners) and the
   slice-4 −1px text nudge — keep the nosidebar lights-clearance padding and
   the 25px breadcrumbs constant; the M3-deferred zoom-overflow fix dies
-  with the revert (stock tabs scale normally)
+  with the revert (stock tabs scale normally); **UI font → Geist (D19
+  r6)**: replace M3 S4's `hnUiFont.css` + its style.ts import with
+  vendored Geist woff2 (OFL; Regular + SemiBold) and the same
+  workbench-font-family registration — `hn-weight-shift.css` fully
+  superseded; **overlay/motion spec (D19 anim round, flags pending in
+  session vsebcode-15)**: telescope 180ms fade+scale ease-out-strong,
+  which-key 8px rise after the timeoutlen beat, 120ms dismiss, 120ms
+  INSERT crossfade, beam blink 500ms halves, instant state steps
 - [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
   overlay → which-key → flash jumps → oil.nvim-style buffer file-ops (trouble
   diagnostics list · harpoon revisit = candidates, not green-lit)
@@ -846,16 +853,45 @@ and the `2026-dark.json` include chain for every color.
   foreground fade to comment tone #8b949e (FlashBackdrop→Comment, flash's
   own default link), label = flat char cell #48A0C7/#121314; builder's
   own render pass caught + fixed a dropped statusbar CSS section
-- [ ] View 5 — oil.nvim buffer file-ops (`m10-nvim-oil.html`, own artifact
-  URL): IN PROGRESS 2026-09-01, Fable-max agent per the D19 exception — a
-  REAL directory of this fork rendered as an editable oil buffer in the
-  editor over the r4 scene (rail/chrome untouched). Coherence bar: buffer
-  lines = the real directory contents on disk, machine-verified; mid-edit
-  story (e.g. pending rename) must stay coherent end to end (tab dirty
-  state, cursor Ln/Col, hybrid numbers). Flags expected: tab/breadcrumbs/
-  statusbar treatment for a directory buffer, the edit story, icons/
-  ordering. Delegated-round protocol applies; LAST green-lit view — after
-  it closes, further views/implementation scoping return to Sebastian
+- [x] View 5 — oil.nvim buffer file-ops **APPROVED at v1, 2026-09-01**
+  (delegated round; session ruled all 6 flags as mocked; file committed on
+  approval) →
+  https://claude.ai/code/artifact/78c781ee-0660-4df3-9fb8-bc1125830183
+  Rulings: (1) tab = `browser/` + folder icon + dirty dot (basename
+  convention with oil's trailing-slash truth; full oil:// URI = tab
+  noise); (2) breadcrumbs end at the directory, no leaf/symbol; (3)
+  statusbar strips to NORMAL + branch + Ln 13,Col 6 + 54% (diff/
+  diagnostics/encoding/EOL/language are file-buffer segments — honest
+  absences); (4) edit story = case-toggle rename `panecomposite.ts` →
+  `paneComposite.ts` mid-flight, unwritten (the upstream file is
+  GENUINELY lowercase; `~` cursor position Col 6 coherent); (5)
+  name-only columns, no EOF tildes, no scrollbar (24<37), no git gutter
+  marks; (6) rail tree stays v3-verbatim, read as a scrolled viewport.
+  Verification: builder's oilcheck.py re-run at review — 24/24 rows =
+  the real `src/vs/workbench/browser` listing, ALL CHECKS PASS; greps
+  clean; r4 geometry honored by the builder unprompted
+- [x] **Font r6 — UI face → Geist (D19 amendments round 6; Sebastian
+  confirmed live)** 2026-09-01: 9-candidate research specimen (committed
+  as `m10-font-research.html`) →
+  https://claude.ai/code/artifact/974a0e56-c878-4852-84c8-b7826dbf4de5
+  All five views carry embedded Geist (Regular 400-599 / SemiBold
+  600-1000 data URIs; HN light-shift block removed; still zero external
+  refs). COMMIT STATE: flash + oil font swaps committed here; views
+  1–3's swaps ride the animation-round commit (same files)
+- [ ] **Animation round — IN FLIGHT, owned by session vsebcode-15**
+  (Sebastian: "Lets add animations to the design, use emil skills";
+  his ruling recorded there: Emil frequency gate WAIVED — overlays
+  animate in the product). Motion layer on views 1–3 session-reviewed
+  here (transform/opacity only, one ease-out-strong curve, PRODUCT vs
+  PRESENTATION values documented in-file, prefers-reduced-motion
+  variants, safe class-toggle JS — no network/storage/eval) and
+  republished; page affordance: `r` or the r·replay button re-runs the
+  demo. PENDING: that session's flag round with Sebastian (panel
+  recipes, 120ms mode crossfade, beam blink, view-1 walk, replay
+  control) → then the three files commit with its amendment text;
+  then flash/oil get the same pass. Rewrite guard: preserve the MOTION
+  sections + .play/.out/.kwalk/.mcov/.ecur hooks; walk geometry assumes
+  22px tree rows
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
