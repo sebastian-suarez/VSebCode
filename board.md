@@ -51,6 +51,18 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   ICON SET in the mockup icons' style → recorded as M11/D20. Candidate later views (each needs a green-light): telescope
   overlay · which-key · flash jumps · oil.nvim-style buffer file-ops · trouble
   list · harpoon revisit (excluded from view 1 by choice)
+- **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
+  file-icon set in the M10 mockup icons' visual language, generated with Nano
+  Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
+  icon theme, shipped as the product DEFAULT. Top-3 source themes fixed by
+  install count (marketplace gallery API 2026-09-01): Material Icon Theme
+  35.4M · vscode-icons 24.5M (Sebastian's favorite — naming reference) ·
+  VSCode Great Icons 2.3M. Phase 1 IN FLIGHT, two delegated opus-coder agents
+  writing `m11-icons/`: (a) inventory/ — merged concept list + curated core
+  tier (~140 file + ~40 folder; long tail → category generics); (b) pilot/ —
+  16-icon NBP grid sheet through the full pipeline (slice → key → vectorize →
+  16px legibility sheet). GATE: Sebastian's style checkpoint on the pilot
+  BEFORE mass generation.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -392,7 +404,22 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   metrics honest to the product (editor line-height = mac golden-ratio 21px @
   fontSize 14 — grow the frame, never fudge the metric); NO staged elements (a
   dressing feature the real editor would not draw stays absent — the scope
-  guide waits for a view whose cursor sits inside a block). Design-intent deltas vs today's
+  guide waits for a view whose cursor sits inside a block)
+- **D20 M11 icon theme** (Sebastian 2026-09-01, on approving the M10 first
+  view: "I love the icons you made, lets make a complete set"): an own icon
+  collection in the mockup icons' language — flat solid matte brand colors,
+  three archetypes (letter BADGE / object SILHOUETTE / bare GLYPH), no
+  gradients/outlines/shadows, 16px-first — concept-sourced from a merged
+  inventory of the 3 most-installed marketplace icon themes (Material Icon
+  Theme + vscode-icons [favorite, naming wins] + VSCode Great Icons);
+  generated with Nano Banana Pro through `agy`, converted to SVG (or whatever
+  the icon-theme format needs), shipped as the DEFAULT file icon theme in the
+  fork (D15-style bake). Strategy delegated to the session and chosen: one
+  master style-prompt + 4×4 grid-sheet batches for intra-set consistency;
+  curated core tier (~140 file + ~40 folder concepts) gets bespoke icons, the
+  long tail maps to category generics (as the source themes themselves do);
+  PILOT CHECKPOINT (16 icons end-to-end incl. 16px gate) before any mass
+  generation.. Design-intent deltas vs today's
   shipped product, to be baked at M10 implementation: **caption row** = dim
   foreground (#8C8C8C-class) + true row-centering (also settles the M2
   watch-list ~12px off-center quirk — judged now); **full-height sidebar** —

@@ -803,7 +803,24 @@ and the `2026-dark.json` include chain for every color.
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
 - Resume cold: open the artifact URL above; the html file at the umbrella root is
-  the source; `git status` should show it untracked until the view is approved
+  the source (committed at `a884069` with the approval)
+
+## M11 — VSebCode icon theme (D20)
+
+Own file-icon set in the M10 mockup icons' language, NBP-generated via `agy`,
+default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
+
+- [ ] Inventory: merged concept list from the top-3 themes + curated core tier
+  (`m11-icons/inventory/`) — delegated, IN FLIGHT 2026-09-01
+- [ ] Pilot: 16-icon NBP grid → slice → key → vectorize → 16px checkpoint sheet
+  (`m11-icons/pilot/`) — delegated, IN FLIGHT 2026-09-01
+- [ ] **Sebastian's style checkpoint on the pilot** — gate for mass generation
+  (also decides raster→trace vs hand-authored-SVG on the pilot's evidence)
+- [ ] Mass generation of the core tier (grid-sheet batches) + long-tail fallback
+  mapping to category generics
+- [ ] Package as a built-in icon-theme extension in `vscode/` + product default
+  (delegated implementation; D15-style bake)
+- [ ] Acceptance: virgin build boots with the VSebCode icon set as default
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 
