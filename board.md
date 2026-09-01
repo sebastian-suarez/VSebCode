@@ -14,14 +14,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M3 — Tree & type polish: DEV-ACCEPTED, one gate left** (2026-08-31): four slices +
-  three checkpoint fix-rounds landed and approved on the dev instance (pin target
-  `6f2061ab8cf`); D14 amendments, D15 (design as default), D16 (AI nuke; interim
-  hide) and the single-painter D10 amendment all recorded. REMAINING: the packaged
-  pass (Sebastian: gulp build + virgin .app = full design per D15; carries M2's
-  one-time packaged verification) → then M3 closes and
-  [settings-m3-reduction.md](settings-m3-reduction.md) applies at daily-driver
-  switch
+- **M9 — AI excision (D16, this/next session)**: dependency survey first (who imports
+  `contrib/chat`, `platform/agentHost`, `src/vs/sessions`), then staged removal —
+  code, wiring, views/commands/menus, deps (`@vscode/copilot-api`,
+  `@anthropic-ai/*` typings shim), tests (`chatDisabled` smoke dies too); deletes
+  the interim `chat.disableAIFeatures` default along with the setting. Round-3
+  sweep pointers to fold in: aux-bar editor-background second coat
+  (`auxiliaryBarPart.css:11-15`), chat-interior sidebar-color fills (chat.css and
+  friends), dead composite-bar active/inactive color fields
 
 ## Next
 
@@ -46,6 +46,28 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-08-31 — **M3 complete — tree & type polish + design-as-default** (four slices +
+  three checkpoint fix-rounds, all delegated and diff-reviewed, hooks ON; pins
+  `6bef040`→`a75746d`, final vscode `6f2061ab8cf`): `fff7895` native sticky clip var
+  (kills `tree-sticky-mask.js`), `9237487` source-list sidebar CSS + transparent
+  sticky colors, `b679985` search toggle anchor (dead padding rule dropped per D14),
+  `2c380fb` HN UI product font (kills `hn-weight-shift.css`), `bf73bb4` five visual
+  fixes (breadcrumbs hidden-state −26px bug, safe-center pills, transparent
+  accordion headers, 16px caption codicons, sticky hairline+fade), `d350494` D15
+  defaults (titlebar pair, activity bar top, tree 16/always; Dark 2026 already
+  default), `d5e6a6e` main-process native fallback + Dark 2026 first-frame palette,
+  `fe36ad4` banner above the statusbar + bare sticky, `6370b80` aux bar hidden
+  (the real "chat window"), `6f2061a` single-painter material (uniform 0.3
+  everywhere). Acceptance: virgin dev instance approved; packaged virgin .app
+  approved (carries M2's one-time packaged verification; bundle marker-grep-verified
+  first). Both injection shims retired; Custom UI Style + Vibrancy uninstall +
+  settings reduction = Sebastian at daily-driver switch per settings-m3-reduction.md.
+  Learnings recorded: this fork's watch never emits (esbuild transpile patched off —
+  compile by hand + verify out/ markers before launching); packaged executable is
+  `Contents/MacOS/Code - OSS`; shared-storage recents leak across profiles.
+  DEFERRED FIX (Sebastian at the packaged pass): the fixed-physical 46pt bar makes
+  tab text/icons overflow at higher zoom levels (bar shrinks in CSS px while glyphs
+  grow) — future slice: clamp or scale the physical constants under zoom
 - 2026-08-31 — **M2 complete — workbench layout in source** (six slices + two gate
   refinements, all delegated, diff-reviewed, hooks ON; pins `a292612`→`b0c05c1`):
   `7f3a2be` zoom/gate infra (`InlineTitleBarLayout`, `--zoom-factor`, D13 gate class),

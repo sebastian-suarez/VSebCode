@@ -514,15 +514,17 @@ commit each, diff-reviewed:
   EVERY region exactly one 0.3 coat (pills/caption/pane headers/tree body/gutters/
   below-tree). **Sebastian approved the dev instance 2026-08-31 — M3 dev acceptance
   DONE.**
-- [ ] **Packaged pass — the last M3 gate** (carries M2's one-time packaged
-  verification): Sebastian runs `npm run gulp vscode-darwin-arm64` (8 GB node heap —
-  close heavy apps), boots `../VSCode-darwin-arm64/Code - OSS.app` with a fresh
-  SHORT-PATH `--user-data-dir`; session grep-verifies the bundle first
-  (`Resources/app/out/vs/workbench/workbench.desktop.main.css/.js` must carry the
-  M3 markers). Criteria per D15/D16: the VIRGIN app shows the FULL design out of
-  the box — 46pt bar + pills, Dark 2026, HN UI, source-list trees + bare sticky
-  with hairline/fade, no aux bar, banner (if provoked) above the statusbar; gate
-  still flips live when the titlebar pair is overridden. Then M3 CLOSED.
+- [x] **Packaged pass APPROVED — M3 CLOSED 2026-08-31** (carried M2's one-time
+  packaged verification): bundle marker-grep all-green (CSS: clip mask, HN UI ×11,
+  safe center, breadcrumbs guard, banner-height; JS: force sets, banner-last, clip
+  publisher, 2026 splash, aux-hidden + titlebar defaults; main.js: mac-native
+  fallback + M1 hiddenInset). Virgin .app booted (executable is
+  `Contents/MacOS/Code - OSS`, NOT `Electron`): gate ON out of the box, Dark 2026
+  first frame, HN UI, nosidebar tab clearance — Sebastian approved. Known quirk
+  (not ours): Recents leak across profiles via `~/.code-oss-shared` shared storage.
+  **DEFERRED FIX recorded on the board**: at higher zoom levels the fixed-physical
+  46pt bar overflows tab text/icons (bar shrinks in CSS px, glyphs grow) — future
+  slice: clamp/scale the physical constants under zoom.
 - [ ] After close: Sebastian's daily-driver switch per
   [settings-m3-reduction.md](settings-m3-reduction.md) (supersedes the M2 doc):
   settings reduction, uninstall Custom UI Style + Vibrancy, retire the three shims
