@@ -72,16 +72,22 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   panel bottom-anchored to the editor column in the approved overlay
   vocabulary, `SPC` breadcrumb in the title row as our showcmd,
   statusbar v3-verbatim, first leader map `,` `/` `b` `d` `e` `f` `g`
-  `w` (3 leaves + 5 groups, grounded-only). **View 4 (flash jumps) IN
-  PROGRESS**: `m10-nvim-flash.html` (untracked until approved), same
-  pipeline over the v3 NORMAL moment — labels on REAL pattern matches
-  in the visible editor text; the flash dim-vs-no-dim call is the
-  centerpiece flag; delegated-round protocol applies (session rules,
-  plain veto window to Sebastian). **Geometry revision r4 same day**
-  (Sebastian: tabs "too big"): tab row → stock 35px, windows → 1280×859;
-  views 1–3 patched in-session + republished to their same URLs (view 1
-  via the url-update flow, favicon ⌨️ per the peer session), flash gets
-  the same patch at review — durable in § D19 amendments round 4.
+  `w` (3 leaves + 5 groups, grounded-only). **View 4 (flash jumps)
+  APPROVED at v1 (2026-09-01, delegated round — session ruled: dim =
+  editor-foreground fade to the comment tone, no cmdline echo, flat
+  accent label cells, all matches equal, g-excluded alphabet; § D19
+  amendments round 5)** →
+  https://claude.ai/code/artifact/18f2d6b7-5a9c-4ba0-8f28-59586cf45627
+  (`m10-nvim-flash.html`, committed on approval; r4 baked pre-publish):
+  `s hei`, 9 machine-verified real matches. **View 5 (oil buffer
+  file-ops) IN PROGRESS**: `m10-nvim-oil.html` — a real fork directory
+  as an editable oil buffer; LAST green-lit view, further views /
+  implementation scoping return to Sebastian after it. **Geometry
+  revision r4 same day** (Sebastian: tabs "too big"): tab row → stock
+  35px, windows → 1280×859; views 1–3 patched in-session + republished
+  to their same URLs (view 1 via the url-update flow, favicon ⌨️ per
+  the peer session), flash patched at review as planned — durable in
+  § D19 amendments round 4.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -550,6 +556,22 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   views updated + republished to their URLs, renders re-verified. Veto
   window open: option A (compact tabs+crumbs combined inside the 46 band)
   remains available if stock reads wrong.
+- **D19 amendments round 5 (view-4 flash verdicts — delegated round, session
+  ruled 2026-09-01, all as mocked)**: (1) flash's backdrop dim ships as an
+  editor-FOREGROUND fade — unmatched buffer text flattens to the theme's
+  comment tone (FlashBackdrop→Comment, flash.nvim's own default link); no
+  scrim, no panel — the round-2 no-dim rule governs PANELS and stands;
+  gutter numbers, git bars, cursorline, block cursor and all chrome never
+  dim; (2) no cmdline/pattern echo — the lualine keeps no showcmd/cmdline
+  segment (round-3 precedent); OPEN design-intent question for the
+  implementation phase: where the typed flash pattern lives; (3) jump
+  labels = flat single-char cells, interactive-key accent `#48A0C7` ground
+  with editor-ground glyph (block-cursor grammar; no radius at char
+  scale); (4) all matches band equally with
+  `editor.findMatchHighlightBackground` — bidirectional `s` has no
+  current-match promotion; (5) label alphabet excludes any char that could
+  extend the live search (the g rule), assignment nearest-to-cursor
+  (Δrow, then Δcol).
 - **D19 amendments round 3 (view-3 which-key verdicts — round DELEGATED by
   Sebastian 2026-09-01, "take the decisions that fit the best"; session
   ruled, all as mocked)**: (1) the FIRST LEADER MAP is locked at prototype

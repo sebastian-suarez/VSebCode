@@ -774,7 +774,8 @@ the plan's S2–S12 sections.
 Prototype-first: static HTML mockups of the nvim-inspired UX on the shipped design,
 one view per round, Sebastian judges each. Source of truth = one page per view at the
 umbrella root (view 1: `m10-nvim-prototype.html`; view 2: `m10-nvim-telescope.html`;
-view 3: `m10-nvim-whichkey.html`; view 4: `m10-nvim-flash.html`);
+view 3: `m10-nvim-whichkey.html`; view 4: `m10-nvim-flash.html`; view 5:
+`m10-nvim-oil.html`);
 iterate by editing the view's file and re-publishing — the SAME file path keeps the
 SAME artifact URL, a NEW view gets its own file + URL. View 1 references: his `~/Projects/Settings/settings.json`
 (relative numbers, minimap off, Error Lens, inline blame, Liga SFMono NF, vscode-icons)
@@ -830,18 +831,31 @@ and the `2026-dark.json` include chain for every color.
   review re-verified independently: openSettings/findInFiles ids real,
   #d2a8ff ×2 in 2026-dark.json, diff vs v3 scene = panel+title+legend
   only, geometry untouched, rail coat ×1, zero http/attribution
-- [ ] View 4 — flash jumps (`m10-nvim-flash.html`, own artifact URL): IN
-  PROGRESS 2026-09-01, Fable-max agent per the D19 exception — flash.nvim
-  jump mid-flight over the v3 NORMAL moment (mode + block cursor stay; rail/
-  chrome untouched). Coherence bar: the typed pattern must REALLY occur in
-  the visible v3 editor text at every labeled position, label count = match
-  count, flash label-alphabet rules honored against the real lines.
-  Centerpiece flag: flash's unmatched-text DIM vs the round-2 no-dim
-  verdict (editor-foreground fade ≠ backdrop scrim — builder chooses +
-  justifies); secondary: pattern echo home (lualine has no cmdline —
-  honest-absence precedent), label + match-highlight theme provenance,
-  assignment scheme. Delegated-round protocol: session reviews, rules,
-  publishes, closes — plain veto window to Sebastian in the report
+- [x] View 4 — flash jumps **APPROVED at v1, 2026-09-01** (delegated round;
+  session ruled all 5 flags as mocked, durable in board § D19 amendments
+  round 5; the r4 tab/window patch applied in-session before publish).
+  File committed on approval →
+  https://claude.ai/code/artifact/18f2d6b7-5a9c-4ba0-8f28-59586cf45627
+  Reference record: `s hei` — 9 real case-insensitive matches in the 37
+  visible lines, machine-verified (builder's flashcheck.py, re-run at
+  review post-patch: 9/9 positions, labels a s d f h j k l q assigned
+  nearest-to-cursor with g excluded — every match continues "heig" — and
+  zero other char diffs vs the v3 buffer); match band #27678280 =
+  editor.findMatchHighlightBackground (2026-dark:122 verbatim, provenance
+  re-verified after a truncated-grep false alarm), backdrop dim =
+  foreground fade to comment tone #8b949e (FlashBackdrop→Comment, flash's
+  own default link), label = flat char cell #48A0C7/#121314; builder's
+  own render pass caught + fixed a dropped statusbar CSS section
+- [ ] View 5 — oil.nvim buffer file-ops (`m10-nvim-oil.html`, own artifact
+  URL): IN PROGRESS 2026-09-01, Fable-max agent per the D19 exception — a
+  REAL directory of this fork rendered as an editable oil buffer in the
+  editor over the r4 scene (rail/chrome untouched). Coherence bar: buffer
+  lines = the real directory contents on disk, machine-verified; mid-edit
+  story (e.g. pending rename) must stay coherent end to end (tab dirty
+  state, cursor Ln/Col, hybrid numbers). Flags expected: tab/breadcrumbs/
+  statusbar treatment for a directory buffer, the edit story, icons/
+  ordering. Delegated-round protocol applies; LAST green-lit view — after
+  it closes, further views/implementation scoping return to Sebastian
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
