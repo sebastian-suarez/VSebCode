@@ -100,7 +100,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   in-file, reduced-motion variants, safe JS), republished pre-verdict
   (approved state = published state), trio committed with the doc fold;
   flash gets the motion pass next (the vocabulary lives in the three
-  files). NEXT (Sebastian's calls): further views (trouble list ·
+  files). **Hints r9 same day** (Sebastian: text under the sidebar
+  cropped by the window shape): rail-hints footer compacted across all
+  four views + republished — § D19 amendments round 9; found + fixed in
+  passing: the flash artifact was still serving the pre-Geist r4 page
+  (the r6 republish never landed there), now current.
+  NEXT (Sebastian's calls): further views (trouble list ·
   harpoon stay candidates) and/or implementation scoping.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
@@ -598,6 +603,22 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   settled animated frame pixel-identical to the approved static scene
   (AE 0/0/0.2px on the 1280×859 window crops, real-clock headless
   renders). Flash gets the same pass next.
+- **D19 amendments round 9 — RAIL HINTS COMPACTED (Sebastian 2026-09-01:
+  "Compact the text under the sidebar, some of it is getting cropped by
+  the window shape")**: the keyboard-hint footer at the rail bottom
+  ("j/k move · … · / filter") measured ≈283px from its x20 anchor —
+  filling the 300px rail flush into the statusbar seam, shoulder to
+  shoulder with the 26px bottom-left corner arc, so ends clipped at
+  some zooms/renderers. Fix (metric-only; all six hints and the x20
+  text-column anchor kept): font 10.5px → 10px, separator-dot padding
+  5px → 4px per side — the line now ends ≈21px clear of the seam.
+  Applied to all four view files (identical block), headless renders
+  re-verified corner-clean, all four artifacts republished to their
+  URLs. Found + fixed in passing: the flash artifact was still serving
+  the pre-Geist r4 page (the r6 "all five republished" never actually
+  landed on flash's URL — it still had the Helvetica-Neue face, likely
+  where the crop read worst); flash's URL now serves the committed
+  Geist page with r9 baked.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:
