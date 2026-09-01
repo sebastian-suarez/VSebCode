@@ -493,7 +493,39 @@ commit each, diff-reviewed:
   FIRST), relaunch virgin, re-verify (banner-at-bottom geometry with trust banner
   visible, pills stay on the lights line, toasts/quick-input sanity, sticky bare,
   no chat view), his final judge.
-- [ ] **Checkpoint round 3 / close** (M2-style roles: Sebastian runs watch + judges; session drives):
+- [x] **Checkpoint round 3 — battery green; Sebastian's judge found the material
+  patchwork** (2026-08-31): banner-above-statusbar exact (852+26=878, lights row at
+  0 with banner up, `--banner-height` 26px feeding toasts, quick input at 0), aux
+  bar gone + Cmd+⌥+B toggles, sticky fully bare with live hairline. THEN measured
+  paint-stack map (elementsFromPoint per region): pills row 0.3, caption
+  **0.51** (sideBarTitle 0.3 re-paints over the part's 0.3), pane headers 0.3,
+  tree body **0.51** (per-list style element re-paints sideBar.background on
+  `.monaco-list-rows`) — the patchwork Sebastian saw. Fix approved: single-painter
+  model (part alone paints 0.3; interiors alpha 0) — AMENDS D10: sideBarTitle moves
+  to the transparent set; sidebar `.monaco-list-rows` background transparent in the
+  M3 CSS block; sweep for other same-color re-paints.
+- [x] **Fix round 3 landed + round-4 verify + DEV ACCEPTANCE** (`6f2061ab8cf`,
+  delegated; diff reviewed; hooks ON): single-painter material — sideBarTitle →
+  transparent set (amends D10), sidebar `.monaco-list-rows` background transparent
+  ((0,6,0) beats the per-list (0,3,0); drop feedback survives via its `!important`;
+  drag images/row fills proven unaffected). Sweep: aux-bar editor-background second
+  coat + chat-interior sidebar-color fills reported for M9's shadow; composite-bar
+  active/inactive color fields found dead upstream. Post-compile map measured:
+  EVERY region exactly one 0.3 coat (pills/caption/pane headers/tree body/gutters/
+  below-tree). **Sebastian approved the dev instance 2026-08-31 — M3 dev acceptance
+  DONE.**
+- [ ] **Packaged pass — the last M3 gate** (carries M2's one-time packaged
+  verification): Sebastian runs `npm run gulp vscode-darwin-arm64` (8 GB node heap —
+  close heavy apps), boots `../VSCode-darwin-arm64/Code - OSS.app` with a fresh
+  SHORT-PATH `--user-data-dir`; session grep-verifies the bundle first
+  (`Resources/app/out/vs/workbench/workbench.desktop.main.css/.js` must carry the
+  M3 markers). Criteria per D15/D16: the VIRGIN app shows the FULL design out of
+  the box — 46pt bar + pills, Dark 2026, HN UI, source-list trees + bare sticky
+  with hairline/fade, no aux bar, banner (if provoked) above the statusbar; gate
+  still flips live when the titlebar pair is overridden. Then M3 CLOSED.
+- [ ] After close: Sebastian's daily-driver switch per
+  [settings-m3-reduction.md](settings-m3-reduction.md) (supersedes the M2 doc):
+  settings reduction, uninstall Custom UI Style + Vibrancy, retire the three shims
   launch skill with `TMPDIR=/tmp`; CDP battery — clip var tracks scroll/sticky height,
   mask boundary sits under the sticky widget, row inset 8/…/7px incl. sticky rows,
   indent-guide shift, pane-header 12px, no scroll shadows, toggle-replace 26px on the

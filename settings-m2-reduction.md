@@ -1,5 +1,8 @@
 # Settings/settings.json — M2 reduction (apply when daily-driving VSebCode ≥ 2811166)
 
+**SUPERSEDED 2026-08-31 by [settings-m3-reduction.md](settings-m3-reduction.md)** —
+M3/D15/D16 made the reduction much larger; apply that one instead.
+
 Removing what M1+M2 baked into source; keeping only M3-pending material.
 Line refs against Settings/settings.json @ bc7132d.
 

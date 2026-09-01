@@ -14,12 +14,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Now
 
-- **M3 — Tree & type polish** (next session): sticky-header mask in the tree widget,
-  source-list rows, HN UI font — retires `tree-sticky-mask.js` +
-  `hn-weight-shift.css`, uninstalls both extensions. Source spec: the M3-only
-  leftovers in Settings/settings.json (see settings-m2-reduction.md for exactly which
-  pieces remain). M3's packaged pass also carries M2's one-time packaged
-  verification (virgin profile = stock layout per D13)
+- **M3 — Tree & type polish: DEV-ACCEPTED, one gate left** (2026-08-31): four slices +
+  three checkpoint fix-rounds landed and approved on the dev instance (pin target
+  `6f2061ab8cf`); D14 amendments, D15 (design as default), D16 (AI nuke; interim
+  hide) and the single-painter D10 amendment all recorded. REMAINING: the packaged
+  pass (Sebastian: gulp build + virgin .app = full design per D15; carries M2's
+  one-time packaged verification) → then M3 closes and
+  [settings-m3-reduction.md](settings-m3-reduction.md) applies at daily-driver
+  switch
 
 ## Next
 
@@ -239,7 +241,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   macOS native): any top banner steals the traffic-lights row and shoves the pills
   off the lights line — the lights are immovable, so the strip above must always be
   the sidebar header/tabs; banner CSS drops the traffic-light inset, keeps drag +
-  no-drag holes.
+  no-drag holes. Round 3 (same day) adds the **single-painter material model,
+  amending D10**: the sidebar PART alone paints the 0.30 material; interior
+  surfaces are alpha 0 — `sideBarTitle.background` moves from the 0.30 set to the
+  transparent set, and the sidebar list body stops re-painting `sideBar.background`
+  (measured patchwork: caption + tree body composited 0.51 over the part's 0.30
+  while pills row + pane headers sat at 0.30).
 - **D12 Chat substrate stays; ghost text recorded as M8** — *superseded by D16 2026-08-31.* — the remaining chat surface
   ships inert, VSCodium-style: `contrib/chat` (14 MB), `platform/agentHost` (8.7 MB,
   incl. the `node/claude` Agent-SDK glue), `src/vs/sessions` (5.8 MB) all KEEP — dormant
