@@ -92,16 +92,16 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   day**: UI face → GEIST (Sebastian confirmed live), all five views
   republished with it embedded — § D19 amendments round 6; research
   page https://claude.ai/code/artifact/974a0e56-c878-4852-84c8-b7826dbf4de5
-  **Animation round IN FLIGHT (session vsebcode-15)**: demo motion
-  layered on views 1–3 per Sebastian ("add animations, use emil
-  skills"; his ruling: the Emil frequency gate is WAIVED — overlays DO
-  animate in the product; craft values stay), session-reviewed here
+  **Animation round APPROVED (Sebastian 2026-09-01, ruled in the
+  animation session: "all flags approved as built, commit it" — all 6
+  flags stand; § D19 amendments round 8)**: motion layer on views 1–3
+  authored by session vsebcode-15, session-reviewed here
   (transform/opacity only, PRODUCT vs PRESENTATION values documented
-  in-file, reduced-motion variants, safe JS) + republished; that
-  session's flag round is pending with Sebastian — the three animated
-  files commit with its verdicts; flash gets the motion pass after.
-  NEXT (Sebastian's calls): further views (trouble list · harpoon
-  stay candidates) and/or implementation scoping.
+  in-file, reduced-motion variants, safe JS), republished pre-verdict
+  (approved state = published state), trio committed with the doc fold;
+  flash gets the motion pass next (the vocabulary lives in the three
+  files). NEXT (Sebastian's calls): further views (trouble list ·
+  harpoon stay candidates) and/or implementation scoping.
 - **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
   file-icon set in the M10 mockup icons' visual language, generated with Nano
   Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
@@ -570,6 +570,31 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   views updated + republished to their URLs, renders re-verified. Veto
   window open: option A (compact tabs+crumbs combined inside the 46 band)
   remains available if stock reads wrong.
+- **D19 amendments round 8 — ANIMATION ROUND (Sebastian 2026-09-01, ruled
+  in the animation session: all 6 flags approved as built)**: motion
+  enters the M10 design. Ground ruling: the Emil frequency-gate restraint
+  (keyboard-opened surfaces never animate) is WAIVED for this design
+  (Sebastian: "Emil design dont belong to this design"); Emil craft rules
+  still bind — transform/opacity only, strong ease-out, enter fast / exit
+  faster, reduced-motion variants. PRODUCT motion spec (ships at
+  implementation): (1) overlay entrances 180ms on
+  cubic-bezier(0.23,1,0.32,1) — telescope fade + scale 0.97→1 from its
+  own center (modal-class, not trigger-anchored); which-key fade + 8px
+  rise off its statusbar gap, after the timeoutlen pause; (2) overlay
+  dismiss 120ms fade-out; (3) lualine NORMAL↔INSERT flip = 120ms
+  crossfade; (4) prompt beam blinks at the editor cadence — 500ms
+  halves (`viewCursors.ts:32` BLINK_INTERVAL). DURABLE manners: the
+  block cursor never blinks; keystroke state steps are instant — the
+  cursor teleports, no motion on j/k or cursor moves;
+  prefers-reduced-motion = opacity-only variants. PRESENTATION layer
+  (demo-only, never ships): view-1 j·j/k·k explorer-cursor walk at
+  keystroke rhythm, 480ms window settle on load, rest beats, r·replay
+  control under each window. Every view file carries a MOTION CSS
+  section splitting PRODUCT from PRESENTATION values — the
+  implementation phase reads PRODUCT lines only. Verification recorded:
+  settled animated frame pixel-identical to the approved static scene
+  (AE 0/0/0.2px on the 1280×859 window crops, real-clock headless
+  renders). Flash gets the same pass next.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:

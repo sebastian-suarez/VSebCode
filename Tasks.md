@@ -807,8 +807,8 @@ and the `2026-dark.json` include chain for every color.
   r6)**: replace M3 S4's `hnUiFont.css` + its style.ts import with
   vendored Geist woff2 (OFL; Regular + SemiBold) and the same
   workbench-font-family registration — `hn-weight-shift.css` fully
-  superseded; **overlay/motion spec (D19 anim round, flags pending in
-  session vsebcode-15)**: telescope 180ms fade+scale ease-out-strong,
+  superseded; **overlay/motion spec (APPROVED — D19 r8)**: telescope
+  180ms fade+scale ease-out-strong,
   which-key 8px rise after the timeoutlen beat, 120ms dismiss, 120ms
   INSERT crossfade, beam blink 500ms halves, instant state steps
 - [x] Later views green-lit — **Sebastian 2026-09-01**, build order: telescope
@@ -867,20 +867,19 @@ and the `2026-dark.json` include chain for every color.
   600-1000 data URIs; HN light-shift block removed; still zero external
   refs). COMMIT STATE: flash + oil font swaps committed here; views
   1–3's swaps ride the animation-round commit (same files)
-- [ ] **Animation round — IN FLIGHT, owned by session vsebcode-15**
-  (Sebastian: "Lets add animations to the design, use emil skills";
-  his ruling recorded there: Emil frequency gate WAIVED — overlays
-  animate in the product). Motion layer on views 1–3 session-reviewed
-  here (transform/opacity only, one ease-out-strong curve, PRODUCT vs
+- [x] **Animation round APPROVED 2026-09-01** (owned by session
+  vsebcode-15; Sebastian ruled there: "all flags approved as built,
+  commit it" — all 6 flags stand; durable as board § D19 amendments
+  round 8). Motion layer on views 1–3 session-reviewed here
+  (transform/opacity only, one ease-out-strong curve, PRODUCT vs
   PRESENTATION values documented in-file, prefers-reduced-motion
-  variants, safe class-toggle JS — no network/storage/eval) and
-  republished; page affordance: `r` or the r·replay button re-runs the
-  demo. PENDING: that session's flag round with Sebastian (panel
-  recipes, 120ms mode crossfade, beam blink, view-1 walk, replay
-  control) → then the three files commit with its amendment text;
-  then flash gets the same pass. Rewrite guard: preserve the MOTION
-  sections + .play/.out/.kwalk/.mcov/.ecur hooks; walk geometry assumes
-  22px tree rows
+  variants, safe class-toggle JS — no network/storage/eval);
+  published state = approved state; trio committed with this fold.
+  Page affordance: `r` or the r·replay button re-runs the demo.
+  NEXT: flash gets the same pass (motion vocabulary lives in the three
+  files). Rewrite guard stands: preserve the MOTION sections +
+  .play/.out/.kwalk/.mcov/.ecur hooks; walk geometry assumes 22px
+  tree rows
 - [ ] Only after mockups are accepted: scope the implementation milestones
   (keyboard tree navigation is the first candidate — the one capability VS Code
   genuinely lacks today)
