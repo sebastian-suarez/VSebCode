@@ -1,0 +1,422 @@
+{
+ "publiccode": {
+  "archetype": "SILHOUETTE",
+  "fill": "#5E8CAE",
+  "note": "no brand → civic blue #5E8CAE (vsicons publiccode reads blue)"
+ },
+ "pulumi": {
+  "archetype": "SILHOUETTE",
+  "fill": "#8B4FA0",
+  "note": "no brand → Pulumi violet #8A3391 lifted to #8B4FA0"
+ },
+ "puppeteer": {
+  "archetype": "GLYPH",
+  "fill": "#419F6C",
+  "note": "no brand → Puppeteer mint #40B5A4, pulled green to clear the slice teal lane (R7)"
+ },
+ "purgecss": {
+  "archetype": "SILHOUETTE",
+  "fill": "#5FA98F",
+  "note": "no brand → matte green #5FA98F (sweep/purge)"
+ },
+ "pyenv": {
+  "archetype": "SILHOUETTE",
+  "fill": "#5C86B0",
+  "note": "no brand → python blue-grey #5C86B0 (kept off core python #3776AB)"
+ },
+ "pypi": {
+  "archetype": "SILHOUETTE",
+  "fill": "#3775A9",
+  "note": "brand #3775A9"
+ },
+ "pytest": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E9FBF",
+  "note": "no brand → pytest doc blue #4E9FBF"
+ },
+ "pyup": {
+  "archetype": "GLYPH",
+  "fill": "#5A6BA8",
+  "note": "no brand → muted indigo (R7 spread across the slice glyph lane)"
+ },
+ "quasar": {
+  "archetype": "GLYPH",
+  "fill": "#4ABDC9",
+  "note": "no brand → Quasar aqua"
+ },
+ "railway": {
+  "archetype": "GLYPH",
+  "fill": "#CED1D6",
+  "note": "brand #0B0D0E lifted to #CED1D6 (§6.3)"
+ },
+ "razzle": {
+  "archetype": "GLYPH",
+  "fill": "#C26B85",
+  "note": "no brand → matte rose #C26B85"
+ },
+ "rc": {
+  "archetype": "GLYPH",
+  "fill": "#8A8F98",
+  "note": "no brand → neutral #8A8F98"
+ },
+ "reactrouter": {
+  "archetype": "SILHOUETTE",
+  "fill": "#D4535E",
+  "note": "brand #F44250 matted to #D4535E"
+ },
+ "registry": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E8FC4",
+  "note": "no brand → Windows blue #4E8FC4"
+ },
+ "rehype": {
+  "archetype": "GLYPH",
+  "fill": "#A97DCA",
+  "note": "no brand → unified violet #A97DCA"
+ },
+ "remark": {
+  "archetype": "GLYPH",
+  "fill": "#7A51C2",
+  "note": "no brand → unified violet (R7 spread; kept off core markdown)"
+ },
+ "remix": {
+  "archetype": "BADGE",
+  "fill": "#D2D5D9",
+  "note": "brand #000000 lifted to plate #D2D5D9 with a dark letter (§4)"
+ },
+ "render": {
+  "archetype": "SILHOUETTE",
+  "fill": "#3E9BB0",
+  "note": "brand #1A1F6C is the plate hue family; rack uses #3E9BB0"
+ },
+ "renovate": {
+  "archetype": "SILHOUETTE",
+  "fill": "#6B72C0",
+  "note": "brand #1A1F6C lifted to #6B72C0"
+ },
+ "retext": {
+  "archetype": "GLYPH",
+  "fill": "#CAAC7D",
+  "note": "no brand → warm sand"
+ },
+ "robots": {
+  "archetype": "SILHOUETTE",
+  "fill": "#8A93A0",
+  "note": "no brand → neutral steel #8A93A0"
+ },
+ "rocket": {
+  "archetype": "SILHOUETTE",
+  "fill": "#C0563F",
+  "note": "no brand → release red #C0563F"
+ },
+ "rolldown": {
+  "archetype": "SILHOUETTE",
+  "fill": "#D07C3C",
+  "note": "no brand → Rolldown amber #D07C3C (kept off rollup red)"
+ },
+ "rome": {
+  "archetype": "GLYPH",
+  "fill": "#A89A88",
+  "note": "no brand → Roman travertine, neutral lane (HSL S < 25, R7-exempt)"
+ },
+ "rspec": {
+  "archetype": "GLYPH",
+  "fill": "#924F57",
+  "note": "no brand → RSpec maroon #924F57"
+ },
+ "rstack": {
+  "archetype": "SILHOUETTE",
+  "fill": "#D4703A",
+  "note": "no brand → Rspack orange #D4703A"
+ },
+ "rubocop": {
+  "archetype": "SILHOUETTE",
+  "fill": "#7E8AA8",
+  "note": "no brand → RuboCop slate blue #7E8AA8"
+ },
+ "ruff": {
+  "archetype": "SILHOUETTE",
+  "fill": "#A6C45E",
+  "note": "brand #D7FF64 matted to #A6C45E"
+ },
+ "sails": {
+  "archetype": "SILHOUETTE",
+  "fill": "#3E86C4",
+  "note": "brand #14ACC2 shifted to Sails blue #3E86C4"
+ },
+ "sapphire-framework-cli": {
+  "archetype": "GLYPH",
+  "fill": "#4A6FD0",
+  "note": "no brand → sapphire blue #4A6FD0"
+ },
+ "screwdriver": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E8FB0",
+  "note": "no brand → Screwdriver.cd steel blue #4E8FB0"
+ },
+ "seedkit": {
+  "archetype": "SILHOUETTE",
+  "fill": "#5FA05E",
+  "note": "no brand → sprout green #5FA05E"
+ },
+ "semanticrelease": {
+  "archetype": "SILHOUETTE",
+  "fill": "#C7A150",
+  "note": "no brand → release gold #C7A150"
+ },
+ "semgrep": {
+  "archetype": "GLYPH",
+  "fill": "#6FB05C",
+  "note": "no brand → Semgrep green #6FB05C"
+ },
+ "serverless": {
+  "archetype": "SILHOUETTE",
+  "fill": "#D45B54",
+  "note": "brand #FD5750 matted to #D45B54"
+ },
+ "shadcn": {
+  "archetype": "GLYPH",
+  "fill": "#B9BEC6",
+  "note": "brand #000000 lifted to #B9BEC6 (§6.3)"
+ },
+ "shuttle": {
+  "archetype": "GLYPH",
+  "fill": "#CA9B7D",
+  "note": "brand #F25100 desaturated to a warm bronze to clear the Svelte orange (R7)"
+ },
+ "sitemap": {
+  "archetype": "SILHOUETTE",
+  "fill": "#6E9AC0",
+  "note": "no brand → wayfinding blue #6E9AC0"
+ },
+ "slashup": {
+  "archetype": "SILHOUETTE",
+  "fill": "#6656A8",
+  "note": "no brand → command violet #6656A8"
+ },
+ "slug": {
+  "archetype": "GLYPH",
+  "fill": "#8E86A8",
+  "note": "no brand → violet-grey, neutral lane (HSL S < 25, R7-exempt)"
+ },
+ "smithery": {
+  "archetype": "SILHOUETTE",
+  "fill": "#8A9098",
+  "note": "no brand → forge steel #8A9098"
+ },
+ "snapcraft": {
+  "archetype": "SILHOUETTE",
+  "fill": "#C97A45",
+  "note": "brand #E95420 matted to #C97A45"
+ },
+ "snaplet": {
+  "archetype": "SILHOUETTE",
+  "fill": "#C4568E",
+  "note": "no brand → Snaplet pink #C4568E"
+ },
+ "snowpack": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E9ED0",
+  "note": "no brand → Snowpack blue #4E9ED0"
+ },
+ "snyk": {
+  "archetype": "SILHOUETTE",
+  "fill": "#7C79A8",
+  "note": "brand #4C4A73 lifted to #7C79A8"
+ },
+ "solidarity": {
+  "archetype": "GLYPH",
+  "fill": "#AF6EAF",
+  "note": "no brand → muted orchid"
+ },
+ "spin": {
+  "archetype": "SILHOUETTE",
+  "fill": "#3EA0A8",
+  "note": "no brand → Spin teal #3EA0A8"
+ },
+ "stackblitz": {
+  "archetype": "SILHOUETTE",
+  "fill": "#2E7ACC",
+  "note": "brand #1269D3 matted to #2E7ACC"
+ },
+ "steadybit": {
+  "archetype": "GLYPH",
+  "fill": "#B45F9F",
+  "note": "no brand → chaos magenta #B45F9F"
+ },
+ "stitches": {
+  "archetype": "GLYPH",
+  "fill": "#8350AA",
+  "note": "no brand → Stitches lilac #8350AA"
+ },
+ "styleci": {
+  "archetype": "SILHOUETTE",
+  "fill": "#6E86C8",
+  "note": "no brand → StyleCI indigo #6E86C8"
+ },
+ "stylish-haskell": {
+  "archetype": "SILHOUETTE",
+  "fill": "#9A7EC4",
+  "note": "brand-adjacent Haskell violet, shifted to #9A7EC4"
+ },
+ "sublime": {
+  "archetype": "GLYPH",
+  "fill": "#E3B063",
+  "note": "brand #FF9800 matted to #E3B063"
+ },
+ "subversion": {
+  "archetype": "SILHOUETTE",
+  "fill": "#C46E4A",
+  "note": "no brand → Subversion terracotta #C46E4A"
+ },
+ "svelteconfig": {
+  "archetype": "GLYPH",
+  "fill": "#B84325",
+  "note": "brand #FF3E00 matted to #B84325"
+ },
+ "swc": {
+  "archetype": "BADGE",
+  "fill": "#5A56A0",
+  "note": "no brand → SWC indigo (kept off core mdx)"
+ },
+ "syncpack": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E9EA8",
+  "note": "no brand → syncpack teal #4E9EA8"
+ },
+ "systemd": {
+  "archetype": "SILHOUETTE",
+  "fill": "#7E8894",
+  "note": "no brand → systemd steel #7E8894"
+ },
+ "taplo": {
+  "archetype": "GLYPH",
+  "fill": "#A87E5E",
+  "note": "no brand → TOML tan #A87E5E"
+ },
+ "taskfile": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E9E9E",
+  "note": "no brand → Taskfile teal #4E9E9E"
+ },
+ "taze": {
+  "archetype": "GLYPH",
+  "fill": "#6BC27A",
+  "note": "no brand → taze green"
+ },
+ "testcafe": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4C8FA8",
+  "note": "no brand → TestCafe blue #4C8FA8"
+ },
+ "textlint": {
+  "archetype": "GLYPH",
+  "fill": "#9AA08E",
+  "note": "no brand → prose olive-grey"
+ },
+ "tfs": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E7FC4",
+  "note": "no brand → Azure DevOps blue #4E7FC4"
+ },
+ "tiltfile": {
+  "archetype": "SILHOUETTE",
+  "fill": "#D4A03E",
+  "note": "no brand → Tilt amber #D4A03E"
+ },
+ "tmux": {
+  "archetype": "SILHOUETTE",
+  "fill": "#5FA85C",
+  "note": "brand #1BB91F matted to #5FA85C"
+ },
+ "tobimake": {
+  "archetype": "SILHOUETTE",
+  "fill": "#A8846E",
+  "note": "no brand → build tan #A8846E"
+ },
+ "tox": {
+  "archetype": "GLYPH",
+  "fill": "#77B691",
+  "note": "no brand → tox green #77B691"
+ },
+ "travis": {
+  "archetype": "BADGE",
+  "fill": "#3EAAAF",
+  "note": "brand #3EAAAF"
+ },
+ "trigger": {
+  "archetype": "GLYPH",
+  "fill": "#B264C9",
+  "note": "no brand → trigger violet #B264C9"
+ },
+ "trivy": {
+  "archetype": "GLYPH",
+  "fill": "#8C9AD4",
+  "note": "no brand → Trivy blue #8C9AD4"
+ },
+ "truffle": {
+  "archetype": "SILHOUETTE",
+  "fill": "#A8785E",
+  "note": "no brand → truffle earth #A8785E"
+ },
+ "trunk": {
+  "archetype": "SILHOUETTE",
+  "fill": "#6FA05C",
+  "note": "no brand → Trunk green #6FA05C"
+ },
+ "tsdown": {
+  "archetype": "GLYPH",
+  "fill": "#6787AD",
+  "note": "no brand → tsdown blue #6787AD"
+ },
+ "tslint": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4A7FA8",
+  "note": "no brand → TSLint muted blue #4A7FA8 (kept off canon #3178C6)"
+ },
+ "ty": {
+  "archetype": "BADGE",
+  "fill": "#6E9EAE",
+  "note": "no brand → Astral slate #6E9EAE"
+ },
+ "umi": {
+  "archetype": "SILHOUETTE",
+  "fill": "#3E8FC4",
+  "note": "no brand → Umi sea blue #3E8FC4"
+ },
+ "unibeautify": {
+  "archetype": "GLYPH",
+  "fill": "#C26B97",
+  "note": "no brand → beautify pink #C26B97"
+ },
+ "unocss": {
+  "archetype": "BADGE",
+  "fill": "#C6C9CE",
+  "note": "brand #333333 lifted to plate #C6C9CE with a dark letter (§4)"
+ },
+ "vagrant": {
+  "archetype": "SILHOUETTE",
+  "fill": "#4E7FD4",
+  "note": "brand #1868F2 matted to #4E7FD4"
+ },
+ "vale": {
+  "archetype": "GLYPH",
+  "fill": "#8E96A8",
+  "note": "no brand → prose blue-grey, neutral lane (HSL S < 25, R7-exempt)"
+ },
+ "vapor": {
+  "archetype": "SILHOUETTE",
+  "fill": "#7E7FD4",
+  "note": "no brand → Vapor periwinkle #7E7FD4"
+ },
+ "velite": {
+  "archetype": "SILHOUETTE",
+  "fill": "#B8874E",
+  "note": "no brand → Velite ochre #B8874E"
+ },
+ "verdaccio": {
+  "archetype": "BADGE",
+  "fill": "#7E9166",
+  "note": "brand #4B5E40 lifted to #7E9166"
+ }
+}

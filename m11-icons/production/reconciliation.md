@@ -252,6 +252,10 @@ member (its `#BE6329` is already a long retint off `#FF3E00`), so it took a 3-po
 darkening inside its own hue and saturation: `#B15B25` (h 23 s 65 l 42). Nothing else in the
 warm band moved; the audit confirms no other new finding.
 
+> **REAFFIRMED 2026-09-02 (review lead).** `claude` ships `#E2957E` — the lighter direction
+> stands, on these measurements. The invert stays on the shelf as a standing one-liner, not as
+> an open question: **`claude=#85381E`**. No artwork changes.
+
 ## Ruling C — the real marks, each gated by the 16 px proof
 
 | icon | verdict | evidence |
@@ -299,6 +303,11 @@ one-icon one.
 | --- | --- | --- | --- |
 | `turborepo` | `#CC333B` | **withdrawn — unchanged** | The approved exit moved turborepo off L 50 to free the slot; the proof killed it. `erlang` seals the lane above (`--try turborepo=#E08589` → R7 twin erlang / turborepo, dh 11.1 dl 5.9 ds 14.1), so turborepo could only go *darker*, and the only lightness that also clears maven is L ≤ 37 → `#97262B`, **peak 0.18 / 39 % faint**: the new dimmest icon in the set. Trading the defect, not fixing it — withdrawn, turborepo keeps `#CC333B` |
 | `maven` | `#86323A` | **`#A4656B`** | The replacement exit, one icon instead of two: escape up the **saturation** axis rather than the lightness axis. h 354 s 26 l 52 keeps the brand-red hue and puts ΔS ≈ 34 against `angular` and `turborepo` (both s 60), so the pair no longer rests on a hue gap alone. **peak 0.21 → 0.40, faint 62 % → 32 %** — the in-lane maximum |
+
+> **REAFFIRMED 2026-09-02 (review lead).** `maven` ships `#A4656B`. The ΔL 12.2 margin against
+> `erlang` — clear by 0.2 — is accepted as it stands. The wider-margin alternative stays on the
+> shelf as a standing one-liner, not as an open question: **`maven=#A15E65`** (ΔL 14.1, for
+> 0.02 of peak contrast). No artwork changes.
 
 ### Why the targets were restated
 
@@ -373,3 +382,341 @@ validator:             237 / 237, 0 warn    (121 296 B total, 512 avg, 1 425 max
 now `#A4656B` at 0.40 / 32 %, the in-lane maximum. Option (a) of the round-2 note (move
 `angular` or `turborepo` off L 50) was the approved exit and was withdrawn on the proof;
 option (b) (leave the red band) was not needed — the saturation axis kept it in the band.
+
+---
+
+# Round 3 — full coverage
+
+The eighteen full-coverage slices (A01–A12 files, F01–F06 folders) each shipped GREEN on
+its own R7/R8 checks, and each ran **blind to the other seventeen** — they were authored
+concurrently and none could see another's marks. Round 3 is the first pass that could:
+`tools/make-set-manifest.mjs` was made merge-preserving and regenerated over the whole tree
+(**1,779 icons**, 0 missing metadata), and `tools/audit.mjs` ran set-wide with the accumulated
+R3 family list and §11 scoping.
+
+```
+node tools/make-set-manifest.mjs     # merge-preserving; hand keys (round1/2/3) survive a rerun
+node tools/audit.mjs                 # 0 open hard findings, exits 0
+node tools/audit.mjs --near --tolerated       # near-misses + the whole tolerated lane
+node tools/validate.mjs              # 1779 / 1779
+node tools/build-theme.mjs           # + structural self-check
+```
+
+## What the audit had to grow first
+
+`audit.mjs` was written for 237 icons and had three things to gain before it could speak
+about 1,779.
+
+1. **The R3 family list**, extended from 9 groups to **131** — every "FAMILIES to add" line
+   the slices declared, ratified in `assembly-v2-notes.md`. Membership is now a *set* of
+   group ids rather than a partition, because the declarations overlap: `bench-js` is kin to
+   `js` **and** to its own trio, and a partition would have merged `js`, `reactjs` and
+   `typescript` into one family through it and exempted the three from each other.
+   Plus **4 alias pairs** (spec R13), identical artwork by design.
+2. **Bitset form scoring.** 241k same-archetype pairs on 4,096-character masks is minutes of
+   work; the masks become 128-word bitsets once and the IoU is popcount over AND/OR. Same
+   number, ~6 s for the whole run.
+3. **§11.3 scoping** — see the two readings below.
+
+## Two readings, flagged for the review lead — both RATIFIED 2026-09-02 (round 4)
+
+Both are constants at the top of `audit.mjs` and both are the lead's to overrule. They are
+the same *kind* of thing as reconciliation round 1's readings 1 and 2: not new law, but the
+decision that had to be made to apply the existing law at this scale.
+
+### Reading 3 — the form qualifier reaches BADGE and GLYPH in the long tail
+
+Round 1's reading 1 said: *155 icons cannot be pairwise ≥ 12° apart in hue (that allows 30)*,
+and form-qualified the SILHOUETTE lane on that basis. The set now holds **375 BADGEs and
+262 GLYPHs**, so the same argument now reaches them. Measured, with the strict reading:
+
+| | pairs |
+| --- | --- |
+| R7 hard-lane twins, strict reading | **298** |
+| …of which form score < 0.40 (the marks read nothing alike) | **282** |
+| …of which form score ≥ 0.55 | **1** (`cocos` ↔ `sqlite`) |
+| …originating inside one slice | **0** — every slice's own R7 work holds |
+
+All 298 involve a core icon; not one is a long-tail pair that a slice should have caught.
+So the audit applies the form qualifier to every archetype **for any pair involving a
+long-tail icon**, and keeps the strict rule among the 155 core, where the lead's rounds 1–2
+stand untouched. `LONGTAIL_FORM_QUALIFIED = false` restores the strict reading.
+The one pair that survives the qualifier was **fixed, not tolerated** — see `cocos` below.
+
+### §11.3's hard scope is the authoring slice
+
+spec §11.3 says R7 is "HARD within your own slice and against core icons of the same domain
+family". `--scope` implements three readings of that; the shipped default is `slice`.
+
+| `--scope` | hard R7 | tolerated | note |
+| --- | --- | --- | --- |
+| `slice` (shipped) | **298** → 1 after reading 3 | 1,471 → 10 | your own slice, plus everything against the 155 core |
+| `domain` | 1,037 | 708 | "within-domain" read as the worklist category — but `code` alone holds 629 concepts across eight slices, so this recreates reading 1's arithmetic problem one level up |
+| `all` | 1,787 | 0 | no scoping at all |
+
+Either side being a **core icon always makes the pair hard**, in every scope.
+
+## Audit before
+
+| finding | count |
+| --- | --- |
+| R7 hard-lane twins (reading 3, `--scope slice`) | **1** |
+| R8 form collisions, files | **20** |
+| R8 folder-emblem collisions (new lane, uncalibrated) | 21 |
+| R7 §11.3 tolerated lane | 12 |
+| R7 colour hits separated by form | 10,644 |
+| validator | 1779 / 1779 |
+
+## Changes applied — 20 mark redraws + 1 retint
+
+Fix policy is round 1's, unchanged: **the less brand-anchored member moves**; where neither
+member has a brand, the earlier slice keeps the mark and the later one moves. Every one of
+the twenty R8 findings is the same failure — two slices, unable to see each other, ran
+`letterpath` on the same two or three letters, or reached for the same obvious object.
+
+| icon | finding | was | now | why this one moved |
+| --- | --- | --- | --- | --- |
+| `adonis` | R8 1.00 vs `access` | letters **A** | **AD** | access is letter-locked inside the Office plate family (W / X / P / P / A) |
+| `api-extractor` | R8 1.00 vs `openapi`, `vapi` | letters **API** | **AE** | three slices shipped API; openapi keeps it — brand green, and the concept *is* OpenAPI |
+| `vapi` | R8 1.00, same trio | letters **API** | **VA** | `.vapi` is the Vala API file |
+| `brunch` | R8 1.00 vs `bruno` | letters **BR** | **BN** | bruno had already moved off `B` once in-slice (A02 caught bruno ↔ biome at 0.915) |
+| `cloudfoundry` | R8 0.99 vs `cf` | letters **CF** | **a cloud** | `cf` anchors the ColdFusion family (cf / cfc / cfm). Cloud Foundry's own brand is a cloud, and a BADGE cloud is a different archetype from both `gcloud` (outlined GLYPH) and `cloudflare` (solid SILHOUETTE) — the R8 dodge A09 documented |
+| `hugo` | R8 1.00 vs `cheader` | letters **H** | **HU** | cheader is core and sits in the c / cheader / cppheader family |
+| `denizenscript` | R8 0.97 vs `deepsource` | letters **DS** | **DSC** | deepsource carries the brand navy; `.dsc` is denizenscript's extension |
+| `docz` | R8 1.00 vs `drizzle` | letters **DZ** | **DCZ** | drizzle is brand-anchored (`#C5F74F` → `#B8D94A`) |
+| `glitter` | R8 0.95 vs `grit` | letters **GT** | **GLT** | both no-brand, so the earlier slice keeps it: grit (A03) stands, glitter (A09) moves |
+| `just` | R8 0.97 vs `jenkins` | letters **J** | **JU** | jenkins is core |
+| `posthtml` | R8 1.00 vs `phalcon` | letters **PH** | **PHT** | both no-brand; phalcon (A05) is the earlier slice |
+| `purescript` | R8 0.92 vs `phpstan` | letters **PS** | **PUR** | phpstan's colour source is "php-adjacent" — a family anchor; purescript's says "no brand". `.purs` |
+| `shaderlab` | R8 0.99 vs `s-lang` | letters **SL** | **SHL** | both no-brand; s-lang (A06) is earlier |
+| `styled` | R8 0.97 vs `scons` | letters **SC** | **STD** | both no-brand; scons (A06) is earlier |
+| `sty` | R8 1.00 vs `latex-package` | letters **STY** | **ST** | latex-package holds the tex family teal. **Flagged**: `.sty` *is* the LaTeX package file, so these two may be one concept the lead would rather declare a tex-family pair than keep as two icons |
+| `razor` | R8 1.00 vs `blade` | the **@** sigil, GLYPH | **RZ** on a plate | both are template engines whose sigil is `@`, and both slices drew the same glyph. blade has the Laravel brand red; razor had none. R12 forbids a bare letter group at this lightness, so razor became a BADGE |
+| `nest-resolver` | R8 0.74 vs `circleci` | ring + centre dot | **two feeders converging into one arrow** | that is circleci's mark and circleci's is the brand (F01 already recorded the file mark as dot-in-ring). First build proofed at 24 % faint on 1.7 px limbs — the §2 floor is not enough on a diagonal; shipped at 2.4 px |
+| `metal` | R8 0.81 vs `cuda` | chip die with pins | **the subdivided triangle** | cuda carries the NVIDIA green. Metal is a graphics API, so the mesh primitive is the honest read. 16 px: peak 0.56, 6 % faint |
+| `mailing` | R8 0.92 vs `outlook` | envelope | **paper plane** | Outlook's brand *is* the envelope |
+| `zizmor` | R8 0.72 vs `valgrind` | magnifier | **a beetle** | both no-brand; valgrind (A07) is earlier. No shield (css / html own that silhouette), no lens, eye or padlock (valgrind, lynx, lock own those). Six 1.4 px legs proofed as fringe; shipped with four at 2.2 px |
+| `cocos` | **R7** hard twin vs core `sqlite` | `#2A8D70` | **`#1C5E4A`** | the only hue twin reading 3 does not excuse: BADGE, dh 9.7 / dl 1.4 / ds 9.9 **and** form 0.62, so the marks do not separate it either. cocos has no brand; sqlite is core and the R3 rhyme with `sql`. Escaped down the lightness axis to ΔL 13 |
+
+Every redrawn letter group was sized by R5 (ink width first: 9.0–9.8 for two letters,
+10.6–11.4 for three) with §5 law 1 applied to the ink box, and every hand-drawn mark winds
+its subpaths the same way or declares `fill-rule="evenodd"` (R11).
+
+## Audit after
+
+```
+R7 palette twins (HARD lane):   0 open, 1 accepted   (npm / yaml — R10a, ruled)
+R8 form collisions, files:      0 open, 2 accepted   (css / html, font / generic-font)
+R7 §11.3 tolerated lane:        10 pairs
+R7 separated by form:           10 644 pairs, 7 hue neighbourhoods
+folder emblems described twice: 2 (admin / guard "shield"; filter / ngrx-reducer "funnel")
+validator:                      1779 / 1779, 0 warn  (989 140 B total, 556 avg, 2 026 max)
+theme self-check:               clean
+```
+
+### The §11.3 tolerated lane — all 10
+
+Cross-slice, cross-domain, neither side core. Logged, not defects.
+
+| pair | archetype | dh / dl / ds | form |
+| --- | --- | --- | --- |
+| `blitz` ↔ `qwik` | BADGE | 9.9 / 5.9 / 6.7 | .71 |
+| `cangjie` ↔ `ogone` | BADGE | 1.9 / 9.4 / 4.8 | .56 |
+| `dbt` ↔ `riot` | BADGE | 4.5 / 4.7 / 1.8 | .67 |
+| `hack` ↔ `haxedevelop` | BADGE | 4.2 / 1.0 / 7.4 | .57 |
+| `astro-config` ↔ `nest-service` | SILHOUETTE | 9.2 / 10.6 / 0.8 | .57 |
+| `astroconfig` ↔ `nest-service` | SILHOUETTE | 9.2 / 10.6 / 0.8 | .57 |
+| `cloudflare` ↔ `wrangler` | SILHOUETTE | 5.3 / 10.2 / 4.5 | .69 |
+| `jshint` ↔ `nest-filter` | SILHOUETTE | 9.9 / 6.5 / 8.8 | .55 |
+| `locale` ↔ `phraseapp` | SILHOUETTE | 2.1 / 5.7 / 9.7 | .57 |
+| `pip` ↔ `pypi` | SILHOUETTE | 0.0 / 0.4 / 0.4 | .68 |
+
+`cloudflare` ↔ `wrangler` and `pip` ↔ `pypi` are brand rhymes and would be R3 families if
+declared; `astro-config` ↔ `astroconfig` is one icon appearing twice (R13 alias).
+
+### New lane, NOT gating — R8 on folder emblems
+
+R9 makes the tan plate law and the emblem the discriminator, so R8 does reach folder
+emblems, and F04 explicitly asked assembly for the cross-slice check its own slice could not
+run. The audit now scores emblem geometry (the ink that is not the tan) with the same metric
+as files. **21 pairs land at or over 0.72, and 71 more are near.** The lane reports and does
+not gate, because **the bar has never been calibrated for emblems** and the 21 are visibly
+two different things:
+
+- **Real** — `bloc` / `ngrx-store` / `devcontainer` / `vm` are one rounded-box-with-a-counter,
+  four times, at 0.73–0.91. `filter` / `ngrx-reducer` are both funnels (and are the second
+  description duplicate too).
+- **Artefact** — `atom` (nucleus in orbit), `target` (bullseye) and `deprecated` (slashed
+  circle) score 0.73–0.85 against each other while reading as three different objects. At
+  emblem scale the outline term stops discriminating, because every candidate outline is the
+  same circle. This is precisely the failure the outline term was added to prevent at file
+  scale, reappearing one size down.
+
+`node tools/audit.mjs --folders-hard` gates on the lane once the lead sets its bar.
+
+## Handed to the review lead
+
+Carried forward, plus what assembly added. All of these are in `contact-full.html` §5 with
+the same wording. **Every one of the seven was ruled on 2026-09-02 — see round 4 below.**
+
+1. **Reading 3** — ratify, or restore the strict reading and rule the 298.
+2. **§11.3 scope** — confirm `slice`.
+3. **The folder-emblem bar** — what is it, and does the box cluster get redrawn?
+4. **109 unreachable icons.** The theme's core-over-long-tail precedence leaves 109 bespoke
+   icons that nothing routes to, because a core concept co-claims every matcher they have
+   (`shell` and `awk` both claim `.awk`; `image` and `avif` both claim `.avif`; `godot` and
+   `gdscript` both claim `.gd`). This rule never mattered before full coverage, because the
+   long tail had no icons to lose with. `node tools/build-theme.mjs --longtail-first` drops
+   it to 46; `--unreachable` lists them. Shipped core-first, unchanged from the core tier.
+5. **`sty` ↔ `latex-package`** — one concept or two?
+6. **`claude` direction** (round 2) — `claude=#85381E` inverts it in one line.
+7. **`maven` ↔ `erlang` margin** (round 2) — `maven=#A15E65` restores ΔL 14.1 for 0.02 of peak.
+
+---
+
+# Round 4 — the closing rulings
+
+The review lead closed all seven items round 3 handed up, on **2026-09-02**, as six rulings —
+`claude` and `maven` were answered together. **Nothing here changes artwork**: four are a
+reading, a precedence or a ratification, one is a declaration (`sty`), and one reaffirms two
+shipped fills. The single thing that moves is the **theme**, and it moves a lot.
+
+| # | item | ruling |
+| --- | --- | --- |
+| 1 | R7 reading 3 (`LONGTAIL_FORM_QUALIFIED`) | **RATIFIED.** It shipped provisionally with the full-coverage set; the ratification is now explicit in spec §10 and in the audit banner |
+| 2 | §11.3 hard scope (`--scope slice`) | **RATIFIED**, same footing — spec §10 reading 4 |
+| 3 | folder-emblem R8 | **DOES NOT GATE** — new spec **R9b** |
+| 4 | theme resolution | **FLIPPED** to specific-beats-general — new spec **R14**; its escalation ruled the same day and corrected by 11 hand pins — new spec **R14a**, `theme/pins.json` |
+| 5 | `claude` / `maven` | **REAFFIRMED as shipped**; both inverts recorded as standing one-liners beside their round-2 rulings above |
+| 6 | `sty` ↔ `latex-package` | **TWO CONCEPTS**, declared an R3 pair |
+
+## Ruling 3 — folder emblems: R8 does not gate (spec R9b)
+
+Two independent reasons, and either alone would be enough.
+
+**A shared construction can be an honest concept rhyme.** The `bloc` / `ngrx-store` /
+`devcontainer` / `vm` four-way at 0.73–0.91 is four concepts that each *hold something*: it is
+the container metaphor drawn four times, which is what an R3 family is, one lane down. Hue and
+the context a folder name arrives in do the separating — nobody has `bloc/` and `vm/` in one
+tree and confuses them.
+
+**And the bar is not calibrated for this scale.** 0.72 is the file SILHOUETTE bar, measured on
+full-size objects. At an 8.20 emblem the outline term stops discriminating, because every
+candidate outline is the same circle — `atom` (nucleus in orbit), `target` (bullseye) and
+`deprecated` (slashed circle) score 0.73–0.85 against one another while reading as three
+different objects. That false cluster is the proof: a metric that cannot tell those three apart
+is not measuring emblems yet.
+
+`tools/audit.mjs` keeps the lane and keeps `--folders-hard` available, **off by default**. The
+21 pairs remain reported, not fixed, and the lane will gate the day someone measures a bar for
+8.20 px geometry.
+
+## Ruling 4 — the resolution flip (spec R14)
+
+`build-theme.mjs`'s open question `--longtail-first` is ruled, shipped as the default, and
+renamed **specific-beats-general** — because "long-tail first" names the tier arithmetic and
+not the reason. The reason is D20 amendment 2's own logic: `.awk` deserves the awk icon, not
+`shell`'s broad claim on every script extension; `.avif` deserves avif, not `image`'s claim on
+every raster format. `--core-first` is the escape flag.
+
+| | core-first (withdrawn) | specific-beats-general (shipped) |
+| --- | --- | --- |
+| associations that changed hands | — | **194** |
+| core concepts yielding a matcher | — | 70 |
+| long-tail concepts gaining one | — | 135 |
+| **unreachable definitions** | **108** | **48** (+11 open twins) |
+| core-tier `matcherCollisions` verdicts | 54 | **54 — unchanged, pinned exactly as-is** |
+| `theme/pins.json` verdicts (R14a) | 11 | 11 |
+| generic fileName rules dropped for a named extension | 2 | 2 |
+
+By matcher kind: 117 `fileExtensions`, 45 `fileNames`, 13 `languageIds`, 19 `folderNames`.
+
+The full diff, the 48 residual unreachables with a reason each, the escalation and three sanity
+scans are in **`theme/resolution-flip-diff.md`**, regenerated by
+`node tools/build-theme.mjs --flip-report`.
+
+### What the flip could not see — escalated, then RESOLVED BY PIN (R14a)
+
+A tier rule is not a measurement of specificity. Where the two agree the flip is exactly what
+§11 asked for; where an upstream source theme gave a **narrow concept an over-broad matcher**,
+the flip believes it, and nothing in the tier arithmetic can tell that apart from a genuinely
+specific claim. Three scans in the diff found them, and the first cut of this round escalated
+what they found:
+
+- **3a — long-tail wins on a matcher 3+ other concepts claim**: `store/`, `stores/`, `.cls`.
+- **3b — the matcher IS the losing concept's own id**: `.xml` and `lang:xml` left `_xml` for
+  `_source`; `.yaml` left `_yaml` for `_esphome`; `components/` and `services/` left their
+  eponymous folders.
+- **3c — blast radius**, ranked by the yielding concept's `core-tier.json` rank. Top of the
+  list: **`.tsx` left `_reactts` (core rank 2) for `_qwik`**, whose entire claim list is the
+  single extension `tsx`, from Material. Also `.yml` → `_cloudfoundry` and `.es` → `_elastic`.
+
+**The lead ruled the escalation the same day: correct it per matcher.** The correction lives in
+**`theme/pins.json`** — read by `build-theme.mjs`, merged into the same map as core-tier's
+verdicts, and resolved **before every precedence rule in either mode**. It is data, not code:
+the rule stays one line, the exceptions stay a list. **11 pins ship**, covering every §3b hit
+and the §3c hits where a top-ranked core concept owns the matcher in the real world. After them
+both scans read clean — **§3a 0, §3b 0** — because a pinned matcher no longer changes hands.
+
+| matcher | pinned to | over | why |
+| --- | --- | --- | --- |
+| `.tsx` | `reactts` | qwik | blast radius: core rank 2, and qwik's claim on the bare extension is upstream over-reach |
+| `.yaml` | `yaml` | esphome, homeassistant | eponymous |
+| `.yml` | `yaml` | cloudfoundry | the same file as `.yaml`; the two cannot render differently |
+| `.xml` | `xml` | source | eponymous; `source` is broader than xml, not narrower |
+| `lang:xml` | `xml` | source | eponymous; keeps the language and the extension in agreement |
+| `.tikz` | `tex` | matlab | TikZ is a TeX package; matlab's claim is a mis-claim |
+| `.cls` | `tex` | apex, vb, vba | the LaTeX class is the common `.cls`, and tex owns the family |
+| `components/` | `components` | react-components, vue | eponymous; a bare `components/` is framework-agnostic |
+| `services/` | `services` | controller | eponymous; a services dir is not a controllers dir |
+| `store/` | `store` | db, ngrx-store, redux-store, vuex-store | a bare `store/` is generic — the dir name cannot say NgRx from Redux from Pinia |
+| `stores/` | `store` | db, redux-store, vuex-store | the plural of the same generic dir, same icon |
+
+**Cost, measured** (the builder computes it against the same flip with core-tier verdicts only,
+so the number cannot drift from the file): **3 stranded** — `_qwik`, `_folder_ngrx-store`,
+`_folder_redux-store`, each of which claims nothing but the matcher pinned away; **1 recovered**
+— `_folder_store`, which the un-pinned flip had stranded; **1 already unreachable either way** —
+`_folder_vuex-store`, named so the pin is not blamed for it. Every other loser keeps at least
+one association, counted per pin in `pins.json`'s `keeps` field and in the diff's escalation
+table. Net unreachable 46 → 48.
+
+Every pin is validated against the claim map at build time: a matcher nobody claims, or a winner
+that does not claim it, **fails the build** rather than being silently ignored.
+
+## Ruling 6 — `sty` and `latex-package` are two concepts, declared an R3 pair
+
+**They do not overlap.** The merged inventory gives `sty` the *extension* `.sty` and gives
+`latex-package` the *language id* `latex-package`, and nothing else — different matcher kinds,
+zero intersection. So the R13 fold does not apply: neither icon is a duplicate key for one
+concept, and after R14 both resolve to their own artwork (`.sty` → `_sty`, which the withdrawn
+precedence had given to core `_tex`; `lang:latex-package` → `_latex-package`). Folding them
+would have deleted a reachable association, not a redundant one.
+
+Declared in `audit.mjs` `FAMILIES` as the bare pair `['sty', 'latex-package']` rather than
+folded into the ten-member tex group above it, because `sty` ships purple `#7E6FA8` against the
+family's teal `#61BAB5`: it is kin by concept, not by hue, and writing it into the tex group
+would claim a hue rhyme the manifest does not support. Round 3's letter move (`STY` → `ST`)
+stands and is what actually separates them; the declaration stops the audit re-litigating it.
+
+Families 131 → 132. Audit unchanged at 0 open.
+
+## Round-4 gates
+
+```
+validator:        1779 / 1779, 0 fail, 0 warn   (989 140 B total, 556 avg, 2 026 max)
+audit:            0 open hard findings          (10 tolerated §11.3, 3 accepted,
+                                                 21 folder-emblem reported — R9b, does not gate)
+theme self-check: clean                         (1775 definitions, 48 unreachable,
+                                                 54 core-tier + 11 pins.json verdicts applied)
+```
+
+## Still to fix before packaging
+
+1. **The `PATH_PREFIX` swap** — `./../svg` → `./icons/` in `build-theme.mjs`, one string, at
+   packaging time.
+2. **Nothing else is open.** The seven items round 3 handed up are all ruled, and R14's own
+   escalation was ruled and pinned in the same round. The only decisions left on the table are
+   optional and each is one line: the `claude` and `maven` inverts, both reaffirmed as shipped.
+3. **New pins, if any, are a data edit.** `theme/pins.json` is the place; §3a and §3c of
+   `theme/resolution-flip-diff.md` are where a new candidate shows up. Both scans read clean
+   today.

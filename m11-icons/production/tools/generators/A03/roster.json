@@ -1,0 +1,506 @@
+[
+ {
+  "id": "fastlane",
+  "archetype": "SILHOUETTE",
+  "fill": "#5FBE93",
+  "note": "no brand → #5FBE93 (fastlane mint)"
+ },
+ {
+  "id": "fauna",
+  "archetype": "SILHOUETTE",
+  "fill": "#9C5FC4",
+  "note": "no brand → #9C5FC4 (Fauna violet)"
+ },
+ {
+  "id": "fbx",
+  "archetype": "BADGE",
+  "fill": "#6E8598",
+  "note": "no brand → #6E8598 (neutral 3D slate)"
+ },
+ {
+  "id": "firebasestorage",
+  "archetype": "SILHOUETTE",
+  "fill": "#EBBE45",
+  "note": "Firebase amber #FFCA28 → #EBBE45 (family with core firebase)"
+ },
+ {
+  "id": "firestore",
+  "archetype": "SILHOUETTE",
+  "fill": "#E0A23C",
+  "note": "Firebase amber → #E0A23C (family with core firebase)"
+ },
+ {
+  "id": "fitbit",
+  "archetype": "GLYPH",
+  "fill": "#328190",
+  "note": "Fitbit teal #00B0B9 → #328190"
+ },
+ {
+  "id": "fla",
+  "archetype": "BADGE",
+  "fill": "#8A2036",
+  "note": "Adobe Flash dark plate red → #8A2036 (family with flash)"
+ },
+ {
+  "id": "flash",
+  "archetype": "BADGE",
+  "fill": "#8A2036",
+  "note": "Adobe Flash dark plate red → #8A2036 (family with fla)"
+ },
+ {
+  "id": "flatbuffers",
+  "archetype": "GLYPH",
+  "fill": "#4A55A0",
+  "note": "no brand → #4A55A0 (serialization indigo)"
+ },
+ {
+  "id": "flow",
+  "archetype": "GLYPH",
+  "fill": "#C4923A",
+  "note": "no brand → #C4923A (Flow honey)"
+ },
+ {
+  "id": "flowgorithm",
+  "archetype": "SILHOUETTE",
+  "fill": "#4A93C4",
+  "note": "no brand → #4A93C4 (flowchart blue)"
+ },
+ {
+  "id": "flutter-package",
+  "archetype": "SILHOUETTE",
+  "fill": "#46A8DC",
+  "note": "Flutter #54C5F8 → #46A8DC (family with core dartlang)"
+ },
+ {
+  "id": "formkit",
+  "archetype": "GLYPH",
+  "fill": "#28A86A",
+  "note": "no brand → #28A86A (FormKit green)"
+ },
+ {
+  "id": "forth",
+  "archetype": "GLYPH",
+  "fill": "#6A5293",
+  "note": "no brand → #6A5293 (matte violet, clear of the GLYPH warm lane)"
+ },
+ {
+  "id": "fortran",
+  "archetype": "GLYPH",
+  "fill": "#8C6BC0",
+  "note": "fortran-lang purple #734F96 → #8C6BC0"
+ },
+ {
+  "id": "fossil",
+  "archetype": "SILHOUETTE",
+  "fill": "#7A9E63",
+  "note": "no brand → #7A9E63 (fossil moss)"
+ },
+ {
+  "id": "foxpro",
+  "archetype": "SILHOUETTE",
+  "fill": "#D2622F",
+  "note": "no brand → #D2622F (FoxPro rust)"
+ },
+ {
+  "id": "freemarker",
+  "archetype": "BADGE",
+  "fill": "#C08060",
+  "note": "no brand → #C08060 (template tan)"
+ },
+ {
+  "id": "fritzing",
+  "archetype": "GLYPH",
+  "fill": "#A38A5C",
+  "note": "no brand → #A38A5C (copper)"
+ },
+ {
+  "id": "fsproj",
+  "archetype": "BADGE",
+  "fill": "#35A0A0",
+  "note": "F# teal #378BBA → #35A0A0 (family with core fsharp)"
+ },
+ {
+  "id": "fthtml",
+  "archetype": "BADGE",
+  "fill": "#5E7A8C",
+  "note": "no brand → #5E7A8C (neutral lane)"
+ },
+ {
+  "id": "fusebox",
+  "archetype": "SILHOUETTE",
+  "fill": "#5F6FA8",
+  "note": "no brand → #5F6FA8 (FuseBox indigo)"
+ },
+ {
+  "id": "galen",
+  "archetype": "GLYPH",
+  "fill": "#6FB3B8",
+  "note": "no brand → #6FB3B8 (layout steel)"
+ },
+ {
+  "id": "gamemaker",
+  "archetype": "BADGE",
+  "fill": "#3F9E6B",
+  "note": "GameMaker green → #3F9E6B (family)"
+ },
+ {
+  "id": "gamemaker2",
+  "archetype": "BADGE",
+  "fill": "#3F9E6B",
+  "note": "GameMaker green → #3F9E6B (family)"
+ },
+ {
+  "id": "gamemaker81",
+  "archetype": "BADGE",
+  "fill": "#3F9E6B",
+  "note": "GameMaker green → #3F9E6B (family)"
+ },
+ {
+  "id": "gatsby",
+  "archetype": "BADGE",
+  "fill": "#6B3FA0",
+  "note": "brand #663399 → #6B3FA0"
+ },
+ {
+  "id": "gcode",
+  "archetype": "GLYPH",
+  "fill": "#8A93A0",
+  "note": "no brand → #8A93A0 (machine graphite, neutral lane)"
+ },
+ {
+  "id": "gdscript",
+  "archetype": "BADGE",
+  "fill": "#478CBF",
+  "note": "Godot brand #478CBF (family)"
+ },
+ {
+  "id": "gduid",
+  "archetype": "GLYPH",
+  "fill": "#6FA6C8",
+  "note": "Godot blue, lifted → #6FA6C8 (family)"
+ },
+ {
+  "id": "genstat",
+  "archetype": "GLYPH",
+  "fill": "#5E9E86",
+  "note": "no brand → #5E9E86 (statistics green)"
+ },
+ {
+  "id": "gleam",
+  "archetype": "SILHOUETTE",
+  "fill": "#D68FC6",
+  "note": "Gleam pink #FFAFF3 → #D68FC6"
+ },
+ {
+  "id": "glimmer",
+  "archetype": "GLYPH",
+  "fill": "#D27B4B",
+  "note": "Ember/Glimmer #E04E39 → #D27B4B"
+ },
+ {
+  "id": "glsl",
+  "archetype": "GLYPH",
+  "fill": "#4A8581",
+  "note": "no brand → #4A8581 (shader steel)"
+ },
+ {
+  "id": "gnuplot",
+  "archetype": "GLYPH",
+  "fill": "#7E8FC0",
+  "note": "no brand → #7E8FC0 (plot indigo)"
+ },
+ {
+  "id": "goctl",
+  "archetype": "BADGE",
+  "fill": "#6AACB5",
+  "note": "Go cyan, lifted off core go → #6AACB5"
+ },
+ {
+  "id": "godot",
+  "archetype": "SILHOUETTE",
+  "fill": "#478CBF",
+  "note": "brand #478CBF"
+ },
+ {
+  "id": "godot-assets",
+  "archetype": "SILHOUETTE",
+  "fill": "#478CBF",
+  "note": "brand #478CBF (family)"
+ },
+ {
+  "id": "godotshader",
+  "archetype": "GLYPH",
+  "fill": "#478CBF",
+  "note": "brand #478CBF (family)"
+ },
+ {
+  "id": "google",
+  "archetype": "SILHOUETTE",
+  "fill": "#4A85C8",
+  "note": "Google blue #4285F4 → #4A85C8"
+ },
+ {
+  "id": "grain",
+  "archetype": "SILHOUETTE",
+  "fill": "#D89E45",
+  "note": "Grain #F5A623 → #D89E45"
+ },
+ {
+  "id": "graphcool",
+  "archetype": "BADGE",
+  "fill": "#9289BC",
+  "note": "no brand → #9289BC (graphcool violet)"
+ },
+ {
+  "id": "graphqls",
+  "archetype": "BADGE",
+  "fill": "#C43E93",
+  "note": "GraphQL #E10098 → #C43E93 (family with core graphql)"
+ },
+ {
+  "id": "graphviz",
+  "archetype": "GLYPH",
+  "fill": "#83C2B7",
+  "note": "no brand → #83C2B7 (DOT steel)"
+ },
+ {
+  "id": "gridsome",
+  "archetype": "SILHOUETTE",
+  "fill": "#6FBE6A",
+  "note": "Gridsome green #00A672 → #6FBE6A (clear of core nuxt/vue)"
+ },
+ {
+  "id": "grit",
+  "archetype": "BADGE",
+  "fill": "#A8B84C",
+  "note": "no brand → #A8B84C (light plate, dark letters)"
+ },
+ {
+  "id": "grok",
+  "archetype": "GLYPH",
+  "fill": "#D6D8DA",
+  "note": "brand black → #D6D8DA (lifted, neutral lane)"
+ },
+ {
+  "id": "groovy",
+  "archetype": "BADGE",
+  "fill": "#46697C",
+  "note": "Groovy blue-grey → #46697C"
+ },
+ {
+  "id": "grunt",
+  "archetype": "SILHOUETTE",
+  "fill": "#DCA33F",
+  "note": "Grunt amber → #DCA33F"
+ },
+ {
+  "id": "gulp",
+  "archetype": "SILHOUETTE",
+  "fill": "#CF5B52",
+  "note": "Gulp red → #CF5B52"
+ },
+ {
+  "id": "haml",
+  "archetype": "GLYPH",
+  "fill": "#C4566B",
+  "note": "Haml crimson → #C4566B"
+ },
+ {
+  "id": "handlebars",
+  "archetype": "SILHOUETTE",
+  "fill": "#D4763C",
+  "note": "Handlebars #F0772B → #D4763C"
+ },
+ {
+  "id": "harbour",
+  "archetype": "SILHOUETTE",
+  "fill": "#6E9EC0",
+  "note": "no brand → #6E9EC0 (harbour blue)"
+ },
+ {
+  "id": "hashicorp",
+  "archetype": "SILHOUETTE",
+  "fill": "#C9CDD2",
+  "note": "brand black → #C9CDD2 (lifted, neutral lane)"
+ },
+ {
+  "id": "haxe",
+  "archetype": "SILHOUETTE",
+  "fill": "#D2822E",
+  "note": "Haxe #EA8220 → #D2822E"
+ },
+ {
+  "id": "haxedevelop",
+  "archetype": "BADGE",
+  "fill": "#A8632A",
+  "note": "Haxe orange, darkened for the plate → #A8632A (family)"
+ },
+ {
+  "id": "hcl",
+  "archetype": "BADGE",
+  "fill": "#9E6FD0",
+  "note": "HashiCorp violet #844FBA → #9E6FD0"
+ },
+ {
+  "id": "hip",
+  "archetype": "GLYPH",
+  "fill": "#C4453C",
+  "note": "AMD red → #C4453C"
+ },
+ {
+  "id": "hjson",
+  "archetype": "BADGE",
+  "fill": "#B8A63C",
+  "note": "JSON yellow, darkened off core js → #B8A63C"
+ },
+ {
+  "id": "hlsl",
+  "archetype": "BADGE",
+  "fill": "#78879E",
+  "note": "no brand → #78879E (neutral lane)"
+ },
+ {
+  "id": "huff",
+  "archetype": "BADGE",
+  "fill": "#6E5F8C",
+  "note": "no brand → #6E5F8C (neutral lane)"
+ },
+ {
+  "id": "hunspell",
+  "archetype": "GLYPH",
+  "fill": "#93A2AE",
+  "note": "no brand → #93A2AE (neutral lane)"
+ },
+ {
+  "id": "hurl",
+  "archetype": "SILHOUETTE",
+  "fill": "#5FB08C",
+  "note": "Hurl green → #5FB08C"
+ },
+ {
+  "id": "hy",
+  "archetype": "BADGE",
+  "fill": "#D69846",
+  "note": "no brand → #D69846 (Hy amber)"
+ },
+ {
+  "id": "hygen",
+  "archetype": "SILHOUETTE",
+  "fill": "#A86FC0",
+  "note": "no brand → #A86FC0 (generator violet)"
+ },
+ {
+  "id": "hypr",
+  "archetype": "SILHOUETTE",
+  "fill": "#4FB8C8",
+  "note": "Hyprland cyan → #4FB8C8"
+ },
+ {
+  "id": "icl",
+  "archetype": "GLYPH",
+  "fill": "#6E9E8E",
+  "note": "no brand → #6E9E8E (matte sea-green)"
+ },
+ {
+  "id": "idris",
+  "archetype": "BADGE",
+  "fill": "#7E3A6E",
+  "note": "Idris plum → #7E3A6E (BADGE red lane held by fla/flash + jbuilder) (family)"
+ },
+ {
+  "id": "idrisbin",
+  "archetype": "BADGE",
+  "fill": "#7E3A6E",
+  "note": "Idris plum → #7E3A6E (BADGE red lane held by fla/flash + jbuilder) (family)"
+ },
+ {
+  "id": "idrispkg",
+  "archetype": "BADGE",
+  "fill": "#7E3A6E",
+  "note": "Idris plum → #7E3A6E (BADGE red lane held by fla/flash + jbuilder) (family)"
+ },
+ {
+  "id": "imba",
+  "archetype": "GLYPH",
+  "fill": "#DEAD69",
+  "note": "Imba amber #FFC107 → #DEAD69"
+ },
+ {
+  "id": "inc",
+  "archetype": "GLYPH",
+  "fill": "#8E9AA6",
+  "note": "no brand → #8E9AA6 (neutral lane)"
+ },
+ {
+  "id": "infopath",
+  "archetype": "BADGE",
+  "fill": "#8A3FA8",
+  "note": "InfoPath purple #7719AA → #8A3FA8"
+ },
+ {
+  "id": "informix",
+  "archetype": "BADGE",
+  "fill": "#5A5FA8",
+  "note": "IBM blue → #5A5FA8"
+ },
+ {
+  "id": "ink",
+  "archetype": "SILHOUETTE",
+  "fill": "#8E9AB0",
+  "note": "no brand → #8E9AB0 (ink slate)"
+ },
+ {
+  "id": "innosetup",
+  "archetype": "SILHOUETTE",
+  "fill": "#6E93C4",
+  "note": "no brand → #6E93C4 (installer blue)"
+ },
+ {
+  "id": "io",
+  "archetype": "BADGE",
+  "fill": "#8A6E4E",
+  "note": "no brand → #8A6E4E (neutral lane)"
+ },
+ {
+  "id": "iodine",
+  "archetype": "GLYPH",
+  "fill": "#A16FC0",
+  "note": "iodine violet → #A16FC0"
+ },
+ {
+  "id": "ionic",
+  "archetype": "SILHOUETTE",
+  "fill": "#4A80D6",
+  "note": "brand #3880FF → #4A80D6"
+ },
+ {
+  "id": "jake",
+  "archetype": "BADGE",
+  "fill": "#4F7A5E",
+  "note": "no brand → #4F7A5E (neutral lane)"
+ },
+ {
+  "id": "janet",
+  "archetype": "BADGE",
+  "fill": "#5E9E4E",
+  "note": "no brand → #5E9E4E (Janet green)"
+ },
+ {
+  "id": "jbuilder",
+  "archetype": "BADGE",
+  "fill": "#A94152",
+  "note": "Ruby red #A94152 (family with core ruby)"
+ },
+ {
+  "id": "jekyll",
+  "archetype": "SILHOUETTE",
+  "fill": "#C25A4A",
+  "note": "Jekyll red → #C25A4A"
+ },
+ {
+  "id": "jest-snapshot",
+  "archetype": "SILHOUETTE",
+  "fill": "#B23A55",
+  "note": "Jest maroon #B23A55 (family with core jest)"
+ }
+]

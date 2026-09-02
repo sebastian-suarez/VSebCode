@@ -1,0 +1,121 @@
+{
+	"$doc": [
+		"Hand-pinned matcher verdicts. Ruled by the review lead on 2026-09-02, in the round that",
+		"ratified R14 (spec.md §10) — the specific-beats-general resolution flip.",
+		"",
+		"AUTHORITY. These carry exactly the authority of the 54 `matcherCollisions` verdicts in",
+		"inventory/core-tier.json: tools/build-theme.mjs resolves both BEFORE any precedence rule,",
+		"so a pin wins over tier, over rank, over source count and over id order, in either",
+		"resolution mode. The two sets are merged into one map and must not disagree; if the same",
+		"matcher appears in both with different winners the build fails rather than picking one.",
+		"",
+		"WHY THIS FILE EXISTS. R14 is a TIER rule, and a tier is not a measurement of specificity.",
+		"It is right 194 times out of 205. It is wrong wherever an upstream source theme gave a",
+		"narrow concept an over-broad matcher — Material's `qwik` claiming `.tsx` outright,",
+		"vsicons' `esphome` claiming `.yaml` — because the tier arithmetic cannot tell that from a",
+		"genuinely specific claim. A pin is the per-matcher correction, and it is deliberately data",
+		"and not code: the rule stays one line in build-theme.mjs, and the exceptions are a list",
+		"anyone can read. `theme/resolution-flip-diff.md` §3 is where new candidates come from.",
+		"",
+		"THE RULE THE PINS BELOW ENCODE. Two shapes, both from that diff's sanity scans:",
+		"  1. EPONYMOUS (§3b) — a matcher whose value IS a concept's own id belongs to that",
+		"     concept. `.xml` is xml's, `components/` is components'. Nothing more specific can",
+		"     exist, so no precedence rule may take it away.",
+		"  2. BLAST RADIUS (§3c) — a matcher that a top-ranked core concept covers in the real",
+		"     world stays with it unless the challenger is genuinely narrower. `.tsx` is React's,",
+		"     `.cls` is a LaTeX class far more often than a VB class module.",
+		"",
+		"FORMAT. `matcher` is `kind:value`, the same syntax core-tier.json uses, with kind one of",
+		"ext | name | lang | dir. `winner` is a concept id, and it MUST be one of the concepts that",
+		"actually claims that matcher — build-theme.mjs validates every pin against the claim map",
+		"and fails on a typo rather than silently ignoring it. `over` names who the pin beats, and",
+		"`keeps` records what each loser still resolves through, so a pin can never quietly strand",
+		"an icon without that being written down here.",
+		"",
+		"COST, RECORDED. Three concepts lose their only matcher to these pins and become",
+		"unreachable: file/qwik, folder/ngrx-store and folder/redux-store. That is not an oversight",
+		"— see their `keeps` fields. The merged inventory gives each of them nothing but the",
+		"matcher pinned away, so the choice was between a wrong icon on a common path and no icon",
+		"on a rare one. folder/store, which the flip had stranded, is recovered by the same pins."
+	],
+	"ruled": "2026-09-02",
+	"pins": [
+		{
+			"matcher": "ext:tsx",
+			"winner": "reactts",
+			"over": ["qwik"],
+			"why": "Blast radius, the largest in the set: reactts is core rank 2 and .tsx is the React TypeScript component extension. Material's qwik concept claims the extension outright, which is an over-broad upstream matcher, not a narrower reading.",
+			"keeps": "qwik keeps NOTHING — ext:tsx is its only matcher, so this pin strands file/qwik. Accepted: a Qwik repo is .tsx files that are React-shaped anyway, and the alternative paints every TSX file in every React repo as Qwik."
+		},
+		{
+			"matcher": "ext:yaml",
+			"winner": "yaml",
+			"over": ["esphome", "homeassistant"],
+			"why": "Eponymous: .yaml is yaml's own id, and yaml is core rank 12. Both challengers are vsicons device-config concepts that claim the bare extension.",
+			"keeps": "esphome keeps lang:esphome; homeassistant keeps lang:home-assistant. Both stay reachable."
+		},
+		{
+			"matcher": "ext:yml",
+			"winner": "yaml",
+			"over": ["cloudfoundry"],
+			"why": "The other half of the same concept — .yml is the same file as .yaml and belongs to the same icon. cloudfoundry claiming the bare extension is the same over-broad upstream matcher.",
+			"keeps": "cloudfoundry keeps name:.cfignore and lang:manifest-yaml. Stays reachable."
+		},
+		{
+			"matcher": "ext:xml",
+			"winner": "xml",
+			"over": ["source"],
+			"why": "Eponymous: .xml is xml's own id, and xml is core rank 27. `source` is a broader concept than xml, not a narrower one — the flip's plainest inversion.",
+			"keeps": "source keeps ext:axml, ext:pex and ext:xaml. Stays reachable."
+		},
+		{
+			"matcher": "lang:xml",
+			"winner": "xml",
+			"over": ["source"],
+			"why": "Same verdict on the language id, so the extension and the language cannot disagree about what an XML file looks like.",
+			"keeps": "source keeps ext:axml, ext:pex and ext:xaml. Stays reachable."
+		},
+		{
+			"matcher": "ext:tikz",
+			"winner": "tex",
+			"over": ["matlab"],
+			"why": "TikZ is a TeX drawing package; .tikz is a TeX file. matlab's claim on it is an upstream mis-claim, not a specific reading.",
+			"keeps": "matlab keeps 16 matchers including ext:m, ext:mat, ext:fig, ext:slx and lang:matlab. Stays reachable."
+		},
+		{
+			"matcher": "ext:cls",
+			"winner": "tex",
+			"over": ["apex", "vb", "vba"],
+			"why": "The LaTeX class file is the common .cls by a wide margin, and tex already owns the family (.sty, .dtx, .bib all resolve there). Three concepts claim the extension; none of them is narrower than the others, so the tie goes to the most common reading.",
+			"keeps": "apex keeps lang:apex; vba keeps lang:vba; vb keeps ext:bas, ext:doccls, ext:frm, ext:vb, lang:vb and lang:visualbasic. All three stay reachable."
+		},
+		{
+			"matcher": "dir:components",
+			"winner": "components",
+			"over": ["react-components", "vue"],
+			"why": "Eponymous: components/ is the components folder's own id, and it is core rank 8. A bare components/ directory is framework-agnostic — it is as likely to be Svelte, Angular or plain HTML as React.",
+			"keeps": "react-components keeps dir:jsx, dir:react, dir:react-components and dir:reactjs, and stays reachable. The vue FOLDER concept has no emblem on disk at all — it is one of the 56 folder concepts R9 leaves on the canon tan pair — so it had nothing to lose here and the pin costs it nothing."
+		},
+		{
+			"matcher": "dir:services",
+			"winner": "services",
+			"over": ["controller"],
+			"why": "Eponymous: services/ is the services folder's own id. `controller` claiming it is an upstream MVC over-reach — a services/ directory is not a controllers directory.",
+			"keeps": "controller keeps 15 matchers including dir:controller, dir:controllers, dir:handler, dir:handlers and dir:provider. Stays reachable."
+		},
+		{
+			"matcher": "dir:store",
+			"winner": "store",
+			"over": ["db", "ngrx-store", "redux-store", "vuex-store"],
+			"why": "A bare store/ directory is generic. Five concepts claim it and none of them can tell from the directory name alone whether it is NgRx, Redux, Vuex, Pinia or a data-access layer, so it goes to the generic store bag.",
+			"keeps": "db keeps 14 matchers including dir:data, dir:database, dir:db and dir:repository. ngrx-store keeps NOTHING (dir:store is its only matcher) and redux-store keeps NOTHING once dir:stores is pinned too; both are stranded by this pin, deliberately. vuex-store was already unreachable before the pin, for the same reason."
+		},
+		{
+			"matcher": "dir:stores",
+			"winner": "store",
+			"over": ["db", "redux-store", "vuex-store"],
+			"why": "The plural of the same generic directory, pinned to the same icon so store/ and stores/ cannot render as two different things.",
+			"keeps": "db keeps 14 other matchers. redux-store and vuex-store keep nothing beyond dir:store, which is pinned by the row above — see its `keeps`."
+		}
+	]
+}

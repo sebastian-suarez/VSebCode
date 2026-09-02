@@ -194,9 +194,16 @@ production/
   svg/folder/<id>.svg        plus `folder` and `folder-open`, the two canon defaults,
                              which core-tier.json's folders array does not carry
   theme/vsebcode-icon-theme.json
+  theme/pins.json                 R14a hand-pinned matcher verdicts, self-documenting;
+                                  same authority as core-tier.json's matcherCollisions
+  theme/resolution-flip-diff.md   the R14 precedence diff: what moved, the escalation and
+                                  its pins, what is still unreachable, three sanity scans
   tools/{letterpath,contact,contact-full,validate,raster,audit,pixelproof}.mjs
-  tools/{make-set-manifest,build-theme}.mjs
+  tools/{make-set-manifest,build-theme,chromium}.mjs
   tools/fonts/{Inter-Bold.ttf,Inter-SemiBold.ttf,OFL.txt}
+  tools/generators/<slice>/  the authoring sources, swept out of the session scratchpad
+                             (READ ONLY - they write into svg/ if run; see its README)
+  longtail-worklist.json     the 18 full-coverage slices and their concepts
   contact-<batch>.html/.png, contact-full.html/.png
 ```
 
@@ -216,6 +223,9 @@ node tools/audit.mjs --plan --movable a,b,c   # greedy minimal retint plan
 node tools/pixelproof.mjs svg/file/x.svg       # the honest 16 px test (grid, ink, faint, peak)
 node tools/contact-full.mjs --png             # the whole-set checkpoint sheet
 node tools/build-theme.mjs                    # theme/vsebcode-icon-theme.json + self-check
+node tools/build-theme.mjs --flip-report      # + theme/resolution-flip-diff.md (R14)
+node tools/build-theme.mjs --core-first       # the withdrawn precedence, comparison only
+node tools/audit.mjs --folders-hard           # gate on the R9b folder lane (off by default)
 ```
 
 `contact.mjs` inlines every icon once as an SVG `<symbol>` and renders it at 16 / 22 / tree
@@ -274,7 +284,33 @@ them changed.
   `zip` vs `generic-archive` is accepted: the generic tier is dimmer by design.
 - **R9 — Folders.** There is **no** `generic-folder` asset; the canon `folder` / `folder-open`
   pair serves the 324-concept fallback. The emblem tone law (an emblem is darker than the
-  tan plate) and the 0.8× emblem ratio on open flaps are both ratified.
+  tan plate) is ratified.
+  **R9a — emblem boxes, ruled (Sebastian, 2026-09-01: "too small, make them bigger").**
+  Emblems are authored in a 0–10 field and placed by one uniform scale + translate, so the
+  box is the whole geometry. **Closed: an 8.20 box at x 5.30–13.50, y 4.60–12.80** — right
+  edge 1.00 inside the base's x 14.5, and 0.30 clear of the body's top (y 4.30) and bottom
+  (y 13.10) edges. That is all the body holds: right of the tab it is only 8.80 px tall, so
+  8.20 with the former 1.00 px bottom inset would start at y 3.90 and paint 0.40 px of ink
+  *outside* the silhouette on 19 of the 40 concepts — the anchor moved, the size did not.
+  **Open: a 5.80 box at x 7.26–13.06, y 6.75–12.55** — the largest the front flap allows at
+  0.25 px clearance from its top (y 6.5), bottom (y 12.8) and bottom-right cubic, whose
+  terminus (13.06, 12.80) is what binds the right edge at every clearance. The §2
+  minimum-feature floors scale with the box, **×1.26** off the former 6.50: the 2.0–2.6 unit
+  stem now reads 1.64–2.13 px (was 1.30–1.69) and the 1.2–1.8 unit counter 0.98–1.48 px (was
+  0.78–1.17). The **0.8× open-flap ratio is withdrawn as a ratified constant** — the flap's
+  6.30 px height caps the open box on its own, and the ratio is now merely derived, **~0.707**.
+  **R9b — folder emblems may share construction, ruled (review lead, 2026-09-02). R8 does
+  NOT gate the folder lane.** Where two folder concepts share the *container* metaphor, the
+  same construction is an honest concept rhyme and not a collision — `bloc` / `ngrx-store` /
+  `devcontainer` / `vm` are four things that each hold something, and the four-way is
+  separated by hue and by the context a folder name arrives in, exactly as an R3 family is.
+  The 0.72 bar is also **uncalibrated at emblem scale**: it was measured on full-size file
+  objects, and at 8.20 px the outline term stops discriminating because every candidate
+  outline is the same circle — `atom` (nucleus in orbit), `target` (bullseye) and
+  `deprecated` (slashed circle) score 0.73–0.85 against one another while reading as three
+  different objects. That false cluster is the proof, not a coincidence. `tools/audit.mjs`
+  keeps the lane and keeps `--folders-hard` available, **off by default**; it reports and
+  never gates until a bar is measured for 8.20 px geometry.
 - **R10 — Deliberate off-brands stand.** powerpoint crimson, nim chartreuse, astro purple,
   fsharp teal.
   **R10a — yaml, ruled (Sebastian, 2026-09-01): brand fidelity over separation.** The plum
@@ -286,6 +322,74 @@ them changed.
   they are wound in opposite directions (the helm bug — wind them the same way, or use
   `fill-rule="evenodd"` deliberately). SVG arc radii are silently scaled up when the chord
   is longer than 2r (the docker-emblem bug — check the chord before trusting the radius).
+  **R11a — the arc-radius rounding trap (F03, 2026-09-02).** The same bug fires on
+  *rounding alone*: a radius that is exactly half its chord before minification becomes
+  smaller than half its chord after `toFixed(2)`, and the renderer silently scales it back
+  up — a different curve from the one that was proofed. **Floor emitted arc radii to 2 dp
+  and check the chord against the floored value, not the computed one.** Emitting a radius
+  a hair under half the chord is the safe direction; a hair over is not.
+  **R11b — the headless-shell toolchain fix (F06 → assembly v2).** The
+  `~/Library/Caches/ms-playwright/chromium-<build>` download is Chrome for Testing 147 and
+  no longer honours `--headless --screenshot` / `--dump-dom`: every tool that shelled out
+  to the `.app` hung forever. The resolver now prefers
+  `chromium_headless_shell-<build>/chrome-headless-shell-mac-arm64/chrome-headless-shell`
+  (0.39 s against infinite) and falls back to the `.app` only for caches that predate the
+  split. It lives in one place, `tools/chromium.mjs`, consumed by `contact.mjs`,
+  `contact-full.mjs`, `raster.mjs` and `pixelproof.mjs`.
+
+- **R12 — Letters need a plate, and four is too many (A05, 2026-09-02).**
+  A **bare four-letter wordmark GLYPH is banned**: four caps on nothing cannot hold the
+  1.3 px minimum feature at 16 px and read as a smear. Letter-only marks go on a **plate**
+  (the BADGE archetype) unless the fill is *dotenv-light* — peak contrast ≥ ≈ 0.8 against
+  `#121314`, which is what lets the canon `dotenv` `ENV` stand as a bare glyph. Three caps
+  remains the ceiling on a plate (§4), and R5 still sizes them ink-width-first.
+
+- **R1a — logo-shaped geometry, ratified cases.** R1 covers more than the zig Z, the svelte
+  ribbon S and the TeX wordmark trick it was written from. Also ratified as *drawn shapes,
+  not type*, and therefore correctly built without `letterpath`:
+  **wordpress** — the fat zigzag W (F06; a letterpath W was proved impossible at emblem
+  scale); **brainfuck** — the `[` + `]` syntax mark (A02); **heroku** — the angled H (A10);
+  **markuplint** — the drawn chevrons, whose inner M is a letterpath (A10). The zig and
+  svelte precedents stand unchanged and are restated here as the reference cases.
+
+- **R13 — Alias pairs.** The merged inventory carries duplicate matchers for one concept
+  under two ids: `astro-config` / `astroconfig`, `bitbucket` / `bitbucketpipeline`,
+  `panda` / `pandacss`, `marko` / `markojs`. These ship **identical artwork by design** —
+  one definition, two keys. They are not an R8 collision and must not be "fixed": the theme
+  builder maps both ids to a single icon definition, and `tools/audit.mjs` carries them in
+  its `ALIASES` list, exempt from R7 and R8 exactly as an R3 family is.
+
+- **R14 — theme resolution is SPECIFIC BEATS GENERAL, ruled (review lead, 2026-09-02).**
+  When two named concepts claim one matcher, the **bespoke long-tail icon wins over the core
+  icon**. This was raised as the open question `--longtail-first` and is renamed on
+  ratification, because "long-tail first" names the tier arithmetic and not the reason: the
+  reason is §11's own logic — `.awk` deserves the awk icon, not `shell`'s broad claim on
+  every script extension; `.avif` deserves avif, not `image`'s claim on every raster format.
+  Core-over-long-tail was never ruled; it is what the core tier did when the long tail had no
+  icons to lose with, and at full coverage it left **109 bespoke icons unreachable**. Three
+  things the flip does **not** touch: the **54 explicit `matcherCollisions` verdicts** in
+  `inventory/core-tier.json` still resolve first and are pinned exactly as written; **generic
+  still loses to every named icon**, across matcher kinds; **rank** still orders core against
+  core. Shipped in `tools/build-theme.mjs` as the default, with `--core-first` as the escape
+  flag. Measured after the pins below: **194 associations move, 70 core concepts yield one,
+  unreachable 108 → 48**. `--flip-report` regenerates `theme/resolution-flip-diff.md`, which
+  carries the full diff, the residual unreachable list and three sanity scans.
+  **R14a — the pin file, ruled (review lead, 2026-09-02).** A tier rule is not a measurement
+  of specificity: where an upstream source theme gave a narrow concept an over-broad matcher,
+  R14 believes it (Material's `qwik` claims `.tsx` outright; vsicons' `esphome` claims
+  `.yaml`). The correction is **per matcher, in `theme/pins.json`** — read by
+  `build-theme.mjs` and resolved **before every precedence rule, in either mode, with exactly
+  the authority of the 54 `matcherCollisions` verdicts**, which it is merged with. It is
+  deliberately *data, not code*: the rule stays one line and the exceptions stay a list
+  anyone can read. Two shapes are pinned, and they are the standing test for any new pin:
+  **eponymous** — a matcher whose value IS a concept's own id belongs to that concept
+  (`.xml`→`xml`, `components/`→`components`); and **blast radius** — a matcher a top-ranked
+  core concept covers in the real world stays with it unless the challenger is genuinely
+  narrower (`.tsx`→`reactts`, `.cls`→`tex`). **11 pins ship.** Every pin is validated against
+  the claim map at build time — a matcher nobody claims, or a winner that does not claim it,
+  fails the build rather than being ignored — and each records what its losers still resolve
+  through. Three concepts are stranded by them, on purpose and in writing (`qwik`,
+  folder `ngrx-store`, folder `redux-store`); one (folder `store`) is recovered.
 
 ### How R7 and R8 are applied set-wide
 
@@ -302,6 +406,26 @@ constants at the top of `tools/audit.mjs` and are the review lead's to overrule.
    dilated-outline IoU over a 64 × 64 mask; for BADGE it is measured on the letters, since
    every plate is identical by law. Two short letter groups always overlap heavily
    (`PS` vs `Rs` scores 0.84), so the BADGE bar is 0.92 and everything else is 0.72.
+3. **Reading 3 — the form qualifier extends past SILHOUETTE at full coverage
+   (assembly v2, 2026-09-02). RATIFIED by the review lead, 2026-09-02** — it shipped
+   provisionally with the full-coverage set and is now law, not a reading awaiting a
+   verdict. Reading 1's argument was
+   "155 icons cannot be pairwise ≥ 12° apart in hue (that allows 30)". The set now holds
+   375 BADGEs and 262 GLYPHs, so the strict BADGE/GLYPH lane became arithmetic rather than
+   defect: applied at full coverage it flags **298 core-lane pairs, of which 282 score
+   below 0.40 on form and exactly one reaches 0.55**. The audit therefore applies the
+   SILHOUETTE form qualifier to *every* archetype for any pair involving a long-tail icon,
+   and keeps the strict rule among the 155 core, where the lead's rounds 1–2 stand.
+   `LONGTAIL_FORM_QUALIFIED = false` at the top of `tools/audit.mjs` restores the strict
+   reading and prints all 298. The one pair that survives the qualifier
+   (`cocos` ↔ `sqlite`, form 0.62) was fixed in round 3, not tolerated.
+4. **§11.3's hard scope is the authoring slice, not the worklist category. RATIFIED by the
+   review lead, 2026-09-02** — shipped provisionally, now law (`--scope slice`, the default;
+   `--scope domain` and `--scope all` are the other two readings and are measured in the
+   round-3 log). The `code` category alone holds 629 concepts across eight
+   slices, so reading "within-domain" as "within-category" recreates reading 1's arithmetic
+   problem one level up: it flags 1,037 R7 pairs against `slice`'s 298. Either side being a
+   **core icon always makes the pair hard**, in every scope.
 
 ## §11 — Long-tail addendum (D20 amendment 2, Sebastian 2026-09-01: full coverage, "FIX IT")
 
@@ -327,5 +451,5 @@ for extensions no source theme knows. Rules for the long-tail waves (slices in
 5. PROOF DUTY: run `tools/pixelproof.mjs` on at least your five riskiest marks; redraw
    anything that reads as mush.
 6. FOLDER slices: canon tan base verbatim + one emblem per the folder-family rules
-   (§ folders); the emblem may be the concept's file-icon mark reduced, tone law applies
+   (R9 / R9a); the emblem may be the concept's file-icon mark reduced, tone law applies
    (darker than the tan, brand hue only when it earns it); closed + `-open` variants.

@@ -1,0 +1,1637 @@
+<title>M11 long-tail A12</title>
+<style>
+  :root{
+    --bg:#121314; --bg2:#191A1B; --panel:#1C1E1F; --line:#2A2D2E;
+    --fg:#D7D9DA; --dim:#8A9092;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 var(--sans);
+       -webkit-font-smoothing:antialiased;padding:0 0 96px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  header{padding:56px 0 36px;border-bottom:1px solid var(--line);margin-bottom:44px}
+  h1{font-size:30px;line-height:1.15;margin:0 0 12px;letter-spacing:-.02em;font-weight:600}
+  .sub{color:var(--dim);max-width:74ch;margin:0 0 20px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font:11px/1 var(--mono);color:var(--dim);border:1px solid var(--line);
+       border-radius:999px;padding:6px 10px;background:var(--bg2)}
+  h2{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);
+     font-weight:600;margin:52px 0 14px}
+  h2:first-of-type{margin-top:0}
+  .lede{color:var(--dim);margin:-8px 0 20px;max-width:78ch}
+
+  table{border-collapse:collapse;width:100%;background:var(--panel);
+        border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  thead th{font:11px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+           text-align:center;padding:12px 8px;border-bottom:1px solid var(--line);font-weight:500}
+  thead th:first-child,tbody th{text-align:left}
+  tbody th{font-weight:400;padding:9px 14px;white-space:nowrap}
+  .nm{font:12px/1 var(--mono);color:var(--fg)}
+  .arch{display:block;font:10px/1.6 var(--mono);color:var(--dim);letter-spacing:.06em}
+  td{padding:9px 8px;text-align:center;vertical-align:middle}
+  tbody tr+tr th,tbody tr+tr td{border-top:1px solid var(--line)}
+  .ico{display:inline-block;vertical-align:middle}
+  .rowcell{text-align:left;padding-left:16px}
+  .trow{display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 8px;border-radius:4px}
+  .trow span{font:13px/1 var(--sans);color:#CCCCCC;white-space:nowrap}
+
+  .tree{border:1px solid var(--line);border-radius:10px;padding:10px 0 14px;background:var(--bg)}
+  .treehead{font:10px/1 var(--mono);color:var(--dim);letter-spacing:.08em;padding:6px 14px 12px}
+  .tree .row{display:flex;align-items:center;gap:7px;padding:0 14px;height:22px}
+  .tree .row span{font:13px/1 var(--sans);color:#CCCCCC;white-space:nowrap;overflow:hidden;
+                  text-overflow:ellipsis}
+  .strips{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  .strips.alt .tree{background:#1E1E1E}
+
+  .mono{font:12px/1.5 var(--mono)}
+  .dim{color:var(--dim)}
+  .num{text-align:right}
+  .ftable td{text-align:left;padding:8px 14px}
+  .ftable td.num{text-align:right}
+  tfoot td{border-top:1px solid var(--line);color:var(--dim);font:12px/1.5 var(--mono)}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+<symbol id="a-vim" viewBox="0 0 16 16"><path fill="#2F9A50" fill-rule="evenodd" d="M8 1.8L14.2 8L8 14.2L1.8 8ZM5.2 5.3L6.95 5.3L8 8.9L9.05 5.3L10.8 5.3L8.9 11.6L7.1 11.6Z"/></symbol>
+<symbol id="a-vscode-test" viewBox="0 0 16 16"><path fill="#2782C2" fill-rule="evenodd" d="M8.14 1.37L10.14 2.32 10.42 2.78 10.42 9.17 10.14 9.63 7.74 10.6 3.74 7.09 2.08 8.36 1.12 7.85 1.12 4.11 2.08 3.59 3.74 4.86ZM8.14 3.85L5.24 5.98 8.14 8.1ZM9.21 12.59L11.3 14.68L15.09 10.89L13.71 9.51L11.3 11.92L10.59 11.21Z"/></symbol>
+<symbol id="a-vueconfig" viewBox="0 0 16 16"><path fill="#4CB392" d="M1.5 3.2L8 13.6L14.5 3.2L11.6 3.2L8 9L4.4 3.2Z"/></symbol>
+<symbol id="a-watchmanconfig" viewBox="0 0 16 16"><path fill="#7C8AA6" d="M7.7 1.4H8.3A.6 .6 0 0 1 8.9 2V3.05A.6 .6 0 0 1 8.3 3.65H7.7A.6 .6 0 0 1 7.1 3.05V2A.6 .6 0 0 1 7.7 1.4Z"/><path fill="#7C8AA6" fill-rule="evenodd" d="M2.6 9a5.4 5.4 0 1 1 10.8 0a5.4 5.4 0 1 1 -10.8 0ZM7.35 5.2L8.65 5.2L8.65 8.35L11.4 8.35L11.4 9.65L7.35 9.65Z"/></symbol>
+<symbol id="a-webhint" viewBox="0 0 16 16"><path fill="#CAA67A" fill-rule="evenodd" d="M3.7 6.2a4.3 4.3 0 1 1 8.6 0a4.3 4.3 0 1 1 -8.6 0ZM5.8 9.3L10.2 9.3L9.6 11.8L6.4 11.8ZM6.7 12.4H9.3A.5 .5 0 0 1 9.8 12.9V13.9A.5 .5 0 0 1 9.3 14.4H6.7A.5 .5 0 0 1 6.2 13.9V12.9A.5 .5 0 0 1 6.7 12.4ZM6.2 13.15H9.8V13.65H6.2Z"/></symbol>
+<symbol id="a-wercker" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#8E5A78"/><path fill="#FFFFFF" d="M7.12 11.23L5.82 11.23 4.4 6.43 5.75 6.43 6.17 8.2Q6.25 8.6 6.36 9.06 6.46 9.52 6.56 10.05 6.66 9.53 6.77 9.07 6.87 8.61 6.97 8.2L7.41 6.43 8.59 6.43 9.02 8.2Q9.11 8.61 9.22 9.07 9.33 9.53 9.43 10.06 9.52 9.53 9.62 9.07 9.72 8.61 9.82 8.2L10.23 6.43 11.6 6.43 10.18 11.23 8.87 11.23 8.34 9.38Q8.25 9.07 8.16 8.68 8.08 8.3 7.99 7.92 7.91 8.3 7.83 8.68 7.74 9.07 7.65 9.38L7.12 11.23Z"/></symbol>
+<symbol id="a-windi" viewBox="0 0 16 16"><path fill="#81C6E2" d="M1.9 5.1Q6.6 2.4 11.8 4.1L11.8 5.75Q6.6 4.05 1.9 6.75ZM3.4 8.9Q8.6 5.9 13.8 7.5L13.8 9.15Q8.6 7.55 3.4 10.55ZM2.3 12.6Q6.3 9.7 9.9 11.4L9.9 13.05Q6.3 11.35 2.3 14.25Z"/></symbol>
+<symbol id="a-wpml" viewBox="0 0 16 16"><path fill="#5A7E9E" fill-rule="evenodd" d="M2.1 8a5.9 5.9 0 1 1 11.8 0a5.9 5.9 0 1 1 -11.8 0ZM8 2.1a2.6 5.9 0 1 1 0 11.8a2.6 5.9 0 1 1 0-11.8ZM8 3.3a1.4 4.7 0 1 1 0 9.4a1.4 4.7 0 1 1 0-9.4ZM2.9 5.6H13.1V6.5H2.9ZM2.9 9.5H13.1V10.4H2.9Z"/></symbol>
+<symbol id="a-wrangler" viewBox="0 0 16 16"><path fill="#B85E1C" d="M1.9 8.4a3.3 3.3 0 1 1 6.6 0a3.3 3.3 0 1 1 -6.6 0ZM5.2 7.2a4 4 0 1 1 8 0a4 4 0 1 1 -8 0ZM9.4 9.4a2.6 2.6 0 1 1 5.2 0a2.6 2.6 0 1 1 -5.2 0ZM3.4 9.6H12.8A1.5 1.5 0 0 1 14.3 11.1V11.3A1.5 1.5 0 0 1 12.8 12.8H3.4A1.5 1.5 0 0 1 1.9 11.3V11.1A1.5 1.5 0 0 1 3.4 9.6Z"/></symbol>
+<symbol id="a-wxt" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#3C8C6E"/><path fill="#FFFFFF" d="M4.22 10.66L3.42 10.66 2.5 7.24 3.26 7.24 3.66 8.93Q3.71 9.16 3.76 9.43 3.8 9.7 3.84 9.96 3.89 9.7 3.94 9.43 3.99 9.16 4.04 8.93L4.46 7.24 5.19 7.24 5.6 8.93Q5.66 9.16 5.71 9.42 5.76 9.69 5.8 9.95 5.84 9.69 5.89 9.42 5.93 9.16 5.98 8.93L6.38 7.24 7.15 7.24 6.23 10.66 5.43 10.66 4.98 8.91Q4.93 8.73 4.89 8.52 4.86 8.32 4.82 8.1 4.79 8.31 4.75 8.52 4.72 8.72 4.67 8.91L4.22 10.66ZM8.09 10.66L7.28 10.66 8.51 8.91 7.39 7.24 8.2 7.24 8.58 7.82Q8.7 8 8.77 8.14 8.84 8.29 8.91 8.43 8.97 8.29 9.05 8.15 9.12 8 9.24 7.82L9.62 7.24 10.41 7.24 9.31 8.89 10.51 10.66 9.69 10.66 9.21 9.95Q9.09 9.76 9.03 9.65 8.97 9.53 8.9 9.41 8.83 9.53 8.77 9.65 8.7 9.76 8.58 9.95L8.09 10.66ZM11.76 7.82L10.71 7.82 10.71 7.24 13.5 7.24 13.5 7.82 12.46 7.82 12.46 10.66 11.76 10.66 11.76 7.82Z"/></symbol>
+<symbol id="a-xo" viewBox="0 0 16 16"><path fill="#8A4C38" d="M1.4 6.05L6.5 11.15L7.7 9.95L2.6 4.85ZM6.5 4.85L1.4 9.95L2.6 11.15L7.7 6.05Z"/><path fill="#8A4C38" fill-rule="evenodd" d="M8.85 8a2.95 2.95 0 1 1 5.9 0a2.95 2.95 0 1 1 -5.9 0ZM10.2 8a1.6 1.6 0 1 1 3.2 0a1.6 1.6 0 1 1 -3.2 0Z"/></symbol>
+<symbol id="a-yamllint" viewBox="0 0 16 16"><path fill="#833F42" d="M1.6 3.6H3.4V5H1.6ZM4.2 3.6H11.4V5H4.2ZM1.6 6.6H3.4V8H1.6ZM4.2 6.6H8.6V8H4.2ZM1.6 9.6H3.4V11H1.6ZM4.2 9.6H7.4V11H4.2ZM7.95 11.75L10.1 13.91L15.05 8.95L13.75 7.65L10.1 11.29L9.25 10.45Z"/></symbol>
+<symbol id="a-yandex" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#93301C"/><path fill="#FFFFFF" d="M10.7 5.19L10.7 12.09 9.29 12.09 9.29 9.62 8.18 9.62 6.86 12.09 5.3 12.09 6.77 9.4Q6.17 9.15 5.86 8.65 5.55 8.14 5.55 7.44 5.55 6.42 6.19 5.81 6.84 5.19 8.01 5.19L10.7 5.19ZM8.27 8.48L9.29 8.48 9.29 6.36 8.28 6.36Q7.63 6.36 7.32 6.64 7 6.91 7 7.44 7 8.48 8.27 8.48Z"/></symbol>
+<symbol id="a-yeoman" viewBox="0 0 16 16"><path fill="#5B99A9" d="M2.45 10.5H13.55A.95 .95 0 0 1 14.5 11.45V11.45A.95 .95 0 0 1 13.55 12.4H2.45A.95 .95 0 0 1 1.5 11.45V11.45A.95 .95 0 0 1 2.45 10.5ZM6.2 2.9H9.8A1.6 1.6 0 0 1 11.4 4.5V11.2H4.6V4.5A1.6 1.6 0 0 1 6.2 2.9Z"/></symbol>
+<symbol id="a-zizmor" viewBox="0 0 16 16"><path fill="#9659A6" fill-rule="evenodd" d="M1.9 6.5a4.6 4.6 0 1 1 9.2 0a4.6 4.6 0 1 1 -9.2 0ZM3.4 6.5a3.1 3.1 0 1 1 6.2 0a3.1 3.1 0 1 1 -6.2 0Z"/><path fill="#9659A6" d="M8.49 10.11L12.99 14.61L14.61 12.99L10.11 8.49Z"/></symbol>
+<symbol id="a-access" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#8C2F38"/><path fill="#FFFFFF" d="M6.52 11.65L5.2 11.65 7.19 5.82 8.76 5.82 10.8 11.65 9.47 11.65 9.02 10.3 6.95 10.3 6.52 11.65ZM7.42 8.84L7.25 9.36 8.71 9.36 8.54 8.84Q8.4 8.39 8.26 7.87 8.12 7.35 7.96 6.75 7.82 7.36 7.68 7.88 7.55 8.4 7.42 8.84Z"/></symbol>
+<symbol id="a-dbml" viewBox="0 0 16 16"><path fill="#3C7485" fill-rule="evenodd" d="M2.4 2.7H6.2A1 1 0 0 1 7.2 3.7V6.5A1 1 0 0 1 6.2 7.5H2.4A1 1 0 0 1 1.4 6.5V3.7A1 1 0 0 1 2.4 2.7ZM2.3 4.6H6.3V5.3H2.3ZM2.3 6H6.3V6.7H2.3ZM9.8 8.5H13.6A1 1 0 0 1 14.6 9.5V12.3A1 1 0 0 1 13.6 13.3H9.8A1 1 0 0 1 8.8 12.3V9.5A1 1 0 0 1 9.8 8.5ZM9.7 10.4H13.7V11.1H9.7ZM9.7 11.8H13.7V12.5H9.7ZM5 7.5L6.2 7.5L6.2 9.7L8.8 9.7L8.8 10.9L5 10.9Z"/></symbol>
+<symbol id="a-dependencies-update" viewBox="0 0 16 16"><path fill="#79B786" d="M10.5 3.67A5 5 0 1 0 12.33 10.5L11.03 9.75A3.5 3.5 0 1 1 9.75 4.97Z"/><path fill="#79B786" d="M13.2 11L12.98 7.88L10.17 9.25Z"/></symbol>
+<symbol id="a-design-tokens" viewBox="0 0 16 16"><path fill="#8E7CC0" fill-rule="evenodd" d="M2.9 9.4H5.5A1 1 0 0 1 6.5 10.4V13A1 1 0 0 1 5.5 14H2.9A1 1 0 0 1 1.9 13V10.4A1 1 0 0 1 2.9 9.4ZM6.7 5.7H9.3A1 1 0 0 1 10.3 6.7V9.3A1 1 0 0 1 9.3 10.3H6.7A1 1 0 0 1 5.7 9.3V6.7A1 1 0 0 1 6.7 5.7ZM10.5 2H13.1A1 1 0 0 1 14.1 3V5.6A1 1 0 0 1 13.1 6.6H10.5A1 1 0 0 1 9.5 5.6V3A1 1 0 0 1 10.5 2Z"/></symbol>
+<symbol id="a-geojson" viewBox="0 0 16 16"><path fill="#7FA83E" fill-rule="evenodd" d="M8 1.6A5 5 0 0 1 13 6.6C13 9.9 8 14.4 8 14.4C8 14.4 3 9.9 3 6.6A5 5 0 0 1 8 1.6ZM6.1 6.6a1.9 1.9 0 1 1 3.8 0a1.9 1.9 0 1 1 -3.8 0Z"/></symbol>
+<symbol id="a-horusec" viewBox="0 0 16 16"><path fill="#307FC2" fill-rule="evenodd" d="M1.6 8.4Q7.6 1.6 13.6 8.4Q7.6 14 1.6 8.4ZM6.1 8.4a1.5 1.5 0 1 1 3 0a1.5 1.5 0 1 1 -3 0Z"/><path fill="#307FC2" d="M2.4 4Q7.8 .2 13.4 3.8L12.6 5.5Q7.9 2.2 3.2 5.6ZM11.58 10.68L13.58 14.08L15.22 13.12L13.22 9.72Z"/></symbol>
+<symbol id="a-json-schema" viewBox="0 0 16 16"><path fill="#D6C13C" d="M4.9 2.2C3.66 2.2 2.97 2.92 2.97 4.23L2.97 6.12C2.97 6.79 2.47 7.18 1.6 7.18L1.6 8.82C2.47 8.82 2.97 9.21 2.97 9.88L2.97 11.77C2.97 13.08 3.66 13.8 4.9 13.8L4.9 12.16C4.72 12.16 4.53 12.01 4.53 11.77L4.53 9.88C4.53 8.97 4.17 8.34 3.48 8 4.17 7.66 4.53 7.03 4.53 6.12L4.53 4.23C4.53 3.99 4.72 3.84 4.9 3.84ZM11.1 2.2C12.34 2.2 13.02 2.92 13.02 4.23L13.02 6.12C13.02 6.79 13.53 7.18 14.4 7.18L14.4 8.82C13.53 8.82 13.02 9.21 13.02 9.88L13.02 11.77C13.02 13.08 12.34 13.8 11.1 13.8L11.1 12.16C11.28 12.16 11.47 12.01 11.47 11.77L11.47 9.88C11.47 8.97 11.83 8.34 12.52 8 11.83 7.66 11.47 7.03 11.47 6.12L11.47 4.23C11.47 3.99 11.28 3.84 11.1 3.84ZM5.57 9.73L7.2 11.36L10.33 8.23L9.27 7.17L7.2 9.24L6.63 8.67Z"/></symbol>
+<symbol id="a-jsonld" viewBox="0 0 16 16"><path fill="#7262AA" fill-rule="evenodd" d="M5 4.4H5A3.5 3.5 0 0 1 8.5 7.9V8.1A3.5 3.5 0 0 1 5 11.6H5A3.5 3.5 0 0 1 1.5 8.1V7.9A3.5 3.5 0 0 1 5 4.4ZM5 6.1H5A1.8 1.8 0 0 1 6.8 7.9V8.1A1.8 1.8 0 0 1 5 9.9H5A1.8 1.8 0 0 1 3.2 8.1V7.9A1.8 1.8 0 0 1 5 6.1ZM11 4.4H11A3.5 3.5 0 0 1 14.5 7.9V8.1A3.5 3.5 0 0 1 11 11.6H11A3.5 3.5 0 0 1 7.5 8.1V7.9A3.5 3.5 0 0 1 11 4.4ZM11 6.1H11A1.8 1.8 0 0 1 12.8 7.9V8.1A1.8 1.8 0 0 1 11 9.9H11A1.8 1.8 0 0 1 9.2 8.1V7.9A1.8 1.8 0 0 1 11 6.1Z"/></symbol>
+<symbol id="a-language-configuration" viewBox="0 0 16 16"><path fill="#89AEC3" d="M2 3L5.4 3L5.4 4.4L3.5 4.4L3.5 11.6L5.4 11.6L5.4 13L2 13ZM14 3L10.6 3L10.6 4.4L12.5 4.4L12.5 11.6L10.6 11.6L10.6 13L14 13ZM7.2 6.5H8.8A.7 .7 0 0 1 9.5 7.2V8.8A.7 .7 0 0 1 8.8 9.5H7.2A.7 .7 0 0 1 6.5 8.8V7.2A.7 .7 0 0 1 7.2 6.5Z"/></symbol>
+<symbol id="a-libreoffice-calc" viewBox="0 0 16 16"><path fill="#4E9E5E" d="M1.8 2.6L3.2 2.6L3.2 12L14.2 12L14.2 13.4L1.8 13.4ZM4.4 7.6H6.6V12H4.4ZM7.4 4.8H9.6V12H7.4ZM10.4 6.4H12.6V12H10.4Z"/></symbol>
+<symbol id="a-parquet" viewBox="0 0 16 16"><path fill="#8E7248" d="M3.2 2.8H9.4A.4 .4 0 0 1 9.8 3.2V5A.4 .4 0 0 1 9.4 5.4H3.2A.4 .4 0 0 1 2.8 5V3.2A.4 .4 0 0 1 3.2 2.8ZM11 2.8H12.8A.4 .4 0 0 1 13.2 3.2V9.4A.4 .4 0 0 1 12.8 9.8H11A.4 .4 0 0 1 10.6 9.4V3.2A.4 .4 0 0 1 11 2.8ZM3.2 6.2H5A.4 .4 0 0 1 5.4 6.6V12.8A.4 .4 0 0 1 5 13.2H3.2A.4 .4 0 0 1 2.8 12.8V6.6A.4 .4 0 0 1 3.2 6.2ZM6.6 10.6H12.8A.4 .4 0 0 1 13.2 11V12.8A.4 .4 0 0 1 12.8 13.2H6.6A.4 .4 0 0 1 6.2 12.8V11A.4 .4 0 0 1 6.6 10.6Z"/></symbol>
+<symbol id="a-postman" viewBox="0 0 16 16"><path fill="#E56B3A" d="M1.6 7.4L14.4 2.6L9 13.4L6.8 9.3Z"/></symbol>
+<symbol id="a-rojo" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#D2793E"/><path fill="#FFFFFF" d="M6.66 12.19L5.2 12.19 5.2 5.04 7.99 5.04Q9.21 5.04 9.88 5.68 10.55 6.31 10.55 7.37 10.55 8.1 10.22 8.62 9.89 9.14 9.28 9.4L10.8 12.19 9.18 12.19 7.82 9.64 6.66 9.64 6.66 12.19ZM6.66 6.25L6.66 8.45 7.72 8.45Q9.03 8.45 9.03 7.37 9.03 6.83 8.71 6.54 8.39 6.25 7.71 6.25L6.66 6.25Z"/></symbol>
+<symbol id="a-verified" viewBox="0 0 16 16"><path fill="#5AB4B4" fill-rule="evenodd" d="M2 8a6 6 0 1 1 12 0a6 6 0 1 1 -12 0ZM4.33 8.87L7.25 11.79L12.11 6.23L10.69 4.97L7.15 9.01L5.67 7.53Z"/></symbol>
+<symbol id="a-architecture" viewBox="0 0 16 16"><path fill="#A09488" d="M8 2.2L14.5 6.4L1.5 6.4ZM2.2 6.4H13.8V8H2.2ZM3 8H4.9V12.6H3ZM7.05 8H8.95V12.6H7.05ZM11.1 8H13V12.6H11.1ZM1.8 12.6H14.2V14.1H1.8Z"/></symbol>
+<symbol id="a-authors" viewBox="0 0 16 16"><path fill="#6E7EA8" fill-rule="evenodd" d="M13.9 2.1C13.9 2.1 5.6 3 3.9 7.8C2.6 11.4 4.4 11.6 4.4 11.6C4.4 11.6 6.8 13.4 9.4 11.9C13.4 9.6 13.9 2.1 13.9 2.1ZM13.06 2.26L4.26 11.06L4.94 11.74L13.74 2.94Z"/><path fill="#6E7EA8" d="M4.48 10.68L1.38 13.78L2.62 15.02L5.72 11.92Z"/></symbol>
+<symbol id="a-changelog" viewBox="0 0 16 16"><path fill="#7E6A44" fill-rule="evenodd" d="M3.3 2H12.7A1.3 1.3 0 0 1 14 3.3V3.3A1.3 1.3 0 0 1 12.7 4.6H3.3A1.3 1.3 0 0 1 2 3.3V3.3A1.3 1.3 0 0 1 3.3 2ZM3.4 4.6H12.6V11.4H3.4ZM3.3 11.4H12.7A1.3 1.3 0 0 1 14 12.7V12.7A1.3 1.3 0 0 1 12.7 14H3.3A1.3 1.3 0 0 1 2 12.7V12.7A1.3 1.3 0 0 1 3.3 11.4ZM5 6.2H11V7.2H5ZM5 8.6H11V9.6H5Z"/></symbol>
+<symbol id="a-citation" viewBox="0 0 16 16"><path fill="#8A9EB4" d="M3.2 4.4H4.6A1.3 1.3 0 0 1 5.9 5.7V7.1A1.3 1.3 0 0 1 4.6 8.4H3.2A1.3 1.3 0 0 1 1.9 7.1V5.7A1.3 1.3 0 0 1 3.2 4.4ZM2.4 7.7L5.9 7.7L3.8 11.6ZM10.8 4.4H12.2A1.3 1.3 0 0 1 13.5 5.7V7.1A1.3 1.3 0 0 1 12.2 8.4H10.8A1.3 1.3 0 0 1 9.5 7.1V5.7A1.3 1.3 0 0 1 10.8 4.4ZM10 7.7L13.5 7.7L11.4 11.6Z"/></symbol>
+<symbol id="a-conduct" viewBox="0 0 16 16"><path fill="#A0606E" d="M3.63 8.26L9.43 4.66L7.37 1.34L1.57 4.94ZM5.79 7.28L10.99 12.08L12.61 10.32L7.41 5.52ZM4.4 12.4H13.6A.8 .8 0 0 1 14.4 13.2V13.6A.8 .8 0 0 1 13.6 14.4H4.4A.8 .8 0 0 1 3.6 13.6V13.2A.8 .8 0 0 1 4.4 12.4Z"/></symbol>
+<symbol id="a-contributing" viewBox="0 0 16 16"><path fill="#4FA890" d="M2.7 3.2H10.3A1 1 0 0 1 11.3 4.2V6.2A1.85 1.85 0 1 1 11.3 9.8V11.8A1 1 0 0 1 10.3 12.8H8.3A1.85 1.85 0 1 0 4.7 12.8H2.7A1 1 0 0 1 1.7 11.8V4.2A1 1 0 0 1 2.7 3.2Z"/></symbol>
+<symbol id="a-credits" viewBox="0 0 16 16"><path fill="#AEB4BA" fill-rule="evenodd" d="M4.4 2.4H11.6V6.4C11.6 8.7 10 10.3 8 10.3C6 10.3 4.4 8.7 4.4 6.4ZM2.8 3.3H4.4V7.7H2.8A1.5 1.5 0 0 1 1.3 6.2V4.8A1.5 1.5 0 0 1 2.8 3.3ZM3.5 4.8H4.4V6.2H3.5A.7 .7 0 0 1 2.8 5.5V5.5A.7 .7 0 0 1 3.5 4.8ZM11.6 3.3H13.2A1.5 1.5 0 0 1 14.7 4.8V6.2A1.5 1.5 0 0 1 13.2 7.7H11.6V3.3ZM11.6 4.8H12.5A.7 .7 0 0 1 13.2 5.5V5.5A.7 .7 0 0 1 12.5 6.2H11.6V4.8ZM7.1 10.3H8.9V12.3H7.1ZM5.4 12.3H10.6A.6 .6 0 0 1 11.2 12.9V13.6A.6 .6 0 0 1 10.6 14.2H5.4A.6 .6 0 0 1 4.8 13.6V12.9A.6 .6 0 0 1 5.4 12.3Z"/></symbol>
+<symbol id="a-docusaurus" viewBox="0 0 16 16"><path fill="#5FBB72" fill-rule="evenodd" d="M2 12.2C2 7.4 4.9 3.4 8.8 3.4C12 3.4 14.4 5.6 14.4 8.4C14.4 9.3 13.7 10 12.8 10H9.6L14.4 12.2V13.6H4.4C3 13.6 2 13.1 2 12.2ZM5 7.4a1.6 1.6 0 1 1 3.2 0a1.6 1.6 0 1 1 -3.2 0Z"/></symbol>
+<symbol id="a-doxygen" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#7A6E86"/><path fill="#FFFFFF" d="M5.28 11.57L3.3 11.57 3.3 5.94 5.3 5.94Q6.14 5.94 6.75 6.28 7.36 6.62 7.69 7.25 8.02 7.87 8.02 8.75 8.02 9.63 7.69 10.26 7.36 10.89 6.75 11.23 6.13 11.57 5.28 11.57ZM4.45 6.93L4.45 10.57 5.22 10.57Q6.03 10.57 6.45 10.14 6.87 9.7 6.87 8.75 6.87 7.81 6.45 7.37 6.04 6.93 5.23 6.93L4.45 6.93ZM9.73 11.57L8.53 11.57 9.89 9.4 8.62 7.35 9.84 7.35 10.22 8.01Q10.33 8.22 10.43 8.43 10.53 8.63 10.63 8.83 10.72 8.63 10.82 8.43 10.92 8.22 11.04 8.01L11.44 7.35 12.64 7.35 11.34 9.41 12.7 11.57 11.48 11.57 11.02 10.77Q10.9 10.57 10.8 10.36 10.7 10.16 10.6 9.96 10.51 10.16 10.41 10.36 10.32 10.57 10.2 10.77L9.73 11.57Z"/></symbol>
+<symbol id="a-epub" viewBox="0 0 16 16"><path fill="#3E8E8E" fill-rule="evenodd" d="M4.2 2H11.8A1 1 0 0 1 12.8 3V11A1 1 0 0 1 11.8 12H4.2A1 1 0 0 1 3.2 11V3A1 1 0 0 1 4.2 2ZM9 12L11.6 12L11.6 14.6L10.3 13.4L9 14.6ZM5 2.9H5.7V11.1H5ZM6.9 4.6H11.1V5.5H6.9ZM6.9 6.4H11.1V7.3H6.9ZM6.9 8.2H11.1V9.1H6.9Z"/></symbol>
+<symbol id="a-humanstxt" viewBox="0 0 16 16"><path fill="#C09070" d="M1.7 4.6a1.8 1.8 0 1 1 3.6 0a1.8 1.8 0 1 1 -3.6 0ZM.8 10.4A2.7 2.7 0 0 1 6.2 10.4ZM8 3.1H14.8V4.5H8ZM8 6.2H14.8V7.6H8ZM8 9.3H12.6V10.7H8ZM.8 12.4H14.8V13.8H.8Z"/></symbol>
+<symbol id="a-installation" viewBox="0 0 16 16"><path fill="#5EABD8" d="M6.9 2.2H9.1V7.6H6.9ZM4.8 6.8L11.2 6.8L8 10.8ZM1.8 9.6L3.6 9.6L3.6 12.4L12.4 12.4L12.4 9.6L14.2 9.6L14.2 14.2L1.8 14.2Z"/></symbol>
+<symbol id="a-instructions" viewBox="0 0 16 16"><path fill="#A8955E" d="M7.3 3H8.7V14.2H7.3ZM8.7 3.6L13.4 3.6L14.6 5.3L13.4 7L8.7 7ZM7.3 8.4L2.6 8.4L1.4 10.1L2.6 11.8L7.3 11.8Z"/></symbol>
+<symbol id="a-libreoffice-writer" viewBox="0 0 16 16"><path fill="#5B7FA8" d="M11.54 13.2L9.84 13.2 9.84 4.43 8.58 4.43 8.58 9.35 7.98 9.35Q6.84 9.35 6.06 8.92 5.27 8.5 4.87 7.75 4.46 7.01 4.46 6.07 4.46 5.13 4.87 4.39 5.27 3.66 6.06 3.23 6.84 2.8 7.98 2.8L11.54 2.8 11.54 13.2Z"/></symbol>
+<symbol id="a-markdoc" viewBox="0 0 16 16"><path fill="#3F93A8" d="M1.28 10.69L1.28 4.93 3.01 4.93 4.74 7.1 6.46 4.93 8.19 4.93 8.19 10.69 6.46 10.69 6.46 7.49 4.74 9.66 3.01 7.49 3.01 10.69ZM11.07 4.93L12.99 4.93 12.99 7.87 14.72 7.87 12.03 11.07 9.34 7.87 11.07 7.87Z"/></symbol>
+<symbol id="a-openapi" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#6DA542"/><path fill="#FFFFFF" d="M3.67 11.38L2.5 11.38 4.27 6.2 5.66 6.2 7.47 11.38 6.3 11.38 5.9 10.18 4.06 10.18 3.67 11.38ZM4.47 8.88L4.32 9.35 5.62 9.35 5.46 8.88Q5.34 8.49 5.21 8.03 5.09 7.56 4.95 7.04 4.83 7.57 4.71 8.03 4.59 8.49 4.47 8.88ZM9.03 11.38L7.97 11.38 7.97 6.2 9.99 6.2Q10.58 6.2 10.99 6.43 11.41 6.65 11.62 7.05 11.84 7.44 11.84 7.95 11.84 8.47 11.62 8.86 11.4 9.25 10.98 9.47 10.56 9.69 9.97 9.69L9.03 9.69 9.03 11.38ZM9.03 7.08L9.03 8.84 9.8 8.84Q10.28 8.84 10.51 8.59 10.75 8.34 10.75 7.95 10.75 7.56 10.51 7.32 10.28 7.08 9.79 7.08L9.03 7.08ZM12.44 6.2L13.5 6.2 13.5 11.38 12.44 11.38 12.44 6.2Z"/></symbol>
+<symbol id="a-org" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#7E6EA8"/><path fill="#FFFFFF" d="M4.87 10.44Q4.25 10.44 3.76 10.16 3.27 9.88 2.99 9.35 2.7 8.81 2.7 8.06 2.7 7.3 2.99 6.77 3.27 6.23 3.76 5.95 4.25 5.67 4.87 5.67 5.48 5.67 5.97 5.95 6.46 6.23 6.75 6.77 7.03 7.3 7.03 8.06 7.03 8.82 6.75 9.35 6.46 9.88 5.97 10.16 5.48 10.44 4.87 10.44ZM4.87 9.59Q5.41 9.59 5.74 9.2 6.06 8.81 6.06 8.06 6.06 7.31 5.74 6.91 5.41 6.52 4.87 6.52 4.33 6.52 4 6.91 3.67 7.31 3.67 8.06 3.67 8.8 4 9.2 4.33 9.59 4.87 9.59ZM8.53 10.38L7.59 10.38 7.59 6.89 8.5 6.89 8.5 7.5 8.54 7.5Q8.63 7.18 8.86 7.01 9.08 6.85 9.38 6.85 9.54 6.85 9.68 6.88L9.68 7.71Q9.62 7.69 9.5 7.68 9.38 7.67 9.27 7.67 8.95 7.67 8.74 7.87 8.53 8.07 8.53 8.39L8.53 10.38ZM11.61 11.75Q10.96 11.75 10.56 11.51 10.16 11.27 10.05 10.9L10.85 10.68Q10.92 10.82 11.09 10.95 11.27 11.07 11.61 11.07 11.96 11.07 12.17 10.91 12.37 10.75 12.37 10.4L12.37 9.76 12.3 9.76Q12.21 9.97 11.98 10.15 11.76 10.33 11.34 10.33 10.94 10.33 10.62 10.14 10.3 9.96 10.11 9.58 9.92 9.21 9.92 8.63 9.92 8.04 10.11 7.64 10.31 7.25 10.63 7.05 10.95 6.85 11.34 6.85 11.63 6.85 11.83 6.95 12.03 7.05 12.16 7.2 12.28 7.34 12.34 7.48L12.38 7.48 12.38 6.89 13.3 6.89 13.3 10.35Q13.3 10.82 13.08 11.13 12.87 11.45 12.49 11.6 12.1 11.75 11.61 11.75ZM11.63 9.62Q11.99 9.62 12.18 9.35 12.38 9.09 12.38 8.62 12.38 8.16 12.18 7.88 11.99 7.6 11.63 7.6 11.26 7.6 11.07 7.89 10.88 8.17 10.88 8.62 10.88 9.08 11.07 9.35 11.27 9.62 11.63 9.62Z"/></symbol>
+<symbol id="a-patch" viewBox="0 0 16 16"><path fill="#C68D7E" fill-rule="evenodd" d="M9.56 3.05A1.8 1.8 0 0 1 12.1 3.05L12.95 3.9A1.8 1.8 0 0 1 12.95 6.44L6.44 12.95A1.8 1.8 0 0 1 3.9 12.95L3.05 12.1A1.8 1.8 0 0 1 3.05 9.56ZM10.12 8L8 5.88L5.88 8L8 10.12Z"/></symbol>
+<symbol id="a-prompt" viewBox="0 0 16 16"><path fill="#9B7FD0" d="M6.4 1.8Q7.26 5.74 11.2 6.6Q7.26 7.46 6.4 11.4Q5.54 7.46 1.6 6.6Q5.54 5.74 6.4 1.8ZM11.9 8.8Q12.42 11.18 14.8 11.7Q12.42 12.22 11.9 14.6Q11.38 12.22 9 11.7Q11.38 11.18 11.9 8.8Z"/></symbol>
+<symbol id="a-readthedocs" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#5A7E70"/><path fill="#FFFFFF" d="M3.36 10.99L2.5 10.99 2.5 6.77 4.15 6.77Q4.87 6.77 5.26 7.14 5.66 7.52 5.66 8.14 5.66 8.58 5.47 8.88 5.27 9.19 4.91 9.34L5.81 10.99 4.85 10.99 4.05 9.48 3.36 9.48 3.36 10.99ZM3.36 7.48L3.36 8.78 3.99 8.78Q4.77 8.78 4.77 8.14 4.77 7.82 4.57 7.65 4.38 7.48 3.99 7.48L3.36 7.48ZM7.32 7.48L6.03 7.48 6.03 6.77 9.48 6.77 9.48 7.48 8.19 7.48 8.19 10.99 7.32 10.99 7.32 7.48ZM11.44 10.99L9.96 10.99 9.96 6.77 11.46 6.77Q12.09 6.77 12.55 7.02 13.01 7.28 13.25 7.75 13.5 8.22 13.5 8.88 13.5 9.54 13.25 10.01 13.01 10.48 12.54 10.74 12.08 10.99 11.44 10.99ZM10.82 7.51L10.82 10.25 11.4 10.25Q12.01 10.25 12.32 9.92 12.64 9.59 12.64 8.88 12.64 8.17 12.32 7.84 12.01 7.51 11.4 7.51L10.82 7.51Z"/></symbol>
+<symbol id="a-rest" viewBox="0 0 16 16"><path fill="#8E7E9E" d="M1.8 3H12.6V4.8H1.8ZM1.8 5.6H3.8V6.6H1.8ZM4.4 5.6H6.4V6.6H4.4ZM7 5.6H9V6.6H7ZM9.6 5.6H11.6V6.6H9.6ZM12.2 5.6H14.2V6.6H12.2ZM1.8 7.4H3.8V8.4H1.8ZM4.4 7.4H6.4V8.4H4.4ZM7 7.4H9V8.4H7ZM9.6 7.4H11.6V8.4H9.6ZM12.2 7.4H14.2V8.4H12.2ZM1.8 10.4H14.2V11.6H1.8ZM1.8 12.8H10V14H1.8Z"/></symbol>
+<symbol id="a-roadmap" viewBox="0 0 16 16"><path fill="#B7854B" d="M3 1.8H4.6V14.2H3ZM4.6 2.4L14.2 2.4L12 5.5L14.2 8.6L4.6 8.6Z"/></symbol>
+<symbol id="a-skill" viewBox="0 0 16 16"><path fill="#7E8FC8" d="M8 2.8L14.6 6.1L8 9.4L1.4 6.1ZM4.7 8.8L8 10.45L11.3 8.8V11.9C11.3 13.3 9.9 14.2 8 14.2C6.1 14.2 4.7 13.3 4.7 11.9Z"/></symbol>
+<symbol id="a-textile" viewBox="0 0 16 16"><path fill="#CB959F" d="M3.4 1.8H6V14.2H3.4ZM10 1.8H12.6V14.2H10ZM1.4 4H2.7V6.6H1.4ZM6.7 4H14.6V6.6H6.7ZM1.4 9.4H9.3V12H1.4ZM13.3 9.4H14.6V12H13.3Z"/></symbol>
+<symbol id="a-toc" viewBox="0 0 16 16"><path fill="#8E9EA8" d="M2.2 2H3.6V12.4H2.2ZM3.6 3.55H5.6V4.85H3.6ZM6.3 3.2H14.2V5.2H6.3ZM3.6 7.05H5.6V8.35H3.6ZM6.3 6.7H12.4V8.7H6.3ZM3.6 10.55H5.6V11.85H3.6ZM6.3 10.2H13.6V12.2H6.3Z"/></symbol>
+<symbol id="a-tsdoc" viewBox="0 0 16 16"><path fill="#3178C6" d="M2 2.2H3.4V13.8H2ZM4.8 8.8L14 8.8L14 7.2L4.8 7.2ZM6.41 4.42L11.01 12.38L12.39 11.58L7.79 3.62ZM11.01 3.62L6.41 11.58L7.79 12.38L12.39 4.42Z"/></symbol>
+<symbol id="a-typedoc" viewBox="0 0 16 16"><path fill="#6E9BD0" d="M2.6 5.5H9.2A1 1 0 0 1 10.2 6.5V12.9A1 1 0 0 1 9.2 13.9H2.6A1 1 0 0 1 1.6 12.9V6.5A1 1 0 0 1 2.6 5.5ZM3.4 3.5L12.2 3.5L12.2 12.4L10.9 12.4L10.9 4.8L3.4 4.8ZM5.2 1.5L14.2 1.5L14.2 10.4L12.9 10.4L12.9 2.8L5.2 2.8Z"/></symbol>
+<symbol id="a-unlicense" viewBox="0 0 16 16"><path fill="#A9A79E" fill-rule="evenodd" d="M2.1 8a5.9 5.9 0 1 1 11.8 0a5.9 5.9 0 1 1 -11.8 0ZM3.5 8a4.5 4.5 0 1 1 9 0a4.5 4.5 0 1 1 -9 0Z"/><path fill="#A9A79E" d="M4.7 12.5L12.5 4.7L11.3 3.5L3.5 11.3Z"/></symbol>
+<symbol id="a-fantasticon" viewBox="0 0 16 16"><path fill="#C86EA8" d="M3.15 14.75L10.55 7.35L8.65 5.45L1.25 12.85ZM11.8 .9Q12.43 3.77 15.3 4.4Q12.43 5.03 11.8 7.9Q11.17 5.03 8.3 4.4Q11.17 3.77 11.8 .9Z"/></symbol>
+<symbol id="a-glyphs" viewBox="0 0 16 16"><path fill="#B6ADA4" d="M8.01 13.1Q6.62 13.1 5.78 12.59 4.93 12.08 4.69 11.29L6.39 10.81Q6.53 11.12 6.9 11.39 7.28 11.66 8 11.66 8.75 11.66 9.19 11.31 9.62 10.97 9.62 10.23L9.62 8.87 9.47 8.87Q9.27 9.32 8.79 9.7 8.32 10.07 7.42 10.07 6.59 10.07 5.91 9.68 5.23 9.29 4.82 8.49 4.42 7.7 4.42 6.47 4.42 5.22 4.83 4.38 5.24 3.55 5.93 3.12 6.61 2.7 7.43 2.7 8.05 2.7 8.47 2.91 8.9 3.12 9.16 3.43 9.42 3.74 9.55 4.03L9.64 4.03 9.64 2.79 11.58 2.79 11.58 10.12Q11.58 11.12 11.13 11.78 10.67 12.45 9.86 12.77 9.05 13.1 8.01 13.1ZM8.04 8.57Q8.8 8.57 9.22 8.01 9.63 7.45 9.63 6.46 9.63 5.48 9.22 4.88 8.81 4.29 8.04 4.29 7.26 4.29 6.86 4.9 6.45 5.51 6.45 6.46 6.45 7.43 6.86 8 7.27 8.57 8.04 8.57Z"/><path fill="#B6ADA4" d="M1.6 4.2H3.1V5.7H1.6ZM12.9 10.6H14.4V12.1H12.9Z"/></symbol>
+<symbol id="a-libreoffice-math" viewBox="0 0 16 16"><path fill="#B54E56" d="M1.8 9.1L3.08 9.1L5.51 14.64L9.08 3.7L14.2 3.7L14.2 2.1L7.92 2.1L5.29 10.16L4.12 7.5L1.8 7.5Z"/></symbol>
+<symbol id="a-affinitydesigner" viewBox="0 0 16 16"><path fill="#3F60A8" fill-rule="evenodd" d="M4.9 1.6L11.1 1.6L12.8 6.6L8 14.4L3.2 6.6ZM6.5 5.6a1.5 1.5 0 1 1 3 0a1.5 1.5 0 1 1 -3 0ZM7.45 7.8H8.55V12.6H7.45Z"/></symbol>
+<symbol id="a-affinityphoto" viewBox="0 0 16 16"><path fill="#8A5FB0" fill-rule="evenodd" d="M5.6 2.2H9A.6 .6 0 0 1 9.6 2.8V4.2H5V2.8A.6 .6 0 0 1 5.6 2.2ZM3 4.2H13A1.6 1.6 0 0 1 14.6 5.8V12A1.6 1.6 0 0 1 13 13.6H3A1.6 1.6 0 0 1 1.4 12V5.8A1.6 1.6 0 0 1 3 4.2ZM4.6 8.9a3.4 3.4 0 1 1 6.8 0a3.4 3.4 0 1 1 -6.8 0ZM6.5 8.9a1.5 1.5 0 1 1 3 0a1.5 1.5 0 1 1 -3 0Z"/></symbol>
+<symbol id="a-ai" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#5A3E19"/><path fill="#E09140" d="M4.95 12.41L3.3 12.41 5.79 5.13 7.74 5.13 10.29 12.41 8.64 12.41 8.08 10.72 5.49 10.72 4.95 12.41ZM6.07 8.9L5.86 9.55 7.69 9.55 7.47 8.9Q7.29 8.34 7.12 7.69 6.94 7.04 6.75 6.3 6.57 7.05 6.4 7.7 6.24 8.35 6.07 8.9ZM12.63 12.41L11.16 12.41 11.16 6.95 12.63 6.95 12.63 12.41ZM11.89 6.23Q11.56 6.23 11.33 6.01 11.09 5.79 11.09 5.48 11.09 5.17 11.33 4.95 11.56 4.73 11.89 4.73 12.23 4.73 12.46 4.95 12.7 5.17 12.7 5.48 12.7 5.79 12.46 6.01 12.23 6.23 11.89 6.23Z"/></symbol>
+<symbol id="a-aseprite" viewBox="0 0 16 16"><path fill="#C4547E" d="M1.6 1.6H4.2V4.2H1.6ZM4.2 4.2H6.8V6.8H4.2ZM6.8 4.2H9.4V6.8H6.8ZM6.8 6.8H9.4V9.4H6.8ZM9.4 9.4H12V12H9.4ZM12 9.4H14.6V12H12ZM12 12H14.6V14.6H12Z"/></symbol>
+<symbol id="a-avif" viewBox="0 0 16 16"><path fill="#4EA8A6" d="M4.45 7.02L3.4 7.02 4.98 2.38 6.23 2.38 7.85 7.02 6.79 7.02 6.44 5.94 4.79 5.94 4.45 7.02ZM5.16 4.78L5.03 5.2 6.19 5.2 6.05 4.78Q5.94 4.43 5.83 4.01 5.72 3.6 5.59 3.13 5.48 3.61 5.37 4.02 5.27 4.43 5.16 4.78ZM11.01 7.02L9.77 7.02 8.15 2.38 9.21 2.38 9.95 4.62Q10.06 4.97 10.17 5.37 10.28 5.78 10.4 6.25 10.52 5.78 10.62 5.37 10.73 4.97 10.84 4.62L11.55 2.38 12.6 2.38 11.01 7.02Z"/><path fill="#4EA8A6" d="M3.9 7.83L5.32 7.83 5.32 14.77 3.9 14.77 3.9 7.83ZM8.95 14.77L7.53 14.77 7.53 7.83 12.1 7.83 12.1 9.01 8.95 9.01 8.95 10.95 11.79 10.95 11.79 12.11 8.95 12.11 8.95 14.77Z"/></symbol>
+<symbol id="a-drawio" viewBox="0 0 16 16"><path fill="#C7761E" d="M4.4 1.4L7.6 4.6L4.4 7.8L1.2 4.6ZM10.2 2H13.6A1 1 0 0 1 14.6 3V6.2A1 1 0 0 1 13.6 7.2H10.2A1 1 0 0 1 9.2 6.2V3A1 1 0 0 1 10.2 2ZM8 8.6L14.2 14.4L1.8 14.4Z"/></symbol>
+<symbol id="a-eps" viewBox="0 0 16 16"><path fill="#8E9E5E" fill-rule="evenodd" d="M2.93 13.61L6.17 10.76L4.91 9.34L1.67 12.19ZM11.09 6.66L14.33 3.81L13.07 2.39L9.83 5.24ZM5 8a3 3 0 1 1 6 0a3 3 0 1 1 -6 0ZM6.5 8a1.5 1.5 0 1 1 3 0a1.5 1.5 0 1 1 -3 0Z"/><path fill="#8E9E5E" d="M1.1 11.7H3.5V14.1H1.1ZM12.5 1.9H14.9V4.3H12.5Z"/></symbol>
+<symbol id="a-excalidraw" viewBox="0 0 16 16"><path fill="#7E7ADB" d="M1.8 12.4Q5.6 9.9 7.6 7.4Q9.4 5.1 12.2 3.6L13.1 5.6Q10.2 7 8.6 9Q6.6 11.6 3 14.2ZM14.4 2L13.2 7.2L9.2 3.8Z"/></symbol>
+<symbol id="a-figma" viewBox="0 0 16 16"><path fill="#D65530" d="M3.53 3.53C3.53 2.3 4.53 1.3 5.77 1.3L8 1.3 8 5.77 5.77 5.77C4.53 5.77 3.53 4.77 3.53 3.53Z"/><path fill="#DC7B6E" d="M8 1.3L10.23 1.3C11.47 1.3 12.47 2.3 12.47 3.53 12.47 4.77 11.47 5.77 10.23 5.77L8 5.77Z"/><path fill="#9260CC" d="M3.53 8C3.53 6.77 4.53 5.77 5.77 5.77L8 5.77 8 10.23 5.77 10.23C4.53 10.23 3.53 9.23 3.53 8Z"/><path fill="#45A8CE" d="M12.47 8C12.47 9.23 11.47 10.23 10.23 10.23 9 10.23 8 9.23 8 8 8 6.77 9 5.77 10.23 5.77 11.47 5.77 12.47 6.77 12.47 8Z"/><path fill="#3EAE83" d="M5.77 14.7C7 14.7 8 13.7 8 12.47L8 10.23 5.77 10.23C4.53 10.23 3.53 11.23 3.53 12.47 3.53 13.7 4.53 14.7 5.77 14.7Z"/></symbol>
+<symbol id="a-gimp" viewBox="0 0 16 16"><path fill="#9C8A5E" d="M2.95 14.95L9.35 8.55L7.45 6.65L1.05 13.05ZM9.21 9.41L11.91 6.71L9.29 4.09L6.59 6.79ZM9.1 4.6L14.9 1L11.6 7Z"/></symbol>
+<symbol id="a-icon" viewBox="0 0 16 16"><path fill="#6E80C8" d="M3 1.8H6A1.2 1.2 0 0 1 7.2 3V6A1.2 1.2 0 0 1 6 7.2H3A1.2 1.2 0 0 1 1.8 6V3A1.2 1.2 0 0 1 3 1.8ZM10 1.8H13A1.2 1.2 0 0 1 14.2 3V6A1.2 1.2 0 0 1 13 7.2H10A1.2 1.2 0 0 1 8.8 6V3A1.2 1.2 0 0 1 10 1.8ZM3 8.8H6A1.2 1.2 0 0 1 7.2 10V13A1.2 1.2 0 0 1 6 14.2H3A1.2 1.2 0 0 1 1.8 13V10A1.2 1.2 0 0 1 3 8.8ZM8.8 11.5a2.7 2.7 0 1 1 5.4 0a2.7 2.7 0 1 1 -5.4 0Z"/></symbol>
+<symbol id="a-krita" viewBox="0 0 16 16"><path fill="#649BAF" fill-rule="evenodd" d="M8 2C11.8 2 14.8 4.6 14.8 8C14.8 9.6 13.6 10.6 12.2 10.6H10.8C10 10.6 9.4 11.2 9.4 12C9.4 12.4 9.6 12.8 9.6 13.2C9.6 13.8 9.2 14.2 8.4 14.2C4.6 14.2 1.4 11.4 1.4 8C1.4 4.6 4.2 2 8 2ZM3.85 6a1.15 1.15 0 1 1 2.3 0a1.15 1.15 0 1 1 -2.3 0ZM7.05 4.8a1.15 1.15 0 1 1 2.3 0a1.15 1.15 0 1 1 -2.3 0ZM10.15 6.4a1.15 1.15 0 1 1 2.3 0a1.15 1.15 0 1 1 -2.3 0Z"/></symbol>
+<symbol id="a-matlab" viewBox="0 0 16 16"><path fill="#B16C4D" d="M2 13.4C6.6 11.4 9.8 6.6 11 1.6C14.4 7.6 11.8 13 6.6 14.6C5 14.4 3.4 14 2 13.4Z"/></symbol>
+<symbol id="a-photoshop" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#1B4A6B"/><path fill="#4FA8E0" d="M4.57 11.74L3.3 11.74 3.3 5.56 5.71 5.56Q6.42 5.56 6.91 5.82 7.41 6.09 7.67 6.56 7.93 7.03 7.93 7.64 7.93 8.26 7.66 8.73 7.4 9.19 6.9 9.46 6.39 9.72 5.68 9.72L4.57 9.72 4.57 11.74ZM4.57 6.6L4.57 8.7 5.48 8.7Q6.06 8.7 6.34 8.4 6.62 8.11 6.62 7.64 6.62 7.18 6.34 6.89 6.06 6.6 5.48 6.6L4.57 6.6ZM10.62 11.83Q9.79 11.83 9.24 11.48 8.69 11.12 8.57 10.47L9.73 10.27Q9.91 10.92 10.66 10.92 11.02 10.92 11.22 10.79 11.43 10.65 11.43 10.44 11.43 10.09 10.83 9.97L10.03 9.8Q8.69 9.53 8.69 8.48 8.69 7.82 9.23 7.43 9.76 7.04 10.64 7.04 11.47 7.04 11.96 7.38 12.45 7.72 12.58 8.28L11.48 8.48Q11.4 8.24 11.2 8.09 11 7.94 10.66 7.94 10.35 7.94 10.15 8.07 9.94 8.2 9.94 8.4 9.94 8.58 10.07 8.7 10.21 8.82 10.54 8.89L11.37 9.06Q12.7 9.33 12.7 10.31 12.7 10.77 12.43 11.11 12.17 11.45 11.7 11.64 11.23 11.83 10.62 11.83Z"/></symbol>
+<symbol id="a-sketch" viewBox="0 0 16 16"><path fill="#DDAE33" fill-rule="evenodd" d="M4.6 2L11.4 2L14.6 5.6L8 14.4L1.4 5.6ZM2.2 5.2H13.8V6H2.2ZM4.75 2H5.55V5.2H4.75ZM10.45 2H11.25V5.2H10.45Z"/></symbol>
+<symbol id="a-svgo" viewBox="0 0 16 16"><path fill="#D8A24E" d="M2.2 1.6H13.8V2.9H2.2ZM2.2 13.1H13.8V14.4H2.2ZM7 3.6H9V5H7ZM5.2 5L10.8 5L8 7.6ZM7 11H9V12.4H7ZM5.2 11L10.8 11L8 8.4Z"/></symbol>
+<symbol id="a-svgr" viewBox="0 0 16 16"><path fill="#46B5D1" fill-rule="evenodd" d="M14.2 8A6.2 2.5 0 1 1 1.8 8A6.2 2.5 0 1 1 14.2 8ZM13.1 8A5.1 1.4 0 1 1 2.9 8A5.1 1.4 0 1 1 13.1 8Z"/><path fill="#46B5D1" fill-rule="evenodd" d="M11.1 13.37A6.2 2.5 60 1 1 4.9 2.63A6.2 2.5 60 1 1 11.1 13.37ZM10.55 12.42A5.1 1.4 60 1 1 5.45 3.58A5.1 1.4 60 1 1 10.55 12.42Z"/><path fill="#46B5D1" fill-rule="evenodd" d="M4.9 13.37A6.2 2.5 120 1 1 11.1 2.63A6.2 2.5 120 1 1 4.9 13.37ZM5.45 12.42A5.1 1.4 120 1 1 10.55 3.58A5.1 1.4 120 1 1 5.45 12.42Z"/><path fill="#46B5D1" d="M6.3 8a1.7 1.7 0 1 1 3.4 0a1.7 1.7 0 1 1 -3.4 0Z"/></symbol>
+<symbol id="a-3d" viewBox="0 0 16 16"><path fill="#63C4D3" fill-rule="evenodd" d="M8 1.6L14.4 5.3L14.4 10.7L8 14.4L1.6 10.7L1.6 5.3ZM8 3.33L12.67 6.03L12.67 9.97L8 12.67L3.33 9.97L3.33 6.03Z"/><path fill="#63C4D3" d="M7.25 8L7.25 14.4L8.75 14.4L8.75 8ZM8.29 7.31L1.89 4.61L1.31 5.99L7.71 8.69ZM8.29 8.69L14.69 5.99L14.11 4.61L7.71 7.31Z"/></symbol>
+<symbol id="a-blender" viewBox="0 0 16 16"><path fill="#E8913F" fill-rule="evenodd" d="M4.8 9.6a4.6 4.6 0 1 1 9.2 0a4.6 4.6 0 1 1 -9.2 0ZM7.6 9.6a1.8 1.8 0 1 1 3.6 0a1.8 1.8 0 1 1 -3.6 0Z"/><path fill="#E8913F" d="M1.2 3.6L8.2 3.6L9.6 6.6L4.6 6.6Z"/></symbol>
+<symbol id="a-gltf" viewBox="0 0 16 16"><path fill="#C25A44" d="M2.1 13.03L6 3.3L9.9 13.03ZM6.66 3.01L10.57 12.7L13.87 3.93Z"/></symbol>
+<symbol id="a-lottie" viewBox="0 0 16 16"><path fill="#3EBFA0" d="M8.7 4.6a2.9 2.9 0 1 1 5.8 0a2.9 2.9 0 1 1 -5.8 0ZM1.5 13.8Q3.2 8.6 8 6L9 7.9Q4.9 10 3.5 14.4Z"/></symbol>
+<symbol id="a-subtitles" viewBox="0 0 16 16"><path fill="#A8ADB4" d="M4.72 11.34Q3.85 11.34 3.17 10.94 2.49 10.55 2.09 9.8 1.7 9.06 1.7 8 1.7 6.94 2.1 6.2 2.49 5.45 3.18 5.06 3.86 4.66 4.72 4.66 5.45 4.66 6.05 4.94 6.65 5.21 7.03 5.73 7.42 6.24 7.51 6.97L6.16 6.97Q6.07 6.44 5.69 6.14 5.3 5.85 4.74 5.85 3.98 5.85 3.52 6.41 3.05 6.97 3.05 8 3.05 9.06 3.52 9.61 3.99 10.15 4.74 10.15 5.29 10.15 5.68 9.86 6.07 9.56 6.17 9.02L7.52 9.02Q7.44 9.63 7.09 10.16 6.74 10.68 6.14 11.01 5.54 11.34 4.72 11.34ZM11.5 11.34Q10.63 11.34 9.95 10.94 9.27 10.55 8.88 9.8 8.48 9.06 8.48 8 8.48 6.94 8.88 6.2 9.28 5.45 9.96 5.06 10.65 4.66 11.5 4.66 12.24 4.66 12.83 4.94 13.43 5.21 13.82 5.73 14.2 6.24 14.3 6.97L12.95 6.97Q12.86 6.44 12.47 6.14 12.09 5.85 11.53 5.85 10.77 5.85 10.3 6.41 9.84 6.97 9.84 8 9.84 9.06 10.3 9.61 10.77 10.15 11.52 10.15 12.08 10.15 12.47 9.86 12.86 9.56 12.95 9.02L14.3 9.02Q14.23 9.63 13.87 10.16 13.52 10.68 12.92 11.01 12.32 11.34 11.5 11.34Z"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+<header>
+  <h1>M11 long-tail A12 — 82 file icons</h1>
+  <p class="sub">Long-tail slice A12 of the M11 full-coverage wave (D20 amendment 2). Hand-authored SVGs:
+  no &lt;text&gt;, no font-family, no gradients, no external references — every letterform is an
+  Inter&nbsp;Bold outline baked by tools/letterpath.mjs. 16&nbsp;px is the primary render; the 22&nbsp;px
+  tree rows carry the real filenames this slice matches.</p>
+  <div class="meta">
+    <span class="tag">82 icons</span>
+    <span class="tag">40 silhouette</span>
+    <span class="tag">11 badge</span>
+    <span class="tag">31 glyph</span>
+    <span class="tag">31372 bytes total</span>
+    <span class="tag">avg 383 B</span>
+    <span class="tag">max 1517 B</span>
+    <span class="tag">bg #121314</span>
+  </div>
+</header>
+
+<section>
+  <h2>Config — 15</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">vim</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="vim 16px"><use href="#a-vim"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="vim 22px"><use href="#a-vim"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vim"/></svg><span>.gvimrc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="vim 32px"><use href="#a-vim"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="vim 64px"><use href="#a-vim"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">vscode-test</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="vscode-test 16px"><use href="#a-vscode-test"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="vscode-test 22px"><use href="#a-vscode-test"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vscode-test"/></svg><span>.vscode-test.js</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="vscode-test 32px"><use href="#a-vscode-test"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="vscode-test 64px"><use href="#a-vscode-test"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">vueconfig</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="vueconfig 16px"><use href="#a-vueconfig"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="vueconfig 22px"><use href="#a-vueconfig"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vueconfig"/></svg><span>.vuerc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="vueconfig 32px"><use href="#a-vueconfig"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="vueconfig 64px"><use href="#a-vueconfig"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">watchmanconfig</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="watchmanconfig 16px"><use href="#a-watchmanconfig"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="watchmanconfig 22px"><use href="#a-watchmanconfig"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-watchmanconfig"/></svg><span>.watchmanconfig</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="watchmanconfig 32px"><use href="#a-watchmanconfig"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="watchmanconfig 64px"><use href="#a-watchmanconfig"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">webhint</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="webhint 16px"><use href="#a-webhint"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="webhint 22px"><use href="#a-webhint"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-webhint"/></svg><span>.hintrc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="webhint 32px"><use href="#a-webhint"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="webhint 64px"><use href="#a-webhint"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">wercker</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="wercker 16px"><use href="#a-wercker"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="wercker 22px"><use href="#a-wercker"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wercker"/></svg><span>wercker.yml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="wercker 32px"><use href="#a-wercker"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="wercker 64px"><use href="#a-wercker"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">windi</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="windi 16px"><use href="#a-windi"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="windi 22px"><use href="#a-windi"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-windi"/></svg><span>windi.config.ts</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="windi 32px"><use href="#a-windi"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="windi 64px"><use href="#a-windi"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">wpml</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="wpml 16px"><use href="#a-wpml"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="wpml 22px"><use href="#a-wpml"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wpml"/></svg><span>wpml-config.xml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="wpml 32px"><use href="#a-wpml"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="wpml 64px"><use href="#a-wpml"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">wrangler</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="wrangler 16px"><use href="#a-wrangler"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="wrangler 22px"><use href="#a-wrangler"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wrangler"/></svg><span>wrangler.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="wrangler 32px"><use href="#a-wrangler"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="wrangler 64px"><use href="#a-wrangler"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">wxt</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="wxt 16px"><use href="#a-wxt"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="wxt 22px"><use href="#a-wxt"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wxt"/></svg><span>wxt.config.cjs</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="wxt 32px"><use href="#a-wxt"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="wxt 64px"><use href="#a-wxt"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">xo</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="xo 16px"><use href="#a-xo"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="xo 22px"><use href="#a-xo"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-xo"/></svg><span>.xo-config</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="xo 32px"><use href="#a-xo"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="xo 64px"><use href="#a-xo"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">yamllint</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="yamllint 16px"><use href="#a-yamllint"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="yamllint 22px"><use href="#a-yamllint"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yamllint"/></svg><span>.yamllint</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="yamllint 32px"><use href="#a-yamllint"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="yamllint 64px"><use href="#a-yamllint"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">yandex</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="yandex 16px"><use href="#a-yandex"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="yandex 22px"><use href="#a-yandex"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yandex"/></svg><span>.yaspeller.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="yandex 32px"><use href="#a-yandex"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="yandex 64px"><use href="#a-yandex"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">yeoman</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="yeoman 16px"><use href="#a-yeoman"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="yeoman 22px"><use href="#a-yeoman"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yeoman"/></svg><span>.yo-rc.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="yeoman 32px"><use href="#a-yeoman"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="yeoman 64px"><use href="#a-yeoman"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">zizmor</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="zizmor 16px"><use href="#a-zizmor"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="zizmor 22px"><use href="#a-zizmor"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-zizmor"/></svg><span>zizmor.yaml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="zizmor 32px"><use href="#a-zizmor"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="zizmor 64px"><use href="#a-zizmor"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+<section>
+  <h2>Data — 14</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">access</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="access 16px"><use href="#a-access"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="access 22px"><use href="#a-access"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-access"/></svg><span>customers.accdb</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="access 32px"><use href="#a-access"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="access 64px"><use href="#a-access"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">dbml</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="dbml 16px"><use href="#a-dbml"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="dbml 22px"><use href="#a-dbml"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dbml"/></svg><span>schema.dbml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="dbml 32px"><use href="#a-dbml"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="dbml 64px"><use href="#a-dbml"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">dependencies-update</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="dependencies-update 16px"><use href="#a-dependencies-update"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="dependencies-update 22px"><use href="#a-dependencies-update"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dependencies-update"/></svg><span>.ncurc.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="dependencies-update 32px"><use href="#a-dependencies-update"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="dependencies-update 64px"><use href="#a-dependencies-update"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">design-tokens</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="design-tokens 16px"><use href="#a-design-tokens"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="design-tokens 22px"><use href="#a-design-tokens"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-design-tokens"/></svg><span>tokens.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="design-tokens 32px"><use href="#a-design-tokens"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="design-tokens 64px"><use href="#a-design-tokens"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">geojson</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="geojson 16px"><use href="#a-geojson"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="geojson 22px"><use href="#a-geojson"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-geojson"/></svg><span>boundaries.geojson</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="geojson 32px"><use href="#a-geojson"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="geojson 64px"><use href="#a-geojson"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">horusec</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="horusec 16px"><use href="#a-horusec"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="horusec 22px"><use href="#a-horusec"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-horusec"/></svg><span>horusec-config.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="horusec 32px"><use href="#a-horusec"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="horusec 64px"><use href="#a-horusec"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">json-schema</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="json-schema 16px"><use href="#a-json-schema"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="json-schema 22px"><use href="#a-json-schema"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-json-schema"/></svg><span>schema.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="json-schema 32px"><use href="#a-json-schema"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="json-schema 64px"><use href="#a-json-schema"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">jsonld</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="jsonld 16px"><use href="#a-jsonld"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="jsonld 22px"><use href="#a-jsonld"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-jsonld"/></svg><span>context.jsonld</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="jsonld 32px"><use href="#a-jsonld"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="jsonld 64px"><use href="#a-jsonld"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">language-configuration</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="language-configuration 16px"><use href="#a-language-configuration"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="language-configuration 22px"><use href="#a-language-configuration"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-language-configuration"/></svg><span>language-configuration.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="language-configuration 32px"><use href="#a-language-configuration"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="language-configuration 64px"><use href="#a-language-configuration"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">libreoffice-calc</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="libreoffice-calc 16px"><use href="#a-libreoffice-calc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="libreoffice-calc 22px"><use href="#a-libreoffice-calc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-calc"/></svg><span>budget.ods</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="libreoffice-calc 32px"><use href="#a-libreoffice-calc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="libreoffice-calc 64px"><use href="#a-libreoffice-calc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">parquet</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="parquet 16px"><use href="#a-parquet"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="parquet 22px"><use href="#a-parquet"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-parquet"/></svg><span>events.parquet</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="parquet 32px"><use href="#a-parquet"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="parquet 64px"><use href="#a-parquet"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">postman</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="postman 16px"><use href="#a-postman"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="postman 22px"><use href="#a-postman"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-postman"/></svg><span>api.postman_collection.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="postman 32px"><use href="#a-postman"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="postman 64px"><use href="#a-postman"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">rojo</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="rojo 16px"><use href="#a-rojo"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="rojo 22px"><use href="#a-rojo"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rojo"/></svg><span>default.project.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="rojo 32px"><use href="#a-rojo"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="rojo 64px"><use href="#a-rojo"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">verified</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="verified 16px"><use href="#a-verified"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="verified 22px"><use href="#a-verified"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-verified"/></svg><span>attestation.sigstore.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="verified 32px"><use href="#a-verified"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="verified 64px"><use href="#a-verified"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+<section>
+  <h2>Doc — 28</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">architecture</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="architecture 16px"><use href="#a-architecture"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="architecture 22px"><use href="#a-architecture"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-architecture"/></svg><span>ARCHITECTURE.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="architecture 32px"><use href="#a-architecture"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="architecture 64px"><use href="#a-architecture"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">authors</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="authors 16px"><use href="#a-authors"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="authors 22px"><use href="#a-authors"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-authors"/></svg><span>AUTHORS</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="authors 32px"><use href="#a-authors"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="authors 64px"><use href="#a-authors"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">changelog</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="changelog 16px"><use href="#a-changelog"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="changelog 22px"><use href="#a-changelog"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-changelog"/></svg><span>CHANGELOG.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="changelog 32px"><use href="#a-changelog"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="changelog 64px"><use href="#a-changelog"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">citation</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="citation 16px"><use href="#a-citation"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="citation 22px"><use href="#a-citation"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-citation"/></svg><span>CITATION.cff</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="citation 32px"><use href="#a-citation"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="citation 64px"><use href="#a-citation"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">conduct</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="conduct 16px"><use href="#a-conduct"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="conduct 22px"><use href="#a-conduct"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-conduct"/></svg><span>CODE_OF_CONDUCT.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="conduct 32px"><use href="#a-conduct"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="conduct 64px"><use href="#a-conduct"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">contributing</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="contributing 16px"><use href="#a-contributing"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="contributing 22px"><use href="#a-contributing"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-contributing"/></svg><span>CONTRIBUTING.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="contributing 32px"><use href="#a-contributing"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="contributing 64px"><use href="#a-contributing"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">credits</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="credits 16px"><use href="#a-credits"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="credits 22px"><use href="#a-credits"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-credits"/></svg><span>CREDITS.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="credits 32px"><use href="#a-credits"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="credits 64px"><use href="#a-credits"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">docusaurus</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="docusaurus 16px"><use href="#a-docusaurus"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="docusaurus 22px"><use href="#a-docusaurus"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-docusaurus"/></svg><span>docusaurus.config.cjs</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="docusaurus 32px"><use href="#a-docusaurus"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="docusaurus 64px"><use href="#a-docusaurus"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">doxygen</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="doxygen 16px"><use href="#a-doxygen"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="doxygen 22px"><use href="#a-doxygen"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-doxygen"/></svg><span>api.dox</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="doxygen 32px"><use href="#a-doxygen"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="doxygen 64px"><use href="#a-doxygen"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">epub</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="epub 16px"><use href="#a-epub"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="epub 22px"><use href="#a-epub"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-epub"/></svg><span>handbook.epub</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="epub 32px"><use href="#a-epub"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="epub 64px"><use href="#a-epub"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">humanstxt</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="humanstxt 16px"><use href="#a-humanstxt"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="humanstxt 22px"><use href="#a-humanstxt"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-humanstxt"/></svg><span>humans.txt</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="humanstxt 32px"><use href="#a-humanstxt"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="humanstxt 64px"><use href="#a-humanstxt"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">installation</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="installation 16px"><use href="#a-installation"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="installation 22px"><use href="#a-installation"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-installation"/></svg><span>INSTALL</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="installation 32px"><use href="#a-installation"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="installation 64px"><use href="#a-installation"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">instructions</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="instructions 16px"><use href="#a-instructions"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="instructions 22px"><use href="#a-instructions"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-instructions"/></svg><span>instructions.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="instructions 32px"><use href="#a-instructions"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="instructions 64px"><use href="#a-instructions"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">libreoffice-writer</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="libreoffice-writer 16px"><use href="#a-libreoffice-writer"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="libreoffice-writer 22px"><use href="#a-libreoffice-writer"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-writer"/></svg><span>brief.odt</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="libreoffice-writer 32px"><use href="#a-libreoffice-writer"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="libreoffice-writer 64px"><use href="#a-libreoffice-writer"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">markdoc</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="markdoc 16px"><use href="#a-markdoc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="markdoc 22px"><use href="#a-markdoc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-markdoc"/></svg><span>guide.mdoc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="markdoc 32px"><use href="#a-markdoc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="markdoc 64px"><use href="#a-markdoc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">openapi</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="openapi 16px"><use href="#a-openapi"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="openapi 22px"><use href="#a-openapi"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-openapi"/></svg><span>openapi.yaml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="openapi 32px"><use href="#a-openapi"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="openapi 64px"><use href="#a-openapi"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">org</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="org 16px"><use href="#a-org"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="org 22px"><use href="#a-org"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-org"/></svg><span>notes.org</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="org 32px"><use href="#a-org"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="org 64px"><use href="#a-org"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">patch</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="patch 16px"><use href="#a-patch"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="patch 22px"><use href="#a-patch"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-patch"/></svg><span>fix-crash.patch</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="patch 32px"><use href="#a-patch"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="patch 64px"><use href="#a-patch"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">prompt</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="prompt 16px"><use href="#a-prompt"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="prompt 22px"><use href="#a-prompt"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-prompt"/></svg><span>prompt.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="prompt 32px"><use href="#a-prompt"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="prompt 64px"><use href="#a-prompt"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">readthedocs</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="readthedocs 16px"><use href="#a-readthedocs"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="readthedocs 22px"><use href="#a-readthedocs"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-readthedocs"/></svg><span>.readthedocs.yaml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="readthedocs 32px"><use href="#a-readthedocs"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="readthedocs 64px"><use href="#a-readthedocs"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">rest</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="rest 16px"><use href="#a-rest"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="rest 22px"><use href="#a-rest"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rest"/></svg><span>index.rst</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="rest 32px"><use href="#a-rest"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="rest 64px"><use href="#a-rest"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">roadmap</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="roadmap 16px"><use href="#a-roadmap"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="roadmap 22px"><use href="#a-roadmap"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-roadmap"/></svg><span>ROADMAP.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="roadmap 32px"><use href="#a-roadmap"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="roadmap 64px"><use href="#a-roadmap"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">skill</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="skill 16px"><use href="#a-skill"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="skill 22px"><use href="#a-skill"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-skill"/></svg><span>skill.md</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="skill 32px"><use href="#a-skill"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="skill 64px"><use href="#a-skill"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">textile</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="textile 16px"><use href="#a-textile"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="textile 22px"><use href="#a-textile"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-textile"/></svg><span>page.textile</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="textile 32px"><use href="#a-textile"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="textile 64px"><use href="#a-textile"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">toc</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="toc 16px"><use href="#a-toc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="toc 22px"><use href="#a-toc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-toc"/></svg><span>toc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="toc 32px"><use href="#a-toc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="toc 64px"><use href="#a-toc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">tsdoc</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="tsdoc 16px"><use href="#a-tsdoc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="tsdoc 22px"><use href="#a-tsdoc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-tsdoc"/></svg><span>tsdoc.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="tsdoc 32px"><use href="#a-tsdoc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="tsdoc 64px"><use href="#a-tsdoc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">typedoc</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="typedoc 16px"><use href="#a-typedoc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="typedoc 22px"><use href="#a-typedoc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-typedoc"/></svg><span>typedoc.cjs</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="typedoc 32px"><use href="#a-typedoc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="typedoc 64px"><use href="#a-typedoc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">unlicense</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="unlicense 16px"><use href="#a-unlicense"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="unlicense 22px"><use href="#a-unlicense"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-unlicense"/></svg><span>UNLICENSE</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="unlicense 32px"><use href="#a-unlicense"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="unlicense 64px"><use href="#a-unlicense"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+<section>
+  <h2>Font — 3</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">fantasticon</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="fantasticon 16px"><use href="#a-fantasticon"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="fantasticon 22px"><use href="#a-fantasticon"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-fantasticon"/></svg><span>.fantasticonrc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="fantasticon 32px"><use href="#a-fantasticon"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="fantasticon 64px"><use href="#a-fantasticon"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">glyphs</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="glyphs 16px"><use href="#a-glyphs"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="glyphs 22px"><use href="#a-glyphs"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-glyphs"/></svg><span>Inter.glyphs</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="glyphs 32px"><use href="#a-glyphs"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="glyphs 64px"><use href="#a-glyphs"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">libreoffice-math</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="libreoffice-math 16px"><use href="#a-libreoffice-math"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="libreoffice-math 22px"><use href="#a-libreoffice-math"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-math"/></svg><span>formula.odf</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="libreoffice-math 32px"><use href="#a-libreoffice-math"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="libreoffice-math 64px"><use href="#a-libreoffice-math"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+<section>
+  <h2>Image — 17</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">affinitydesigner</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="affinitydesigner 16px"><use href="#a-affinitydesigner"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="affinitydesigner 22px"><use href="#a-affinitydesigner"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinitydesigner"/></svg><span>poster.afdesign</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="affinitydesigner 32px"><use href="#a-affinitydesigner"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="affinitydesigner 64px"><use href="#a-affinitydesigner"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">affinityphoto</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="affinityphoto 16px"><use href="#a-affinityphoto"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="affinityphoto 22px"><use href="#a-affinityphoto"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinityphoto"/></svg><span>cover.afphoto</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="affinityphoto 32px"><use href="#a-affinityphoto"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="affinityphoto 64px"><use href="#a-affinityphoto"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">ai</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="ai 16px"><use href="#a-ai"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="ai 22px"><use href="#a-ai"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-ai"/></svg><span>logo.ai</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="ai 32px"><use href="#a-ai"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="ai 64px"><use href="#a-ai"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">aseprite</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="aseprite 16px"><use href="#a-aseprite"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="aseprite 22px"><use href="#a-aseprite"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-aseprite"/></svg><span>sprite.aseprite</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="aseprite 32px"><use href="#a-aseprite"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="aseprite 64px"><use href="#a-aseprite"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">avif</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="avif 16px"><use href="#a-avif"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="avif 22px"><use href="#a-avif"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-avif"/></svg><span>hero.avif</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="avif 32px"><use href="#a-avif"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="avif 64px"><use href="#a-avif"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">drawio</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="drawio 16px"><use href="#a-drawio"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="drawio 22px"><use href="#a-drawio"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-drawio"/></svg><span>flow.drawio</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="drawio 32px"><use href="#a-drawio"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="drawio 64px"><use href="#a-drawio"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">eps</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="eps 16px"><use href="#a-eps"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="eps 22px"><use href="#a-eps"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-eps"/></svg><span>diagram.eps</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="eps 32px"><use href="#a-eps"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="eps 64px"><use href="#a-eps"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">excalidraw</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="excalidraw 16px"><use href="#a-excalidraw"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="excalidraw 22px"><use href="#a-excalidraw"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-excalidraw"/></svg><span>sketch.excalidraw</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="excalidraw 32px"><use href="#a-excalidraw"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="excalidraw 64px"><use href="#a-excalidraw"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">figma</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="figma 16px"><use href="#a-figma"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="figma 22px"><use href="#a-figma"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-figma"/></svg><span>ui.fig</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="figma 32px"><use href="#a-figma"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="figma 64px"><use href="#a-figma"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">gimp</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="gimp 16px"><use href="#a-gimp"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="gimp 22px"><use href="#a-gimp"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gimp"/></svg><span>mockup.xcf</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="gimp 32px"><use href="#a-gimp"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="gimp 64px"><use href="#a-gimp"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">icon</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="icon 16px"><use href="#a-icon"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="icon 22px"><use href="#a-icon"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-icon"/></svg><span>app.ico</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="icon 32px"><use href="#a-icon"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="icon 64px"><use href="#a-icon"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">krita</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="krita 16px"><use href="#a-krita"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="krita 22px"><use href="#a-krita"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-krita"/></svg><span>paint.kra</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="krita 32px"><use href="#a-krita"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="krita 64px"><use href="#a-krita"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">matlab</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="matlab 16px"><use href="#a-matlab"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="matlab 22px"><use href="#a-matlab"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-matlab"/></svg><span>solve.m</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="matlab 32px"><use href="#a-matlab"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="matlab 64px"><use href="#a-matlab"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">photoshop</span><span class="arch">BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="photoshop 16px"><use href="#a-photoshop"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="photoshop 22px"><use href="#a-photoshop"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-photoshop"/></svg><span>banner.psd</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="photoshop 32px"><use href="#a-photoshop"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="photoshop 64px"><use href="#a-photoshop"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">sketch</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="sketch 16px"><use href="#a-sketch"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="sketch 22px"><use href="#a-sketch"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-sketch"/></svg><span>kit.sketch</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="sketch 32px"><use href="#a-sketch"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="sketch 64px"><use href="#a-sketch"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">svgo</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="svgo 16px"><use href="#a-svgo"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="svgo 22px"><use href="#a-svgo"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgo"/></svg><span>svgo.config.cjs</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="svgo 32px"><use href="#a-svgo"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="svgo 64px"><use href="#a-svgo"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">svgr</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="svgr 16px"><use href="#a-svgr"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="svgr 22px"><use href="#a-svgr"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgr"/></svg><span>.config/svgrrc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="svgr 32px"><use href="#a-svgr"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="svgr 64px"><use href="#a-svgr"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+<section>
+  <h2>Media — 5</h2>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">3d</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="3d 16px"><use href="#a-3d"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="3d 22px"><use href="#a-3d"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-3d"/></svg><span>chair.3ds</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="3d 32px"><use href="#a-3d"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="3d 64px"><use href="#a-3d"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">blender</span><span class="arch">SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="blender 16px"><use href="#a-blender"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="blender 22px"><use href="#a-blender"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-blender"/></svg><span>scene.blend</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="blender 32px"><use href="#a-blender"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="blender 64px"><use href="#a-blender"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">gltf</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="gltf 16px"><use href="#a-gltf"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="gltf 22px"><use href="#a-gltf"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gltf"/></svg><span>robot.gltf</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="gltf 32px"><use href="#a-gltf"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="gltf 64px"><use href="#a-gltf"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">lottie</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="lottie 16px"><use href="#a-lottie"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="lottie 22px"><use href="#a-lottie"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-lottie"/></svg><span>spinner.lottie</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="lottie 32px"><use href="#a-lottie"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="lottie 64px"><use href="#a-lottie"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">subtitles</span><span class="arch">GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="subtitles 16px"><use href="#a-subtitles"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="subtitles 22px"><use href="#a-subtitles"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-subtitles"/></svg><span>episode.srt</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="subtitles 32px"><use href="#a-subtitles"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="subtitles 64px"><use href="#a-subtitles"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>As a set — explorer listings</h2>
+  <p class="lede">Each group as one listing on the editor background, then the same on #1E1E1E.</p>
+  <div class="strips"><div class="tree">
+  <div class="treehead">Config</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vim"/></svg><span>.gvimrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vscode-test"/></svg><span>.vscode-test.js</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vueconfig"/></svg><span>.vuerc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-watchmanconfig"/></svg><span>.watchmanconfig</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-webhint"/></svg><span>.hintrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wercker"/></svg><span>wercker.yml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-windi"/></svg><span>windi.config.ts</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wpml"/></svg><span>wpml-config.xml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wrangler"/></svg><span>wrangler.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wxt"/></svg><span>wxt.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-xo"/></svg><span>.xo-config</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yamllint"/></svg><span>.yamllint</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yandex"/></svg><span>.yaspeller.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yeoman"/></svg><span>.yo-rc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-zizmor"/></svg><span>zizmor.yaml</span></div>
+</div><div class="tree">
+  <div class="treehead">Data</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-access"/></svg><span>customers.accdb</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dbml"/></svg><span>schema.dbml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dependencies-update"/></svg><span>.ncurc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-design-tokens"/></svg><span>tokens.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-geojson"/></svg><span>boundaries.geojson</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-horusec"/></svg><span>horusec-config.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-json-schema"/></svg><span>schema.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-jsonld"/></svg><span>context.jsonld</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-language-configuration"/></svg><span>language-configuration.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-calc"/></svg><span>budget.ods</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-parquet"/></svg><span>events.parquet</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-postman"/></svg><span>api.postman_collection.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rojo"/></svg><span>default.project.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-verified"/></svg><span>attestation.sigstore.json</span></div>
+</div><div class="tree">
+  <div class="treehead">Doc</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-architecture"/></svg><span>ARCHITECTURE.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-authors"/></svg><span>AUTHORS</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-changelog"/></svg><span>CHANGELOG.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-citation"/></svg><span>CITATION.cff</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-conduct"/></svg><span>CODE_OF_CONDUCT.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-contributing"/></svg><span>CONTRIBUTING.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-credits"/></svg><span>CREDITS.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-docusaurus"/></svg><span>docusaurus.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-doxygen"/></svg><span>api.dox</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-epub"/></svg><span>handbook.epub</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-humanstxt"/></svg><span>humans.txt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-installation"/></svg><span>INSTALL</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-instructions"/></svg><span>instructions.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-writer"/></svg><span>brief.odt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-markdoc"/></svg><span>guide.mdoc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-openapi"/></svg><span>openapi.yaml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-org"/></svg><span>notes.org</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-patch"/></svg><span>fix-crash.patch</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-prompt"/></svg><span>prompt.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-readthedocs"/></svg><span>.readthedocs.yaml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rest"/></svg><span>index.rst</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-roadmap"/></svg><span>ROADMAP.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-skill"/></svg><span>skill.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-textile"/></svg><span>page.textile</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-toc"/></svg><span>toc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-tsdoc"/></svg><span>tsdoc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-typedoc"/></svg><span>typedoc.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-unlicense"/></svg><span>UNLICENSE</span></div>
+</div><div class="tree">
+  <div class="treehead">Font</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-fantasticon"/></svg><span>.fantasticonrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-glyphs"/></svg><span>Inter.glyphs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-math"/></svg><span>formula.odf</span></div>
+</div><div class="tree">
+  <div class="treehead">Image</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinitydesigner"/></svg><span>poster.afdesign</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinityphoto"/></svg><span>cover.afphoto</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-ai"/></svg><span>logo.ai</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-aseprite"/></svg><span>sprite.aseprite</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-avif"/></svg><span>hero.avif</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-drawio"/></svg><span>flow.drawio</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-eps"/></svg><span>diagram.eps</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-excalidraw"/></svg><span>sketch.excalidraw</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-figma"/></svg><span>ui.fig</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gimp"/></svg><span>mockup.xcf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-icon"/></svg><span>app.ico</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-krita"/></svg><span>paint.kra</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-matlab"/></svg><span>solve.m</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-photoshop"/></svg><span>banner.psd</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-sketch"/></svg><span>kit.sketch</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgo"/></svg><span>svgo.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgr"/></svg><span>.config/svgrrc</span></div>
+</div><div class="tree">
+  <div class="treehead">Media</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-3d"/></svg><span>chair.3ds</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-blender"/></svg><span>scene.blend</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gltf"/></svg><span>robot.gltf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-lottie"/></svg><span>spinner.lottie</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-subtitles"/></svg><span>episode.srt</span></div>
+</div></div>
+  <div style="height:18px"></div>
+  <div class="strips alt"><div class="tree">
+  <div class="treehead">Config · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vim"/></svg><span>.gvimrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vscode-test"/></svg><span>.vscode-test.js</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-vueconfig"/></svg><span>.vuerc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-watchmanconfig"/></svg><span>.watchmanconfig</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-webhint"/></svg><span>.hintrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wercker"/></svg><span>wercker.yml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-windi"/></svg><span>windi.config.ts</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wpml"/></svg><span>wpml-config.xml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wrangler"/></svg><span>wrangler.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-wxt"/></svg><span>wxt.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-xo"/></svg><span>.xo-config</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yamllint"/></svg><span>.yamllint</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yandex"/></svg><span>.yaspeller.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-yeoman"/></svg><span>.yo-rc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-zizmor"/></svg><span>zizmor.yaml</span></div>
+</div><div class="tree">
+  <div class="treehead">Data · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-access"/></svg><span>customers.accdb</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dbml"/></svg><span>schema.dbml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-dependencies-update"/></svg><span>.ncurc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-design-tokens"/></svg><span>tokens.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-geojson"/></svg><span>boundaries.geojson</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-horusec"/></svg><span>horusec-config.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-json-schema"/></svg><span>schema.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-jsonld"/></svg><span>context.jsonld</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-language-configuration"/></svg><span>language-configuration.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-calc"/></svg><span>budget.ods</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-parquet"/></svg><span>events.parquet</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-postman"/></svg><span>api.postman_collection.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rojo"/></svg><span>default.project.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-verified"/></svg><span>attestation.sigstore.json</span></div>
+</div><div class="tree">
+  <div class="treehead">Doc · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-architecture"/></svg><span>ARCHITECTURE.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-authors"/></svg><span>AUTHORS</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-changelog"/></svg><span>CHANGELOG.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-citation"/></svg><span>CITATION.cff</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-conduct"/></svg><span>CODE_OF_CONDUCT.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-contributing"/></svg><span>CONTRIBUTING.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-credits"/></svg><span>CREDITS.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-docusaurus"/></svg><span>docusaurus.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-doxygen"/></svg><span>api.dox</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-epub"/></svg><span>handbook.epub</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-humanstxt"/></svg><span>humans.txt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-installation"/></svg><span>INSTALL</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-instructions"/></svg><span>instructions.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-writer"/></svg><span>brief.odt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-markdoc"/></svg><span>guide.mdoc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-openapi"/></svg><span>openapi.yaml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-org"/></svg><span>notes.org</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-patch"/></svg><span>fix-crash.patch</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-prompt"/></svg><span>prompt.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-readthedocs"/></svg><span>.readthedocs.yaml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-rest"/></svg><span>index.rst</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-roadmap"/></svg><span>ROADMAP.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-skill"/></svg><span>skill.md</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-textile"/></svg><span>page.textile</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-toc"/></svg><span>toc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-tsdoc"/></svg><span>tsdoc.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-typedoc"/></svg><span>typedoc.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-unlicense"/></svg><span>UNLICENSE</span></div>
+</div><div class="tree">
+  <div class="treehead">Font · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-fantasticon"/></svg><span>.fantasticonrc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-glyphs"/></svg><span>Inter.glyphs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-libreoffice-math"/></svg><span>formula.odf</span></div>
+</div><div class="tree">
+  <div class="treehead">Image · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinitydesigner"/></svg><span>poster.afdesign</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-affinityphoto"/></svg><span>cover.afphoto</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-ai"/></svg><span>logo.ai</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-aseprite"/></svg><span>sprite.aseprite</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-avif"/></svg><span>hero.avif</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-drawio"/></svg><span>flow.drawio</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-eps"/></svg><span>diagram.eps</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-excalidraw"/></svg><span>sketch.excalidraw</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-figma"/></svg><span>ui.fig</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gimp"/></svg><span>mockup.xcf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-icon"/></svg><span>app.ico</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-krita"/></svg><span>paint.kra</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-matlab"/></svg><span>solve.m</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-photoshop"/></svg><span>banner.psd</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-sketch"/></svg><span>kit.sketch</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgo"/></svg><span>svgo.config.cjs</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-svgr"/></svg><span>.config/svgrrc</span></div>
+</div><div class="tree">
+  <div class="treehead">Media · #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-3d"/></svg><span>chair.3ds</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-blender"/></svg><span>scene.blend</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-gltf"/></svg><span>robot.gltf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-lottie"/></svg><span>spinner.lottie</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#a-subtitles"/></svg><span>episode.srt</span></div>
+</div></div>
+</section>
+
+<section>
+  <h2>Manifest</h2>
+  <table class="ftable">
+    <thead><tr><th>id</th><th>path</th><th>archetype</th><th class="num">bytes</th><th>colour source</th></tr></thead>
+    <tbody>
+  <tr>
+    <td class="mono">vim</td>
+    <td class="mono dim">svg/file/vim.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">200</td>
+    <td class="mono dim">brand #019733 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">vscode-test</td>
+    <td class="mono dim">svg/file/vscode-test.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">337</td>
+    <td class="mono dim">core #2782C2 (R3 family: vscode)</td>
+  </tr>
+  <tr>
+    <td class="mono">vueconfig</td>
+    <td class="mono dim">svg/file/vueconfig.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">139</td>
+    <td class="mono dim">brand #4FC08D → core #4CB392 (R3 family: vue)</td>
+  </tr>
+  <tr>
+    <td class="mono">watchmanconfig</td>
+    <td class="mono dim">svg/file/watchmanconfig.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">353</td>
+    <td class="mono dim">no brand → #7C8AA6 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">webhint</td>
+    <td class="mono dim">svg/file/webhint.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">336</td>
+    <td class="mono dim">no brand → #CAA67A</td>
+  </tr>
+  <tr>
+    <td class="mono">wercker</td>
+    <td class="mono dim">svg/file/wercker.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">539</td>
+    <td class="mono dim">no brand → #8E5A78</td>
+  </tr>
+  <tr>
+    <td class="mono">windi</td>
+    <td class="mono dim">svg/file/windi.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">259</td>
+    <td class="mono dim">brand #48B0F7 → matte, lifted</td>
+  </tr>
+  <tr>
+    <td class="mono">wpml</td>
+    <td class="mono dim">svg/file/wpml.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">304</td>
+    <td class="mono dim">no brand → #5A7E9E</td>
+  </tr>
+  <tr>
+    <td class="mono">wrangler</td>
+    <td class="mono dim">svg/file/wrangler.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">352</td>
+    <td class="mono dim">brand Cloudflare #F6821F → matte, split from blender</td>
+  </tr>
+  <tr>
+    <td class="mono">wxt</td>
+    <td class="mono dim">svg/file/wxt.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">924</td>
+    <td class="mono dim">brand green → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">xo</td>
+    <td class="mono dim">svg/file/xo.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">318</td>
+    <td class="mono dim">no brand → #8A4C38</td>
+  </tr>
+  <tr>
+    <td class="mono">yamllint</td>
+    <td class="mono dim">svg/file/yamllint.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">277</td>
+    <td class="mono dim">no brand → #833F42</td>
+  </tr>
+  <tr>
+    <td class="mono">yandex</td>
+    <td class="mono dim">svg/file/yandex.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">422</td>
+    <td class="mono dim">brand #FC3F1D → matte, darkened clear of npm</td>
+  </tr>
+  <tr>
+    <td class="mono">yeoman</td>
+    <td class="mono dim">svg/file/yeoman.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">296</td>
+    <td class="mono dim">no brand → #5B99A9</td>
+  </tr>
+  <tr>
+    <td class="mono">zizmor</td>
+    <td class="mono dim">svg/file/zizmor.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">287</td>
+    <td class="mono dim">no brand → #9659A6</td>
+  </tr>
+  <tr>
+    <td class="mono">access</td>
+    <td class="mono dim">svg/file/access.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">371</td>
+    <td class="mono dim">brand #A4373A → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">dbml</td>
+    <td class="mono dim">svg/file/dbml.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">448</td>
+    <td class="mono dim">no brand → #3C7485</td>
+  </tr>
+  <tr>
+    <td class="mono">dependencies-update</td>
+    <td class="mono dim">svg/file/dependencies-update.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">218</td>
+    <td class="mono dim">no brand → #79B786</td>
+  </tr>
+  <tr>
+    <td class="mono">design-tokens</td>
+    <td class="mono dim">svg/file/design-tokens.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">403</td>
+    <td class="mono dim">no brand → #8E7CC0</td>
+  </tr>
+  <tr>
+    <td class="mono">geojson</td>
+    <td class="mono dim">svg/file/geojson.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">243</td>
+    <td class="mono dim">no brand → #7FA83E</td>
+  </tr>
+  <tr>
+    <td class="mono">horusec</td>
+    <td class="mono dim">svg/file/horusec.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">323</td>
+    <td class="mono dim">no brand → #307FC2</td>
+  </tr>
+  <tr>
+    <td class="mono">json-schema</td>
+    <td class="mono dim">svg/file/json-schema.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">797</td>
+    <td class="mono dim">core #D6C13C (R3 family: json)</td>
+  </tr>
+  <tr>
+    <td class="mono">jsonld</td>
+    <td class="mono dim">svg/file/jsonld.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">539</td>
+    <td class="mono dim">no brand → #7262AA</td>
+  </tr>
+  <tr>
+    <td class="mono">language-configuration</td>
+    <td class="mono dim">svg/file/language-configuration.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">320</td>
+    <td class="mono dim">no brand → #89AEC3</td>
+  </tr>
+  <tr>
+    <td class="mono">libreoffice-calc</td>
+    <td class="mono dim">svg/file/libreoffice-calc.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">207</td>
+    <td class="mono dim">brand LO Calc green → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">parquet</td>
+    <td class="mono dim">svg/file/parquet.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">515</td>
+    <td class="mono dim">no brand → #8E7248 (oak)</td>
+  </tr>
+  <tr>
+    <td class="mono">postman</td>
+    <td class="mono dim">svg/file/postman.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">126</td>
+    <td class="mono dim">brand #FF6C37 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">rojo</td>
+    <td class="mono dim">svg/file/rojo.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">434</td>
+    <td class="mono dim">brand red → matte, split from npm/rust</td>
+  </tr>
+  <tr>
+    <td class="mono">verified</td>
+    <td class="mono dim">svg/file/verified.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">213</td>
+    <td class="mono dim">no brand → #5AB4B4</td>
+  </tr>
+  <tr>
+    <td class="mono">architecture</td>
+    <td class="mono dim">svg/file/architecture.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">221</td>
+    <td class="mono dim">no brand → #A09488 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">authors</td>
+    <td class="mono dim">svg/file/authors.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">344</td>
+    <td class="mono dim">no brand → #6E7EA8 (ink)</td>
+  </tr>
+  <tr>
+    <td class="mono">changelog</td>
+    <td class="mono dim">svg/file/changelog.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">393</td>
+    <td class="mono dim">no brand → #7E6A44</td>
+  </tr>
+  <tr>
+    <td class="mono">citation</td>
+    <td class="mono dim">svg/file/citation.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">378</td>
+    <td class="mono dim">no brand → #8A9EB4 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">conduct</td>
+    <td class="mono dim">svg/file/conduct.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">294</td>
+    <td class="mono dim">no brand → #A0606E (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">contributing</td>
+    <td class="mono dim">svg/file/contributing.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">254</td>
+    <td class="mono dim">no brand → #4FA890</td>
+  </tr>
+  <tr>
+    <td class="mono">credits</td>
+    <td class="mono dim">svg/file/credits.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">594</td>
+    <td class="mono dim">no brand → #AEB4BA (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">docusaurus</td>
+    <td class="mono dim">svg/file/docusaurus.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">285</td>
+    <td class="mono dim">brand #3ECC5F → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">doxygen</td>
+    <td class="mono dim">svg/file/doxygen.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">766</td>
+    <td class="mono dim">no brand → #7A6E86 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">epub</td>
+    <td class="mono dim">svg/file/epub.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">327</td>
+    <td class="mono dim">no brand → #3E8E8E</td>
+  </tr>
+  <tr>
+    <td class="mono">humanstxt</td>
+    <td class="mono dim">svg/file/humanstxt.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">252</td>
+    <td class="mono dim">no brand → #C09070</td>
+  </tr>
+  <tr>
+    <td class="mono">installation</td>
+    <td class="mono dim">svg/file/installation.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">212</td>
+    <td class="mono dim">no brand → #5EABD8</td>
+  </tr>
+  <tr>
+    <td class="mono">instructions</td>
+    <td class="mono dim">svg/file/instructions.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">197</td>
+    <td class="mono dim">no brand → #A8955E</td>
+  </tr>
+  <tr>
+    <td class="mono">libreoffice-writer</td>
+    <td class="mono dim">svg/file/libreoffice-writer.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">293</td>
+    <td class="mono dim">brand LO Writer blue → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">markdoc</td>
+    <td class="mono dim">svg/file/markdoc.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">295</td>
+    <td class="mono dim">core-adjacent #519ABA (R3 family: markdown)</td>
+  </tr>
+  <tr>
+    <td class="mono">openapi</td>
+    <td class="mono dim">svg/file/openapi.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">742</td>
+    <td class="mono dim">brand #6BA539 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">org</td>
+    <td class="mono dim">svg/file/org.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">1517</td>
+    <td class="mono dim">no brand → #7E6EA8</td>
+  </tr>
+  <tr>
+    <td class="mono">patch</td>
+    <td class="mono dim">svg/file/patch.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">283</td>
+    <td class="mono dim">no brand → #C68D7E</td>
+  </tr>
+  <tr>
+    <td class="mono">prompt</td>
+    <td class="mono dim">svg/file/prompt.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">270</td>
+    <td class="mono dim">no brand → #9B7FD0</td>
+  </tr>
+  <tr>
+    <td class="mono">readthedocs</td>
+    <td class="mono dim">svg/file/readthedocs.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">838</td>
+    <td class="mono dim">no brand → #5A7E70 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">rest</td>
+    <td class="mono dim">svg/file/rest.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">363</td>
+    <td class="mono dim">no brand → #8E7E9E (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">roadmap</td>
+    <td class="mono dim">svg/file/roadmap.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">153</td>
+    <td class="mono dim">no brand → #B7854B</td>
+  </tr>
+  <tr>
+    <td class="mono">skill</td>
+    <td class="mono dim">svg/file/skill.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">207</td>
+    <td class="mono dim">no brand → #7E8FC8</td>
+  </tr>
+  <tr>
+    <td class="mono">textile</td>
+    <td class="mono dim">svg/file/textile.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">216</td>
+    <td class="mono dim">no brand → #CB959F</td>
+  </tr>
+  <tr>
+    <td class="mono">toc</td>
+    <td class="mono dim">svg/file/toc.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">252</td>
+    <td class="mono dim">no brand → #8E9EA8 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">tsdoc</td>
+    <td class="mono dim">svg/file/tsdoc.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">232</td>
+    <td class="mono dim">core #3178C6 (R3 family: typescript)</td>
+  </tr>
+  <tr>
+    <td class="mono">typedoc</td>
+    <td class="mono dim">svg/file/typedoc.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">304</td>
+    <td class="mono dim">core-adjacent TS blue, lifted</td>
+  </tr>
+  <tr>
+    <td class="mono">unlicense</td>
+    <td class="mono dim">svg/file/unlicense.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">271</td>
+    <td class="mono dim">no brand → #A9A79E (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">fantasticon</td>
+    <td class="mono dim">svg/file/fantasticon.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">224</td>
+    <td class="mono dim">no brand → #C86EA8</td>
+  </tr>
+  <tr>
+    <td class="mono">glyphs</td>
+    <td class="mono dim">svg/file/glyphs.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">829</td>
+    <td class="mono dim">no brand → #B6ADA4 (neutral lane)</td>
+  </tr>
+  <tr>
+    <td class="mono">libreoffice-math</td>
+    <td class="mono dim">svg/file/libreoffice-math.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">186</td>
+    <td class="mono dim">brand LO Math red → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">affinitydesigner</td>
+    <td class="mono dim">svg/file/affinitydesigner.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">226</td>
+    <td class="mono dim">brand Affinity Designer blue → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">affinityphoto</td>
+    <td class="mono dim">svg/file/affinityphoto.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">375</td>
+    <td class="mono dim">brand Affinity Photo purple → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">ai</td>
+    <td class="mono dim">svg/file/ai.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">614</td>
+    <td class="mono dim">brand Adobe dark plate lifted per §6.3; wordmark #FF9A00 → #E09140 (R2)</td>
+  </tr>
+  <tr>
+    <td class="mono">aseprite</td>
+    <td class="mono dim">svg/file/aseprite.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">235</td>
+    <td class="mono dim">no brand → #C4547E</td>
+  </tr>
+  <tr>
+    <td class="mono">avif</td>
+    <td class="mono dim">svg/file/avif.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">669</td>
+    <td class="mono dim">no brand → #4EA8A6</td>
+  </tr>
+  <tr>
+    <td class="mono">drawio</td>
+    <td class="mono dim">svg/file/drawio.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">247</td>
+    <td class="mono dim">brand #F08705 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">eps</td>
+    <td class="mono dim">svg/file/eps.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">353</td>
+    <td class="mono dim">no brand → #8E9E5E</td>
+  </tr>
+  <tr>
+    <td class="mono">excalidraw</td>
+    <td class="mono dim">svg/file/excalidraw.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">199</td>
+    <td class="mono dim">brand #6965DB → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">figma</td>
+    <td class="mono dim">svg/file/figma.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">705</td>
+    <td class="mono dim">brand five-colour mark → matte (R2)</td>
+  </tr>
+  <tr>
+    <td class="mono">gimp</td>
+    <td class="mono dim">svg/file/gimp.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">201</td>
+    <td class="mono dim">no brand → #9C8A5E</td>
+  </tr>
+  <tr>
+    <td class="mono">icon</td>
+    <td class="mono dim">svg/file/icon.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">440</td>
+    <td class="mono dim">no brand → #6E80C8</td>
+  </tr>
+  <tr>
+    <td class="mono">krita</td>
+    <td class="mono dim">svg/file/krita.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">459</td>
+    <td class="mono dim">no brand → #649BAF</td>
+  </tr>
+  <tr>
+    <td class="mono">matlab</td>
+    <td class="mono dim">svg/file/matlab.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">172</td>
+    <td class="mono dim">brand MathWorks orange → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">photoshop</td>
+    <td class="mono dim">svg/file/photoshop.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">961</td>
+    <td class="mono dim">brand Adobe dark plate #001E36 lifted per §6.3; wordmark #31A8FF → #4FA8E0 (R2)</td>
+  </tr>
+  <tr>
+    <td class="mono">sketch</td>
+    <td class="mono dim">svg/file/sketch.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">218</td>
+    <td class="mono dim">brand #F7B500 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">svgo</td>
+    <td class="mono dim">svg/file/svgo.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">209</td>
+    <td class="mono dim">core-adjacent svg amber #DFA046</td>
+  </tr>
+  <tr>
+    <td class="mono">svgr</td>
+    <td class="mono dim">svg/file/svgr.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">636</td>
+    <td class="mono dim">core react #46B5D1 (R3 rhyme: reactjs)</td>
+  </tr>
+  <tr>
+    <td class="mono">3d</td>
+    <td class="mono dim">svg/file/3d.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">367</td>
+    <td class="mono dim">no brand → #63C4D3</td>
+  </tr>
+  <tr>
+    <td class="mono">blender</td>
+    <td class="mono dim">svg/file/blender.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">273</td>
+    <td class="mono dim">brand #E87D0D → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">gltf</td>
+    <td class="mono dim">svg/file/gltf.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">153</td>
+    <td class="mono dim">brand glTF vermilion → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">lottie</td>
+    <td class="mono dim">svg/file/lottie.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">187</td>
+    <td class="mono dim">brand LottieFiles #00DDB3 → matte</td>
+  </tr>
+  <tr>
+    <td class="mono">subtitles</td>
+    <td class="mono dim">svg/file/subtitles.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">981</td>
+    <td class="mono dim">no brand → #A8ADB4 (neutral lane)</td>
+  </tr></tbody>
+    <tfoot><tr><td colspan="3">82 icons · 40 SILHOUETTE · 11 BADGE · 31 GLYPH</td>
+      <td class="num">31372</td><td>—</td></tr></tfoot>
+  </table>
+</section>
+</div>

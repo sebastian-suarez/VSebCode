@@ -35,25 +35,249 @@ const IOU_COLLIDE = 0.72, IOU_COLLIDE_BADGE = 0.92, IOU_NEAR = 0.60;
 // R7, SILHOUETTE lane: two silhouettes whose shapes read this far apart are separated by
 // form and are a hue neighbourhood, not a twin.
 const FORM_SEP = 0.55;
+// READING 3 — RATIFIED by the review lead 2026-09-02; it shipped provisionally with the
+// full-coverage set and is now law. Still the lead's to overrule by flipping this
+// constant. At full coverage the form qualifier extends to the BADGE and GLYPH lanes for
+// any pair that involves a long-tail icon; the 155-core set keeps the strict archetype
+// rule among itself, exactly as the lead ruled it in rounds 1-2.
+//
+// This is the same argument reconciliation.md's reading 1 makes, one order of magnitude
+// on: "155 icons cannot be pairwise >= 12 degrees apart in hue (that allows 30)". The set
+// now holds 375 BADGEs and 262 GLYPHs, so the strict lane is arithmetic, not defect —
+// measured, over the 298 core-lane hits it produces, 282 score below 0.40 on form and
+// exactly ONE reaches 0.55. spec.md §11.3 already concedes the point ("the wheel cannot
+// hold 1,170 pairwise-distinct file hues"); this is where that concession lands
+// mechanically. Set to false to restore the strict reading and see all 298.
+const LONGTAIL_FORM_QUALIFIED = true;
 
-// R3 — sanctioned family rhymes: shared plate/hue with a different mark. Exempt from R7 and R8.
+// R3 — sanctioned family rhymes: shared plate/hue with a different mark. Exempt from R7
+// and R8. The first nine are the core set's own; everything after is the accumulated
+// full-coverage list ratified by the review lead in production/assembly-v2-notes.md,
+// one block per slice. Groups OVERLAP on purpose (bench-js is kin to js AND to its own
+// trio), so membership is a set of group ids, not a partition — a partition would merge
+// js, reactjs and typescript into one family through bench-* and exempt the three from
+// each other, which is exactly the collision R7 exists to catch.
 const FAMILIES = [
+	// --- core (batches 1-6) ---
 	['reactjs', 'reactts'], ['typescript', 'typescriptdef'], ['js', 'jsconfig'],
-	['json', 'json5'], ['sql', 'sqlite'], ['cheader', 'cppheader'],
-	['testjs', 'testts'], ['vite', 'vitest'], ['next', 'vercel']
+	['sql', 'sqlite'], ['cheader', 'cppheader'],
+	['vite', 'vitest'], ['next', 'vercel'],
+	// --- standing declarations (pre-wave) ---
+	['testjs', 'testts', 'test-jsx'],
+	['svelte', 'svelte-js', 'svelte-ts'],
+	// --- A01 ---
+	['java', 'jar', 'class'],
+	['python', 'python-misc'],
+	['actionscript', 'adobe-swc'],
+	['affinity', 'affinitydesigner', 'affinityphoto', 'affinitypublisher'],
+	['advpl', 'advpl-include', 'advpl-ptm', 'advpl-tlpp'],
+	['al', 'al-dal'],
+	['autohotkey', 'ahk2'],
+	['azure', 'azurepipelines', 'azurestreamanalytics'],
+	['bibliography', 'bibtex-style', 'bbx'],
+	['bench-js', 'bench-jsx', 'bench-ts'],
+	['js', 'bench-js'], ['reactjs', 'bench-jsx'], ['typescript', 'bench-ts'],
+	['angular', 'angular-component', 'angular-directive', 'angular-guard',
+		'angular-interceptor', 'angular-pipe', 'angular-resolver', 'angular-service'],
+	// --- A02 ---
+	['cf', 'cfc', 'cfm'],
+	['c-al', 'dal'],
+	['chef', 'chef-cookbook'],
+	['cabal', 'haskell'],
+	['csharp', 'csproj'],
+	['css', 'cssmap'],
+	['clojure', 'clojurescript'],
+	['cypress', 'cypress-spec'],
+	['dartlang', 'dartlang-generated'],
+	['python', 'cython'],
+	['elixir', 'eex'],
+	['ruby', 'erb'],
+	['xml', 'dtd'],
+	['ocaml', 'dune'],
+	// --- A03 ---
+	['fla', 'flash'],
+	['gamemaker', 'gamemaker2', 'gamemaker81'],
+	['godot', 'gdscript', 'gduid', 'godot-assets', 'godotshader', 'tres', 'tscn'],
+	['idris', 'idrisbin', 'idrispkg'],
+	['haxe', 'haxecheckstyle', 'haxedevelop'],
+	['firebasestorage', 'firestore'],
+	['hashicorp', 'hcl'],
+	['glsl', 'hlsl'],
+	// --- A04 ---
+	['tex', 'latex', 'latex-class', 'latex-package', 'lbx', 'latexmk',
+		'context', 'doctex', 'doctex-installer', 'dtx'],
+	// R3 pair, ruled 2026-09-02 (review lead). `.sty` IS the LaTeX package file, so round 3
+	// asked whether these are one concept. They are not: the matchers do not overlap at all —
+	// `sty` owns the EXTENSION `.sty`, `latex-package` owns the LANGUAGE ID `latex-package`,
+	// and after R14 both resolve to their own icon, so neither is a dead twin. Declared as a
+	// kin PAIR and not folded into the tex group above, because sty ships purple `#7E6FA8`
+	// against the family's teal `#61BAB5` — it is kin by concept, not by hue.
+	['sty', 'latex-package'],
+	['lean', 'leanconfig'],
+	['jsmap', 'map'],
+	['marko', 'markojs'],
+	['manifest', 'manifest-bak', 'manifest-skip'],
+	['json', 'json5', 'jsonnet', 'json-schema'],
+	['lua', 'luau'],
+	// --- A05 ---
+	['mvt', 'mvtcss', 'mvtjs'],
+	['pascal', 'pascalproject'],
+	['perl', 'perl6'],
+	['objectivec', 'objectivecpp'],
+	['tailwind', 'ng-tailwind'],
+	['sql', 'plsql', 'plsql-package', 'plsql-package-body', 'plsql-package-header',
+		'plsql-package-spec'],
+	['ocaml', 'ocaml-intf', 'opam'],
+	['nim', 'nimble'],
+	['node', 'njsproj'],
+	['python', 'numpy'], ['python', 'pip'],
+	['mustache', 'nunjucks'],
+	// --- A06 ---
+	['powershell', 'powershell-format', 'powershell-psd', 'powershell-psm', 'powershell-types'],
+	['python', 'pyscript', 'pytyped', 'pythonconfig'],
+	['qbs', 'qml', 'qmldir', 'qrc'],
+	['rust', 'ron', 'ra-syntax-tree', 'rust-toolchain'],
+	['r', 'rmd', 'rproj'],
+	['ruby', 'rake'],
+	['scala', 'sbt'],
+	['rescript', 'rescript-interface', 'reason'],
+	['roblox', 'rbxmk'],
+	['reactjs', 'reacttemplate'],
+	['sass', 'scss'],
+	['markdown', 'quarkdown'],
+	['search', 'search-result'],
+	['xml', 'rnc'],
+	['redux-action', 'redux-reducer', 'redux-selector', 'redux-store'],
+	['word', 'excel', 'powerpoint', 'publisher', 'access'],
+	['prisma', 'prismaconfig'],
+	['processing', 'processinglang'],
+	// --- A08 ---
+	['vb', 'vba', 'vbhtml', 'vbproj', 'vcxproj'],
+	['visualstudio', 'vsix', 'vsixmanifest'],
+	['xaml', 'xib'],
+	['wgsl', 'wesl'],
+	['wepy', 'wxml', 'wxss'],
+	['xquery', 'xsl'],
+	['bashly', 'bashly-hook', 'bashly-settings', 'bashly-strings'],
+	['bazel', 'bazel-ignore', 'bazel-version'],
+	['bitbucket', 'bitbucketpipeline'],
+	['astro', 'astro-config', 'astroconfig'],
+	['vue', 'vuex-store'],
+	['wasm', 'wit'],
+	// --- A09 ---
+	['commitizen', 'commitlint'],
+	['dbt', 'dbt-bouncer'],
+	['deno', 'denoify'],
+	['drizzle', 'drizzle-orm'],
+	['expo', 'eas-metadata'],
+	['go', 'go-package', 'go-work'],
+	['funding', 'github-sponsors'],
+	['bun', 'bunfig'],
+	['cursor', 'cursorrules'],
+	['dartlang', 'dartlang-ignore'],
+	['firebase', 'firebasehosting'],
+	['graphql', 'graphql-config'],
+	['dotenv', 'direnv'],
+	['container', 'devcontainer'],
+	// --- A10 ---
+	['markdownlint', 'markdownlint-ignore'],
+	['nsri', 'nsri-integrity'],
+	['pm2', 'pm2-ecosystem'],
+	['panda', 'pandacss'],
+	['heroku', 'procfile'],
+	['kubernetes', 'helm'],
+	['mdx', 'mdxlint', 'mdx-components'],
+	['node', 'nodemon'],
+	['reactjs', 'preact'],
+	['php', 'phpcsfixer'],
+	['postcss', 'postcssconfig'],
+	['docker', 'hadolint'],
+	// --- A11 ---
+	['svelte', 'svelteconfig'],
+	// --- A12 ---
+	['vscode', 'vscode-test'],
+	['vue', 'vueconfig'],
+	['typescript', 'tsdoc'], ['typescript', 'typedoc'],
+	['markdown', 'markdoc', 'markdoc-config'],
+	['reactjs', 'svgr'],
+	// --- folder slices (F01, F03, F04) ---
+	['gemini', 'gemini-ai'],
+	['interface', 'interfaces'],
+	['gh-workflows', 'gitea-workflows'],
+	['ngrx-actions', 'ngrx-effects', 'ngrx-entities', 'ngrx-entity', 'ngrx-reducer',
+		'ngrx-selectors', 'ngrx-state', 'ngrx-store']
 ];
 
-// Residuals ruled acceptable. Key is the sorted pair, value is the reason printed by the report.
+// Alias pairs — duplicate matchers in the merged inventory that resolve to the SAME
+// artwork by design (the theme builder maps both keys at one definition). Byte-identical
+// SVGs are not an R8 collision; flagging them would be flagging a decision.
+const ALIASES = [
+	['astro-config', 'astroconfig'],
+	['bitbucket', 'bitbucketpipeline'],
+	['panda', 'pandacss'],
+	['marko', 'markojs']
+];
+
+// Residuals ruled acceptable. Key is the sorted pair, value is the reason printed by the
+// report. Everything below the core block is a slice-review ruling carried over from
+// production/assembly-v2-notes.md — each one was seen and ratified when its slice shipped.
 const ACCEPTED = new Map(Object.entries({
+	// --- core set, rounds 1-2 ---
 	'generic-archive|zip': 'R8 accepted: the generic tier is dimmer by design (generic-archive is the fallback for 6 concepts, zip is the named concept)',
 	'font|generic-font': 'R8 accepted, same precedent: generic-font is the dim fallback for the 3 non-core font concepts, font is the named concept',
 	'css|html': 'R8 accepted + flagged: both real logos are shields and spec.md §3 gives html the canon css geometry on purpose; separated by hue (#1572B6 / #DB5430) and by the 3 / 5 letterform',
-	'npm|yaml': 'R10 ruled exception (Sebastian, 2026-09-01): yaml is brand-true #CB171E, brand fidelity over separation. The R7 twin against canon npm #CB3837 is knowingly accepted; separation rests on the YML / npm letter groups and the small value gap'
+	'npm|yaml': 'R10a ruled exception (Sebastian, 2026-09-01): yaml is brand-true #CB171E, brand fidelity over separation. The R7 twin against canon npm #CB3837 is knowingly accepted; separation rests on the YML / npm letter groups and the small value gap',
+	// --- A01 ---
+	'debian|turborepo': 'A01 ruling: GLYPH, marks and domains separate; the only legal spot that keeps Debian brand-adjacent',
+	// --- A04 ---
+	'jinja|npm': 'A04 tolerated: template engine vs package manifest, different domains',
+	'jinja|rust': 'A04 tolerated: template engine vs systems language, different domains',
+	'kusto|typescript': 'A04 tolerated: query language vs core language badge',
+	'cpp|less': 'A04 tolerated: stylesheet preprocessor vs systems language',
+	'less|perl': 'A04 tolerated: stylesheet preprocessor vs scripting language',
+	'lit|powershell': 'A04 tolerated: web-component library vs shell',
+	'maya|sqlite': 'A04 tolerated: 3D suite vs embedded database',
+	'mdsvex|rust': 'A04 tolerated: deliberate svelte-hue for mdsvex',
+	'git|mojo': 'A04 tolerated: VCS vs language, different domains',
+	'jupyter|mojo': 'A04 tolerated: notebook vs language, different domains',
+	'cypress|lisp': 'A04 tolerated: brand-mandated on both sides',
+	// --- A05 ---
+	'django|phalcon': 'A05 ruling: PHP and Python frameworks almost never co-occur; letters differ',
+	'plsql-package|rust': 'A05 ruling: brand-true on both sides (R10a precedent); Oracle + Cargo co-occurrence is nil',
+	'plsql-package-body|rust': 'A05 ruling: same, the plsql-package quartet is brand-true',
+	'plsql-package-header|rust': 'A05 ruling: same, the plsql-package quartet is brand-true',
+	'plsql-package-spec|rust': 'A05 ruling: same, the plsql-package quartet is brand-true',
+	// --- A06 ---
+	'npm|rescript': 'A06 ruling: kept brand-true per the R10a reasoning',
+	'postcss|rss': 'A06 ruling: kept per spec §11.2 (recognized hue wins)',
+	// --- A07 ---
+	'postcss|typo3': 'A07 tolerated §11.3 residual: GLYPH, dh 11 / dl 4 / ds 9, form .12 — the forms read nothing alike',
+	'svelte|typo3': 'A07 tolerated §11.3 residual: GLYPH, dh 3 / dl 12 / ds 6, form .12',
+	// --- A08 ---
+	'cpp|xcode': 'A08 deliberate trade: xcode #26588A twins cpp rather than typescript, on the co-occurrence argument',
+	// --- A11 ---
+	'railway|shadcn': 'A11 ruling: neutral-lane pair accepted (silver precedent + letter separation)',
+	'remix|unocss': 'A11 ruling: neutral-lane pair accepted (silver precedent + letter separation)',
+	// --- A03 ---
+	'hy|svg': 'A03 tolerated: the tightest of its 49 cross-domain pairs, dH 1.1 — the letters separate them'
 }));
 
+// Membership is a SET of group ids so overlapping declarations do not merge (see FAMILIES).
 const familyOf = new Map();
-FAMILIES.forEach((f, i) => f.forEach(id => familyOf.set(id, i)));
-const sameFamily = (a, b) => familyOf.has(a) && familyOf.get(a) === familyOf.get(b);
+const addGroups = (groups, offset) => groups.forEach((f, i) => f.forEach(id => {
+	if (!familyOf.has(id)) { familyOf.set(id, new Set()); }
+	familyOf.get(id).add(offset + i);
+}));
+addGroups(FAMILIES, 0);
+addGroups(ALIASES, FAMILIES.length);
+const aliasOf = new Map();
+ALIASES.forEach(g => g.forEach(id => aliasOf.set(id, g[0])));
+function sameFamily(a, b) {
+	const x = familyOf.get(a), y = familyOf.get(b);
+	if (!x || !y) { return false; }
+	for (const g of x) { if (y.has(g)) { return true; } }
+	return false;
+}
 const pairKey = (a, b) => [a, b].sort().join('|');
 
 // ---- colour ----------------------------------------------------------------
@@ -83,6 +307,29 @@ const manifest = JSON.parse(readFileSync(join(ROOT, 'set-manifest.json'), 'utf8'
 const measured = await rasterFills(manifest.icons.map(i =>
 	({ kind: i.kind, id: i.id, path: join(ROOT, 'svg', i.kind, `${i.id}.svg`) })));
 
+// ---- §11 scoping ------------------------------------------------------------
+//
+// spec.md §11.3: the wheel cannot hold 1,161 pairwise-distinct file hues, so R7 is HARD
+// within a domain and TOLERATED across domains that rarely share a directory. Two things
+// define the hard lane here:
+//
+//   * the 155-core set (contact-batch1..6) — core icons are the ones a repo root actually
+//     shows, so EVERY pair that touches a core icon is judged at the core's own rules;
+//   * the domain, read off longtail-worklist.json's `category` (code / config / data /
+//     doc / font / image / media / archive / binary) plus the declared R3 domain families.
+//
+// R8 is unscoped: the same mark for two unrelated concepts is a defect wherever it lands.
+const CORE_BATCHES = new Set(['batch1', 'batch2', 'batch3', 'batch4', 'batch5', 'batch6', 'canon', 'folders']);
+const domainOf = new Map();
+{
+	const wl = join(ROOT, 'longtail-worklist.json');
+	if (existsSync(wl)) {
+		for (const s of JSON.parse(readFileSync(wl, 'utf8')).slices) {
+			for (const c of s.concepts) { domainOf.set(`${c.kind}/${c.id}`, c.category ?? 'unknown'); }
+		}
+	}
+}
+
 // --try id=#HEX,… — score a retint before it touches disk. A retint never changes form,
 // so swapping the dominant in memory is exactly equivalent to editing the SVG.
 const TRY = new Map();
@@ -97,22 +344,74 @@ const icons = manifest.icons.map(i => {
 	const m = measured.get(`${i.kind}/${i.id}`);
 	const dominant = (i.kind === 'file' && TRY.get(i.id)) || m.dominant;
 	// BADGE plates are identical by law, so the letters are the form; everything else is
-	// judged on its whole silhouette.
-	const form = i.archetype === 'BADGE' && m.mark.includes('1') ? m.mark : m.ink;
-	return { ...i, dominant, coverage: m.coverage, hsl: hsl(dominant), form, mask: m.mask, bytes: m.bytes };
+	// judged on its whole silhouette. A FOLDER's plate is law too (R9), so its emblem —
+	// the ink that is not the tan — is what carries its identity.
+	const form = (i.archetype === 'BADGE' || i.kind === 'folder') && m.mark.includes('1') ? m.mark : m.ink;
+	const core = CORE_BATCHES.has(i.batch);
+	return { ...i, dominant, coverage: m.coverage, hsl: hsl(dominant), form, mask: m.mask,
+		bytes: m.bytes, core, domain: core ? 'core' : (domainOf.get(`${i.kind}/${i.id}`) ?? 'unknown') };
 });
 const byId = new Map(icons.map(i => [`${i.kind}/${i.id}`, i]));
 const file = (id) => byId.get(`file/${id}`);
 
-function iou(a, b) {
+/**
+ * Is this pair inside R7's HARD lane (§11.3)?
+ *
+ * Either side core always counts: the 155-core set is what a repo root actually shows,
+ * so every pair touching it is judged at the core's own rules. What separates the two
+ * long-tail readings is how wide "within-domain" is drawn:
+ *
+ *   --scope slice  (default, spec §11.3 as written: "HARD within your own slice")
+ *       RATIFIED by the review lead 2026-09-02; shipped provisionally, now law.
+ *       the slice is the unit an authoring agent could actually control.
+ *   --scope domain (longtail-worklist.json `category`)
+ *       measured and reported, not shipped: `code` alone holds 629 icons across A01-A08
+ *       and `config` 297 across A08-A12, so this asks 262 GLYPHs to be pairwise >= 12
+ *       degrees apart on a 360-degree wheel — which admits 30. See the run banner for
+ *       what each reading costs.
+ */
+const SCOPE = argv.includes('--scope') ? argv[argv.indexOf('--scope') + 1] : 'slice';
+const inScope = {
+	slice: (A, B) => A.core || B.core || A.batch === B.batch,
+	domain: (A, B) => A.core || B.core || A.domain === B.domain,
+	all: () => true
+};
+if (!inScope[SCOPE]) { console.error(`unknown --scope "${SCOPE}" (slice | domain | all)`); process.exit(2); }
+const hardScope = inScope[SCOPE];
+
+// ---- form scoring, as bitsets ----------------------------------------------
+//
+// 1,161 file icons is 241k same-archetype pairs; scoring those on 4,096-character
+// strings is minutes of work. The masks become 128-word bitsets once, and the IoU is
+// popcount over AND / OR — the same number, three orders of magnitude cheaper.
+
+const WORDS = 128;   // 64 x 64 bits
+const bitsOf = new Map();
+function bits(mask) {
+	let v = bitsOf.get(mask);
+	if (v) { return v; }
+	v = new Uint32Array(WORDS);
+	for (let i = 0; i < mask.length; i++) {
+		if (mask.charCodeAt(i) === 49) { v[i >>> 5] |= 1 << (i & 31); }
+	}
+	bitsOf.set(mask, v);
+	return v;
+}
+function popcount(x) {
+	x -= (x >>> 1) & 0x55555555;
+	x = (x & 0x33333333) + ((x >>> 2) & 0x33333333);
+	x = (x + (x >>> 4)) & 0x0f0f0f0f;
+	return (Math.imul(x, 0x01010101) >>> 24);
+}
+function iouBits(a, b) {
 	let inter = 0, union = 0;
-	for (let k = 0; k < a.length; k++) {
-		const x = a[k] === '1', y = b[k] === '1';
-		if (x && y) { inter++; }
-		if (x || y) { union++; }
+	for (let i = 0; i < WORDS; i++) {
+		inter += popcount(a[i] & b[i]);
+		union += popcount(a[i] | b[i]);
 	}
 	return union ? inter / union : 0;
 }
+function iou(a, b) { return iouBits(bits(a), bits(b)); }
 
 /**
  * Outline of a mask, dilated by one cell. Area IoU alone cannot tell a shield from a
@@ -149,38 +448,57 @@ function outline(mask, M) {
 	return s;
 }
 
-/** Form similarity: both the filled area and the outline have to agree. */
-function formSim(A, B) {
-	const area = iou(A.form, B.form);
-	const edge = iou(outline(A.form, A.mask), outline(B.form, B.mask));
+/**
+ * Form similarity: both the filled area and the outline have to agree, so the score is
+ * the smaller of the two. `floor` is an early exit — sim can never exceed area, so an
+ * area below every bar we test against makes the outline pass pointless. 0.55 is the
+ * lowest bar in the file (FORM_SEP); IOU_NEAR is 0.60.
+ */
+function formSim(A, B, floor = FORM_SEP) {
+	const area = iouBits(bits(A.form), bits(B.form));
+	if (area < floor) { return { area, edge: area, sim: area, early: true }; }
+	const edge = iouBits(bits(outline(A.form, A.mask)), bits(outline(B.form, B.mask)));
 	return { area, edge, sim: Math.min(area, edge) };
 }
 
 // ---- R7: palette twins ------------------------------------------------------
 
-const twins = [], separated = [], nearTwins = [];
+const twins = [], separated = [], nearTwins = [], tolerated = [];
 const files = icons.filter(i => i.kind === 'file');
-for (let a = 0; a < files.length; a++) {
-	for (let b = a + 1; b < files.length; b++) {
-		const A = files[a], B = files[b];
-		if (A.archetype !== B.archetype) { continue; }
-		if (sameFamily(A.id, B.id)) { continue; }
-		if (A.hsl.s < NEUTRAL_S || B.hsl.s < NEUTRAL_S) { continue; }   // neutral lane
-		const dh = dHue(A.hsl.h, B.hsl.h), dl = Math.abs(A.hsl.l - B.hsl.l), ds = Math.abs(A.hsl.s - B.hsl.s);
-		if (!(dh < D_HUE && dl < D_LIGHT && ds < D_SAT)) {
-			if (dh < D_HUE * 1.5 && dl < D_LIGHT * 1.4 && ds < D_SAT * 1.4) {
-				nearTwins.push({ a: A.id, b: B.id, archetype: A.archetype, dh, dl, ds, ...formSim(A, B) });
+// index by archetype: the pairwise loops only ever compare like with like, and skipping
+// 1.3 M archetype-mismatched iterations is most of the run time at full coverage
+const byArchetype = new Map();
+for (const i of files) {
+	if (!byArchetype.has(i.archetype)) { byArchetype.set(i.archetype, []); }
+	byArchetype.get(i.archetype).push(i);
+}
+
+for (const lane of byArchetype.values()) {
+	for (let a = 0; a < lane.length; a++) {
+		for (let b = a + 1; b < lane.length; b++) {
+			const A = lane[a], B = lane[b];
+			if (sameFamily(A.id, B.id)) { continue; }
+			if (A.hsl.s < NEUTRAL_S || B.hsl.s < NEUTRAL_S) { continue; }   // neutral lane
+			const dh = dHue(A.hsl.h, B.hsl.h), dl = Math.abs(A.hsl.l - B.hsl.l), ds = Math.abs(A.hsl.s - B.hsl.s);
+			if (!(dh < D_HUE && dl < D_LIGHT && ds < D_SAT)) {
+				if (hardScope(A, B) && dh < D_HUE * 1.5 && dl < D_LIGHT * 1.4 && ds < D_SAT * 1.4) {
+					nearTwins.push({ a: A.id, b: B.id, archetype: A.archetype, dh, dl, ds, ...formSim(A, B) });
+				}
+				continue;
 			}
-			continue;
+			const f = formSim(A, B);
+			const rec = { a: A.id, b: B.id, archetype: A.archetype, dh, dl, ds, ...f,
+				domains: `${A.domain}/${B.domain}` };
+			// A BADGE is a plate (§6: "two badges in the same hue do not" separate) and a GLYPH
+			// is thin ink on nothing — in both, hue IS the read at 16 px, so any colour hit is a
+			// twin. A SILHOUETTE carries a distinctive object shape, so a colour hit is a twin
+			// only when the shapes do not read apart either (see FORM_SEP).
+			const formQualified = A.archetype === 'SILHOUETTE'
+				|| (LONGTAIL_FORM_QUALIFIED && !(A.core && B.core));   // reading 3
+			if (formQualified && f.sim < FORM_SEP) { separated.push(rec); }
+			else if (hardScope(A, B)) { twins.push(rec); }
+			else { tolerated.push(rec); }   // §11.3 cross-domain long-tail lane
 		}
-		const f = formSim(A, B);
-		const rec = { a: A.id, b: B.id, archetype: A.archetype, dh, dl, ds, ...f };
-		// A BADGE is a plate (§6: "two badges in the same hue do not" separate) and a GLYPH
-		// is thin ink on nothing — in both, hue IS the read at 16 px, so any colour hit is a
-		// twin. A SILHOUETTE carries a distinctive object shape, so a colour hit is a twin
-		// only when the shapes do not read apart either (see FORM_SEP).
-		if (A.archetype === 'SILHOUETTE' && f.sim < FORM_SEP) { separated.push(rec); }
-		else { twins.push(rec); }
 	}
 }
 
@@ -201,34 +519,61 @@ function cluster(pairs) {
 
 // ---- R8: form collisions ----------------------------------------------------
 
+// R8 is unscoped by §11.3 — "the same mark, same archetype" is a defect wherever the two
+// concepts live. Only declared families and alias pairs are exempt.
 const forms = [], nearForms = [];
-for (let a = 0; a < files.length; a++) {
-	for (let b = a + 1; b < files.length; b++) {
-		const A = files[a], B = files[b];
-		if (A.archetype !== B.archetype) { continue; }
-		if (sameFamily(A.id, B.id)) { continue; }
-		const f = formSim(A, B);
-		const bar = A.archetype === 'BADGE' ? IOU_COLLIDE_BADGE : IOU_COLLIDE;
-		if (f.sim >= bar) { forms.push({ a: A.id, b: B.id, archetype: A.archetype, ...f }); }
-		else if (f.sim >= IOU_NEAR) { nearForms.push({ a: A.id, b: B.id, archetype: A.archetype, ...f }); }
+for (const lane of byArchetype.values()) {
+	for (let a = 0; a < lane.length; a++) {
+		for (let b = a + 1; b < lane.length; b++) {
+			const A = lane[a], B = lane[b];
+			if (sameFamily(A.id, B.id)) { continue; }
+			const bar = A.archetype === 'BADGE' ? IOU_COLLIDE_BADGE : IOU_COLLIDE;
+			const f = formSim(A, B, IOU_NEAR);
+			if (f.sim >= bar) {
+				forms.push({ a: A.id, b: B.id, archetype: A.archetype, ...f, domains: `${A.domain}/${B.domain}` });
+			} else if (f.sim >= IOU_NEAR) {
+				nearForms.push({ a: A.id, b: B.id, archetype: A.archetype, ...f, domains: `${A.domain}/${B.domain}` });
+			}
+		}
 	}
 }
 
-// folders: the plate is law, so the emblem carries the identity — flag duplicate emblem text
+// folders: the plate is law (R9), so the emblem carries the identity. Two checks —
+// the emblem DESCRIPTION (cheap, catches two slices naming the same object) and the
+// emblem GEOMETRY through the same R8 form score, which is what the F04 cross-slice
+// checklist actually needs: six folder slices ran concurrently and none could see the
+// others' emblems.
 const folderEmblems = new Map();
-for (const f of icons.filter(i => i.kind === 'folder' && !i.id.endsWith('-open'))) {
+const closedFolders = icons.filter(i => i.kind === 'folder' && !i.id.endsWith('-open'));
+for (const f of closedFolders) {
 	const k = (f.emblem ?? '').toLowerCase().trim();
 	if (!k || k.startsWith('none')) { continue; }
 	if (!folderEmblems.has(k)) { folderEmblems.set(k, []); }
 	folderEmblems.get(k).push(f.id);
 }
-const folderDupes = [...folderEmblems.entries()].filter(([, v]) => v.length > 1);
+// a declared family that shares one mark in two hues (F03's gh-workflows / gitea-workflows)
+// is a rhyme, not a duplicate
+const folderDupes = [...folderEmblems.entries()].filter(([, v]) =>
+	v.length > 1 && v.some((x, i) => v.some((y, j) => i !== j && !sameFamily(x, y))));
+
+const folderForms = [], folderNearForms = [];
+for (let a = 0; a < closedFolders.length; a++) {
+	for (let b = a + 1; b < closedFolders.length; b++) {
+		const A = closedFolders[a], B = closedFolders[b];
+		if (sameFamily(A.id, B.id)) { continue; }
+		if (!A.form.includes('1') || !B.form.includes('1')) { continue; }   // the canon bare pair
+		const f = formSim(A, B, IOU_NEAR);
+		if (f.sim >= IOU_COLLIDE) { folderForms.push({ a: A.id, b: B.id, archetype: 'FOLDER', ...f }); }
+		else if (f.sim >= IOU_NEAR) { folderNearForms.push({ a: A.id, b: B.id, archetype: 'FOLDER', ...f }); }
+	}
+}
 
 // ---- report -----------------------------------------------------------------
 
 const accepted = (r) => ACCEPTED.get(pairKey(r.a, r.b));
 const openTwins = twins.filter(t => !accepted(t));
 const openForms = forms.filter(f => !accepted(f));
+const openFolderForms = folderForms.filter(f => !accepted(f));
 
 // The matte band (§6): retints are searched inside it, never outside.
 const MATTE = { sMin: 26, sMax: 72, lMin: 32, lMax: 70 };
@@ -381,52 +726,100 @@ if (argv.includes('--pair')) {
 }
 
 if (argv.includes('--json')) {
-	console.log(JSON.stringify({ twins, separated, nearTwins, forms, nearForms, folderDupes,
-		clusters: cluster(openTwins) }, null, '\t'));
+	console.log(JSON.stringify({ twins, separated, nearTwins, tolerated, forms, nearForms,
+		folderDupes, folderForms, folderNearForms, clusters: cluster(openTwins) }, null, '\t'));
 	process.exit(0);
 }
 
-const row = (r) => `  ${r.a.padEnd(20)} ${r.b.padEnd(20)} ${r.archetype.padEnd(11)} `
-	+ `${file(r.a).dominant} ${file(r.b).dominant}  `
+const hexOf = (id) => (file(id) ?? byId.get(`folder/${id}`)).dominant;
+const row = (r) => `  ${r.a.padEnd(24)} ${r.b.padEnd(24)} ${r.archetype.padEnd(11)} `
+	+ `${hexOf(r.a)} ${hexOf(r.b)}  `
 	+ (r.dh !== undefined ? `dh ${r.dh.toFixed(1).padStart(5)} dl ${r.dl.toFixed(1).padStart(5)} ds ${r.ds.toFixed(1).padStart(5)}  ` : '')
-	+ `form ${r.sim.toFixed(2)} (area ${r.area.toFixed(2)} edge ${r.edge.toFixed(2)})`;
+	+ `form ${r.sim.toFixed(2)} (area ${r.area.toFixed(2)} edge ${r.edge.toFixed(2)})`
+	+ (r.domains ? `  [${r.domains}]` : '');
 
 console.log(`M11 set audit — ${icons.length} icons (${files.length} file, ${icons.length - files.length} folder)`);
 console.log(`R7 thresholds: dhue<${D_HUE} dL<${D_LIGHT} dS<${D_SAT}, neutral lane S<${NEUTRAL_S}`);
 console.log(`R7 SILHOUETTE lane: a colour hit whose form score is < ${FORM_SEP} is separated by form`);
-console.log(`R8 threshold: form score >= ${IOU_COLLIDE} (min of area IoU and outline IoU, 64x64)\n`);
+if (LONGTAIL_FORM_QUALIFIED) {
+	console.log('R7 READING 3 (RATIFIED 2026-09-02): the form qualifier extends to BADGE and'
+		+ ' GLYPH for any pair involving a long-tail icon; core-vs-core keeps the strict rule');
+}
+console.log(`R7 §11.3 scope --scope ${SCOPE}: HARD when either side is core (${files.filter(f => f.core).length} icons)`
+	+ (SCOPE === 'slice' ? ' or both come from one authoring slice' : SCOPE === 'domain' ? ' or both share a worklist domain' : '')
+	+ '; everything else is the tolerated lane');
+console.log(`R8 threshold: form score >= ${IOU_COLLIDE} (BADGE ${IOU_COLLIDE_BADGE}), unscoped; ${FAMILIES.length} R3 families + ${ALIASES.length} alias pairs exempt\n`);
 
-console.log(`== R7 palette twins: ${openTwins.length} open, ${twins.length - openTwins.length} accepted ==`);
+console.log(`== R7 palette twins (HARD lane): ${openTwins.length} open, ${twins.length - openTwins.length} accepted ==`);
 for (const c of cluster(openTwins)) {
 	console.log(` cluster {${c.members.join(', ')}}`);
 	for (const p of c.pairs) { console.log(row(p)); }
 }
 if (!openTwins.length) { console.log('  none'); }
 
-console.log(`\n== R8 form collisions: ${openForms.length} open, ${forms.length - openForms.length} accepted ==`);
+console.log(`\n== R8 form collisions, files: ${openForms.length} open, ${forms.length - openForms.length} accepted ==`);
 for (const f of openForms) { console.log(row(f)); }
 if (!openForms.length) { console.log('  none'); }
 
-if (twins.length - openTwins.length || forms.length - openForms.length) {
+// R9b — RULED 2026-09-02 (review lead): this lane does NOT gate. `--folders-hard` stays
+// available and stays off by default.
+//
+// Two independent reasons, both in spec.md R9b. First, folder emblems MAY share
+// construction where the concepts share the container metaphor: bloc / ngrx-store /
+// devcontainer / vm are four things that each hold something, and an honest concept rhyme
+// is separated by hue and by the context a folder name arrives in, exactly as an R3 family
+// is. Second, the bar is uncalibrated at this scale. 0.72 is the file SILHOUETTE bar,
+// measured on full-size objects; an emblem is a simple shape in an 8.20 box, and the
+// outline term — the thing that tells a shield from a page from a disc at full size —
+// stops discriminating when every candidate outline is the same circle: atom (nucleus in
+// orbit), target (bullseye) and deprecated (slashed circle) score 0.73-0.85 against each
+// other while reading as three different objects. That false cluster is the proof.
+// The lane keeps reporting, because a measured bar for 8.20 px geometry would make it
+// gate; until someone measures one, a file-scale number is not evidence about emblems.
+const FOLDERS_HARD = argv.includes('--folders-hard');
+console.log(`\n== R8 folder emblems (R9b: ${FOLDERS_HARD ? 'gating, --folders-hard' : 'reported only, does not gate - ruled 2026-09-02'}): `
+	+ `${openFolderForms.length} at or over ${IOU_COLLIDE}, ${folderNearForms.length} near ==`);
+for (const f of openFolderForms) { console.log(row(f)); }
+if (!openFolderForms.length) { console.log('  none'); }
+
+if (twins.length - openTwins.length || forms.length - openForms.length || folderForms.length - openFolderForms.length) {
 	console.log('\n== accepted residuals ==');
-	for (const r of [...twins, ...forms].filter(accepted)) { console.log(`  ${r.a} / ${r.b} — ${accepted(r)}`); }
+	for (const r of [...twins, ...forms, ...folderForms].filter(accepted)) {
+		console.log(`  ${r.a} / ${r.b} — ${accepted(r)}`);
+	}
+}
+
+console.log(`\n== R7 §11.3 tolerated lane (cross-domain long-tail): ${tolerated.length} pair(s) ==`);
+{
+	const byDomains = new Map();
+	for (const t of tolerated) {
+		const k = t.domains.split('/').sort().join(' / ');
+		byDomains.set(k, (byDomains.get(k) ?? 0) + 1);
+	}
+	for (const [k, n] of [...byDomains].sort((x, y) => y[1] - x[1])) { console.log(`  ${k.padEnd(24)} ${n}`); }
+	if (!tolerated.length) { console.log('  none'); }
+	if (argv.includes('--tolerated')) { for (const t of tolerated) { console.log(row(t)); } }
 }
 
 console.log(`\n== R7 colour hits separated by form (${separated.length}, SILHOUETTE lane) ==`);
-for (const c of cluster(separated)) { console.log(`  {${c.members.join(', ')}}  ${c.pairs.length} pair(s)`); }
-if (!separated.length) { console.log('  none'); }
+console.log(`  ${cluster(separated).length} hue neighbourhood(s); largest ${Math.max(0, ...cluster(separated).map(c => c.members.length))} icons`);
 
 if (folderDupes.length) {
-	console.log('\n== folder emblems used twice ==');
+	console.log('\n== folder emblems described identically ==');
 	for (const [k, v] of folderDupes) { console.log(`  ${v.join(', ')} — "${k}"`); }
 }
 
 if (argv.includes('--near')) {
 	console.log(`\n== R7 near-misses (${nearTwins.length}) ==`);
 	for (const p of nearTwins.sort((x, y) => x.dh - y.dh)) { console.log(row(p)); }
-	console.log(`\n== R8 near-misses (${nearForms.length}) ==`);
-	for (const p of nearForms.sort((x, y) => y.iou - x.iou)) { console.log(row(p)); }
+	console.log(`\n== R8 near-misses, files (${nearForms.length}) ==`);
+	for (const p of nearForms.sort((x, y) => y.sim - x.sim)) { console.log(row(p)); }
+	console.log(`\n== R8 near-misses, folder emblems (${folderNearForms.length}) ==`);
+	for (const p of folderNearForms.sort((x, y) => y.sim - x.sim)) { console.log(row(p)); }
 }
 
-console.log(`\n${openTwins.length + openForms.length} open finding(s)`);
-process.exit(openTwins.length + openForms.length ? 1 : 0);
+const open = openTwins.length + openForms.length + (FOLDERS_HARD ? openFolderForms.length : 0);
+console.log(`\n${open} open hard finding(s); ${tolerated.length} tolerated (§11.3), `
+	+ `${separated.length} form-separated, ${twins.length - openTwins.length + forms.length - openForms.length} accepted`
+	+ (FOLDERS_HARD ? '' : `, ${openFolderForms.length} folder-emblem reported (R9b: does not gate)`));
+process.exit(open ? 1 : 0);

@@ -17,28 +17,16 @@
 // `mark` the ink that is not the dominant fill (a badge's letters), both as
 // mask*mask '0'/'1' strings.
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { homedir, tmpdir } from 'node:os';
+import { tmpdir } from 'node:os';
+import { chromium } from './chromium.mjs';
 
 const SIZE = 256;
 const MASK = 64;   // shape-mask resolution (SIZE must be a multiple of it)
 
-export function chromium() {
-	const cache = join(homedir(), 'Library/Caches/ms-playwright');
-	const builds = readdirSync(cache)
-		.filter(d => /^chromium-\d+$/.test(d))
-		.sort((a, b) => +b.split('-')[1] - +a.split('-')[1]);
-	for (const b of builds) {
-		const macos = join(cache, b, 'chrome-mac-arm64');
-		for (const app of readdirSync(macos).filter(f => f.endsWith('.app'))) {
-			const bin = join(macos, app, 'Contents/MacOS', app.replace(/\.app$/, ''));
-			if (existsSync(bin)) { return bin; }
-		}
-	}
-	throw new Error(`no Playwright chromium under ${cache}`);
-}
+export { chromium };
 
 /** Literal fills declared in an SVG source, in document order, de-duplicated. */
 export function declaredFills(src) {

@@ -1,0 +1,767 @@
+[
+ {
+  "id": "less",
+  "desc": "letter L",
+  "fill": "#1D365D",
+  "source": "brandColor #1D365D (inventory)",
+  "bytes": 397,
+  "bytesOpen": 444,
+  "box": [
+   2.33,
+   0.8,
+   7.67,
+   9.2
+  ],
+  "w": 5.34,
+  "h": 8.4,
+  "letter": "L cap 8.4u"
+ },
+ {
+  "id": "link",
+  "desc": "two interlocked chain rings on the diagonal",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 562,
+  "bytesOpen": 619,
+  "box": [
+   0.5,
+   0.5,
+   9.5,
+   9.5
+  ],
+  "w": 9,
+  "h": 9,
+  "letter": ""
+ },
+ {
+  "id": "linux",
+  "desc": "Tux penguin — belly knocked out, feet splayed",
+  "fill": "#4E545B",
+  "source": "brandColor #FCC624 is lighter than the tan → neutral (R9 tone law)",
+  "bytes": 681,
+  "bytesOpen": 731,
+  "box": [
+   1,
+   0.2,
+   9,
+   9.9
+  ],
+  "w": 8,
+  "h": 9.7,
+  "letter": ""
+ },
+ {
+  "id": "liquibase",
+  "desc": "two liquid waves",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 615,
+  "bytesOpen": 675,
+  "box": [
+   0.3,
+   0.41,
+   9.7,
+   9.59
+  ],
+  "w": 9.4,
+  "h": 9.18,
+  "letter": ""
+ },
+ {
+  "id": "lottie",
+  "desc": "play triangle knocked out of a rounded plate",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 532,
+  "bytesOpen": 570,
+  "box": [
+   0.4,
+   1.6,
+   9.6,
+   8.4
+  ],
+  "w": 9.2,
+  "h": 6.8,
+  "letter": ""
+ },
+ {
+  "id": "luau",
+  "desc": "Lua orbit — pierced sphere with a moon",
+  "fill": "#4A48A8",
+  "source": "family rhyme with core file lua #6C6ACB, darkened",
+  "bytes": 527,
+  "bytesOpen": 572,
+  "box": [
+   0.14,
+   0.32,
+   9.86,
+   9.67
+  ],
+  "w": 9.72,
+  "h": 9.35,
+  "letter": ""
+ },
+ {
+  "id": "macos",
+  "desc": "Apple silhouette with the bite and leaf",
+  "fill": "#4E545B",
+  "source": "Apple’s own mark is monochrome → neutral",
+  "bytes": 717,
+  "bytesOpen": 780,
+  "box": [
+   0.57,
+   0.1,
+   8.95,
+   9.9
+  ],
+  "w": 8.38,
+  "h": 9.8,
+  "letter": ""
+ },
+ {
+  "id": "mail",
+  "desc": "envelope with a chevron flap",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 555,
+  "bytesOpen": 606,
+  "box": [
+   0.4,
+   1.2,
+   9.6,
+   8.8
+  ],
+  "w": 9.2,
+  "h": 7.6,
+  "letter": ""
+ },
+ {
+  "id": "mappings",
+  "desc": "two columns crossed by an X of links",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 703,
+  "bytesOpen": 752,
+  "box": [
+   0.2,
+   0.6,
+   9.8,
+   9.4
+  ],
+  "w": 9.6,
+  "h": 8.8,
+  "letter": ""
+ },
+ {
+  "id": "mariadb",
+  "desc": "tiered database cylinder — top disc plus a tier line",
+  "fill": "#003545",
+  "source": "brandColor #003545 (inventory)",
+  "bytes": 557,
+  "bytesOpen": 610,
+  "box": [
+   0.7,
+   0.2,
+   9.3,
+   9.8
+  ],
+  "w": 8.6,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "mediawiki",
+  "desc": "letter W",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 715,
+  "bytesOpen": 763,
+  "box": [
+   0.2,
+   1.47,
+   9.8,
+   8.53
+  ],
+  "w": 9.6,
+  "h": 7.06,
+  "letter": "W cap 7.057u"
+ },
+ {
+  "id": "memcached",
+  "desc": "hash grid — two bars each way",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 496,
+  "bytesOpen": 545,
+  "box": [
+   0.2,
+   0.2,
+   9.8,
+   9.8
+  ],
+  "w": 9.6,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "mercurial",
+  "desc": "commit trunk with a side branch (VCS family)",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 708,
+  "bytesOpen": 742,
+  "box": [
+   0.8,
+   0.3,
+   9.4,
+   9.7
+  ],
+  "w": 8.6,
+  "h": 9.4,
+  "letter": ""
+ },
+ {
+  "id": "messages",
+  "desc": "two offset chat bubbles",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 676,
+  "bytesOpen": 733,
+  "box": [
+   0.3,
+   0.4,
+   9.7,
+   9.9
+  ],
+  "w": 9.4,
+  "h": 9.5,
+  "letter": ""
+ },
+ {
+  "id": "meta",
+  "desc": "label tag with an eyelet",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 444,
+  "bytesOpen": 500,
+  "box": [
+   0.4,
+   1.8,
+   9.4,
+   8.2
+  ],
+  "w": 9,
+  "h": 6.4,
+  "letter": ""
+ },
+ {
+  "id": "meteor",
+  "desc": "comet head with a forked tail",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 505,
+  "bytesOpen": 564,
+  "box": [
+   0.19,
+   0.4,
+   9.6,
+   9.41
+  ],
+  "w": 9.41,
+  "h": 9.01,
+  "letter": ""
+ },
+ {
+  "id": "metro",
+  "desc": "train front — windshield and two lamps",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 777,
+  "bytesOpen": 826,
+  "box": [
+   0.6,
+   0.4,
+   9.4,
+   9.6
+  ],
+  "w": 8.8,
+  "h": 9.2,
+  "letter": ""
+ },
+ {
+  "id": "migrations",
+  "desc": "box → box, state moved forward",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 649,
+  "bytesOpen": 709,
+  "box": [
+   0,
+   2.2,
+   10,
+   7.8
+  ],
+  "w": 10,
+  "h": 5.6,
+  "letter": ""
+ },
+ {
+  "id": "minecraft",
+  "desc": "pickaxe",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 422,
+  "bytesOpen": 475,
+  "box": [
+   0.5,
+   1.74,
+   9.5,
+   9.66
+  ],
+  "w": 9,
+  "h": 7.92,
+  "letter": ""
+ },
+ {
+  "id": "minikube",
+  "desc": "Kubernetes heptagon ring with a hub",
+  "fill": "#2C5CA8",
+  "source": "kubernetes brand #326CE5, darkened",
+  "bytes": 512,
+  "bytesOpen": 574,
+  "box": [
+   0.17,
+   0.05,
+   9.83,
+   9.46
+  ],
+  "w": 9.65,
+  "h": 9.41,
+  "letter": ""
+ },
+ {
+  "id": "mjml",
+  "desc": "letter M",
+  "fill": "#A3453A",
+  "source": "MJML coral #F45E43, darkened",
+  "bytes": 839,
+  "bytesOpen": 897,
+  "box": [
+   0.38,
+   0.8,
+   9.62,
+   9.2
+  ],
+  "w": 9.24,
+  "h": 8.4,
+  "letter": "M cap 8.4u"
+ },
+ {
+  "id": "mobile",
+  "desc": "phone with a screen cut-out",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 648,
+  "bytesOpen": 691,
+  "box": [
+   1.8,
+   0.2,
+   8.2,
+   9.8
+  ],
+  "w": 6.4,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "module",
+  "desc": "IC chip with eight pins",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 816,
+  "bytesOpen": 871,
+  "box": [
+   0.3,
+   0.3,
+   9.7,
+   9.7
+  ],
+  "w": 9.4,
+  "h": 9.4,
+  "letter": ""
+ },
+ {
+  "id": "mojo",
+  "desc": "flame",
+  "fill": "#A8481F",
+  "source": "Mojo flame orange, darkened",
+  "bytes": 507,
+  "bytesOpen": 564,
+  "box": [
+   1.1,
+   0.2,
+   8.9,
+   9.8
+  ],
+  "w": 7.8,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "molecule",
+  "desc": "three atoms joined by bonds",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 712,
+  "bytesOpen": 730,
+  "box": [
+   0.1,
+   0.1,
+   9.9,
+   9.9
+  ],
+  "w": 9.8,
+  "h": 9.8,
+  "letter": ""
+ },
+ {
+  "id": "mongodb",
+  "desc": "MongoDB leaf with its vein",
+  "fill": "#3C7A4E",
+  "source": "MongoDB green #47A248, darkened",
+  "bytes": 475,
+  "bytesOpen": 531,
+  "box": [
+   1.88,
+   0.3,
+   8.12,
+   9.9
+  ],
+  "w": 6.25,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "moon",
+  "desc": "crescent moon",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 381,
+  "bytesOpen": 432,
+  "box": [
+   0.4,
+   0.4,
+   9.13,
+   9.59
+  ],
+  "w": 8.73,
+  "h": 9.19,
+  "letter": ""
+ },
+ {
+  "id": "mypy",
+  "desc": "magnifier — the type checker’s look",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 490,
+  "bytesOpen": 537,
+  "box": [
+   0.6,
+   0.6,
+   9.68,
+   9.68
+  ],
+  "w": 9.08,
+  "h": 9.08,
+  "letter": ""
+ },
+ {
+  "id": "mysql",
+  "desc": "MySQL dolphin — detached dorsal fin, forked fluke",
+  "fill": "#4479A1",
+  "source": "brandColor #4479A1 (inventory)",
+  "bytes": 495,
+  "bytesOpen": 534,
+  "box": [
+   0.2,
+   0.6,
+   9.9,
+   9.3
+  ],
+  "w": 9.7,
+  "h": 8.7,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-actions",
+  "desc": "lightning bolt (dispatch)",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 381,
+  "bytesOpen": 430,
+  "box": [
+   1.2,
+   0.2,
+   9,
+   9.8
+  ],
+  "w": 7.8,
+  "h": 9.6,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-effects",
+  "desc": "source dot with two radiating waves",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 528,
+  "bytesOpen": 572,
+  "box": [
+   0,
+   0.3,
+   9.9,
+   9.7
+  ],
+  "w": 9.9,
+  "h": 9.4,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-entities",
+  "desc": "three-row, two-column record table",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 1204,
+  "bytesOpen": 1276,
+  "box": [
+   0.2,
+   0.4,
+   9.8,
+   9.6
+  ],
+  "w": 9.6,
+  "h": 9.2,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-reducer",
+  "desc": "funnel",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 380,
+  "bytesOpen": 426,
+  "box": [
+   0.4,
+   0.6,
+   9.6,
+   9.4
+  ],
+  "w": 9.2,
+  "h": 8.8,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-selectors",
+  "desc": "pointer — picking one thing out",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 394,
+  "bytesOpen": 445,
+  "box": [
+   1.4,
+   0.5,
+   8.6,
+   9.9
+  ],
+  "w": 7.2,
+  "h": 9.4,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-state",
+  "desc": "toggle switch",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 554,
+  "bytesOpen": 610,
+  "box": [
+   0.2,
+   2,
+   9.8,
+   8
+  ],
+  "w": 9.6,
+  "h": 6,
+  "letter": ""
+ },
+ {
+  "id": "ngrx-store",
+  "desc": "container holding one block",
+  "fill": "#7A3E92",
+  "source": "NgRx family purple (R3)",
+  "bytes": 777,
+  "bytesOpen": 817,
+  "box": [
+   0.4,
+   0.4,
+   9.6,
+   9.6
+  ],
+  "w": 9.2,
+  "h": 9.2,
+  "letter": ""
+ },
+ {
+  "id": "nix",
+  "desc": "six-armed snowflake",
+  "fill": "#5277C3",
+  "source": "brandColor #5277C3 (inventory)",
+  "bytes": 447,
+  "bytesOpen": 500,
+  "box": [
+   0.2,
+   0.34,
+   9.8,
+   9.66
+  ],
+  "w": 9.6,
+  "h": 9.32,
+  "letter": ""
+ },
+ {
+  "id": "notebooks",
+  "desc": "notebook with a bookmark ribbon",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 549,
+  "bytesOpen": 581,
+  "box": [
+   1,
+   0.6,
+   9,
+   9.4
+  ],
+  "w": 8,
+  "h": 8.8,
+  "letter": ""
+ },
+ {
+  "id": "notification",
+  "desc": "bell",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 541,
+  "bytesOpen": 587,
+  "box": [
+   0.6,
+   0.05,
+   9.4,
+   9.1
+  ],
+  "w": 8.8,
+  "h": 9.05,
+  "letter": ""
+ },
+ {
+  "id": "nuget",
+  "desc": "package with a ribbon and a top tab",
+  "fill": "#0B4A80",
+  "source": "NuGet blue #004880, lifted",
+  "bytes": 658,
+  "bytesOpen": 710,
+  "box": [
+   0.6,
+   0.4,
+   9.4,
+   9.4
+  ],
+  "w": 8.8,
+  "h": 9,
+  "letter": ""
+ },
+ {
+  "id": "obsidian",
+  "desc": "faceted gem",
+  "fill": "#6A4BA8",
+  "source": "Obsidian purple, darkened",
+  "bytes": 431,
+  "bytesOpen": 486,
+  "box": [
+   0.6,
+   0.3,
+   9.4,
+   9.7
+  ],
+  "w": 8.8,
+  "h": 9.4,
+  "letter": ""
+ },
+ {
+  "id": "opencode",
+  "desc": "terminal plate with a prompt caret",
+  "fill": "#4E545B",
+  "source": "monochrome brand → neutral",
+  "bytes": 610,
+  "bytesOpen": 653,
+  "box": [
+   0.4,
+   1.4,
+   9.6,
+   8.6
+  ],
+  "w": 9.2,
+  "h": 7.2,
+  "letter": ""
+ },
+ {
+  "id": "organism",
+  "desc": "seven-cell rosette",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 714,
+  "bytesOpen": 794,
+  "box": [
+   0.3,
+   0.78,
+   9.7,
+   9.22
+  ],
+  "w": 9.4,
+  "h": 8.43,
+  "letter": ""
+ },
+ {
+  "id": "other",
+  "desc": "ellipsis on the diagonal",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 508,
+  "bytesOpen": 537,
+  "box": [
+   0,
+   0,
+   10,
+   10
+  ],
+  "w": 10,
+  "h": 10,
+  "letter": ""
+ },
+ {
+  "id": "paket",
+  "desc": "two stacked parcels",
+  "fill": "#4E545B",
+  "source": "no brand → neutral",
+  "bytes": 616,
+  "bytesOpen": 667,
+  "box": [
+   0.4,
+   0.4,
+   9.6,
+   9.6
+  ],
+  "w": 9.2,
+  "h": 9.2,
+  "letter": ""
+ }
+]

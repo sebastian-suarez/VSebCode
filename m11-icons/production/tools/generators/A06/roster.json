@@ -1,0 +1,798 @@
+[
+ {
+  "id": "poetry",
+  "arch": "BADGE",
+  "fills": [
+   "#3A78C0",
+   "#FFFFFF"
+  ],
+  "src": "brandColor #60A5FA → matte, value-shifted for R7",
+  "bytes": 452
+ },
+ {
+  "id": "polyglot",
+  "arch": "GLYPH",
+  "fills": [
+   "#B06BC8"
+  ],
+  "src": "no brand → violet (.NET interactive)",
+  "bytes": 205
+ },
+ {
+  "id": "polymer",
+  "arch": "GLYPH",
+  "fills": [
+   "#EA9FC4"
+  ],
+  "src": "no brand → Polymer magenta (vsicons)",
+  "bytes": 179
+ },
+ {
+  "id": "poml",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#7C6FAF"
+  ],
+  "src": "no brand → violet (prompt markup)",
+  "bytes": 395
+ },
+ {
+  "id": "pony",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#B07D5B"
+  ],
+  "src": "no brand → saddle tan",
+  "bytes": 154
+ },
+ {
+  "id": "postscript",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#BE5A4C"
+  ],
+  "src": "no brand → Adobe red (pdf family rhyme)",
+  "bytes": 393
+ },
+ {
+  "id": "powerbi",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#D8B84A"
+  ],
+  "src": "no brand → Power BI amber (#F2C811 matte)",
+  "bytes": 162
+ },
+ {
+  "id": "powershell-format",
+  "arch": "BADGE",
+  "fills": [
+   "#6A95D2",
+   "#FFFFFF"
+  ],
+  "src": "core powershell #6A95D2 (R3 family)",
+  "bytes": 1169
+ },
+ {
+  "id": "powershell-psd",
+  "arch": "BADGE",
+  "fills": [
+   "#6A95D2",
+   "#FFFFFF"
+  ],
+  "src": "core powershell #6A95D2 (R3 family)",
+  "bytes": 1689
+ },
+ {
+  "id": "powershell-psm",
+  "arch": "BADGE",
+  "fills": [
+   "#6A95D2",
+   "#FFFFFF"
+  ],
+  "src": "core powershell #6A95D2 (R3 family)",
+  "bytes": 1548
+ },
+ {
+  "id": "powershell-types",
+  "arch": "BADGE",
+  "fills": [
+   "#6A95D2",
+   "#FFFFFF"
+  ],
+  "src": "core powershell #6A95D2 (R3 family)",
+  "bytes": 1291
+ },
+ {
+  "id": "prismaconfig",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#8592AD"
+  ],
+  "src": "core prisma #8592AD (R3 family)",
+  "bytes": 152
+ },
+ {
+  "id": "processing",
+  "arch": "BADGE",
+  "fills": [
+   "#46586E",
+   "#FFFFFF"
+  ],
+  "src": "no brand → Processing navy",
+  "bytes": 1616
+ },
+ {
+  "id": "processinglang",
+  "arch": "GLYPH",
+  "fills": [
+   "#46586E"
+  ],
+  "src": "core-of-slice processing navy (R3 family)",
+  "bytes": 801
+ },
+ {
+  "id": "progress",
+  "arch": "GLYPH",
+  "fills": [
+   "#68AF5A"
+  ],
+  "src": "no brand → Progress green",
+  "bytes": 881
+ },
+ {
+  "id": "prolog",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#B5703F"
+  ],
+  "src": "no brand → owl tan (vsicons)",
+  "bytes": 340
+ },
+ {
+  "id": "prometheus",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#CF5C3A"
+  ],
+  "src": "brandColor #E6522C → matte",
+  "bytes": 256
+ },
+ {
+  "id": "prql",
+  "arch": "BADGE",
+  "fills": [
+   "#4E7A72",
+   "#FFFFFF"
+  ],
+  "src": "no brand → muted query slate (neutral lane, clears sqlite)",
+  "bytes": 1260
+ },
+ {
+  "id": "publisher",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#3F8C7E",
+   "#FFFFFF"
+  ],
+  "src": "no brand → Publisher teal (#077568 matte)",
+  "bytes": 453
+ },
+ {
+  "id": "pug",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#A86454"
+  ],
+  "src": "no brand → pug brown (material / vsicons)",
+  "bytes": 426
+ },
+ {
+  "id": "puppet",
+  "arch": "BADGE",
+  "fills": [
+   "#B8862F",
+   "#FFFFFF"
+  ],
+  "src": "no brand → Puppet amber (#FFAE1A matte, dropped for R7)",
+  "bytes": 782
+ },
+ {
+  "id": "purescript",
+  "arch": "BADGE",
+  "fills": [
+   "#A0A8BC",
+   "#232A38"
+  ],
+  "src": "no brand → PureScript slate (#1D222D lifted)",
+  "bytes": 1082
+ },
+ {
+  "id": "pyret",
+  "arch": "BADGE",
+  "fills": [
+   "#9E6B85",
+   "#FFFFFF"
+  ],
+  "src": "no brand → plum",
+  "bytes": 1258
+ },
+ {
+  "id": "pyscript",
+  "arch": "GLYPH",
+  "fills": [
+   "#3D7FB0"
+  ],
+  "src": "core python #3776AB → matte (R3 python family)",
+  "bytes": 903
+ },
+ {
+  "id": "pythonconfig",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#3D7FB0"
+  ],
+  "src": "core python #3776AB → matte (R3 python family)",
+  "bytes": 243
+ },
+ {
+  "id": "pythowo",
+  "arch": "BADGE",
+  "fills": [
+   "#D488B8",
+   "#3E2036"
+  ],
+  "src": "no brand → magenta",
+  "bytes": 1393
+ },
+ {
+  "id": "pytyped",
+  "arch": "GLYPH",
+  "fills": [
+   "#3D7FB0"
+  ],
+  "src": "core python #3776AB → matte (R3 python family)",
+  "bytes": 163
+ },
+ {
+  "id": "q",
+  "arch": "BADGE",
+  "fills": [
+   "#B34DBC",
+   "#FFFFFF"
+  ],
+  "src": "no brand → violet (free BADGE band)",
+  "bytes": 648
+ },
+ {
+  "id": "qbs",
+  "arch": "GLYPH",
+  "fills": [
+   "#4AA85F"
+  ],
+  "src": "Qt green #41CD52 → matte (R3 Qt family)",
+  "bytes": 1574
+ },
+ {
+  "id": "qlikview",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#3E9358"
+  ],
+  "src": "no brand → Qlik green (#009845 matte)",
+  "bytes": 240
+ },
+ {
+  "id": "qml",
+  "arch": "GLYPH",
+  "fills": [
+   "#4AA85F"
+  ],
+  "src": "Qt green #41CD52 → matte (R3 Qt family)",
+  "bytes": 1160
+ },
+ {
+  "id": "qmldir",
+  "arch": "GLYPH",
+  "fills": [
+   "#4AA85F"
+  ],
+  "src": "Qt green #41CD52 → matte (R3 Qt family)",
+  "bytes": 1053
+ },
+ {
+  "id": "qrc",
+  "arch": "GLYPH",
+  "fills": [
+   "#4AA85F"
+  ],
+  "src": "Qt green #41CD52 → matte (R3 Qt family)",
+  "bytes": 1210
+ },
+ {
+  "id": "qsharp",
+  "arch": "BADGE",
+  "fills": [
+   "#52348C",
+   "#FFFFFF"
+  ],
+  "src": "no brand → Microsoft Quantum violet",
+  "bytes": 1010
+ },
+ {
+  "id": "quarkdown",
+  "arch": "GLYPH",
+  "fills": [
+   "#6FB0CE"
+  ],
+  "src": "canon markdown #519ABA, lifted (R3 markdown family)",
+  "bytes": 899
+ },
+ {
+  "id": "quarto",
+  "arch": "GLYPH",
+  "fills": [
+   "#ADCFEA"
+  ],
+  "src": "Quarto blue #75AADB → light matte",
+  "bytes": 1512
+ },
+ {
+  "id": "quokka",
+  "arch": "BADGE",
+  "fills": [
+   "#B0578E",
+   "#FFFFFF"
+  ],
+  "src": "no brand → magenta (material)",
+  "bytes": 798
+ },
+ {
+  "id": "qwik",
+  "arch": "BADGE",
+  "fills": [
+   "#9E7AD8",
+   "#FFFFFF"
+  ],
+  "src": "brandColor #AC7EF4 → matte",
+  "bytes": 208
+ },
+ {
+  "id": "ra-syntax-tree",
+  "arch": "GLYPH",
+  "fills": [
+   "#9E7266"
+  ],
+  "src": "core rust #A0523C, desaturated (R3 rust family, neutral lane)",
+  "bytes": 289
+ },
+ {
+  "id": "racket",
+  "arch": "GLYPH",
+  "fills": [
+   "#BE5049"
+  ],
+  "src": "no brand → Racket red",
+  "bytes": 544
+ },
+ {
+  "id": "rake",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#A94152"
+  ],
+  "src": "core ruby #A94152 (R3 ruby family)",
+  "bytes": 245
+ },
+ {
+  "id": "raku",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#B573B8"
+  ],
+  "src": "no brand → Camelia violet",
+  "bytes": 532
+ },
+ {
+  "id": "raml",
+  "arch": "BADGE",
+  "fills": [
+   "#333D6B",
+   "#FFFFFF"
+  ],
+  "src": "no brand → deep indigo (neutral lane)",
+  "bytes": 1501
+ },
+ {
+  "id": "razor",
+  "arch": "GLYPH",
+  "fills": [
+   "#6B4EC4"
+  ],
+  "src": "no brand → .NET violet (#512BD4 matte)",
+  "bytes": 1147
+ },
+ {
+  "id": "rbxmk",
+  "arch": "GLYPH",
+  "fills": [
+   "#8A323C"
+  ],
+  "src": "roblox red, darkened (R3 roblox family)",
+  "bytes": 1128
+ },
+ {
+  "id": "reacttemplate",
+  "arch": "BADGE",
+  "fills": [
+   "#46B5D1",
+   "#10262E"
+  ],
+  "src": "core reactjs #46B5D1 (R3 react family)",
+  "bytes": 671
+ },
+ {
+  "id": "reason",
+  "arch": "GLYPH",
+  "fills": [
+   "#A8502E"
+  ],
+  "src": "no brand → Reason red-orange (R3 rescript family)",
+  "bytes": 772
+ },
+ {
+  "id": "red",
+  "arch": "BADGE",
+  "fills": [
+   "#8A383C",
+   "#FFFFFF"
+  ],
+  "src": "no brand → deep red",
+  "bytes": 1364
+ },
+ {
+  "id": "redux-action",
+  "arch": "BADGE",
+  "fills": [
+   "#7A55B0",
+   "#FFFFFF"
+  ],
+  "src": "Redux #764ABC → matte (R3 redux family)",
+  "bytes": 207
+ },
+ {
+  "id": "redux-reducer",
+  "arch": "BADGE",
+  "fills": [
+   "#7A55B0",
+   "#FFFFFF"
+  ],
+  "src": "Redux #764ABC → matte (R3 redux family)",
+  "bytes": 209
+ },
+ {
+  "id": "redux-selector",
+  "arch": "BADGE",
+  "fills": [
+   "#7A55B0",
+   "#FFFFFF"
+  ],
+  "src": "Redux #764ABC → matte (R3 redux family)",
+  "bytes": 342
+ },
+ {
+  "id": "redux-store",
+  "arch": "BADGE",
+  "fills": [
+   "#7A55B0",
+   "#FFFFFF"
+  ],
+  "src": "Redux #764ABC → matte (R3 redux family)",
+  "bytes": 246
+ },
+ {
+  "id": "rego",
+  "arch": "BADGE",
+  "fills": [
+   "#6E8299",
+   "#FFFFFF"
+  ],
+  "src": "no brand → slate (neutral lane)",
+  "bytes": 1946
+ },
+ {
+  "id": "replit",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#D96A2E"
+  ],
+  "src": "brandColor #F26207 → matte",
+  "bytes": 403
+ },
+ {
+  "id": "rescript",
+  "arch": "BADGE",
+  "fills": [
+   "#D14A4E",
+   "#FFFFFF"
+  ],
+  "src": "no brand → ReScript red (#E6484F matte)",
+  "bytes": 901
+ },
+ {
+  "id": "rescript-interface",
+  "arch": "BADGE",
+  "fills": [
+   "#D14A4E",
+   "#FFFFFF"
+  ],
+  "src": "ReScript red (R3 rescript family)",
+  "bytes": 666
+ },
+ {
+  "id": "restql",
+  "arch": "BADGE",
+  "fills": [
+   "#6FB8AE",
+   "#17352F"
+  ],
+  "src": "no brand → light teal (clears sqlite / go)",
+  "bytes": 939
+ },
+ {
+  "id": "rexx",
+  "arch": "BADGE",
+  "fills": [
+   "#888830",
+   "#FFFFFF"
+  ],
+  "src": "no brand → muted gold",
+  "bytes": 1416
+ },
+ {
+  "id": "riot",
+  "arch": "BADGE",
+  "fills": [
+   "#DD7C58",
+   "#3A1A0E"
+  ],
+  "src": "no brand → Riot red, value-lifted for R7",
+  "bytes": 1340
+ },
+ {
+  "id": "ripple",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#3EA8A0"
+  ],
+  "src": "no brand → water teal",
+  "bytes": 441
+ },
+ {
+  "id": "rmd",
+  "arch": "GLYPH",
+  "fills": [
+   "#3D6EC8"
+  ],
+  "src": "core r #3D6EC8 (R3 r family)",
+  "bytes": 1316
+ },
+ {
+  "id": "rnc",
+  "arch": "BADGE",
+  "fills": [
+   "#7C93A6",
+   "#FFFFFF"
+  ],
+  "src": "core xml #7C93A6 (schema kin, neutral lane)",
+  "bytes": 1045
+ },
+ {
+  "id": "roblox",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#C0433F"
+  ],
+  "src": "no brand → Roblox red",
+  "bytes": 181
+ },
+ {
+  "id": "robotframework",
+  "arch": "BADGE",
+  "fills": [
+   "#6E8496",
+   "#FFFFFF"
+  ],
+  "src": "no brand → slate (neutral lane)",
+  "bytes": 544
+ },
+ {
+  "id": "ron",
+  "arch": "BADGE",
+  "fills": [
+   "#A0523C",
+   "#FFFFFF"
+  ],
+  "src": "core rust #A0523C (R3 rust family)",
+  "bytes": 1075
+ },
+ {
+  "id": "routing",
+  "arch": "GLYPH",
+  "fills": [
+   "#3F827A"
+  ],
+  "src": "no brand → teal",
+  "bytes": 196
+ },
+ {
+  "id": "rproj",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#78828E",
+   "#4C87DC"
+  ],
+  "src": "R logo grey + core r blue, lifted (R2 two-tone)",
+  "bytes": 430
+ },
+ {
+  "id": "rss",
+  "arch": "GLYPH",
+  "fills": [
+   "#D8802E"
+  ],
+  "src": "no brand → RSS orange (#E8862E matte)",
+  "bytes": 258
+ },
+ {
+  "id": "rust-toolchain",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#B85F3E"
+  ],
+  "src": "core rust #A0523C, lifted for silhouette contrast (R3 rust family)",
+  "bytes": 541
+ },
+ {
+  "id": "s-lang",
+  "arch": "BADGE",
+  "fills": [
+   "#7E8A96",
+   "#FFFFFF"
+  ],
+  "src": "no brand → steel grey (neutral lane)",
+  "bytes": 821
+ },
+ {
+  "id": "salesforce",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#3E9ACF"
+  ],
+  "src": "no brand → Salesforce blue (#00A1E0 matte)",
+  "bytes": 338
+ },
+ {
+  "id": "saltstack",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#6E9EB0"
+  ],
+  "src": "no brand → salt blue-grey",
+  "bytes": 378
+ },
+ {
+  "id": "san",
+  "arch": "BADGE",
+  "fills": [
+   "#8E88A8",
+   "#FFFFFF"
+  ],
+  "src": "no brand → violet-grey (neutral lane)",
+  "bytes": 1530
+ },
+ {
+  "id": "sas",
+  "arch": "BADGE",
+  "fills": [
+   "#A8C6E8",
+   "#1E3A5C"
+  ],
+  "src": "SAS blue #0766D1 → light plate (clears the badge blues)",
+  "bytes": 1622
+ },
+ {
+  "id": "sbt",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#C93A4A"
+  ],
+  "src": "core scala #C93A4A (R3 scala family)",
+  "bytes": 414
+ },
+ {
+  "id": "scheme",
+  "arch": "BADGE",
+  "fills": [
+   "#8E5A82",
+   "#FFFFFF"
+  ],
+  "src": "no brand → plum",
+  "bytes": 1452
+ },
+ {
+  "id": "scilab",
+  "arch": "GLYPH",
+  "fills": [
+   "#7E86C0"
+  ],
+  "src": "no brand → indigo",
+  "bytes": 367
+ },
+ {
+  "id": "scons",
+  "arch": "BADGE",
+  "fills": [
+   "#8A8078",
+   "#FFFFFF"
+  ],
+  "src": "no brand → taupe (neutral lane)",
+  "bytes": 1218
+ },
+ {
+  "id": "script",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#A8998A"
+  ],
+  "src": "no brand → parchment tan (neutral lane)",
+  "bytes": 395
+ },
+ {
+  "id": "scss",
+  "arch": "BADGE",
+  "fills": [
+   "#C4708F",
+   "#FFFFFF"
+  ],
+  "src": "brandColor #CC6699 → core sass matte (R3 sass family)",
+  "bytes": 2026
+ },
+ {
+  "id": "sdlang",
+  "arch": "BADGE",
+  "fills": [
+   "#7E9E5E",
+   "#FFFFFF"
+  ],
+  "src": "no brand → olive",
+  "bytes": 1184
+ },
+ {
+  "id": "search",
+  "arch": "GLYPH",
+  "fills": [
+   "#8A9AA8"
+  ],
+  "src": "no brand → slate (neutral lane)",
+  "bytes": 293
+ },
+ {
+  "id": "search-result",
+  "arch": "GLYPH",
+  "fills": [
+   "#8A9AA8"
+  ],
+  "src": "slate (R3 search family)",
+  "bytes": 300
+ },
+ {
+  "id": "sentry",
+  "arch": "SILHOUETTE",
+  "fills": [
+   "#8579B8"
+  ],
+  "src": "brandColor #362D59 lifted (§6.3)",
+  "bytes": 144
+ }
+]

@@ -1,0 +1,354 @@
+[
+ {
+  "id": "spin",
+  "fill": "#4E545B",
+  "desc": "broken ring + arrowhead (rotation)",
+  "source": "no brand → neutral",
+  "bytes": 420,
+  "bytesOpen": 472
+ },
+ {
+  "id": "src-tauri",
+  "fill": "#4E545B",
+  "desc": "app-window frame with a content slot (tauri file mark reduced)",
+  "source": "tauri #D19A3C rejected (tan-hue clash) → neutral",
+  "bytes": 488,
+  "bytesOpen": 531
+ },
+ {
+  "id": "sso",
+  "fill": "#4E545B",
+  "desc": "key: ringed bow, shaft, one tooth",
+  "source": "no brand → neutral",
+  "bytes": 513,
+  "bytesOpen": 584
+ },
+ {
+  "id": "stack",
+  "fill": "#4E545B",
+  "desc": "layers: lead rhombus over a chevron band",
+  "source": "no brand → neutral",
+  "bytes": 409,
+  "bytesOpen": 474
+ },
+ {
+  "id": "stencil",
+  "fill": "#4E545B",
+  "desc": "stencil plate with a punched triangle",
+  "source": "no brand → neutral",
+  "bytes": 483,
+  "bytesOpen": 527
+ },
+ {
+  "id": "store",
+  "fill": "#4E545B",
+  "desc": "shopping bag: looped handle over a body",
+  "source": "no brand → neutral",
+  "bytes": 560,
+  "bytesOpen": 601
+ },
+ {
+  "id": "story",
+  "fill": "#A33C76",
+  "desc": "book with a spine rule and a bookmark notch",
+  "source": "brand #D0559B → #A33C76",
+  "bytes": 554,
+  "bytesOpen": 618
+ },
+ {
+  "id": "stylus",
+  "fill": "#33383D",
+  "desc": "hollow ink droplet (outlined against the solid theme drop)",
+  "source": "brand #333333 → #33383D",
+  "bytes": 510,
+  "bytesOpen": 556
+ },
+ {
+  "id": "sublime",
+  "fill": "#4E545B",
+  "desc": "letterpath “S” (Sublime wordmark)",
+  "source": "brand #FF9800 rejected (tan-hue clash) → neutral",
+  "bytes": 931,
+  "bytesOpen": 997,
+  "ink": {
+   "x1": 8.109,
+   "y1": 6.97,
+   "x2": 12.211,
+   "y2": 12.337,
+   "w": 4.102,
+   "h": 5.367
+  }
+ },
+ {
+  "id": "syntax",
+  "fill": "#4E545B",
+  "desc": "word bar over a spellcheck zigzag",
+  "source": "no brand → neutral",
+  "bytes": 464,
+  "bytesOpen": 523
+ },
+ {
+  "id": "target",
+  "fill": "#4E545B",
+  "desc": "bullseye: ring + centre dot",
+  "source": "no brand → neutral",
+  "bytes": 494,
+  "bytesOpen": 548
+ },
+ {
+  "id": "taskfile",
+  "fill": "#4E545B",
+  "desc": "run triangle (task runner)",
+  "source": "no brand → neutral",
+  "bytes": 350,
+  "bytesOpen": 398
+ },
+ {
+  "id": "tasks",
+  "fill": "#4E545B",
+  "desc": "clipboard with two ruled lines",
+  "source": "no brand → neutral",
+  "bytes": 654,
+  "bytesOpen": 693
+ },
+ {
+  "id": "telegram",
+  "fill": "#186C96",
+  "desc": "paper plane",
+  "source": "brand #26A5E4 → #186C96",
+  "bytes": 369,
+  "bytesOpen": 421
+ },
+ {
+  "id": "television",
+  "fill": "#4E545B",
+  "desc": "TV set: screen with rabbit-ear antennae",
+  "source": "no brand → neutral",
+  "bytes": 529,
+  "bytesOpen": 574
+ },
+ {
+  "id": "toc",
+  "fill": "#4E545B",
+  "desc": "bulleted contents list",
+  "source": "no brand → neutral",
+  "bytes": 618,
+  "bytesOpen": 680
+ },
+ {
+  "id": "tools",
+  "fill": "#4E545B",
+  "desc": "open-end wrench",
+  "source": "no brand → neutral",
+  "bytes": 496,
+  "bytesOpen": 556
+ },
+ {
+  "id": "trash",
+  "fill": "#4E545B",
+  "desc": "bin: lid bar over a tapered can",
+  "source": "no brand → neutral",
+  "bytes": 482,
+  "bytesOpen": 537
+ },
+ {
+  "id": "travis",
+  "fill": "#226B6F",
+  "desc": "build-bot head with an antenna",
+  "source": "brand #3EAAAF → #226B6F",
+  "bytes": 609,
+  "bytesOpen": 659
+ },
+ {
+  "id": "trigger",
+  "fill": "#4E545B",
+  "desc": "bell (event / webhook)",
+  "source": "no brand → neutral",
+  "bytes": 498,
+  "bytesOpen": 543
+ },
+ {
+  "id": "trunk",
+  "fill": "#4E545B",
+  "desc": "trunked conifer",
+  "source": "no brand → neutral",
+  "bytes": 426,
+  "bytesOpen": 480
+ },
+ {
+  "id": "ui",
+  "fill": "#4E545B",
+  "desc": "mouse pointer",
+  "source": "no brand → neutral",
+  "bytes": 393,
+  "bytesOpen": 446
+ },
+ {
+  "id": "unity",
+  "fill": "#2B2F33",
+  "desc": "isometric cube: hexagon with seamed faces",
+  "source": "brand #000000 → #2B2F33",
+  "bytes": 477,
+  "bytesOpen": 527
+ },
+ {
+  "id": "update",
+  "fill": "#4E545B",
+  "desc": "double chevron up (upgrade)",
+  "source": "no brand → neutral",
+  "bytes": 434,
+  "bytesOpen": 502
+ },
+ {
+  "id": "upload",
+  "fill": "#4E545B",
+  "desc": "arrow rising out of an open tray",
+  "source": "no brand → neutral",
+  "bytes": 476,
+  "bytesOpen": 533
+ },
+ {
+  "id": "vagrant",
+  "fill": "#1450B8",
+  "desc": "split “V” of two angled slabs",
+  "source": "brand #1868F2 → #1450B8",
+  "bytes": 405,
+  "bytesOpen": 454
+ },
+ {
+  "id": "verdaccio",
+  "fill": "#2F6B4E",
+  "desc": "parrot head (registry mascot)",
+  "source": "no brand → #2F6B4E",
+  "bytes": 475,
+  "bytesOpen": 520
+ },
+ {
+  "id": "vitepress",
+  "fill": "#4A4FC4",
+  "desc": "vite bolt",
+  "source": "brand #646CFF → #4A4FC4",
+  "bytes": 383,
+  "bytesOpen": 428
+ },
+ {
+  "id": "vm",
+  "fill": "#4E545B",
+  "desc": "machine inside a machine (nested frames)",
+  "source": "no brand → neutral",
+  "bytes": 623,
+  "bytesOpen": 670
+ },
+ {
+  "id": "vs",
+  "fill": "#4A2A7A",
+  "desc": "opposed ribbon halves (Visual Studio)",
+  "source": "brand #5C2D91 → #4A2A7A",
+  "bytes": 378,
+  "bytesOpen": 432
+ },
+ {
+  "id": "vscode-test",
+  "fill": "#0A5081",
+  "desc": "test flask",
+  "source": "family with folder/vscode #0A5081",
+  "bytes": 423,
+  "bytesOpen": 472
+ },
+ {
+  "id": "vue-directives",
+  "fill": "#276B54",
+  "desc": "vue chevron",
+  "source": "brand #4CB392 → #276B54",
+  "bytes": 373,
+  "bytesOpen": 431
+ },
+ {
+  "id": "vuepress",
+  "fill": "#276B54",
+  "desc": "vue chevron over a press baseline",
+  "source": "brand #4CB392 → #276B54",
+  "bytes": 415,
+  "bytesOpen": 478
+ },
+ {
+  "id": "vuex-store",
+  "fill": "#276B54",
+  "desc": "store box notched with the vue chevron",
+  "source": "brand #4CB392 → #276B54",
+  "bytes": 497,
+  "bytesOpen": 540
+ },
+ {
+  "id": "wakatime",
+  "fill": "#4E545B",
+  "desc": "clock face with cut-out hands",
+  "source": "no brand → neutral",
+  "bytes": 433,
+  "bytesOpen": 492
+ },
+ {
+  "id": "wasp",
+  "fill": "#4E545B",
+  "desc": "banded wasp abdomen",
+  "source": "no brand → neutral",
+  "bytes": 443,
+  "bytesOpen": 494
+ },
+ {
+  "id": "windows",
+  "fill": "#0A5A96",
+  "desc": "four-pane flag in perspective",
+  "source": "brand #0078D4 → #0A5A96",
+  "bytes": 494,
+  "bytesOpen": 527
+ },
+ {
+  "id": "windsurf",
+  "fill": "#4E545B",
+  "desc": "sail over a board",
+  "source": "no brand → neutral",
+  "bytes": 490,
+  "bytesOpen": 545
+ },
+ {
+  "id": "wit",
+  "fill": "#4A3BB5",
+  "desc": "interface plug",
+  "source": "wasm brand #654FF0 → #4A3BB5",
+  "bytes": 527,
+  "bytesOpen": 580
+ },
+ {
+  "id": "wordpress",
+  "fill": "#1A5E7D",
+  "desc": "drawn W (WordPress wordmark)",
+  "source": "brand #21759B → #1A5E7D",
+  "bytes": 419,
+  "bytesOpen": 474
+ },
+ {
+  "id": "www",
+  "fill": "#4E545B",
+  "desc": "banded globe (three latitude slices)",
+  "source": "no brand → neutral",
+  "bytes": 459,
+  "bytesOpen": 506
+ },
+ {
+  "id": "zeabur",
+  "fill": "#4E545B",
+  "desc": "plate with a cut-out Z",
+  "source": "no brand → neutral",
+  "bytes": 558,
+  "bytesOpen": 607
+ },
+ {
+  "id": "zed",
+  "fill": "#2B3038",
+  "desc": "drawn Z",
+  "source": "no brand → #2B3038",
+  "bytes": 415,
+  "bytesOpen": 472
+ }
+]

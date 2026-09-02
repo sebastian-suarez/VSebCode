@@ -982,12 +982,28 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   `production/assembly-v2-notes.md` (the assembly ledger). Notables:
   xo shipped (A12, drawn X+O); gleam→Lucy fixed the wave's one real form
   collision; F06 diagnosed the Chrome-147 toolchain hang + fix; slice
-  agents caught six+ winding-rule bugs at proof. — [ ] **ASSEMBLY v2 IN
-  FLIGHT 2026-09-02** (sole writer; ledger-driven): toolchain fix →
-  manifest regen (merge-preserving) → set-wide §11 audit + round-3
-  fixes → spec errata → generator sweep → FULL theme rebuild
-  (generic→bespoke flip) → full-sheet v3 → gates. Then fork v2 commit on
-  `80720c4` → pin bump → Sebastian's single boot.
+  agents caught six+ winding-rule bugs at proof.
+- [x] **ASSEMBLY v2 COMPLETE 2026-09-02** (three rounds, ledger fully
+  consumed): chromium headless-shell fix landed in tools/; set-manifest
+  merge-preserving + regenerated (1779, 0 missing); audit FAMILIES 9→132
+  + alias pairs, R7 reading 3 + slice-scope RATIFIED, 21 cross-slice
+  letter/mark collisions fixed in round 3, R9b folder-emblem lane
+  (reported, not gating); spec errata R11a/R11b/R12/R1a/R13/R14/R14a;
+  generators swept to tools/generators/ (27 slots; core-batch4 lost);
+  **theme = SPECIFIC-BEATS-GENERAL** (D20-am2 logic: .awk→awk,
+  .avif→avif, .sty→sty, Rakefile→rake) with 54 core-tier + **11
+  pins.json verdicts** (build-gated, fault-injection proven; pins killed
+  the .tsx→qwik / .yaml→esphome / .yml→cloudfoundry / .xml→source
+  hijacks + generic store/ dirs); 194 associations flipped to bespoke;
+  48 unreachable (+11 open twins) incl. 3 pin-stranded (qwik/ngrx-store/
+  redux-store — only matchers were over-broad claims; honest cost,
+  recorded). GATES: validate 1779/1779 · audit 0 hard open · theme
+  self-check clean. Sheet v3 published (same artifact URL,
+  `full-set-v3-coverage`); human-flag list (28 taste calls, all shipped
+  with fallbacks) lives on the sheet + resolution-flip-diff.md
+- [ ] Fork v2 packaging IN FLIGHT (on `80720c4`): replace extension
+  icons/ tree + theme JSON (PATH_PREFIX flip), verify, commit → pin bump
+  → Sebastian's single boot per the on-hold runbook
   **Emblem-size ruling (Sebastian 2026-09-01: folder emblems "too small,
   make them bigger")**: closed emblem box 6.5 → 8.2px (same bottom-right
   anchor, 1px inside the corner; limb/counter minimums scale ×1.26; tone

@@ -11,11 +11,12 @@
 // embedded verbatim (they still use <text>) next to their production twins so
 // drift is visible at 16 / 32 / 64 px and as a difference blend.
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { homedir, tmpdir } from 'node:os';
+import { tmpdir } from 'node:os';
+import { chromium } from './chromium.mjs';
 
 const DIR = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(DIR, '..');
@@ -246,21 +247,6 @@ console.log(`${out}  (${Buffer.byteLength(html)} bytes, ${icons.length} icons, $
 
 // ---- optional 2x screenshot -------------------------------------------------
 const WIDTH = 1240;
-
-function chromium() {
-	const cache = join(homedir(), 'Library/Caches/ms-playwright');
-	const builds = readdirSync(cache)
-		.filter(d => /^chromium-\d+$/.test(d))
-		.sort((a, b) => +b.split('-')[1] - +a.split('-')[1]);
-	for (const b of builds) {
-		const macos = join(cache, b, 'chrome-mac-arm64');
-		for (const app of readdirSync(macos).filter(f => f.endsWith('.app'))) {
-			const bin = join(macos, app, 'Contents/MacOS', app.replace(/\.app$/, ''));
-			if (existsSync(bin)) { return bin; }
-		}
-	}
-	throw new Error(`no Playwright chromium under ${cache}`);
-}
 
 const COMMON = ['--headless', '--disable-gpu', '--no-sandbox', '--hide-scrollbars',
 	'--allow-file-access-from-files', '--virtual-time-budget=8000'];

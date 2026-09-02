@@ -1,0 +1,121 @@
+--- envelopes (mine) ---
+publiccode               SILHOUETTE  #5E8CAE  12.5 x  10.5
+pulumi                   SILHOUETTE  #8B4FA0  11.3 x  10.3
+puppeteer                GLYPH       #419F6C   9.5 x  11.3
+purgecss                 SILHOUETTE  #5FA98F  10.5 x  12.3
+pyenv                    SILHOUETTE  #5C86B0    10 x  10.5
+pypi                     SILHOUETTE  #3775A9  12.5 x  10.5
+pytest                   SILHOUETTE  #4E9FBF    10 x    13
+pyup                     GLYPH       #5A6BA8  10.5 x    11
+quasar                   GLYPH       #4ABDC9  10.3 x  10.5
+railway                  GLYPH       #CED1D6    10 x  11.5
+razzle                   GLYPH       #C26B85    11 x  11.5
+rc                       GLYPH       #8A8F98    13 x     8
+reactrouter              SILHOUETTE  #D4535E    13 x  12.3
+registry                 SILHOUETTE  #4E8FC4    12 x  12.3
+rehype                   GLYPH       #A97DCA  10.8 x     9
+remark                   GLYPH       #7A51C2    11 x   7.3
+remix                    BADGE       #D2D5D9    14 x    14
+render                   SILHOUETTE  #3E9BB0  11.5 x  10.3
+renovate                 SILHOUETTE  #6B72C0  11.5 x  11.3
+retext                   GLYPH       #CAAC7D    11 x  11.5
+robots                   SILHOUETTE  #8A93A0    11 x  12.3
+rocket                   SILHOUETTE  #C0563F    10 x    13
+rolldown                 SILHOUETTE  #D07C3C  11.5 x    11
+rome                     GLYPH       #A89A88   8.5 x    11
+rspec                    GLYPH       #924F57  12.5 x    10
+rstack                   SILHOUETTE  #D4703A  11.5 x    10
+rubocop                  SILHOUETTE  #7E8AA8    13 x  11.3
+ruff                     SILHOUETTE  #A6C45E  12.5 x  10.3
+sails                    SILHOUETTE  #3E86C4  12.5 x  11.8
+sapphire-framework-cli   GLYPH       #4A6FD0  11.5 x  11.5
+screwdriver              SILHOUETTE  #4E8FB0  11.3 x  11.3
+seedkit                  SILHOUETTE  #5FA05E  11.5 x  11.5
+semanticrelease          SILHOUETTE  #C7A150  11.8 x    11
+semgrep                  GLYPH       #6FB05C  12.5 x  12.5
+serverless               SILHOUETTE  #D45B54    13 x   9.8
+shadcn                   GLYPH       #B9BEC6   9.5 x    12
+shuttle                  GLYPH       #CA9B7D  12.5 x  10.5
+sitemap                  SILHOUETTE  #6E9AC0    13 x  11.5
+slashup                  SILHOUETTE  #6656A8  12.5 x  11.8
+slug                     GLYPH       #8E86A8    13 x   5.5
+smithery                 SILHOUETTE  #8A9098  11.5 x   9.3
+snapcraft                SILHOUETTE  #C97A45    12 x  10.3
+snaplet                  SILHOUETTE  #C4568E  12.5 x  10.3
+snowpack                 SILHOUETTE  #4E9ED0  11.5 x  10.5
+snyk                     SILHOUETTE  #7C79A8  12.5 x  11.8
+solidarity               GLYPH       #AF6EAF  12.5 x  12.5
+spin                     SILHOUETTE  #3EA0A8    11 x    12
+stackblitz               SILHOUETTE  #2E7ACC  12.5 x  12.5
+steadybit                GLYPH       #B45F9F    13 x   9.5
+stitches                 GLYPH       #8350AA  12.5 x   7.5
+styleci                  SILHOUETTE  #6E86C8    13 x  12.8
+stylish-haskell          SILHOUETTE  #9A7EC4    11 x  11.5
+sublime                  GLYPH       #E3B063  11.8 x  10.3
+subversion               SILHOUETTE  #C46E4A  12.5 x  10.3
+svelteconfig             GLYPH       #B84325     8 x  10.5
+swc                      BADGE       #5A56A0    14 x    14
+syncpack                 SILHOUETTE  #4E9EA8    13 x   7.5
+systemd                  SILHOUETTE  #7E8894    11 x    12
+taplo                    GLYPH       #A87E5E  11.5 x  10.5
+taskfile                 SILHOUETTE  #4E9E9E  10.5 x  12.5
+taze                     GLYPH       #6BC27A  12.8 x  11.3
+testcafe                 SILHOUETTE  #4C8FA8  11.5 x  12.5
+textlint                 GLYPH       #9AA08E  12.3 x  10.5
+tfs                      SILHOUETTE  #4E7FC4  12.5 x  10.5
+tiltfile                 SILHOUETTE  #D4A03E  10.5 x  10.5
+tmux                     SILHOUETTE  #5FA85C  12.5 x    10
+tobimake                 SILHOUETTE  #A8846E  12.5 x    11
+tox                      GLYPH       #77B691    12 x     9
+travis                   BADGE       #3EAAAF    14 x    14
+trigger                  GLYPH       #B264C9    12 x  10.5
+trivy                    GLYPH       #8C9AD4    11 x  12.5
+truffle                  SILHOUETTE  #A8785E  12.5 x  11.8
+trunk                    SILHOUETTE  #6FA05C  11.5 x  12.3
+tsdown                   GLYPH       #6787AD    11 x   9.8
+tslint                   SILHOUETTE  #4A7FA8    13 x   8.5
+ty                       BADGE       #6E9EAE    14 x    14
+umi                      SILHOUETTE  #3E8FC4    13 x  11.8
+unibeautify              GLYPH       #C26B97  12.5 x  10.5
+unocss                   BADGE       #C6C9CE    14 x    14
+vagrant                  SILHOUETTE  #4E7FD4  11.5 x  11.3
+vale                     GLYPH       #8E96A8    10 x    11
+vapor                    SILHOUETTE  #7E7FD4     9 x    12
+velite                   SILHOUETTE  #B8874E    12 x  11.3
+verdaccio                BADGE       #7E9166    14 x    14
+
+--- R7 twins WITHIN slice (hard) (0) ---
+
+--- R7 twins vs core (hard for same domain family) (26) ---
+{"a":"puppeteer","b":"assembly","arch":"GLYPH","dh":8.2,"dl":2.9,"ds":8.9,"f":0.2}
+{"a":"pyup","b":"r","arch":"GLYPH","dh":8.1,"dl":0.6,"ds":24.9,"f":0.27}
+{"a":"quasar","b":"tex","arch":"GLYPH","dh":5.7,"dl":1.2,"ds":9.1,"f":0.25}
+{"a":"razzle","b":"angular","arch":"GLYPH","dh":0.2,"dl":8.8,"ds":18.2,"f":0.22}
+{"a":"razzle","b":"erlang","arch":"GLYPH","dh":4.2,"dl":5.1,"ds":3.7,"f":0.16}
+{"a":"retext","b":"jupyter","arch":"GLYPH","dh":8.5,"dl":2.7,"ds":24.8,"f":0.26}
+{"a":"retext","b":"zig","arch":"GLYPH","dh":5.3,"dl":2.7,"ds":24.8,"f":0.21}
+{"a":"rspec","b":"maven","arch":"GLYPH","dh":1.4,"dl":7.8,"ds":4.1,"f":0.14}
+{"a":"sapphire-framework-cli","b":"r","arch":"GLYPH","dh":4.6,"dl":4.1,"ds":2.9,"f":0.16}
+{"a":"semgrep","b":"shell","arch":"GLYPH","dh":10.7,"dl":0.8,"ds":12.4,"f":0.09}
+{"a":"shuttle","b":"claude","arch":"GLYPH","dh":9.6,"dl":4.9,"ds":21.2,"f":0.31}
+{"a":"shuttle","b":"font","arch":"GLYPH","dh":0.6,"dl":4.9,"ds":14.2,"f":0.19}
+{"a":"shuttle","b":"jupyter","arch":"GLYPH","dh":4.8,"dl":2.7,"ds":24.8,"f":0.21}
+{"a":"steadybit","b":"audio","arch":"GLYPH","dh":10.2,"dl":10,"ds":3,"f":0.27}
+{"a":"steadybit","b":"graphql","arch":"GLYPH","dh":7.1,"dl":3.3,"ds":17,"f":0.16}
+{"a":"sublime","b":"jupyter","arch":"GLYPH","dh":8,"dl":2.9,"ds":2.7,"f":0.26}
+{"a":"sublime","b":"zig","arch":"GLYPH","dh":5.9,"dl":2.9,"ds":2.7,"f":0.29}
+{"a":"svelteconfig","b":"svelte","arch":"GLYPH","dh":10.9,"dl":1.4,"ds":1.1,"f":0.16}
+{"a":"taplo","b":"font","arch":"GLYPH","dh":3.2,"dl":7.8,"ds":2,"f":0.18}
+{"a":"travis","b":"go","arch":"BADGE","dh":10,"dl":6.1,"ds":7.7,"f":0.06}
+{"a":"travis","b":"reactjs","arch":"BADGE","dh":9.4,"dl":8.2,"ds":12.5,"f":0.12}
+{"a":"travis","b":"reactts","arch":"BADGE","dh":9.4,"dl":8.2,"ds":12.5,"f":0.12}
+{"a":"travis","b":"sqlite","arch":"BADGE","dh":10.5,"dl":9.2,"ds":3.5,"f":0.09}
+{"a":"tsdown","b":"http","arch":"GLYPH","dh":0.1,"dl":10.8,"ds":1.9,"f":0.16}
+{"a":"unibeautify","b":"audio","arch":"GLYPH","dh":4.7,"dl":4.9,"ds":2.5,"f":0.21}
+{"a":"unibeautify","b":"graphql","arch":"GLYPH","dh":7.7,"dl":8.4,"ds":11.5,"f":0.17}
+
+--- R8 form collisions WITHIN slice (hard) (0) ---
+
+--- R8 form collisions vs core (hard) (0) ---
+
+--- R8 near-misses (0.62-0.72) (0) ---

@@ -1,0 +1,506 @@
+[
+ {
+  "id": "jinja",
+  "archetype": "BADGE",
+  "fill": "#B0483C",
+  "source": "no brand → jinja red #B0483C"
+ },
+ {
+  "id": "jsp",
+  "archetype": "BADGE",
+  "fill": "#B87A26",
+  "source": "java family amber → #B87A26"
+ },
+ {
+  "id": "jss",
+  "archetype": "BADGE",
+  "fill": "#C46FA8",
+  "source": "no brand → #C46FA8"
+ },
+ {
+  "id": "just",
+  "archetype": "BADGE",
+  "fill": "#6FB56C",
+  "source": "no brand → #6FB56C"
+ },
+ {
+  "id": "k",
+  "archetype": "BADGE",
+  "fill": "#9B8B4A",
+  "source": "no brand → #9B8B4A"
+ },
+ {
+  "id": "kcl",
+  "archetype": "BADGE",
+  "fill": "#A64A78",
+  "source": "no brand → #A64A78"
+ },
+ {
+  "id": "kl",
+  "archetype": "BADGE",
+  "fill": "#7E8894",
+  "source": "no brand → neutral #7E8894"
+ },
+ {
+  "id": "kusto",
+  "archetype": "BADGE",
+  "fill": "#3A6FB8",
+  "source": "azure data explorer blue → #3A6FB8"
+ },
+ {
+  "id": "latex",
+  "archetype": "BADGE",
+  "fill": "#61BAB5",
+  "source": "tex family teal (core tex #59C0C0) → #61BAB5"
+ },
+ {
+  "id": "latex-class",
+  "archetype": "BADGE",
+  "fill": "#61BAB5",
+  "source": "tex family teal → #61BAB5"
+ },
+ {
+  "id": "latex-package",
+  "archetype": "BADGE",
+  "fill": "#61BAB5",
+  "source": "tex family teal → #61BAB5"
+ },
+ {
+  "id": "lbx",
+  "archetype": "BADGE",
+  "fill": "#61BAB5",
+  "source": "tex family teal → #61BAB5"
+ },
+ {
+  "id": "latino",
+  "archetype": "BADGE",
+  "fill": "#BE6FC8",
+  "source": "no brand → #BE6FC8"
+ },
+ {
+  "id": "less",
+  "archetype": "BADGE",
+  "fill": "#2F4E7E",
+  "source": "brand #1D365D lifted → #2F4E7E"
+ },
+ {
+  "id": "lex",
+  "archetype": "BADGE",
+  "fill": "#6E9E3E",
+  "source": "no brand → #6E9E3E"
+ },
+ {
+  "id": "lit",
+  "archetype": "BADGE",
+  "fill": "#5E97DC",
+  "source": "lit blue → #5E97DC"
+ },
+ {
+  "id": "livescript",
+  "archetype": "BADGE",
+  "fill": "#6E8090",
+  "source": "no brand → neutral #6E8090"
+ },
+ {
+  "id": "lsl",
+  "archetype": "BADGE",
+  "fill": "#98A0A8",
+  "source": "no brand → neutral #98A0A8"
+ },
+ {
+  "id": "macaulay2",
+  "archetype": "BADGE",
+  "fill": "#7A4890",
+  "source": "no brand → #7A4890"
+ },
+ {
+  "id": "maya",
+  "archetype": "BADGE",
+  "fill": "#2F8C74",
+  "source": "no brand → #2F8C74"
+ },
+ {
+  "id": "mdsvex",
+  "archetype": "BADGE",
+  "fill": "#B85E2E",
+  "source": "svelte family orange → #B85E2E"
+ },
+ {
+  "id": "mediawiki",
+  "archetype": "BADGE",
+  "fill": "#C8C664",
+  "source": "no brand → wiki olive #C8C664"
+ },
+ {
+  "id": "mercurial",
+  "archetype": "BADGE",
+  "fill": "#6E8AA8",
+  "source": "no brand → mercury blue-grey #6E8AA8"
+ },
+ {
+  "id": "mivascript",
+  "archetype": "BADGE",
+  "fill": "#86909C",
+  "source": "no brand → neutral #86909C"
+ },
+ {
+  "id": "modernizr",
+  "archetype": "BADGE",
+  "fill": "#6E4462",
+  "source": "no brand → #6E4462"
+ },
+ {
+  "id": "modernjs",
+  "archetype": "BADGE",
+  "fill": "#534CB8",
+  "source": "no brand → #534CB8"
+ },
+ {
+  "id": "mojo",
+  "archetype": "GLYPH",
+  "fill": "#DE6B3C",
+  "source": "mojo fire orange → #DE6B3C"
+ },
+ {
+  "id": "lilypond",
+  "archetype": "GLYPH",
+  "fill": "#CFC3A8",
+  "source": "no brand → parchment #CFC3A8"
+ },
+ {
+  "id": "mlang",
+  "archetype": "GLYPH",
+  "fill": "#BCAA72",
+  "source": "power query brass → #BCAA72"
+ },
+ {
+  "id": "jsonnet",
+  "archetype": "GLYPH",
+  "fill": "#5FC46E",
+  "source": "json family form, green → #5FC46E"
+ },
+ {
+  "id": "moleculer",
+  "archetype": "GLYPH",
+  "fill": "#4FA36E",
+  "source": "no brand → #4FA36E"
+ },
+ {
+  "id": "lisp",
+  "archetype": "GLYPH",
+  "fill": "#46A98A",
+  "source": "brand #3FB68B matted → #46A98A"
+ },
+ {
+  "id": "latexmk",
+  "archetype": "GLYPH",
+  "fill": "#61BAB5",
+  "source": "tex family teal → #61BAB5"
+ },
+ {
+  "id": "lean",
+  "archetype": "GLYPH",
+  "fill": "#A87FC0",
+  "source": "no brand → #A87FC0"
+ },
+ {
+  "id": "leanconfig",
+  "archetype": "GLYPH",
+  "fill": "#9878B8",
+  "source": "lean family violet → #9878B8"
+ },
+ {
+  "id": "mojolicious",
+  "archetype": "GLYPH",
+  "fill": "#7E8FD0",
+  "source": "no brand → #7E8FD0"
+ },
+ {
+  "id": "lnk",
+  "archetype": "GLYPH",
+  "fill": "#93A0AE",
+  "source": "no brand → neutral #93A0AE"
+ },
+ {
+  "id": "jsbeautify",
+  "archetype": "SILHOUETTE",
+  "fill": "#BE9068",
+  "source": "no brand → #BE9068"
+ },
+ {
+  "id": "jscpd",
+  "archetype": "SILHOUETTE",
+  "fill": "#8F86C0",
+  "source": "no brand → #8F86C0"
+ },
+ {
+  "id": "jsmap",
+  "archetype": "SILHOUETTE",
+  "fill": "#D8C05A",
+  "source": "js gold, map family → #D8C05A"
+ },
+ {
+  "id": "map",
+  "archetype": "SILHOUETTE",
+  "fill": "#93A0AE",
+  "source": "no brand → neutral #93A0AE, map family"
+ },
+ {
+  "id": "juice",
+  "archetype": "SILHOUETTE",
+  "fill": "#C2565E",
+  "source": "no brand → #C2565E"
+ },
+ {
+  "id": "karma",
+  "archetype": "SILHOUETTE",
+  "fill": "#4CA890",
+  "source": "no brand → #4CA890"
+ },
+ {
+  "id": "keystone",
+  "archetype": "SILHOUETTE",
+  "fill": "#4AA396",
+  "source": "no brand → #4AA396"
+ },
+ {
+  "id": "kivy",
+  "archetype": "SILHOUETTE",
+  "fill": "#7EA07A",
+  "source": "no brand → #7EA07A"
+ },
+ {
+  "id": "knex",
+  "archetype": "SILHOUETTE",
+  "fill": "#C4823C",
+  "source": "no brand → #C4823C"
+ },
+ {
+  "id": "knip",
+  "archetype": "SILHOUETTE",
+  "fill": "#9AA8B4",
+  "source": "no brand → neutral #9AA8B4"
+ },
+ {
+  "id": "kos",
+  "archetype": "SILHOUETTE",
+  "fill": "#8FA6C4",
+  "source": "no brand → #8FA6C4"
+ },
+ {
+  "id": "label",
+  "archetype": "SILHOUETTE",
+  "fill": "#4FA0B8",
+  "source": "no brand → #4FA0B8"
+ },
+ {
+  "id": "laravel",
+  "archetype": "SILHOUETTE",
+  "fill": "#E04A3C",
+  "source": "brand #FF2D20 matted → #E04A3C"
+ },
+ {
+  "id": "lark",
+  "archetype": "SILHOUETTE",
+  "fill": "#7FA6CE",
+  "source": "no brand → #7FA6CE"
+ },
+ {
+  "id": "lefthook",
+  "archetype": "SILHOUETTE",
+  "fill": "#C25A62",
+  "source": "no brand → #C25A62"
+ },
+ {
+  "id": "lemon",
+  "archetype": "SILHOUETTE",
+  "fill": "#D8C24E",
+  "source": "no brand → lemon #D8C24E"
+ },
+ {
+  "id": "libreoffice-base",
+  "archetype": "SILHOUETTE",
+  "fill": "#8A62B0",
+  "source": "LibreOffice module palette → #8A62B0"
+ },
+ {
+  "id": "libreoffice-draw",
+  "archetype": "SILHOUETTE",
+  "fill": "#C9A33E",
+  "source": "LibreOffice module palette → #C9A33E"
+ },
+ {
+  "id": "libreoffice-impress",
+  "archetype": "SILHOUETTE",
+  "fill": "#D08344",
+  "source": "LibreOffice module palette → #D08344"
+ },
+ {
+  "id": "lighthouse",
+  "archetype": "SILHOUETTE",
+  "fill": "#DE9048",
+  "source": "lighthouse orange → #DE9048"
+ },
+ {
+  "id": "lime",
+  "archetype": "SILHOUETTE",
+  "fill": "#8FBF4E",
+  "source": "no brand → lime #8FBF4E"
+ },
+ {
+  "id": "liquid",
+  "archetype": "SILHOUETTE",
+  "fill": "#6FAE5A",
+  "source": "shopify liquid green → #6FAE5A"
+ },
+ {
+  "id": "locale",
+  "archetype": "SILHOUETTE",
+  "fill": "#5FA0C0",
+  "source": "no brand → #5FA0C0"
+ },
+ {
+  "id": "lolcode",
+  "archetype": "SILHOUETTE",
+  "fill": "#D0A05A",
+  "source": "no brand → #D0A05A"
+ },
+ {
+  "id": "luau",
+  "archetype": "SILHOUETTE",
+  "fill": "#4A9ED8",
+  "source": "lua family form, luau blue → #4A9ED8"
+ },
+ {
+  "id": "lync",
+  "archetype": "SILHOUETTE",
+  "fill": "#4A8FC8",
+  "source": "no brand → #4A8FC8"
+ },
+ {
+  "id": "lyric",
+  "archetype": "SILHOUETTE",
+  "fill": "#B98BC4",
+  "source": "no brand → #B98BC4"
+ },
+ {
+  "id": "manifest-bak",
+  "archetype": "SILHOUETTE",
+  "fill": "#808C98",
+  "source": "no brand → neutral #808C98, manifest family"
+ },
+ {
+  "id": "manifest-skip",
+  "archetype": "SILHOUETTE",
+  "fill": "#808C98",
+  "source": "no brand → neutral #808C98, manifest family"
+ },
+ {
+  "id": "marko",
+  "archetype": "SILHOUETTE",
+  "fill": "#3E8FC0",
+  "source": "no brand → marko blue #3E8FC0"
+ },
+ {
+  "id": "markojs",
+  "archetype": "SILHOUETTE",
+  "fill": "#3E8FC0",
+  "source": "marko family (same concept) → #3E8FC0"
+ },
+ {
+  "id": "master-co",
+  "archetype": "SILHOUETTE",
+  "fill": "#C9A03E",
+  "source": "no brand → #C9A03E"
+ },
+ {
+  "id": "mathematica",
+  "archetype": "SILHOUETTE",
+  "fill": "#C24A38",
+  "source": "wolfram red #DD1100 matted → #C24A38"
+ },
+ {
+  "id": "maxscript",
+  "archetype": "SILHOUETTE",
+  "fill": "#7CACB6",
+  "source": "no brand → #7CACB6"
+ },
+ {
+  "id": "mdx-components",
+  "archetype": "SILHOUETTE",
+  "fill": "#7A52C8",
+  "source": "mdx family violet → #7A52C8"
+ },
+ {
+  "id": "merlin",
+  "archetype": "SILHOUETTE",
+  "fill": "#C08A3E",
+  "source": "ocaml family amber → #C08A3E"
+ },
+ {
+  "id": "meson",
+  "archetype": "SILHOUETTE",
+  "fill": "#7E8C9A",
+  "source": "no brand → neutral #7E8C9A"
+ },
+ {
+  "id": "metal",
+  "archetype": "SILHOUETTE",
+  "fill": "#8C98A8",
+  "source": "no brand → neutral #8C98A8"
+ },
+ {
+  "id": "metro",
+  "archetype": "SILHOUETTE",
+  "fill": "#B85E4E",
+  "source": "no brand → #B85E4E"
+ },
+ {
+  "id": "minecraft",
+  "archetype": "SILHOUETTE",
+  "fill": "#6FA05B",
+  "source": "minecraft creeper green → #6FA05B"
+ },
+ {
+  "id": "mint",
+  "archetype": "SILHOUETTE",
+  "fill": "#5FB08A",
+  "source": "no brand → mint #5FB08A"
+ },
+ {
+  "id": "mist",
+  "archetype": "SILHOUETTE",
+  "fill": "#A6AEB6",
+  "source": "no brand → neutral #A6AEB6"
+ },
+ {
+  "id": "mjml",
+  "archetype": "SILHOUETTE",
+  "fill": "#DB6350",
+  "source": "mjml coral → #DB6350"
+ },
+ {
+  "id": "mocha",
+  "archetype": "SILHOUETTE",
+  "fill": "#8D6748",
+  "source": "brand #8D6748"
+ },
+ {
+  "id": "mongo",
+  "archetype": "SILHOUETTE",
+  "fill": "#4FA050",
+  "source": "brand #47A248 matted → #4FA050"
+ },
+ {
+  "id": "moonscript",
+  "archetype": "SILHOUETTE",
+  "fill": "#A6ADB8",
+  "source": "no brand → neutral #A6ADB8"
+ },
+ {
+  "id": "mrpack",
+  "archetype": "SILHOUETTE",
+  "fill": "#4FB06E",
+  "source": "modrinth green → #4FB06E"
+ }
+]

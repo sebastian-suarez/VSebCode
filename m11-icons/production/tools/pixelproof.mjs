@@ -14,27 +14,16 @@
 // ink is not mostly in the two dimmest bands. No downsampling tricks: the browser
 // rasterises the SVG at 16 px the same way the explorer does.
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { homedir, tmpdir } from 'node:os';
+import { tmpdir } from 'node:os';
+import { chromium } from './chromium.mjs';
 
 const BG = [0x12, 0x13, 0x14];
 const RAMP = ' .:-=+*#%@';          // 10 levels, dark -> bright
 
-export function chromium() {
-	const cache = join(homedir(), 'Library/Caches/ms-playwright');
-	const builds = readdirSync(cache).filter(d => /^chromium-\d+$/.test(d))
-		.sort((a, b) => +b.split('-')[1] - +a.split('-')[1]);
-	for (const b of builds) {
-		const macos = join(cache, b, 'chrome-mac-arm64');
-		for (const app of readdirSync(macos).filter(f => f.endsWith('.app'))) {
-			const bin = join(macos, app, 'Contents/MacOS', app.replace(/\.app$/, ''));
-			if (existsSync(bin)) { return bin; }
-		}
-	}
-	throw new Error(`no Playwright chromium under ${cache}`);
-}
+export { chromium };
 
 const lum = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 const BG_LUM = lum(...BG);
