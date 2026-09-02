@@ -1,3 +1,9 @@
 node_modules/
 production/contact-*.png
 pilot/checkpoint.png
+pilot/probe.png
+pilot/sheet.png
+pilot/png/
+pilot/raw/
+pilot/check/
+pilot/web/
