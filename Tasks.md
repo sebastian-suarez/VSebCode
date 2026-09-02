@@ -1089,35 +1089,98 @@ Sebastian's call and HARD-GATES M17–M19 (the vim extension needs the marketpla
 Dev-loop reminders: this fork's watch never writes `out/` — compile by hand + verify
 markers; launch skill with `TMPDIR=/tmp`.
 
-### M12 — Base-scene parity (NEXT UP)
+### M12 — Base-scene parity (all five slices LANDED 2026-09-02; Sebastian's checkpoint pending)
 
-- [ ] S1 — tab row → stock 35px (D19 r4, a deletion): editorTabsControl.ts
-  inlineTitleBar import + zoom listener + tabHeight inline branch; the −1px nudge
-  rule in multieditortabscontrol.css (all of `1a7b14c`, CSS-only). KEEP: sidebar
-  46/24 feed, nosidebar lights clearance, 25px breadcrumbs, stock tab-height
-  plumbing (35 lands via the vscodium font patch's `tabsSize35`). Kills the
-  M3-deferred zoom-overflow bug. Exact hunks in the plan §M12-S1
-- [ ] S2 — Geist UI font (D19 r6): hnUiFont.css → Geist woff2 ×2 (OFL) + same
-  `--vscode-workbench-font-family` registration; ADD `.woff2` to BOTH esbuild
-  loader maps (build/lib/optimize.ts + build/next/index.ts) AND both
-  build/filters.ts hygiene lists; root ThirdPartyNotices + cgmanifest entries
-- [ ] S3 — caption dim + true centering: kill part.css's 12px within the gated
-  caption scope + balance the actions width; dim = `sideBarTitle.foreground`
-  value change in 2026-dark.json (caption paints via an INLINE style —
-  compositePart.ts:454; check the splash initial-colors constant for a stale copy)
-- [ ] S4 — sidebar view-body padding 6px top / 8px sides on
-  `.part.sidebar > .content`, PAIRED with box-sizing (the container is
-  JS-px-sized — part.ts Dimension math); rows land 16px off the rail edges,
-  header text x20 (approved v3 geometry)
-- [ ] S5 — editor dressing as product defaults (D21 verdict): hybrid relative
-  numbers, slim git gutter, active indent-scope guide — exact settings/values
-  lifted from `~/Projects/Settings/settings.json` at the brief, D15-style
-  registration (user-overridable, mac-guarded where platform-shared). Error
-  Lens + inline blame stay extension-land
-- [ ] Checkpoint: Sebastian compiles (verify out/ markers first), dev battery
-  (tabs 35 @ zoom 0/±2 no overflow, Geist face live, caption dim+centered,
-  16px row inset, dressing in a virgin profile), his visual pass
-- [ ] Close: packaged verification, pin bump, board/Tasks close-out
+All slices delegated (opus-coder), diff-reviewed, hooks ON, no AI attribution;
+per-slice `npm run compile` exit 0. Session dev battery run over CDP the same day
+(virgin profile, launch skill with `TMPDIR=/tmp`) — every structural assertion
+green; details per slice below.
+
+- [x] **S1 landed** (`f881c9aebb2`): stock 35px tab row — inlineTitleBar import +
+  zoom/titlebar listeners + tabHeight inline branch + the −1px nudge rule deleted
+  (2 files, −34 lines). KEPT as planned: sidebar 46/24 feed, nosidebar clearance,
+  25px breadcrumbs (editorTitleControl.ts's inlineTitleBar import is the
+  breadcrumbs constant — stays by design), stock `tabsSize35` plumbing. The
+  M3-deferred zoom-overflow bug is dead — battery: tabs hold 35 CSS px at zoom
+  1.44 with zero clipping while the rail header keeps physical 46pt (31.94 CSS px)
+  and the caption 24.
+- [x] **S2 landed** (`bcb6d1068`): Geist v1.800 Regular+SemiBold woff2 vendored
+  (91.5 KB total, OFL 1.1; official static builds — 975 glyphs, name tables
+  intact; bytes extracted from the approved mockup data URIs, upstream provenance
+  vercel/geist-font tag `1.8.0` @ `91158e0`, resolved via gh). `geistUiFont.css`
+  replaces `hnUiFont.css` (same var + cascade contract; HN light-shift retired).
+  `.woff2` added to BOTH esbuild loader maps (optimize.ts, next/index.ts) and
+  BOTH filters.ts hygiene lists; ThirdPartyNotices OFL block (alphabetical slot)
+  + cgmanifest git entry. stylelint 0; woff2 verified copied into out/ and
+  accepted by the commit hook. **Packaged-pass duty**: first gulp build through
+  the new loader entries — grep the bundle for the two woff2 assets.
+- [x] **S3 landed** (`f7c91fed0f8`): caption dim + true centering. Dim =
+  `sideBarTitle.foreground` `#bfbfbf`→`#8c8c8c` in 2026-dark.json + the
+  `COLOR_THEME_DARK_INITIAL_COLORS` splash mirror (light constant untouched —
+  known-stale, dormant). Centering = equal-rails CSS in the gated caption block:
+  empty `::before` + `.title-actions` both `flex: 1 1 0`, label hugs its text;
+  overrides part.css's 12px label padding AND compositepart.css's 8px actions
+  padding (a third stock rule the plan missed — it outranks part.css's 5px);
+  zero `!important`. Agent probe in the repo's own Electron: 0px off-center in
+  all normal cases, first toolbar button x identical before/after. Battery live:
+  Δ −0.5px, caption h2 inline color rgb(140,140,140).
+- [x] **S4 landed** (`3e7b39f72c8`): view-body padding 6px top / 8px sides.
+  CSS `box-sizing: border-box; padding: 6px 8px 0` on `.part.sidebar > .content`
+  (mac-native always-on, the M3 family) + new opt-in `contentPadding` Part option
+  (headerHeight idiom) wired ONLY by SidebarPart under `isMacintosh && isNative`:
+  the element keeps the full JS-px box, the composite is announced the reduced
+  size. Probe (real compiled PartLayout + real stylesheets, offscreen Electron):
+  rows x16 off the rail, pane-header content column x20, no overflow, composite
+  284@300, panel/auxbar byte-identical (control case), minimum widths safe
+  (sidebar paneview is vertical — width is orthogonal, no splitview assertion).
+- [x] **S5 landed** (`fcbe24987be`): dressing as product defaults —
+  `editor.lineNumbers` `'on'`→`'relative'` and `editor.guides.bracketPairs`
+  `false`→`'active'`, `isMacintosh && isNative` ternaries at the editorOptions.ts
+  declarations. lineNumbers needed BOTH its runtime default and its separately
+  hardcoded schema default flipped — one `relativeByDefault` const feeds both
+  (guides derives its schema default, one edit). Monaco API doc-comments
+  deliberately untouched (standalone/web stays stock, so they stay true). Third
+  dressing piece = NO-OP by evidence: `scm.diffDecorationsGutterWidth` stock
+  default 3 already IS the mockup's 3px bars; colors are theme-resolved
+  `editorGutter.*` tokens. 4284 editor tests pass, none asserted the old
+  defaults. Battery live (virgin JS buffer): hybrid gutter `1 2* 1 2` with
+  absolute on the cursor line, `bracket-indent-guide … indent-active` rendering.
+- [x] **Session dev battery** (2026-09-02, virgin profile over CDP): gate ON out
+  of the box, Dark 2026 `rgba(25,26,27,0.3)` coat, plus every slice assertion
+  above. CDP screenshot on file; compositor `screencapture` came back black —
+  display locked, so vibrancy shots wait for Sebastian. Console clean except the
+  known languageDetection-worker `require` dev noise. Observed, pre-existing:
+  a virgin EMPTY window boots with the sidebar HIDDEN (Cmd+B shows it) — not an
+  M12 regression; flag below asks whether D15 should force it visible.
+- [ ] **Checkpoint (Sebastian)** — resume commands: `cd vscode && npm run compile`
+  (or trust the battery's out/, compiled at `fcbe249`), verify markers first:
+  `grep -c relativeByDefault out/vs/editor/common/config/editorOptions.js` → 3,
+  `ls out/vs/workbench/browser/media | grep geist` → 3 entries. Launch
+  `./scripts/code.sh`, open a REAL folder (the battery had no folder → no tree
+  rows live-measured; the x16 row inset is probe-verified only). Visual pass:
+  tabs 35 at zooms, Geist face, caption dim+centered, 16px row inset, dressing;
+  then rule the PARKED FLAGS below. Pushes are also his (session pushes denied
+  by permissions): `cd vscode && git push origin vsebcode`, then umbrella
+  `git push`.
+- [ ] **Parked flags for verdicts** (surfaced by the slices, none acted on):
+  (1) inline git blame turns out to be the BUILT-IN git extension
+  (`git.blame.editorDecoration.enabled: true` in the daily settings), not a
+  marketplace install — bake as default too, or keep extension-land per the
+  plan's wording? (2) S3 shrinks the caption row's draggable strip a little
+  (the no-drag actions box now spans its rail: ~+8px at 300px width, ~+52px at
+  400px) — acceptable, or move no-drag down onto the action items? (3) diff
+  editors inherit relative line numbers (they pin no own value) — keep or pin
+  `'on'` for diffs? (4) pane-header TEXT sits x40 behind the stock twistie
+  (x28 in single-view panes) — the x20 column is where the content column
+  starts; restyle the twistie margin or accept? (5) empty-window virgin boot
+  hides the sidebar (pre-existing) — force visible as a D15-style default?
+  (6) dev-only: rspack.serve-out.config.mts (component-explorer harness) has a
+  `.ttf` asset rule but no `.woff2` — one-liner if wanted. (7) 2026-dark.json
+  now mixes `#8c8c8c` (new) with `#8C8C8C` (existing same tone elsewhere) —
+  cosmetic only.
+- [ ] Close: packaged verification (bundle must carry both woff2 + the five
+  slice markers), board/Tasks close-out. Pin bump recorded 2026-09-02 at slice
+  landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 

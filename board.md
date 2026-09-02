@@ -114,7 +114,18 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   + source-survey facts in
   [m10-implementation-plan.md](m10-implementation-plan.md)); trouble
   list · harpoon stay candidate views, revisitable. Design phase
-  closed; NEXT SESSION: M12 (base-scene parity).
+  closed. **M12 SLICES ALL LANDED 2026-09-02** (own session): five
+  delegated commits `f881c9a`→`fcbe249` on the fork, pin bumped —
+  stock 35px tabs (zoom-overflow bug dead), Geist v1.800 vendored
+  (woff2 wired into both loader maps + both hygiene lists, OFL
+  entries), caption `#8c8c8c` + equal-rails true centering (splash
+  constant mirrored), view-body 6/8 inset via new opt-in
+  `contentPadding` Part option (rows x16, headers x20), relative
+  numbers + active bracket-pair guide as mac-native defaults (the
+  "slim git gutter" proved a no-op: stock width 3 = the mockup).
+  Session dev battery green over CDP on a virgin profile; SEBASTIAN'S
+  CHECKPOINT PENDING — runbook + 7 parked flags in Tasks § M12; both
+  repo pushes are his too (session pushes permission-denied).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
