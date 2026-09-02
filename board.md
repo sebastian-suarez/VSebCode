@@ -123,9 +123,22 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   `contentPadding` Part option (rows x16, headers x20), relative
   numbers + active bracket-pair guide as mac-native defaults (the
   "slim git gutter" proved a no-op: stock width 3 = the mockup).
-  Session dev battery green over CDP on a virgin profile; SEBASTIAN'S
-  CHECKPOINT PENDING — runbook + 7 parked flags in Tasks § M12; both
-  repo pushes are his too (session pushes permission-denied).
+  Session dev battery green over CDP on a virgin profile. **M12 FIX
+  ROUND same day (Sebastian's checkpoint verdicts, 4 more commits
+  `d8c198c`→`cdb8f18`)**: light-mode breakage root-caused + fixed
+  (`window.systemColorTheme` → `'dark'` default, both sites — vibrancy
+  no longer follows a light OS); S4 container padding SUPERSEDED →
+  6/8 inset moved to each sidebar pane's body (headers full-bleed,
+  rows x16) with search's lopsided 2px margin fixed to symmetric 8px
+  + width math re-tied; the daily settings.json BAKED as product
+  defaults (120 keys, 19 skipped with receipts; resolves the
+  git-blame flag); temporary `vsebcode.uiFontExperiment` setting =
+  geist · sf-pro · sf-pro-light for the live font call (delete on
+  ruling). VSCodeVim ruled as the vim vehicle (D21 amendment).
+  All battery-verified live incl. main-process themeSource proof in
+  a light OS. CHECKPOINT PENDING: his light-mode + inset visual pass
+  and the FONT RULING; 8 parked flags in Tasks § M12; both repo
+  pushes his (session pushes permission-denied).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -611,6 +624,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   extension owns the surface get surfaced per-view. Core has no mode signal
   (survey: `InputMode` = insert/overtype only; no vim extension in the daily
   rig). One milestone per session; M4 interleaves at Sebastian's call.
+- **D21 amendment — vim vehicle pinned: VSCODEVIM (Sebastian 2026-09-02, at the
+  M12 checkpoint round: "there is an extension called VSCodeVim, thats what
+  you should use to get the vim behaviour")**: the M17 research round's
+  extension question is CLOSED — VSCodeVim, not vscode-neovim. M17 becomes
+  integration-only (mode wiring, lualine mode block, M16 INSERT-handoff flip);
+  M18 which-key and M19 flash take the own-widget-driven-by-extension-state
+  shape (VSCodeVim runs no upstream nvim plugins; its easymotion is the
+  flash-adjacent surface — judged at the M19 brief). M4's marketplace gallery
+  stays the hard prerequisite of the tail.
 - **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
   "the tabs are too big"; two options offered — combine tabs+breadcrumbs
   inside the 46 band, or drop the tab/top-bar alignment and take stock

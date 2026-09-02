@@ -1152,35 +1152,119 @@ green; details per slice below.
   known languageDetection-worker `require` dev noise. Observed, pre-existing:
   a virgin EMPTY window boots with the sidebar HIDDEN (Cmd+B shows it) — not an
   M12 regression; flag below asks whether D15 should force it visible.
-- [ ] **Checkpoint (Sebastian)** — resume commands: `cd vscode && npm run compile`
-  (or trust the battery's out/, compiled at `fcbe249`), verify markers first:
-  `grep -c relativeByDefault out/vs/editor/common/config/editorOptions.js` → 3,
-  `ls out/vs/workbench/browser/media | grep geist` → 3 entries. Launch
-  `./scripts/code.sh`, open a REAL folder (the battery had no folder → no tree
-  rows live-measured; the x16 row inset is probe-verified only). Visual pass:
-  tabs 35 at zooms, Geist face, caption dim+centered, 16px row inset, dressing;
-  then rule the PARKED FLAGS below. Pushes are also his (session pushes denied
-  by permissions): `cd vscode && git push origin vsebcode`, then umbrella
-  `git push`.
-- [ ] **Parked flags for verdicts** (surfaced by the slices, none acted on):
-  (1) inline git blame turns out to be the BUILT-IN git extension
-  (`git.blame.editorDecoration.enabled: true` in the daily settings), not a
-  marketplace install — bake as default too, or keep extension-land per the
-  plan's wording? (2) S3 shrinks the caption row's draggable strip a little
-  (the no-drag actions box now spans its rail: ~+8px at 300px width, ~+52px at
-  400px) — acceptable, or move no-drag down onto the action items? (3) diff
-  editors inherit relative line numbers (they pin no own value) — keep or pin
-  `'on'` for diffs? (4) pane-header TEXT sits x40 behind the stock twistie
-  (x28 in single-view panes) — the x20 column is where the content column
-  starts; restyle the twistie margin or accept? (5) empty-window virgin boot
-  hides the sidebar (pre-existing) — force visible as a D15-style default?
-  (6) dev-only: rspack.serve-out.config.mts (component-explorer harness) has a
-  `.ttf` asset rule but no `.woff2` — one-liner if wanted. (7) 2026-dark.json
-  now mixes `#8c8c8c` (new) with `#8C8C8C` (existing same tone elsewhere) —
-  cosmetic only.
-- [ ] Close: packaged verification (bundle must carry both woff2 + the five
-  slice markers), board/Tasks close-out. Pin bump recorded 2026-09-02 at slice
-  landing.
+**FIX ROUND 2026-09-02 — Sebastian's checkpoint verdicts, four slices landed
+same day** (each delegated, diff-reviewed, hooks ON; his directives verbatim in
+the round briefs):
+
+- [x] **R1 landed** (`d8c198c2580`): "completely broken when the system is in
+  light mode" root-caused — `window.systemColorTheme` defaulted `'default'`
+  (native appearance follows the OS), so a light OS rendered the under-window
+  vibrancy LIGHT behind the transparent window's dark 0.30 coats. Default →
+  `'dark'` on macOS (his daily rig's own value, settings.json:371) at BOTH
+  sites: the main-process Setting fallback (themeMainServiceImpl.ts:46 — the
+  one that runs; main never sees workbench-registered defaults) + the schema
+  (themes.contribution.ts). User-overridable. Battery: main-process inspector
+  shows `themeSource: "dark"`, `shouldUseDarkColors: true` while the OS sat in
+  light mode. LEARNING: @playwright/cli CDP sessions EMULATE
+  prefers-color-scheme (renderer matchMedia says "light" even when nativeTheme
+  is pinned dark) — appearance checks must interrogate the main process over
+  its inspector port, never matchMedia through playwright.
+- [x] **R2 landed** (`63aee3c943b`) — SUPERSEDES S4 (Sebastian: "remove the
+  padding, and added to the accordion content container EXCEPT FOR SEARCH,
+  SEARCH HAS ITS CONTENT ALMOST TOUCHING THE BORDERS, FIX IT"): S4's container
+  padding + `contentPadding` Part option fully reverted (three files
+  byte-identical to pre-S4); instead each SIDEBAR pane's `.pane-body` takes
+  6/8/0 border-box, paired via a new opt-in `bodyPadding` hook on
+  `Pane.layout` (paneview.ts — the real choke point; a ViewPane-level
+  subtraction would arrive after subclasses read the numbers, and shrinking
+  `size` corrupts `expandedSize` replay) with ViewPane answering
+  location-live (`getViewLocationById === Sidebar`, mac-native) so
+  panel/aux-bar-located views stay stock (probe-proven). Headers now run
+  FULL-WIDTH to the rail; rows stay x16. Search: the stock lopsided
+  `margin: 0 12px 0 2px` on `.search-widgets-container` (the 2px = "almost
+  touching") zeroed in the sidebar scope → widgets symmetric at 8px;
+  SearchView width math re-tied to the same constant (`widthOffset` reads
+  `bodyPadding` — CSS/JS cannot drift); toggle-replace chevron re-anchored to
+  the widget (measured broken by the inset — it anchored to the pane corner).
+  Battery live (real folder): headers x0 full-bleed, body 6/8, rows x16,
+  search widgets 8/8 + chevron 26px @ x8 + results x16, container reverted to
+  0/content-box. Notes kept stock by decision: `.wide` breakpoint reads box
+  width; upstream ±2px pattern-input slop preserved (identical in panel).
+- [x] **R3 landed** (`322ff936f14`) — "Bake all the setting in my repo
+  directly into the build": new `vsebcodeDefaults.contribution.ts`
+  (electron-browser, imported by workbench.desktop.main.ts) registers the
+  daily `~/Projects/Settings/settings.json` as DEFAULT overrides via
+  `registerDefaultConfigurations`, `isMacintosh && isNative`, source =
+  product.nameLong. 139 keys dispositioned: 120 baked byte-identical
+  (machine-diffed), 19 skipped with receipts — 8 already product code
+  (tree indent/guides, titlebar pair, activityBar top, lineNumbers,
+  bracketPairs, systemColorTheme), 3 would regress the fork's design
+  (colorTheme "Dark+", iconTheme "vscode-icons", the stale-1e1e1e
+  colorCustomizations block), 8 dead/superseded (chat.disableAIFeatures,
+  vscode_vibrancy.* ×2, custom-ui-style.* ×4, window.zoomLevel).
+  Settings UI shows them as product-attributed DEFAULTS (no "modified" tag;
+  "Default setting value overridden by <product>" hover). Latent-until-
+  installed keys proven: errorLens.fontFamily + debug.javascript.
+  autoAttachFilter apply the moment a schema registers. This RESOLVES old
+  parked flag 1 (git.blame.editorDecoration.enabled bakes — his "all"
+  includes it). Registry probe: fontSize 12→14 at the default layer,
+  `[rust]`/`[markdown]` language overrides registered. Battery live (virgin):
+  editor 14px SFMono, minimap 0-width stub, custom tab labels
+  ("src/index"), reversed window-title pattern, Tab Size 2, whitespace
+  glyphs, Auto Attach "With Flag".
+- [x] **R4 landed** (`cdb8f188ab4`) — "I want to test how does it look with
+  SFPro and SFPro light… a sort of debug option": temporary setting
+  `vsebcode.uiFontExperiment` = `geist` (default) · `sf-pro` · `sf-pro-light`,
+  registered in fork-owned `vsebcodeUiFontExperiment.ts` (deliberately NOT
+  inside the vscodium patch's context window; `included: isMacintosh &&
+  !isWeb`, tags experimental, description says temporary/delete-on-ruling).
+  Single writer preserved: rides `updateFontFamily` in workbench.ts —
+  precedence `workbench.experimental.fontFamily` (wins, experiment fully
+  inert incl. the light class) → experiment → Geist stylesheet default;
+  `sf-pro` = `-apple-system` (that IS SF Pro; no font files), `sf-pro-light`
+  adds a `uifont-sf-light` class = base weight 300 by inheritance (explicit
+  weights keep — pane headers hold 700), rule lives in geistUiFont.css under
+  a DELETE-ON-RULING debug header. 6-case precedence matrix probe-proven +
+  live-switch (memoization extended so an experiment-only change isn't
+  swallowed). Battery live: flip to sf-pro-light applies without reload
+  (SF family, weight 300, headers 700), revert restores Geist exactly.
+  HOW TO USE: settings.json → `"vsebcode.uiFontExperiment": "sf-pro"` or
+  `"sf-pro-light"` — applies live; remove the key (or `"geist"`) for Geist;
+  `workbench.experimental.fontFamily` overrides everything while set.
+- [x] Session battery for the round (virgin profile + real demo folder over
+  CDP, 2026-09-02): all four slices verified live as noted above; system
+  appearance flipped light→dark during the R1 check and RESTORED (his OS
+  ends in dark mode); compositor screenshots still blocked (Screen Recording
+  permission — terminal captures come back black), CDP screenshot delivered.
+  Leaked agent-probe instances found + killed at cleanup (R2/R3-era offscreen
+  Electron trees) — sweep `ps aux | grep "Code - OSS"` at every session end.
+- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `cdb8f188ab4`; launch
+  `./scripts/code.sh` and judge: light-mode look with the OS in light mode
+  (the real vibrancy read), pane-body insets + full-width headers, search
+  insets, the baked defaults feel, and the FONT CALL via
+  `vsebcode.uiFontExperiment` (see R4 HOW TO USE). Pushes are his (session
+  pushes permission-denied): `cd vscode && git push origin vsebcode` then
+  umbrella `git push`.
+- [ ] **Parked flags for verdicts** (updated after the fix round; old flag 1
+  RESOLVED by R3, old flag on S4 padding superseded by R2):
+  (1) S3 caption-row drag strip slightly smaller (no-drag actions box spans
+  its rail: ~+8px at 300px) — acceptable, or move no-drag onto the action
+  items? (2) diff editors inherit relative line numbers — keep or pin `'on'`?
+  (3) pane-header TEXT sits x40 behind the stock twistie (x28 single-view) —
+  restyle twistie margin or accept? (4) empty-window virgin boot hides the
+  sidebar (pre-existing) — force visible as a default? (5) dev-only:
+  rspack.serve-out.config.mts lacks a `.woff2` asset rule (component-explorer
+  harness) — one-liner if wanted. (6) 2026-dark.json mixes `#8c8c8c` with
+  `#8C8C8C` — cosmetic. (7) NEW from R3: `preventExperimentOverride` flag not
+  set on the baked defaults — an experiment-tagged setting's A/B treatment
+  could outrank them (moot-ish: `workbench.enableExperiments: false` is
+  itself baked) — set the flag anyway? (8) NEW from R3: baked
+  `security.workspace.trust.untrustedFiles: "open"` — his value, noted
+  because it is security-relevant.
+- [ ] Close: packaged verification (bundle must carry both woff2 + the slice
+  markers incl. the R-round four), font ruling → delete the R4 experiment
+  (setting + class + CSS debug block), board/Tasks close-out. Pin bumps
+  recorded 2026-09-02 at each landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 
@@ -1241,16 +1325,17 @@ green; details per slice below.
   120ms dismiss, reduced-motion opacity-only; INSERT-handoff hook left clean
   for M17 (onShow/onHide + inQuickOpen, command-center precedent)
 
-### M17–M19 — vim tail (GATED on M4; vehicle = marketplace vim extension, D21)
+### M17–M19 — vim tail (GATED on M4; vehicle RULED: VSCodeVim — D21 amendment 2026-09-02)
 
-- [ ] M17 — research round first: VSCodeVim vs vscode-neovim (the latter runs
-  real Neovim → upstream which-key/flash plugins become candidates, reshaping
-  M18/M19); then mode-block wiring (extension statusbar item; overrideEntry
-  restyle, priority remap/CSS order for far-left position), 120ms INSERT
-  crossfade, M16 handoff flip; per-view fidelity deltas surfaced for verdicts
-- [ ] M18 — which-key per view 3 (shape depends on the M17 pick: own widget on
-  extension state vs restyled extension surface)
-- [ ] M19 — flash per view 4 (same shape question; r5 open point for the brief:
+- [ ] M17 — VSCodeVim integration (the research round's extension question is
+  CLOSED — Sebastian ruled VSCodeVim over vscode-neovim at the M12 checkpoint
+  round): mode-block wiring (extension statusbar item; overrideEntry restyle,
+  priority remap/CSS order for far-left position), 120ms INSERT crossfade,
+  M16 handoff flip; per-view fidelity deltas surfaced for verdicts
+- [ ] M18 — which-key per view 3: own widget driven by VSCodeVim's state
+  (VSCodeVim runs no upstream nvim plugins)
+- [ ] M19 — flash per view 4: same own-widget shape; VSCodeVim's easymotion is
+  the flash-adjacent surface, judged at the brief (r5 open point stands:
   where the typed pattern lives — no cmdline echo ruled)
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
