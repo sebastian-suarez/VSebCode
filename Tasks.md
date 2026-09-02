@@ -792,8 +792,10 @@ and the `2026-dark.json` include chain for every color.
   editor-scoped statusbar — verdicts + ground rules in board § D19 amendments
 - [x] Sebastian's verdict on the first view as a whole — **APPROVED 2026-09-01 at
   v3** (verdict round + breathing-room padding applied; same artifact URL)
-- [ ] Product follow-ups for the implementation phase (accepted design intents,
-  NOT started): workbench grid surgery — full-height sidebar owning the
+- [ ] Product follow-ups for the implementation phase (accepted design intents;
+  ROUTED 2026-09-02 into the D21 milestones — grid surgery/statusbar → M13,
+  caption + padding + tab revert + Geist → M12, overlay/motion → M16+; tracked
+  in § M12–M19, kept here as the design-intent record): workbench grid surgery — full-height sidebar owning the
   bottom-left corner + statusbar starting at the editor column's left edge
   (stock statusbar is full-width); caption row → dim foreground + true
   centering (settles the M2 watch-list ~12px off-center quirk); sidebar
@@ -880,9 +882,10 @@ and the `2026-dark.json` include chain for every color.
   files). Rewrite guard stands: preserve the MOTION sections +
   .play/.out/.kwalk/.mcov/.ecur hooks; walk geometry assumes 22px
   tree rows
-- [ ] Only after mockups are accepted: scope the implementation milestones
-  (keyboard tree navigation is the first candidate — the one capability VS Code
-  genuinely lacks today)
+- [x] Only after mockups are accepted: scope the implementation milestones — DONE
+  2026-09-02: D21 ratified M12–M16 + gated vim tail M17–M19; plan + survey facts
+  in [m10-implementation-plan.md](m10-implementation-plan.md), checklists in
+  § M12–M19 below (keyboard tree navigation = M15)
 - Resume cold: open the view artifacts (URLs in the view items above); each view's
   html at the umbrella root is its source — view 1 committed at `a884069`, later
   views stay untracked until approved
@@ -1075,6 +1078,117 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
 - [x] Acceptance: virgin build boots with the VSebCode icon set as default —
   verified 2026-09-02 (dev + packaged virgin boots, session battery;
   Sebastian's pass)
+
+## M12–M19 — M10 implementation arc (D21; scoped + ratified 2026-09-02)
+
+Reference for every slice: [m10-implementation-plan.md](m10-implementation-plan.md) —
+the ratified plan carries the five-agent source survey's exact file:line facts per
+milestone. One milestone per session; every slice = one delegated commit
+(opus-coder), diff-reviewed, hooks ON, no AI attribution. M4 interleaves at
+Sebastian's call and HARD-GATES M17–M19 (the vim extension needs the marketplace).
+Dev-loop reminders: this fork's watch never writes `out/` — compile by hand + verify
+markers; launch skill with `TMPDIR=/tmp`.
+
+### M12 — Base-scene parity (NEXT UP)
+
+- [ ] S1 — tab row → stock 35px (D19 r4, a deletion): editorTabsControl.ts
+  inlineTitleBar import + zoom listener + tabHeight inline branch; the −1px nudge
+  rule in multieditortabscontrol.css (all of `1a7b14c`, CSS-only). KEEP: sidebar
+  46/24 feed, nosidebar lights clearance, 25px breadcrumbs, stock tab-height
+  plumbing (35 lands via the vscodium font patch's `tabsSize35`). Kills the
+  M3-deferred zoom-overflow bug. Exact hunks in the plan §M12-S1
+- [ ] S2 — Geist UI font (D19 r6): hnUiFont.css → Geist woff2 ×2 (OFL) + same
+  `--vscode-workbench-font-family` registration; ADD `.woff2` to BOTH esbuild
+  loader maps (build/lib/optimize.ts + build/next/index.ts) AND both
+  build/filters.ts hygiene lists; root ThirdPartyNotices + cgmanifest entries
+- [ ] S3 — caption dim + true centering: kill part.css's 12px within the gated
+  caption scope + balance the actions width; dim = `sideBarTitle.foreground`
+  value change in 2026-dark.json (caption paints via an INLINE style —
+  compositePart.ts:454; check the splash initial-colors constant for a stale copy)
+- [ ] S4 — sidebar view-body padding 6px top / 8px sides on
+  `.part.sidebar > .content`, PAIRED with box-sizing (the container is
+  JS-px-sized — part.ts Dimension math); rows land 16px off the rail edges,
+  header text x20 (approved v3 geometry)
+- [ ] S5 — editor dressing as product defaults (D21 verdict): hybrid relative
+  numbers, slim git gutter, active indent-scope guide — exact settings/values
+  lifted from `~/Projects/Settings/settings.json` at the brief, D15-style
+  registration (user-overridable, mac-guarded where platform-shared). Error
+  Lens + inline blame stay extension-land
+- [ ] Checkpoint: Sebastian compiles (verify out/ markers first), dev battery
+  (tabs 35 @ zoom 0/±2 no overflow, Geist face live, caption dim+centered,
+  16px row inset, dressing in a virgin profile), his visual pass
+- [ ] Close: packaged verification, pin bump, board/Tasks close-out
+
+### M13 — Grid surgery (full-height rail + editor-column statusbar)
+
+- [ ] S0 — fix the pre-existing stale-GridLocation bug (adjustPartPositions
+  `[2,…]` literals → getViewLocation-derived; reachable today via activity bar
+  `default` + sidebar-position toggle)
+- [ ] S1 — grid descriptor + arrangement: statusbar + banner leaves move into the
+  right column; LEFT-sidebar gate with sane sidebar-right fallback; pin
+  panelAlignment `center` under the gate (B2); accept the one-time 22px
+  restored-panel-height cosmetic
+- [ ] S2 — lockstep copies + seams: splash prepaint (separate bundle), statusbar
+  focus corner-radius bottom-left → sidebar.left, border-top hairline restyle,
+  notification bottom offsets, part cycling / getVisibleNeighborPart
+- [ ] Acceptance: CDP geometry battery (rail full height owns the corner,
+  statusbar left edge = editor column, banner above statusbar in-column), gate
+  flips, splash-vs-settled frame, panel/aux interplay, Sebastian's corner+seam
+  pass
+
+### M14 — Lualine statusbar (approved bar: NORMAL │ branch · +n ~n −n · ⚠n … Ln,Col · % · UTF-8 · LF · lang; NO mode block until M17)
+
+- [ ] Composition contribution on the existing entry model (addEntry /
+  overrideEntry / updateEntryVisibility + flat-segment CSS; custom-DOM entry for
+  the tri-color diff segment); stock drop-list = flag round at the brief
+  (hide-set is user-overridable by construction)
+- [ ] NEW segments built fresh: working-tree diff counts (SCM resource groups /
+  quick-diff) + scroll % (active editor visible ranges)
+- [ ] Don't trample: M1 drag/no-drag pair, D9/D10 opaque backstop, banner-last
+  grid, hover-grouping inline-background JS
+
+### M15 — Neo-tree explorer keyboard UX
+
+- [ ] Letter keymap under `FilesExplorerFocusCondition` (+ explorer weight
+  bonus): j/k → list.focusDown/Up · h/l → collapse/expand · a → explorer.newFile
+  (unbound today) · r → renameFile · d → moveFileToTrash · / → list.find
+  (explorer find provider already filters); type-ahead disable decision at the
+  brief (800ms-session edge case)
+- [ ] Hint footer via the Part footer area (exists; needs a footerHeight callback
+  in the fork's headerHeight idiom): five hints right-aligned 16px off the rail
+  edge per r9 — `j/k move · h/l fold · a add · r rename · / filter`; noted
+  collision: activityBar.location "bottom" also claims the footer
+- [ ] Cursor-row styling layered on the M3 inset-row grammar; git letter badge →
+  right-aligned column (today a ::after floating after the label)
+
+### M16 — Telescope quick input (one widget = every picker; restyle is global)
+
+- [ ] Geometry: 920px window-centered, prompt at BOTTOM (anchor by `bottom`),
+  descending data order at the `_setElementsToTree` choke point + negated
+  comparator + activation-default flips (trySelectFirst/ItemActivation/
+  First-Last); reconsider the 0.62 golden-cut clamp; neutralize drag/viewState
+  persistence
+- [ ] Coat: quickInput.background @ 0.90 via the theme-resolution mechanism (new
+  constant — 0.30 is a shared absolute) + alpha-0 on the list/sticky second
+  coat (single painter); `overflow: hidden` for the 12px radius; fix the stale
+  5px titlebar-corner rule (bottom corners now)
+- [ ] Rows: M3 inset cosmetics (22px, 7px radius), mono query vs UI rows, match
+  highlighting per approved tokens; previews absolute line numbers
+- [ ] Motion (r8 PRODUCT): 180ms fade+scale 0.97→1 ease-out-strong entrance,
+  120ms dismiss, reduced-motion opacity-only; INSERT-handoff hook left clean
+  for M17 (onShow/onHide + inQuickOpen, command-center precedent)
+
+### M17–M19 — vim tail (GATED on M4; vehicle = marketplace vim extension, D21)
+
+- [ ] M17 — research round first: VSCodeVim vs vscode-neovim (the latter runs
+  real Neovim → upstream which-key/flash plugins become candidates, reshaping
+  M18/M19); then mode-block wiring (extension statusbar item; overrideEntry
+  restyle, priority remap/CSS order for far-left position), 120ms INSERT
+  crossfade, M16 handoff flip; per-view fidelity deltas surfaced for verdicts
+- [ ] M18 — which-key per view 3 (shape depends on the M17 pick: own widget on
+  extension state vs restyled extension surface)
+- [ ] M19 — flash per view 4 (same shape question; r5 open point for the brief:
+  where the typed pattern lives — no cmdline echo ruled)
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 

@@ -109,8 +109,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   — § D19 amendments round 9; found + fixed in passing: the flash
   artifact was still serving the pre-Geist r4 page (the r6 republish
   never landed there), now current.
-  NEXT (Sebastian's calls): further views (trouble list ·
-  harpoon stay candidates) and/or implementation scoping.
+  **IMPLEMENTATION SCOPED 2026-09-02 — D21**: the approved design
+  ships as milestones M12–M16 + gated vim tail M17–M19 (ratified plan
+  + source-survey facts in
+  [m10-implementation-plan.md](m10-implementation-plan.md)); trouble
+  list · harpoon stay candidate views, revisitable. Design phase
+  closed; NEXT SESSION: M12 (base-scene parity).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -119,7 +123,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   and the `.vscode-oss` dataFolderName SHARED with daily VSCodium — the
   packaged fork lists the daily's extensions (vscode-icons) as installed
   until D2's `.vsebcode` flip separates them (M11 acceptance find,
-  2026-09-01; cousin of the M3 `~/.code-oss-shared` recents leak)
+  2026-09-01; cousin of the M3 `~/.code-oss-shared` recents leak).
+  **M4 now also GATES the M10 vim tail M17–M19** — the ruled vehicle
+  (marketplace vim extension, D21) needs D3's gallery baked
 
 ## Next
 
@@ -555,6 +561,45 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   radius 12, shadow-xl, #202122 @ 0.90) is the M10 panel language from here
   on. Session's cursor-row note (explorer keyboard-cursor row keeps its
   active tint under finder focus) not taken up — stays as mocked.
+- **D21 M10 implementation scoping — RATIFIED** (Sebastian 2026-09-02, four
+  verdicts in the scoping session; full plan + the five-agent source survey's
+  file:line facts in [m10-implementation-plan.md](m10-implementation-plan.md)):
+  the approved M10 design ships as SIX milestones + a gated tail. **M12
+  base-scene parity**: stock-tab revert (D19 r4 deletion, kills the M3-deferred
+  zoom-overflow bug) · Geist swap (woff2 needs BOTH esbuild loader maps + BOTH
+  hygiene filter lists extended) · caption dim+center (dim lands as a
+  2026-dark.json value — the caption paints via an inline style; kill the
+  part.css 12px in the gated scope) · sidebar body padding 6/8 (MUST pair with
+  box-sizing — `.content` is JS-px-sized) · **S5 NEW by verdict: view-1 editor
+  dressing bakes as D15-style defaults** (relative numbers, slim git gutter,
+  active scope guide; values lifted from the daily settings.json at the brief).
+  **M13 grid surgery**: full-height rail + editor-column statusbar — grid tree
+  re-parent proven expressible, NO persisted-state migration; includes as S0
+  the survey-FOUND PRE-EXISTING BUG (adjustPartPositions' hard-coded `[2,…]`
+  GridLocations stale since M3's banner move — activity bar at `default`
+  location + sidebar-position toggle corrupts the grid; masked by our
+  defaults; fix = getViewLocation-derived); panel alignment pins `center`
+  under the gate (structurally incompatible otherwise); splash prepaint +
+  corner-radius + part-cycling move in lockstep. **M14 lualine statusbar**:
+  entry-model recomposition (addEntry/overrideEntry/updateEntryVisibility —
+  no part surgery); diff counts + scroll% built fresh (survey: nothing stock
+  computes either); NO mode block until M17. **M15 neo-tree explorer**: letter
+  keymap rides the proven keybinding-beats-typeahead path (lists ask the
+  keybinding service before consuming printable keys — no core patch);
+  Part-level footer mechanism exists for the hint line; git letter badge →
+  right-aligned column restyle. **M16 telescope quick input**: one widget
+  serves every picker so the restyle is global by construction; bottom-prompt
+  descending needs the data-order choke point + activation-default flips
+  (rows are absolutely positioned — CSS can't reverse); 0.90 coat via the D10
+  theme-resolution mechanism (new constant; 0.30 is a shared absolute) +
+  single-painter alpha-0 on the list's second coat. **Modal tail M17–M19 —
+  vehicle RULED: MARKETPLACE VIM EXTENSION** (VSCodeVim or vscode-neovim;
+  specific pick + integration depth = M17's research round; vscode-neovim
+  could run real which-key/flash plugins, reshaping M18/M19) — **M4's gallery
+  becomes a hard prerequisite of the tail**; mockup-fidelity deltas where the
+  extension owns the surface get surfaced per-view. Core has no mode signal
+  (survey: `InputMode` = insert/overtype only; no vim extension in the daily
+  rig). One milestone per session; M4 interleaves at Sebastian's call.
 - **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
   "the tabs are too big"; two options offered — combine tabs+breadcrumbs
   inside the 46 band, or drop the tab/top-bar alignment and take stock
