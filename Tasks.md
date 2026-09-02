@@ -1231,6 +1231,32 @@ the round briefs):
   HOW TO USE: settings.json → `"vsebcode.uiFontExperiment": "sf-pro"` or
   `"sf-pro-light"` — applies live; remove the key (or `"geist"`) for Geist;
   `workbench.experimental.fontFamily` overrides everything while set.
+- [x] **R5 landed** (`b70087d265f`) — "add a debug configuration to change the
+  overall fontsize": `vsebcode.uiFontSizeExperiment` (number, default 13 =
+  stock, clamp 6–32) in the same debug node — ONE knob scaling the whole UI:
+  it resolves the base the vscodium font patch's `updateDefaultSize()`
+  derives every surface from at its stock ratio (workbench/sidebar/tabs/
+  bottomPane = base, statusBar ×12/13, activityBar ×16/13). Precedence:
+  explicit `workbench.experimental.fontSize` (user-set) wins → experiment →
+  stock 13; per-surface `workbench.*.experimental.fontSize` keys still win
+  their own surface (probe + live-proven: sidebar 11 under experiment 16).
+  ARCHITECTURE FINDING: listener registration order is parts-FIRST,
+  workbench-LAST (receipt chain down to the emitter's append-ordered
+  delivery), so the naive "workbench updates defaults first" design would
+  read stale values — instead an idempotent fork-owned
+  `applyUiFontSizeBase()` is called by every consumer before reading; the
+  CSS var keeps its single writer. SEVEN listener sites extended (a 6th
+  surface found: auxiliaryBarPart listens via `SidebarPart.
+  fontSizeSettingsKey`, invisible to a literal grep). Battery live: 13→16
+  scales var/rows/caption-text/statusbar-text exactly (tabs 35→43.1,
+  statusbar 22→27.1 — the patch's own font-driven heights, inherited);
+  46pt header / 24 caption / pills stay design-fixed; editor.fontSize
+  untouched; clearing the key restores stock exactly. Pre-existing, left
+  alone by scope: the vscodium GLOBAL size key still doesn't live-propagate
+  on its own (no part ever listened to it — only our experiment key does
+  now). HOW TO USE: `"vsebcode.uiFontSizeExperiment": 14` (or any 6–32) —
+  live, no reload; delete the key for stock 13; combine freely with
+  `vsebcode.uiFontExperiment`.
 - [x] Session battery for the round (virgin profile + real demo folder over
   CDP, 2026-09-02): all four slices verified live as noted above; system
   appearance flipped light→dark during the R1 check and RESTORED (his OS
@@ -1262,9 +1288,10 @@ the round briefs):
   `security.workspace.trust.untrustedFiles: "open"` — his value, noted
   because it is security-relevant.
 - [ ] Close: packaged verification (bundle must carry both woff2 + the slice
-  markers incl. the R-round four), font ruling → delete the R4 experiment
-  (setting + class + CSS debug block), board/Tasks close-out. Pin bumps
-  recorded 2026-09-02 at each landing.
+  markers incl. the R-round five), font ruling → delete BOTH experiments
+  (R4 face setting + class + CSS debug block; R5 size setting + helper +
+  the seven `/* [VSebCode debug] */` listener clauses), board/Tasks
+  close-out. Pin bumps recorded 2026-09-02 at each landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 

@@ -134,7 +134,10 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   defaults (120 keys, 19 skipped with receipts; resolves the
   git-blame flag); temporary `vsebcode.uiFontExperiment` setting =
   geist · sf-pro · sf-pro-light for the live font call (delete on
-  ruling). VSCodeVim ruled as the vim vehicle (D21 amendment).
+  ruling), joined by `vsebcode.uiFontSizeExperiment` (R5,
+  `b70087d`) — one number scaling the whole UI off the vscodium
+  patch's ratio machinery, per-surface keys still winning theirs.
+  VSCodeVim ruled as the vim vehicle (D21 amendment).
   All battery-verified live incl. main-process themeSource proof in
   a light OS. CHECKPOINT PENDING: his light-mode + inset visual pass
   and the FONT RULING; 8 parked flags in Tasks § M12; both repo
