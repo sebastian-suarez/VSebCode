@@ -1001,9 +1001,18 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   self-check clean. Sheet v3 published (same artifact URL,
   `full-set-v3-coverage`); human-flag list (28 taste calls, all shipped
   with fallbacks) lives on the sheet + resolution-flip-diff.md
-- [ ] Fork v2 packaging IN FLIGHT (on `80720c4`): replace extension
-  icons/ tree + theme JSON (PATH_PREFIX flip), verify, commit → pin bump
-  → Sebastian's single boot per the on-hold runbook
+- [x] **Fork v2 packaging LANDED 2026-09-02** (`4129e69754f` on
+  `80720c4`; the authoring agent hit the session usage limit
+  mid-verification — the session completed verification directly, all
+  green): asset-only commit, extension icon trees byte-identical to the
+  workshop (1,161 + 618), shipped theme = 1775 defs / 2021 ext / 3223
+  names / 624 langs / 1093+1093 folders, 0 missing iconPaths, 0 dangling
+  associations, all SVGs ASCII, hooks ON, no attribution. Branch now
+  FOUR unpushed commits: `14023da` → `1dbd8e5` → `80720c4` → `4129e69`.
+  **The on-hold acceptance runbook is now LIVE** — run it against this
+  HEAD (picker = VSebCode Icons + None; spot-checks: `Cargo.toml` →
+  Rust, `.xo-config` → xo, `.awk` → awk, `store/` → generic bag,
+  folder marks at the big size). Pin bumped.
   **Emblem-size ruling (Sebastian 2026-09-01: folder emblems "too small,
   make them bigger")**: closed emblem box 6.5 → 8.2px (same bottom-right
   anchor, 1px inside the corner; limb/counter minimums scale ×1.26; tone
