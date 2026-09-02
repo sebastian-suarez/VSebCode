@@ -973,14 +973,21 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   like CLAUDE.md/AGENTS.md in user repos — file recognition, not AI
   features; one word drops them if unwanted next to D16) — RULED KEEP
   (Sebastian 2026-09-01, acceptance session)
-- [ ] **FULL-COVERAGE WAVES (D20 amendment 2, "FIX IT")** — every
-  matcher-bearing inventory concept goes bespoke: 12 file slices
-  (A01–A12, ~84 ea; xo lives in the config family) + 6 folder slices
-  (F01–F06, ~45 pairs ea) per `production/longtail-worklist.json` and
-  spec §11. Wave A1 (A01–A06) IN FLIGHT 2026-09-01 → A2 → F → assembly
-  v2 (§11 audit scope; FIX make-set-manifest key-stripping first; theme
-  rebuild: long-tail associations flip generic→bespoke; full-sheet v3)
-  → fork v2 commit supersedes `14023da` → pin bump.
+- [x] **FULL-COVERAGE WAVES COMPLETE 2026-09-02** (D20 amendment 2, "FIX
+  IT") — ALL 18 slices landed + review-green (12 file A01–A12 incl. one
+  connection-drop recovery, 6 folder F01–F06): tree now **1,161 file +
+  618 folder = 1,779 SVGs**, every slice validated 0-fail with in-slice
+  R7/R8 hard-clean, all-proofed 16px discipline, per-slice rulings +
+  family declarations accumulated in
+  `production/assembly-v2-notes.md` (the assembly ledger). Notables:
+  xo shipped (A12, drawn X+O); gleam→Lucy fixed the wave's one real form
+  collision; F06 diagnosed the Chrome-147 toolchain hang + fix; slice
+  agents caught six+ winding-rule bugs at proof. — [ ] **ASSEMBLY v2 IN
+  FLIGHT 2026-09-02** (sole writer; ledger-driven): toolchain fix →
+  manifest regen (merge-preserving) → set-wide §11 audit + round-3
+  fixes → spec errata → generator sweep → FULL theme rebuild
+  (generic→bespoke flip) → full-sheet v3 → gates. Then fork v2 commit on
+  `80720c4` → pin bump → Sebastian's single boot.
   **Emblem-size ruling (Sebastian 2026-09-01: folder emblems "too small,
   make them bigger")**: closed emblem box 6.5 → 8.2px (same bottom-right
   anchor, 1px inside the corner; limb/counter minimums scale ×1.26; tone
@@ -988,6 +995,21 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   clearance logic). Resize of the existing 40 core folder pairs
   delegated + spec § folders updated; F01–F06 launch AFTER it lands with
   the new geometry; A07–A12 (files, unaffected) launched in parallel
+- [x] Stock icon themes REMOVED by ruling (acceptance session
+  2026-09-01→02; delegated to one agent, both diffs reviewed; hooks ON):
+  `1dbd8e5` deletes `extensions/theme-seti` whole (+ its
+  eslint-allowlist line; i18n/tests verified non-referencing), `80720c4`
+  deletes theme-defaults' exposed `vs-minimal` contribution (manifest
+  block + NLS line + `fileicons/`; 10 color themes mechanically verified
+  intact, zero orphan NLS keys). Both: compile 0, hygiene 0,
+  WorkbenchThemeService 3/3 + TokenStyleResolving 7/7, grep-proofs
+  clean. Accepted leftovers: inert uri.perf corpus paths (consumer suite
+  hard-disabled); seti-ui block in tool-regenerated root
+  ThirdPartyNotices.txt (one-block cut on request). Picker end-state =
+  VSebCode Icons + None. Pre-hold early-run evidence: default flip
+  applied on BOTH boots (dev + virgin packaged profiles, state-DB
+  proof); the "vscode-icons installed" sighting = `.vscode-oss`
+  extensions dir shared with daily VSCodium → recorded as an M4 input
 - [ ] **Acceptance — Sebastian's runbook — ON HOLD until the v2 packaging**
   (run it once, against the complete set; session side done):
   1. Push the branch: `git -C vscode push origin vsebcode`
@@ -997,7 +1019,8 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
      — non-empty = the default flip reached out/
   3. Dev boot `./scripts/code.sh`, fresh profile: tree shows VSebCode
      Icons out of the box (no `workbench.iconTheme` set anywhere); File
-     Icon Theme picker lists BOTH "VSebCode Icons" and Seti; folder
+     Icon Theme picker offers ONLY "VSebCode Icons" and "None" (Seti +
+     Minimal removed by ruling, `1dbd8e5` + `80720c4`); folder
      expand/collapse swaps closed/open variants; spot-check a TS repo
      (ts/tsx/json/md/folders) and `Cargo.toml` → Rust icon (the
      fileNames-shadowing fix)
@@ -1020,7 +1043,10 @@ data-migration tasks. All changes are commits to `product.json` and resources in
 - [ ] `product.json` identity: `nameShort`/`nameLong` → VSebCode; `applicationName` (CLI) →
   `vsebcode`; `dataFolderName` → `.vsebcode`; `darwinBundleIdentifier` →
   `dev.sebastiansuarez.vsebcode`; `urlProtocol` → `vsebcode`; sweep remaining macOS-relevant
-  identity fields
+  identity fields. The `.vsebcode` flip also ENDS the `~/.vscode-oss/extensions`
+  sharing with daily VSCodium (M11 acceptance find: the packaged fork listed the
+  daily's vscode-icons as installed; cousin of the M3 `~/.code-oss-shared`
+  recents leak)
 - [ ] `extensionsGallery` → VS Code Marketplace: the 8 values recorded in D3
 - [ ] Icons/images: generate with Nano Banana Pro via the `agy` CLI; regenerate `.icns`
 - [ ] `!!APP_NAME!!` literals (surfaced 2026-08-31, pending approval): imported vscodium

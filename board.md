@@ -197,7 +197,8 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   check, dev boot (icons default out of the box, Cargo.toml → Rust), one
   packaged virgin-.app pass; verdict → M11 close. Note: `claude`/
   `agents`/`copilot`/`cursor` FILE icons ship (file recognition for
-  CLAUDE.md-style files, not AI features) — one word drops them.
+  CLAUDE.md-style files, not AI features) — one word drops them;
+  **RULED KEEP (Sebastian 2026-09-01, acceptance session)**.
   **COVERAGE REOPENED by Sebastian same day (D20 amendment 2 — "FIX IT")**:
   the long tail goes bespoke — 1,006 file + 268 folder concepts, 18-slice
   worklist (`production/longtail-worklist.json`), spec §11 addendum
@@ -206,11 +207,32 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   set-manifest tool's hand-key stripping FIRST; theme rebuild flips
   long-tail associations generic→bespoke), fork v2 commit + pin.
   **Acceptance runbook ON HOLD — boot once, against the full set.**
+  **ACCEPTANCE-SESSION EVENTS (2026-09-01→02; Sebastian ran the runbook
+  early, pre-hold — flip evidence GREEN)**: dev boot AND virgin packaged
+  boot each applied `vsebcode-icons` out of the box (state-DB proof);
+  his "vscode-icons still installed" sighting root-caused NOT a theme
+  bug — the un-rebranded `dataFolderName` `.vscode-oss` is shared with
+  daily VSCodium, so its marketplace vscode-icons shows as installed in
+  the fork's Extensions view; fix rides with M4/D2's `.vsebcode` flip
+  (recorded there). RULED same session: stock icon themes OUT —
+  theme-seti removed (`1dbd8e5`) and the thereby-exposed theme-defaults
+  `vs-minimal` "Minimal (Visual Studio Code)" removed (`80720c4`); both
+  delegated, diff-reviewed, hooks ON; compile/hygiene/theme suites
+  green; picker = VSebCode Icons + None; color themes mechanically
+  verified intact. Accepted leftovers: inert uri.perf corpus paths;
+  orphaned seti-ui block in tool-regenerated ThirdPartyNotices.txt
+  (one-block cut on request). Pin bumped to `80720c4`; `vsebcode` now
+  THREE commits ahead — the on-hold runbook's push step carries all of
+  them.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
   vscodium placeholders (UI + the 21 pre-existing build-script test failures),
-  `!!GH_REPO_PATH!!` announcements 404, icons via Nano Banana Pro (`agy` CLI)
+  `!!GH_REPO_PATH!!` announcements 404, icons via Nano Banana Pro (`agy` CLI),
+  and the `.vscode-oss` dataFolderName SHARED with daily VSCodium — the
+  packaged fork lists the daily's extensions (vscode-icons) as installed
+  until D2's `.vsebcode` flip separates them (M11 acceptance find,
+  2026-09-01; cousin of the M3 `~/.code-oss-shared` recents leak)
 
 ## Next
 
