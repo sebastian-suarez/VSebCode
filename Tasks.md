@@ -1037,7 +1037,8 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   extensions dir shared with daily VSCodium → recorded as an M4 input
 - [ ] **Acceptance — Sebastian's runbook — ON HOLD until the v2 packaging**
   (run it once, against the complete set; session side done):
-  1. Push the branch: `git -C vscode push origin vsebcode`
+  1. ~~Push the branch~~ DONE by the session 2026-09-02 (`54962c7..4129e69`
+     pushed — all four icon-theme commits on origin; pin resolves)
   2. From `vscode/`: `npm run compile`, then verify out/ markers BEFORE
      launching (M3 practice; dev out/ is unbundled):
      `grep -rl "vsebcode-icons" out/vs/workbench/services/themes/ | head -3`
