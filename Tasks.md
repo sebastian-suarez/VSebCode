@@ -1257,6 +1257,24 @@ the round briefs):
   now). HOW TO USE: `"vsebcode.uiFontSizeExperiment": 14` (or any 6–32) —
   live, no reload; delete the key for stock 13; combine freely with
   `vsebcode.uiFontExperiment`.
+- [x] **R6 landed — FONT RULED (`e246e6de7ea`)**: Sebastian, on the live A/B
+  ("Leave the default font size, use sfpro") → UI face = SF PRO at default
+  13px (D19 amendment round 10). Pure deletion, 17 files +16/−430: both
+  experiments (R4 face + R5 size) reverted — the seven touched TS files
+  byte-identical to `322ff936f14` except ONE hooks-forced token (`let
+  family` → `const family` in the restored vscodium updateFontFamily;
+  prefer-const fires once the experiment's reassignment is gone, and this
+  was the first commit ever to stage that file — pre-M2-gate precedent for
+  minimal patch-surface touches under hooks-ON); Geist UNVENDORED (woff2
+  ×2, css, style.ts import, ThirdPartyNotices block, cgmanifest entry,
+  woff2 loader/hygiene wiring — ThirdPartyNotices/cgmanifest/build files
+  byte-identical to `f881c9aebb2`). No font layer remains: stock mac
+  `--monaco-font` = `-apple-system` IS SF Pro (probe + virgin-boot live:
+  computed family `-apple-system…`, weight 400, size 13px, workbench var
+  unset, document.fonts carries only codicons; vscodium fontFamily
+  override verified both directions). compile 0, stylelint 0, tree clean.
+  NOTE for the M6 rebase ledger: the `00-ui-custom-font` patch's
+  workbench.ts line now reads `const family` in-tree.
 - [x] Session battery for the round (virgin profile + real demo folder over
   CDP, 2026-09-02): all four slices verified live as noted above; system
   appearance flipped light→dark during the R1 check and RESTORED (his OS
@@ -1287,11 +1305,12 @@ the round briefs):
   itself baked) — set the flag anyway? (8) NEW from R3: baked
   `security.workspace.trust.untrustedFiles: "open"` — his value, noted
   because it is security-relevant.
-- [ ] Close: packaged verification (bundle must carry both woff2 + the slice
-  markers incl. the R-round five), font ruling → delete BOTH experiments
-  (R4 face setting + class + CSS debug block; R5 size setting + helper +
-  the seven `/* [VSebCode debug] */` listener clauses), board/Tasks
-  close-out. Pin bumps recorded 2026-09-02 at each landing.
+- [ ] Close: packaged verification — bundle markers now REFLECT R6: NO woff2
+  anywhere (Geist unvendored), no `vsebcode.uiFont*` strings, workbench
+  falls back to `--monaco-font`; plus the standing slice markers (stock
+  tabs, pane-body insets, defaults blob, systemColorTheme dark). Font
+  ruling DONE (R6); experiments deleted. Board/Tasks close-out. Pin bumps
+  recorded 2026-09-02 at each landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 

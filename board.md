@@ -139,9 +139,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   patch's ratio machinery, per-surface keys still winning theirs.
   VSCodeVim ruled as the vim vehicle (D21 amendment).
   All battery-verified live incl. main-process themeSource proof in
-  a light OS. CHECKPOINT PENDING: his light-mode + inset visual pass
-  and the FONT RULING; 8 parked flags in Tasks § M12; both repo
-  pushes his (session pushes permission-denied).
+  a light OS. **FONT RULED same day (D19 r10): SF PRO at default
+  size** — both experiments retired + Geist unvendored as a pure
+  deletion (`e246e6d`, R6 in Tasks § M12). CHECKPOINT PENDING: his
+  light-mode + inset visual pass; 8 parked flags in Tasks § M12;
+  both repo pushes his (session pushes permission-denied).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -709,6 +711,25 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   before the seam; the x20 left text-column tie is dropped for this
   row only. Re-verified on headless renders of all four views, all
   four artifacts republished.
+- **D19 amendment round 10 — UI FACE RULED: SF PRO (Sebastian 2026-09-02,
+  on the live A/B the M12 debug experiments enabled: "Leave the default
+  font size, use sfpro")**: the workbench UI font is SF PRO at the default
+  13px — supersedes round 6's Geist pick. Implemented exactly as round 6
+  recorded for this runner-up, "a pure deletion" (`e246e6d`): NO font layer
+  ships at all — the stock mac `--monaco-font` fallback
+  (`-apple-system, BlinkMacSystemFont, sans-serif`) IS SF Pro. Geist fully
+  UNVENDORED (both woff2, geistUiFont.css, the ThirdPartyNotices OFL block,
+  the cgmanifest entry, and the woff2 loader-map + hygiene-filter wiring —
+  every file byte-restored to its pre-Geist state); BOTH temporary
+  `vsebcode.uiFontExperiment` / `uiFontSizeExperiment` settings and their
+  machinery deleted per the close-out plan; the vscodium
+  `workbench.experimental.fontFamily` override path untouched and verified
+  working both directions. SF Pro Light REJECTED — the round-6 light-shift
+  retirement stands. One-token deviation on the restored patch surface,
+  hooks-forced (pre-M2-gate precedent): `let family` → `const family` in
+  updateFontFamily (prefer-const fires once the experiment's reassignment
+  is gone; first commit ever to stage that file). The committed mockups
+  keep Geist embedded as design history — they are not product.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:
