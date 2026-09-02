@@ -302,3 +302,30 @@ constants at the top of `tools/audit.mjs` and are the review lead's to overrule.
    dilated-outline IoU over a 64 × 64 mask; for BADGE it is measured on the letters, since
    every plate is identical by law. Two short letter groups always overlap heavily
    (`PS` vs `Rs` scores 0.84), so the BADGE bar is 0.92 and everything else is 0.72.
+
+## §11 — Long-tail addendum (D20 amendment 2, Sebastian 2026-09-01: full coverage, "FIX IT")
+
+The core-tier curation is overturned as the coverage model: every matcher-bearing concept
+in the merged inventory gets a bespoke icon. Generics remain only as the final fallback
+for extensions no source theme knows. Rules for the long-tail waves (slices in
+`longtail-worklist.json`):
+
+1. Same craft bar as the core: archetypes, optical envelopes, centring laws (incl. the
+   R5 ink-width badge law), letterpath for every typographic letter, matte fills, 16-px
+   grid, ≤4 KB.
+2. HUE: `brandColor` when the inventory has one; otherwise the hue users already
+   recognize from the source themes — vscode-icons preferred (Sebastian's reference),
+   then Material. Do not invent novel hues when a recognized one exists.
+3. R7 SCOPE (the wheel cannot hold 1,170 pairwise-distinct file hues): R7 is HARD within
+   your own slice and against core icons of the same domain family (check
+   `set-manifest.json`); across long-tail concepts of different slices/domains that
+   rarely co-occur in one directory, near-twins are TOLERATED — log them in your report,
+   do not block on them. R8 (same mark, same archetype) stays hard everywhere.
+4. MARKS: prefer the concept's real mark whenever it survives the 16-px proof; letters
+   are the fallback, not the default. A letter badge must not duplicate a same-hue
+   same-archetype letter group in your slice or the core manifest.
+5. PROOF DUTY: run `tools/pixelproof.mjs` on at least your five riskiest marks; redraw
+   anything that reads as mush.
+6. FOLDER slices: canon tan base verbatim + one emblem per the folder-family rules
+   (§ folders); the emblem may be the concept's file-icon mark reduced, tone law applies
+   (darker than the tan, brand hue only when it earns it); closed + `-open` variants.

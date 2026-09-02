@@ -972,7 +972,16 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   `claude`/`agents`/`copilot`/`cursor` FILE icons (they decorate files
   like CLAUDE.md/AGENTS.md in user repos — file recognition, not AI
   features; one word drops them if unwanted next to D16)
-- [ ] **Acceptance — Sebastian's runbook** (session side done):
+- [ ] **FULL-COVERAGE WAVES (D20 amendment 2, "FIX IT")** — every
+  matcher-bearing inventory concept goes bespoke: 12 file slices
+  (A01–A12, ~84 ea; xo lives in the config family) + 6 folder slices
+  (F01–F06, ~45 pairs ea) per `production/longtail-worklist.json` and
+  spec §11. Wave A1 (A01–A06) IN FLIGHT 2026-09-01 → A2 → F → assembly
+  v2 (§11 audit scope; FIX make-set-manifest key-stripping first; theme
+  rebuild: long-tail associations flip generic→bespoke; full-sheet v3)
+  → fork v2 commit supersedes `14023da` → pin bump
+- [ ] **Acceptance — Sebastian's runbook — ON HOLD until the v2 packaging**
+  (run it once, against the complete set; session side done):
   1. Push the branch: `git -C vscode push origin vsebcode`
   2. From `vscode/`: `npm run compile`, then verify out/ markers BEFORE
      launching (M3 practice; dev out/ is unbundled):

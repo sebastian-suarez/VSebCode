@@ -198,6 +198,14 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   packaged virgin-.app pass; verdict → M11 close. Note: `claude`/
   `agents`/`copilot`/`cursor` FILE icons ship (file recognition for
   CLAUDE.md-style files, not AI features) — one word drops them.
+  **COVERAGE REOPENED by Sebastian same day (D20 amendment 2 — "FIX IT")**:
+  the long tail goes bespoke — 1,006 file + 268 folder concepts, 18-slice
+  worklist (`production/longtail-worklist.json`), spec §11 addendum
+  written. Wave A1 (file slices A01–A06, ~84 ea) IN FLIGHT; then A2
+  (A07–A12), F (folders ×6), assembly v2 (§11-scoped audit; fix the
+  set-manifest tool's hand-key stripping FIRST; theme rebuild flips
+  long-tail associations generic→bespoke), fork v2 commit + pin.
+  **Acceptance runbook ON HOLD — boot once, against the full set.**
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -578,7 +586,20 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   horizontal padding — generic, so explorer/search/git all inherit; combined
   with the M3 8px row inset, rows land 16px from the rail edges and
   header/labels/footer share one text column.
-- **D19 amendments round 2 (view-2 telescope verdicts — Sebastian 2026-09-01,
+- **D20 amendment 2 — FULL COVERAGE, curation overturned** (Sebastian
+  2026-09-01: "I specifically said to extract as many icons as you can …
+  they leave configuration files like .xo or .prettierrc to fallback into
+  their file type icon, which is not how its supposed to be. FIX IT"):
+  the core-tier model is OVERTURNED as the coverage strategy — EVERY
+  matcher-bearing concept in the merged inventory gets a bespoke icon
+  (+1,006 file + 268 folder-pair concepts; only the 10 matcher-less
+  decorations skip). Generic category icons remain solely as the final
+  fallback for extensions no source theme knows. Long-tail craft rules =
+  spec §11 (same bar; hue fidelity to the source themes, vscode-icons
+  preferred; R7 hard in-slice + vs same-domain core, tolerated-and-logged
+  across rarely-co-occurring long-tail pairs; R8 hard everywhere; 16px
+  proof duty). The first fork packaging (`14023da`) is SUPERSEDED by a v2
+  commit once coverage lands — the acceptance runbook is ON HOLD.
   all five flags approved as mocked)**: (1) finder layout = telescope
   horizontal, prompt at the BOTTOM, descending sort — best match adjacent to
   the prompt; (2) the finder is a window-centered 920px panel on the
