@@ -111,119 +111,6 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   never landed there), now current.
   NEXT (Sebastian's calls): further views (trouble list ·
   harpoon stay candidates) and/or implementation scoping.
-- **M11 — VSebCode icon theme — OPENED 2026-09-01 (D20)**: own complete
-  file-icon set in the M10 mockup icons' visual language, generated with Nano
-  Banana Pro via `agy` (D2's icon tooling), vectorized, packaged as a built-in
-  icon theme, shipped as the product DEFAULT. Top-3 source themes fixed by
-  install count (marketplace gallery API 2026-09-01): Material Icon Theme
-  35.4M · vscode-icons 24.5M (Sebastian's favorite — naming reference) ·
-  VSCode Great Icons 2.3M. Phase 1 COMPLETE 2026-09-01: (a) **INVENTORY
-  LANDED** — 1534 merged concepts (1170 file / 364 folder; 189 in all three
-  sources, 344 in two) parsed from pinned upstream commits (Material's
-  filename DSL reimplemented, vsicons glob products expanded, 131 disabled
-  entries excluded), core tier 145 file + 40 folder ranked, 269 sparse-honest
-  brand colors, 54 core matcher collisions resolved (33 hand-pinned), long
-  tail annotated `generic-<category>`; (b) **PILOT LANDED
-  2026-09-01** → checkpoint artifact
-  https://claude.ai/code/artifact/b486caca-e065-4a3b-a997-c87921d05461
-  (M10 A/B, size ladders, true-16px pixel grid, both sheets, master prompt,
-  re-runnable pipeline.sh). Findings: agy invocation proven — headless
-  REQUIRES `--dangerously-skip-permissions` (image tool wants a `command`
-  permission print mode can't prompt; used scoped to generation runs); NBP
-  capped the sheet at 1024² (probe reached 2048² — per-request negotiation);
-  style drift across runs LOW; "flat" disobeyed at pixel level (12k+
-  colors/badge → posterize-5 before vtracer; traced SVGs 11–76KB vs <2KB
-  hand-authored); 16px verdict 8 survive / 7 marginal / 1 mush (rust). A/B
-  vs the approved M10 icons: uniform bounding box ≠ optical weight (M10 pads
-  per icon); the master prompt contradicted approved designs on markdown+css
-  (fix those cells before any reuse); M10 hand-authoring already solves 3 of
-  the 7 marginals. SESSION RECOMMENDATION at the gate: lock NBP sheet B as
-  the STYLE BIBLE, HAND-AUTHOR the production SVGs in the M10 language with
-  per-icon optical sizing (raster→trace rejected on 16px + file-weight
-  evidence). **GATE RULED 2026-09-01 — both recommendations ACCEPTED**
-  ("use your recommendations"; D20 amendment): style signed off, NBP sheet B
-  locked as style bible (markdown+css cells corrected to M10 canon),
-  production = hand-authored SVGs. **Production phase OPEN**: ~185 core
-  concepts + ~10 category generics in review-gated batches (~24/batch by
-  family; opus-coder); toolkit (Inter-Bold letter-path generator — no <text>
-  in shipped SVGs — + contact-sheet builder) rides with batch 1; then
-  icon-theme JSON assembly from core-tier matchers; then fork packaging
-  (built-in extension + default flip, D15-style). **Batch 1 LANDED +
-  review-green 2026-09-01** (26 icons: files ranks 1-24 + the 2 canon
-  folders; toolkit built): canon fidelity MEASURED per-pixel — folder /
-  folder-open / markdown bit-identical at 16/32/64, TS/css/npm differ only
-  on Inter-vs-SF letterform antialiasing (grid-searched fit, principled
-  optimum across all three sizes); validator 26/26, 16.5KB total (avg 634B,
-  max 1.4KB); two centring laws derived from the canon into spec.md (badge
-  letters sit low at ~41% below-baseline share; silhouette/glyph letters
-  cap-centred). ONE pending Sebastian yes/no (non-blocking, spec.md §9):
-  yaml shipped OFF-BRAND muted plum #7E6086 — brand red #CB171E is a
-  near-twin of canon npm red in the same repo roots; one-line revert if
-  vetoed. Noted weak pair (kept): reactts/reactjs as TSX/JSX cyan badges.
-  **ALL SIX BATCHES LANDED + review-green same day**: 237 SVGs (145 core
-  files + 10 generics + default file + 40 folders × closed/open),
-  validator 237/237, ~107KB. Gate rulings R1-R11 recorded in Tasks § M11;
-  cross-batch hue twins known (batch-4 audit). **ASSEMBLY LANDED +
-  session-verified 2026-09-01** → full-set checkpoint artifact
-  https://claude.ai/code/artifact/e3f8fc9e-9d7d-4ce3-98ba-f39b7a24cb83 :
-  reconciliation 26 retints + 3 mark redraws (55 R7 twins + 3 real R8
-  collisions → 0 open; 4 moves TOWARD brand; log in reconciliation.md; R7
-  form-qualified for silhouettes, R8 badge bar 0.92 — spec §10); errata
-  R1-R11 written; audit/raster/set-manifest tooling versioned. Theme JSON
-  self-check clean: 237 definitions · 2010 fileExtensions · 1668
-  fileNames · 624 languageIds · 368 folderNames(+Expanded) · 1015
-  long-tail concepts → generics; REAL BUG caught by the theme-resolved
-  explorer strips: VS Code resolves fileNames before fileExtensions, so
-  1554 generic name rules that would shadow core extension rules are
-  dropped by build-theme.mjs. Geist r6 checked: view-1 icon defs still
-  `-apple-system` — icon letterforms (Inter paths matched to the approved
-  canon) unaffected. **GATE RULED 2026-09-01 ("Do all of them") +
-  three-round execution complete**: yaml brand-true (R10a), git
-  bright/claude lighter (measured deviation accepted), expo arch +
-  clojure split-circle shipped on 16px proofs, maven/erlang letters kept
-  on failed proofs, maven lifted via the saturation escape #A4656B after
-  the micro-fix agent disproved the stated targets and withdrew the
-  two-icon plan on evidence — full detail in Tasks § M11 +
-  reconciliation.md. Audit exit 0, validator 237/237, sheet republished
-  (same URL, `full-set-v2-ruled`). **FORK PACKAGING LANDED 2026-09-01**
-  (`14023da` on `vsebcode`, delegated; diff reviewed; hooks ON):
-  `extensions/theme-vsebcode-icons` built-in + default flipped at BOTH
-  hardcoded sites (the survey caught the second,
-  `DEFAULT_FILE_ICON_THEME_ID` — missing it would have reset to Seti);
-  compile 0, self-check clean, hygiene/eslint 0, theme suite 3/3;
-  theme-seti kept selectable. Workshop committed umbrella-side
-  (renders/node_modules gitignored), pin bumped. **REMAINING, Sebastian
-  by hand (runbook in Tasks § M11)**: push `vsebcode`, compile + marker
-  check, dev boot (icons default out of the box, Cargo.toml → Rust), one
-  packaged virgin-.app pass; verdict → M11 close. Note: `claude`/
-  `agents`/`copilot`/`cursor` FILE icons ship (file recognition for
-  CLAUDE.md-style files, not AI features) — one word drops them;
-  **RULED KEEP (Sebastian 2026-09-01, acceptance session)**.
-  **COVERAGE REOPENED by Sebastian same day (D20 amendment 2 — "FIX IT")**:
-  the long tail goes bespoke — 1,006 file + 268 folder concepts, 18-slice
-  worklist (`production/longtail-worklist.json`), spec §11 addendum
-  written. Wave A1 (file slices A01–A06, ~84 ea) IN FLIGHT; then A2
-  (A07–A12), F (folders ×6), assembly v2 (§11-scoped audit; fix the
-  set-manifest tool's hand-key stripping FIRST; theme rebuild flips
-  long-tail associations generic→bespoke), fork v2 commit + pin.
-  **Acceptance runbook ON HOLD — boot once, against the full set.**
-  **ACCEPTANCE-SESSION EVENTS (2026-09-01→02; Sebastian ran the runbook
-  early, pre-hold — flip evidence GREEN)**: dev boot AND virgin packaged
-  boot each applied `vsebcode-icons` out of the box (state-DB proof);
-  his "vscode-icons still installed" sighting root-caused NOT a theme
-  bug — the un-rebranded `dataFolderName` `.vscode-oss` is shared with
-  daily VSCodium, so its marketplace vscode-icons shows as installed in
-  the fork's Extensions view; fix rides with M4/D2's `.vsebcode` flip
-  (recorded there). RULED same session: stock icon themes OUT —
-  theme-seti removed (`1dbd8e5`) and the thereby-exposed theme-defaults
-  `vs-minimal` "Minimal (Visual Studio Code)" removed (`80720c4`); both
-  delegated, diff-reviewed, hooks ON; compile/hygiene/theme suites
-  green; picker = VSebCode Icons + None; color themes mechanically
-  verified intact. Accepted leftovers: inert uri.perf corpus paths;
-  orphaned seti-ui block in tool-regenerated ThirdPartyNotices.txt
-  (one-block cut on request). Pin bumped to `80720c4`; `vsebcode` now
-  THREE commits ahead — the on-hold runbook's push step carries all of
-  them.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -251,6 +138,36 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
 
 ## Done
 
+- 2026-09-02 — **M11 complete — VSebCode icon theme (D20), shipped as product
+  default**: own flat-matte icon set in the M10 mockup language, **1,779
+  icons**, default file icon theme of the fork; picker = VSebCode Icons +
+  None. Arc: 3-source merged inventory (1,534 concepts; Material 35.4M +
+  vscode-icons 24.5M [naming reference] + Great Icons 2.3M, pinned upstream
+  commits) → NBP pilot via `agy` (raster→trace REJECTED on 16px +
+  file-weight evidence) → gate: NBP sheet B as style bible, production
+  HAND-AUTHORED SVGs (Inter-Bold letter PATHS, per-icon optical sizing,
+  <2KB target) → six review-gated batches (237 SVGs; rulings R1-R11) →
+  reconciliation + assembly (audit 0; fileNames-shadowing bug caught) →
+  fork packaging `14023da` (built-in `extensions/theme-vsebcode-icons`,
+  default flipped at BOTH hardcoded sites) → acceptance-session rulings:
+  AI-name file icons KEEP; stock themes OUT — theme-seti `1dbd8e5` + the
+  exposed vs-minimal `80720c4`; "vscode-icons still installed" root-caused
+  to the shared `.vscode-oss` dataFolderName → recorded as M4 input →
+  coverage REOPENED (D20 amendment 2, "FIX IT"): 18 bespoke long-tail
+  slices → assembly v2 (specific-beats-general, 54+11 pinned verdicts,
+  1779/1779 gates green, sheet v3) → v2 packaging `4129e69`, branch pushed
+  → runbook EXECUTED by the session on Sebastian's "Do it yourself":
+  compile+markers green, dev + packaged virgin boots both applied the
+  theme out of the box (state-DB proof), long-tail bespoke + folder
+  closed/open swap verified live over CDP, bundle carries 1,779 SVGs with
+  zero seti residue; screenshots delivered. **PASS — Sebastian 2026-09-02
+  ("Close it")**. Follow-ups live elsewhere: `.vsebcode` dataFolder split
+  (M4); daily-driver `workbench.iconTheme` drop + vscode-icons extension
+  uninstall (settings follow-up, Tasks § M11 tail); orphaned seti-ui block
+  in tool-regenerated ThirdPartyNotices.txt (one-block cut on request).
+  References: full-set sheet
+  https://claude.ai/code/artifact/e3f8fc9e-9d7d-4ce3-98ba-f39b7a24cb83 ;
+  workshop `m11-icons/` (spec.md, reconciliation.md, tooling, worklist)
 - 2026-09-01 — **Agent-skills install audited + vendored (D18)**: 20-skill install
   (8 microsoft/vscode + 12 emilkowalski/skills) audited against `8e8353bf` —
   lock-tracked content verified byte-identical to live upstream main (gh api),

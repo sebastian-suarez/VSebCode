@@ -1035,8 +1035,9 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   applied on BOTH boots (dev + virgin packaged profiles, state-DB
   proof); the "vscode-icons installed" sighting = `.vscode-oss`
   extensions dir shared with daily VSCodium → recorded as an M4 input
-- [ ] **Acceptance — Sebastian's runbook — ON HOLD until the v2 packaging**
-  (run it once, against the complete set; session side done):
+- [x] **Acceptance — RUN 2026-09-02, PASSED** (v2 packaged + pushed; hold
+  lifted; steps 2–4 executed by the session on Sebastian's "Do it
+  yourself"; his verdict "Close it" closed M11):
   1. ~~Push the branch~~ DONE by the session 2026-09-02 (`54962c7..4129e69`
      pushed — all four icon-theme commits on origin; pin resolves)
   2. From `vscode/`: `npm run compile`, then verify out/ markers BEFORE
@@ -1054,12 +1055,26 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
      with the set as default (packaging is the only proof the SVG tree
      lands in the bundle)
   5. Verdict to a session → M11 close-out on the board
+  **Steps 2–4 EXECUTED BY THE SESSION 2026-09-02 (Sebastian: "Do it
+  yourself") — all green, full evidence in board § M11**: compile 0 +
+  markers; dev + packaged virgin boots each applied `vsebcode-icons`
+  out of the box (state-DB proof); picker = None + VSebCode Icons
+  (packaged adds the daily's marketplace vscode-icons via the shared
+  `.vscode-oss` extensions dir — expected, M4 fixes); 11-file spot
+  folder all bespoke incl. Cargo.toml→cargo + lib.rs→rust; src folder
+  closed↔open swap live; bundle 1,779 SVGs, zero `vs-seti`,
+  theme-defaults iconThemes-free. Screenshots sent. VERDICT: PASS —
+  Sebastian 2026-09-02 ("Close it") — **M11 CLOSED**, board Done entry
+  written
 - [ ] After close: `settings.json` `"workbench.iconTheme": "vscode-icons"`
   becomes droppable at the daily-driver switch (the baked default
   replaces it); vscode-icons extension uninstallable
-- [ ] Package as a built-in icon-theme extension in `vscode/` + product default
-  (delegated implementation; D15-style bake)
-- [ ] Acceptance: virgin build boots with the VSebCode icon set as default
+- [x] Package as a built-in icon-theme extension in `vscode/` + product default
+  (delegated implementation; D15-style bake) — done: `14023da` (core set) +
+  `4129e69` (v2 full coverage); stock themes removed `1dbd8e5`/`80720c4`
+- [x] Acceptance: virgin build boots with the VSebCode icon set as default —
+  verified 2026-09-02 (dev + packaged virgin boots, session battery;
+  Sebastian's pass)
 
 ## M4 — Branding & marketplace (full rebrand per D2, VS Code Marketplace per D3)
 
