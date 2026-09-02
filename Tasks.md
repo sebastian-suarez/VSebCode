@@ -955,13 +955,42 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   `make-set-manifest.mjs` rerun would strip hand-added round keys — fix
   before any manifest regen. requirements.txt → text (inventory matcher
   call, revisit if wanted)
-- [ ] Fork packaging IN FLIGHT 2026-09-01 (delegated implementation):
-  built-in icon-theme extension in `vscode/` modeled on theme-seti's full
-  footprint, svg tree + theme JSON (iconPath prefix adjusted + structural
-  self-check re-run), `ThemeSettingDefaults.FILE_ICON_THEME` flip
-  D15-style, hooks ON, compile + checks; vscode commit only — push =
-  Sebastian, pin-bump + workshop commit = session, then Sebastian
-  compiles + virgin-boot verifies per house rules
+- [x] Fork packaging LANDED 2026-09-01 (`14023da` on `vsebcode`, delegated;
+  diff reviewed; hooks ON; 244 files +6140/−3): `extensions/
+  theme-vsebcode-icons` (theme-seti pattern; 155+82 SVGs byte-identical to
+  the workshop, theme JSON with rewritten prefixes, NLS,
+  ThirdPartyNotices = Inter OFL text verbatim, CRLF per .gitattributes);
+  default flip at BOTH sites — `ThemeSettingDefaults.FILE_ICON_THEME` AND
+  the independently-hardcoded `DEFAULT_FILE_ICON_THEME_ID`
+  (`vscode.theme-vsebcode-icons-vsebcode-icons`, computed id proven equal;
+  missing it would have reset to Seti on startup) + one truthful comment
+  in editor.ts. Build wiring: none needed (glob-driven, verified against
+  every theme-seti site). Verified: compile 0 (63/63 clean), self-check 7
+  checks clean w/ exact counts, eslint 0, hygiene 0, targeted theme suite
+  3/3, `diff -r` svg trees empty, grep `vs-seti` residue = 1 inert perf
+  fixture. theme-seti kept selectable. NOTE for Sebastian: the set ships
+  `claude`/`agents`/`copilot`/`cursor` FILE icons (they decorate files
+  like CLAUDE.md/AGENTS.md in user repos — file recognition, not AI
+  features; one word drops them if unwanted next to D16)
+- [ ] **Acceptance — Sebastian's runbook** (session side done):
+  1. Push the branch: `git -C vscode push origin vsebcode`
+  2. From `vscode/`: `npm run compile`, then verify out/ markers BEFORE
+     launching (M3 practice; dev out/ is unbundled):
+     `grep -rl "vsebcode-icons" out/vs/workbench/services/themes/ | head -3`
+     — non-empty = the default flip reached out/
+  3. Dev boot `./scripts/code.sh`, fresh profile: tree shows VSebCode
+     Icons out of the box (no `workbench.iconTheme` set anywhere); File
+     Icon Theme picker lists BOTH "VSebCode Icons" and Seti; folder
+     expand/collapse swaps closed/open variants; spot-check a TS repo
+     (ts/tsx/json/md/folders) and `Cargo.toml` → Rust icon (the
+     fileNames-shadowing fix)
+  4. Packaged `npm run gulp vscode-darwin-arm64` → virgin `.app` boots
+     with the set as default (packaging is the only proof the SVG tree
+     lands in the bundle)
+  5. Verdict to a session → M11 close-out on the board
+- [ ] After close: `settings.json` `"workbench.iconTheme": "vscode-icons"`
+  becomes droppable at the daily-driver switch (the baked default
+  replaces it); vscode-icons extension uninstallable
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)
 - [ ] Acceptance: virgin build boots with the VSebCode icon set as default

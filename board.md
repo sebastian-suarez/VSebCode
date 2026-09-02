@@ -185,9 +185,19 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   the micro-fix agent disproved the stated targets and withdrew the
   two-icon plan on evidence — full detail in Tasks § M11 +
   reconciliation.md. Audit exit 0, validator 237/237, sheet republished
-  (same URL, `full-set-v2-ruled`). **FORK PACKAGING IN FLIGHT**: built-in
-  extension + FILE_ICON_THEME default flip; then pin bump + Sebastian's
-  compile/virgin-boot.
+  (same URL, `full-set-v2-ruled`). **FORK PACKAGING LANDED 2026-09-01**
+  (`14023da` on `vsebcode`, delegated; diff reviewed; hooks ON):
+  `extensions/theme-vsebcode-icons` built-in + default flipped at BOTH
+  hardcoded sites (the survey caught the second,
+  `DEFAULT_FILE_ICON_THEME_ID` — missing it would have reset to Seti);
+  compile 0, self-check clean, hygiene/eslint 0, theme suite 3/3;
+  theme-seti kept selectable. Workshop committed umbrella-side
+  (renders/node_modules gitignored), pin bumped. **REMAINING, Sebastian
+  by hand (runbook in Tasks § M11)**: push `vsebcode`, compile + marker
+  check, dev boot (icons default out of the box, Cargo.toml → Rust), one
+  packaged virgin-.app pass; verdict → M11 close. Note: `claude`/
+  `agents`/`copilot`/`cursor` FILE icons ship (file recognition for
+  CLAUDE.md-style files, not AI features) — one word drops them.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

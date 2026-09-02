@@ -1,0 +1,25 @@
+A single square image: a 4x4 grid of 16 file-type icons for a code editor, evenly spaced cells, generous padding, NO grid lines, on a UNIFORM PURE WHITE background (#FFFFFF everywhere outside the icons).
+
+UNIFORM STYLE — these 16 icons are ONE matched set: flat 2D vector look, solid matte colors, bold simple geometry that stays readable at 16x16 pixels, subtly rounded corners, NO gradients, NO outlines, NO drop shadows, NO 3D, NO texture, NO background tiles behind silhouettes, and NO text anywhere except the short letter badges explicitly specified. Matte desaturated-bright colors tuned for a near-black editor UI (#121314).
+
+Exactly three archetypes: (A) BADGE = rounded square filled with the brand color carrying 1-3 bold white (or specified) letters; (B) SILHOUETTE = one flat object shape in the brand color; (C) GLYPH = a bold flat monogram/mark drawn directly in the brand color with no shape behind it.
+
+Cells left-to-right, top-to-bottom:
+1. TypeScript — BADGE #3178C6, white letters TS
+2. JavaScript — BADGE #E8D44D, dark #323330 letters JS
+3. JSON — GLYPH: bold curly braces mark in #E8D44D
+4. Markdown — GLYPH: bold M with a down-arrow beside it, #519ABA
+5. CSS — SILHOUETTE: flat shield #1572B6 with white number 3
+6. HTML — SILHOUETTE: flat shield #E44D26 with white number 5
+7. Python — GLYPH: the two-snakes interlocked mark, simplified flat, #3776AB and #FFD43B
+8. Rust — GLYPH: simplified flat gear with letter R, #DEA584
+9. Go — BADGE #00ADD8, white letters GO
+10. Docker — SILHOUETTE: flat whale with container blocks, #2496ED
+11. Git — GLYPH: branch mark (dots and lines fork), #F05033
+12. dotenv — BADGE #ECD53F, dark #323330 letters env
+13. YAML — BADGE muted purple #6E4C7E, white letters YML
+14. Closed folder — SILHOUETTE: flat folder, warm tan #BF9354, slightly darker tab band
+15. Open folder — SILHOUETTE: flat open folder, back #8F6D37, front flap #C09553
+16. Plain file — SILHOUETTE: flat document with folded corner, light gray #C5C5C5
+
+Output a single PNG at 2048x2048 or larger.

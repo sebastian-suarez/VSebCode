@@ -1,0 +1,589 @@
+<title>M11 Batch 4</title>
+<style>
+  :root{
+    --bg:#121314; --bg2:#191A1B; --panel:#1C1E1F; --line:#2A2D2E;
+    --fg:#D7D9DA; --dim:#8A9092;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 var(--sans);
+       -webkit-font-smoothing:antialiased;padding:0 0 96px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  header{padding:56px 0 36px;border-bottom:1px solid var(--line);margin-bottom:44px}
+  h1{font-size:30px;line-height:1.15;margin:0 0 12px;letter-spacing:-.02em;font-weight:600}
+  .sub{color:var(--dim);max-width:72ch;margin:0 0 20px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font:11px/1 var(--mono);color:var(--dim);border:1px solid var(--line);
+       border-radius:999px;padding:6px 10px;background:var(--bg2)}
+  h2{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);
+     font-weight:600;margin:52px 0 6px}
+  h2:first-of-type{margin-top:0}
+  .lede{color:var(--dim);margin:0 0 22px;max-width:78ch}
+
+  table{border-collapse:collapse;width:100%;background:var(--panel);
+        border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  thead th{font:11px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+           text-align:center;padding:12px 8px;border-bottom:1px solid var(--line);font-weight:500}
+  thead th:first-child,tbody th{text-align:left}
+  tbody th{font-weight:400;padding:9px 14px;white-space:nowrap}
+  .nm{font:12px/1 var(--mono);color:var(--fg)}
+  .arch{display:block;font:10px/1.6 var(--mono);color:var(--dim);letter-spacing:.06em}
+  td{padding:9px 8px;text-align:center;vertical-align:middle}
+  tbody tr+tr th,tbody tr+tr td{border-top:1px solid var(--line)}
+  .ico{display:inline-block;vertical-align:middle}
+  .rowcell{text-align:left;padding-left:16px}
+  .trow{display:inline-flex;align-items:center;gap:7px;height:22px;padding:0 8px;border-radius:4px}
+  .trow span{font:13px/1 var(--sans);color:#CCCCCC;white-space:nowrap}
+
+  .tree{border:1px solid var(--line);border-radius:10px;padding:10px 0 14px;background:var(--bg);
+        max-width:360px}
+  .treehead{font:10px/1 var(--mono);color:var(--dim);letter-spacing:.08em;padding:6px 14px 12px}
+  .tree .row{display:flex;align-items:center;gap:7px;padding:0 14px;height:22px}
+  .tree .row span{font:13px/1 var(--sans);color:#CCCCCC;white-space:nowrap}
+  .strips{display:grid;grid-template-columns:360px 360px;gap:20px;align-items:start}
+  .strips .tree:nth-child(2){background:#1E1E1E}
+
+  .swatches{display:flex;flex-wrap:wrap;gap:14px;background:var(--panel);border:1px solid var(--line);
+            border-radius:10px;padding:16px}
+  .sw{display:inline-flex;align-items:center;gap:6px}
+  .sw span{font:11px/1 var(--mono);color:var(--dim)}
+
+  .mono{font:12px/1.5 var(--mono)}
+  .dim{color:var(--dim)}
+  .num{text-align:right}
+  .ftable td{text-align:left;padding:8px 14px}
+  .ftable td.num{text-align:right}
+  tfoot td{border-top:1px solid var(--line);color:var(--dim);font:12px/1.5 var(--mono)}
+</style>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+<defs>
+<symbol id="p-word" viewBox="0 0 16 16"><rect x="2.6" y="1.5" width="10.8" height="13" rx="1.3" fill="#37588C"/><path fill="#FFFFFF" d="M6.95 10.95L5.57 10.95 3.99 5.05 5.31 5.05 5.99 7.95Q6.08 8.36 6.16 8.82 6.24 9.29 6.31 9.74 6.39 9.29 6.47 8.82 6.55 8.36 6.65 7.95L7.37 5.05 8.63 5.05 9.34 7.95Q9.44 8.36 9.53 8.82 9.61 9.28 9.69 9.73 9.76 9.28 9.84 8.82 9.91 8.36 10.01 7.95L10.69 5.05 12.01 5.05 10.43 10.95 9.05 10.95 8.26 7.93Q8.18 7.61 8.12 7.26 8.06 6.9 7.99 6.52 7.94 6.89 7.88 7.25 7.82 7.6 7.73 7.93L6.95 10.95Z"/></symbol>
+<symbol id="p-powerpoint" viewBox="0 0 16 16"><rect x="1.5" y="2.8" width="13" height="8.2" rx="1.3" fill="#C74C57"/><path fill="#C74C57" d="M7 11h2v.9h1.8v1.2H5.2v-1.2H7z"/><path fill="#FFFFFF" d="M4.2 6.9h1.6v2.4H4.2zM7.2 5.5h1.6v3.8H7.2zM10.2 4.1h1.6v5.2h-1.6z"/></symbol>
+<symbol id="p-mdx" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#7B68CE"/><path fill="#FFFFFF" d="M3.08 10.82L2.3 10.82 2.3 7.02 3.5 7.02 4.11 8.76Q4.15 8.88 4.2 9.08 4.25 9.27 4.3 9.49 4.35 9.72 4.4 9.92 4.44 9.72 4.49 9.5 4.54 9.27 4.59 9.08 4.64 8.88 4.68 8.76L5.28 7.02 6.48 7.02 6.48 10.82 5.7 10.82 5.7 9.03Q5.7 8.88 5.71 8.66 5.71 8.44 5.72 8.18 5.73 7.93 5.73 7.69 5.66 7.94 5.59 8.2 5.52 8.46 5.46 8.67 5.4 8.89 5.35 9.03L4.72 10.82 4.07 10.82 3.43 9.03Q3.38 8.9 3.32 8.69 3.26 8.48 3.19 8.23 3.11 7.97 3.05 7.72 3.05 7.95 3.06 8.2 3.07 8.45 3.07 8.66 3.08 8.88 3.08 9.03L3.08 10.82ZM8.19 10.82L6.86 10.82 6.86 7.02 8.21 7.02Q8.78 7.02 9.19 7.25 9.6 7.47 9.82 7.9 10.04 8.32 10.04 8.92 10.04 9.51 9.82 9.94 9.6 10.36 9.18 10.59 8.77 10.82 8.19 10.82ZM7.63 7.69L7.63 10.15 8.15 10.15Q8.7 10.15 8.99 9.85 9.27 9.56 9.27 8.92 9.27 8.28 8.99 7.98 8.71 7.69 8.16 7.69L7.63 7.69ZM11 10.82L10.1 10.82 11.46 8.87 10.22 7.02 11.13 7.02 11.54 7.66Q11.67 7.86 11.75 8.02 11.83 8.18 11.91 8.33 11.98 8.18 12.06 8.02 12.15 7.86 12.28 7.66L12.7 7.02 13.58 7.02 12.35 8.85 13.7 10.82 12.77 10.82 12.25 10.02Q12.11 9.82 12.04 9.69 11.97 9.57 11.9 9.43 11.82 9.56 11.75 9.69 11.68 9.82 11.55 10.02L11 10.82Z"/></symbol>
+<symbol id="p-asciidoc" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#A85EA0"/><path fill="#FFFFFF" d="M4.25 11.35L3.1 11.35 4.84 6.25 6.21 6.25 7.99 11.35 6.83 11.35 6.44 10.17 4.63 10.17 4.25 11.35ZM5.04 8.89L4.89 9.35 6.17 9.35 6.02 8.89Q5.89 8.5 5.77 8.04 5.65 7.59 5.51 7.07 5.39 7.6 5.27 8.05 5.15 8.51 5.04 8.89ZM10.42 11.35L8.62 11.35 8.62 6.25 10.44 6.25Q11.2 6.25 11.75 6.56 12.31 6.86 12.61 7.43 12.9 8 12.9 8.8 12.9 9.6 12.61 10.17 12.31 10.74 11.75 11.04 11.19 11.35 10.42 11.35ZM9.67 7.15L9.67 10.45 10.37 10.45Q11.1 10.45 11.48 10.05 11.86 9.66 11.86 8.8 11.86 7.94 11.48 7.55 11.11 7.15 10.37 7.15L9.67 7.15Z"/></symbol>
+<symbol id="p-tex" viewBox="0 0 16 16"><path fill="#3FA6A6" d="M3.14 5.58L1.45 5.58 1.45 4.65 5.95 4.65 5.95 5.58 4.27 5.58 4.27 10.15 3.14 10.15 3.14 5.58ZM9.48 11.35L5.8 11.35 5.8 5.85 9.48 5.85 9.48 6.78 6.92 6.78 6.92 8.11 9.28 8.11 9.28 9.03 6.92 9.03 6.92 10.42 9.48 10.42 9.48 11.35ZM10.64 10.15L9.34 10.15 11.31 7.34 9.51 4.65 10.82 4.65 11.42 5.57Q11.62 5.87 11.73 6.1 11.84 6.33 11.95 6.55 12.06 6.33 12.18 6.1 12.3 5.87 12.49 5.57L13.1 4.65 14.38 4.65 12.6 7.3 14.54 10.15 13.21 10.15 12.44 9Q12.25 8.71 12.15 8.52 12.05 8.34 11.94 8.13 11.83 8.33 11.73 8.52 11.63 8.71 11.43 9L10.64 10.15Z"/></symbol>
+<symbol id="p-audio" viewBox="0 0 16 16"><path fill="#C06E9E" d="M1.95 5.9h1.5v4.2h-1.5zM4.6 4.4h1.5v7.2H4.6zM7.25 3.2h1.5v9.6h-1.5zM9.9 4.4h1.5v7.2H9.9zM12.55 5.9h1.5v4.2h-1.5z"/></symbol>
+<symbol id="p-video" viewBox="0 0 16 16"><path fill="#6E76CE" fill-rule="evenodd" d="M2.8 2.9h10.4a1.3 1.3 0 0 1 1.3 1.3v7.6a1.3 1.3 0 0 1-1.3 1.3H2.8a1.3 1.3 0 0 1-1.3-1.3V4.2a1.3 1.3 0 0 1 1.3-1.3ZM3.05 4.2h1.5v1.4h-1.5ZM5.85 4.2h1.5v1.4h-1.5ZM8.65 4.2h1.5v1.4h-1.5ZM11.45 4.2h1.5v1.4h-1.5ZM3.05 10.4h1.5v1.4h-1.5ZM5.85 10.4h1.5v1.4h-1.5ZM8.65 10.4h1.5v1.4h-1.5ZM11.45 10.4h1.5v1.4h-1.5Z"/></symbol>
+<symbol id="p-zip" viewBox="0 0 16 16"><path fill="#93A05B" fill-rule="evenodd" d="M2.4 3h11.2a.9 .9 0 0 1 .9 .9v.8a.9 .9 0 0 1-.9 .9H2.4a.9 .9 0 0 1-.9-.9v-.8a.9 .9 0 0 1 .9-.9ZM3.4 6.4h9.2a1 1 0 0 1 1 1v4.8a1 1 0 0 1-1 1H3.4a1 1 0 0 1-1-1V7.4a1 1 0 0 1 1-1ZM7.1 7.6h1.8v2.2H7.1Z"/></symbol>
+<symbol id="p-binary" viewBox="0 0 16 16"><path fill="#6F9E77" d="M4.95 4.8L6.36 4.8 6.36 11.2 5.05 11.2 5.05 5.96 5 5.96 3.54 6.99 3.54 5.79 4.95 4.8ZM9.9 11.29Q8.69 11.29 8.01 10.42 7.34 9.56 7.34 8 7.34 6.45 8.01 5.58 8.69 4.71 9.9 4.71 11.11 4.71 11.78 5.58 12.46 6.45 12.46 8 12.46 9.56 11.79 10.42 11.11 11.29 9.9 11.29ZM9.9 10.2Q10.49 10.2 10.81 9.63 11.12 9.06 11.12 8 11.12 6.95 10.81 6.37 10.49 5.8 9.9 5.8 9.31 5.8 8.99 6.37 8.67 6.95 8.67 8 8.67 9.06 8.99 9.63 9.3 10.2 9.9 10.2Z"/></symbol>
+<symbol id="p-exe" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#87817A"/><path fill="#FFFFFF" d="M5.58 11.02L2.7 11.02 2.7 6.72 5.58 6.72 5.58 7.45 3.58 7.45 3.58 8.49 5.43 8.49 5.43 9.21 3.58 9.21 3.58 10.29 5.58 10.29 5.58 11.02ZM6.95 11.02L5.93 11.02 7.47 8.82 6.07 6.72 7.09 6.72 7.56 7.44Q7.71 7.68 7.8 7.86 7.89 8.04 7.97 8.21 8.06 8.04 8.15 7.86 8.24 7.68 8.39 7.44L8.87 6.72 9.87 6.72 8.48 8.8 10 11.02 8.95 11.02 8.36 10.12Q8.21 9.89 8.13 9.75 8.05 9.61 7.96 9.45 7.88 9.6 7.8 9.75 7.72 9.89 7.57 10.12L6.95 11.02ZM13.3 11.02L10.42 11.02 10.42 6.72 13.29 6.72 13.29 7.45 11.3 7.45 11.3 8.49 13.14 8.49 13.14 9.21 11.3 9.21 11.3 10.29 13.3 10.29 13.3 11.02Z"/></symbol>
+<symbol id="p-key" viewBox="0 0 16 16"><path fill="#BFAA4E" d="M2.7 10.4a2.9 2.9 0 1 1 5.8 0a2.9 2.9 0 1 1-5.8 0ZM4.1 10.4a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0-3 0ZM6.46 8.44L12.12 2.78 13.22 3.88 7.57 9.54ZM10.82 6.29L11.81 5.3 12.88 6.37 11.89 7.36ZM12.38 4.73L13.15 3.95 14.09 4.89 13.31 5.66Z"/></symbol>
+<symbol id="p-cert" viewBox="0 0 16 16"><path fill="#C79A4A" d="M4.3 5.6a3.7 3.7 0 1 1 7.4 0a3.7 3.7 0 1 1-7.4 0ZM5 8.4h6v5.7l-3-2.1-3 2.1Z"/></symbol>
+<symbol id="p-powershell" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#6478C8"/><path fill="#FFFFFF" d="M4.61 11.52L3.48 11.52 3.48 6.02 5.63 6.02Q6.25 6.02 6.69 6.25 7.13 6.49 7.36 6.91 7.59 7.33 7.59 7.87 7.59 8.42 7.36 8.83 7.13 9.25 6.68 9.48 6.23 9.72 5.6 9.72L4.61 9.72 4.61 11.52ZM4.61 6.95L4.61 8.81 5.42 8.81Q5.94 8.81 6.18 8.55 6.43 8.29 6.43 7.87 6.43 7.45 6.18 7.2 5.94 6.95 5.42 6.95L4.61 6.95ZM10.4 11.6Q9.4 11.6 8.81 11.14 8.22 10.68 8.2 9.81L9.29 9.81Q9.32 10.23 9.63 10.44 9.93 10.64 10.38 10.64 10.83 10.64 11.11 10.45 11.38 10.26 11.38 9.94 11.38 9.66 11.14 9.51 10.89 9.36 10.44 9.24L9.83 9.09Q9.13 8.92 8.74 8.56 8.34 8.2 8.34 7.6 8.34 7.1 8.61 6.73 8.88 6.35 9.35 6.15 9.81 5.94 10.41 5.94 11.02 5.94 11.47 6.15 11.93 6.36 12.18 6.73 12.44 7.1 12.44 7.58L11.36 7.58Q11.33 7.25 11.07 7.07 10.82 6.89 10.4 6.89 9.97 6.89 9.73 7.07 9.5 7.25 9.5 7.52 9.5 7.83 9.76 7.98 10.03 8.13 10.38 8.22L10.88 8.34Q11.34 8.45 11.71 8.65 12.08 8.85 12.3 9.17 12.52 9.49 12.52 9.95 12.52 10.7 11.96 11.15 11.4 11.6 10.4 11.6Z"/></symbol>
+<symbol id="p-makefile" viewBox="0 0 16 16"><path fill="#A08D78" d="M2.56 11.89L7.93 6.52 7.01 5.6 10.05 2.56 11.01 3.51 8.88 5.63 10.37 7.12 12.49 5 13.45 5.95 10.4 8.99 9.49 8.07 4.11 13.45Z"/></symbol>
+<symbol id="p-cmake" viewBox="0 0 16 16"><path fill="#3D71B5" fill-rule="evenodd" d="M8 1.9L14.3 13.6 1.7 13.6ZM8 5L11.6 11.9 4.4 11.9Z"/></symbol>
+<symbol id="p-gradle" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#6E8A92"/><path fill="#FFFFFF" d="M5.61 11.5Q4.87 11.5 4.31 11.18 3.74 10.85 3.43 10.24 3.12 9.63 3.12 8.79 3.12 7.93 3.44 7.32 3.77 6.71 4.33 6.39 4.89 6.06 5.59 6.06 6.18 6.06 6.67 6.29 7.15 6.52 7.46 6.92 7.77 7.32 7.85 7.84L6.74 7.84Q6.63 7.46 6.34 7.24 6.05 7.03 5.6 7.03 4.99 7.03 4.61 7.48 4.22 7.94 4.22 8.78 4.22 9.62 4.6 10.08 4.98 10.54 5.62 10.54 6.18 10.54 6.51 10.24 6.83 9.94 6.85 9.43L5.69 9.43 5.69 8.61 7.9 8.61 7.9 9.27Q7.9 9.97 7.6 10.47 7.31 10.97 6.79 11.24 6.28 11.5 5.61 11.5ZM9.82 11.43L8.73 11.43 8.73 6.13 10.8 6.13Q11.7 6.13 12.2 6.6 12.69 7.08 12.69 7.86 12.69 8.4 12.45 8.79 12.21 9.17 11.75 9.37L12.88 11.43 11.68 11.43 10.67 9.54 9.82 9.54 9.82 11.43ZM9.82 7.03L9.82 8.66 10.6 8.66Q11.57 8.66 11.57 7.86 11.57 7.46 11.33 7.24 11.09 7.03 10.59 7.03L9.82 7.03Z"/></symbol>
+<symbol id="p-maven" viewBox="0 0 16 16"><path fill="#A93F4A" d="M1.69 10.4L.71 10.4 .71 5.6 2.22 5.6 3 7.8Q3.05 7.95 3.11 8.2 3.17 8.44 3.24 8.73 3.3 9.01 3.36 9.27 3.41 9.01 3.48 8.73 3.54 8.45 3.6 8.2 3.67 7.96 3.71 7.8L4.48 5.6 5.99 5.6 5.99 10.4 5.01 10.4 5.01 8.14Q5.01 7.95 5.01 7.67 5.02 7.39 5.03 7.07 5.04 6.75 5.04 6.45 4.96 6.77 4.87 7.09 4.78 7.42 4.7 7.69 4.62 7.96 4.56 8.14L3.77 10.4 2.94 10.4 2.13 8.14Q2.08 7.97 2 7.71 1.92 7.44 1.83 7.13 1.74 6.81 1.65 6.49 1.66 6.78 1.67 7.09 1.68 7.4 1.68 7.68 1.69 7.95 1.69 8.14L1.69 10.4ZM9.22 10.4L7.94 10.4 6.25 5.6 7.35 5.6 8.11 7.92Q8.23 8.28 8.34 8.7 8.46 9.12 8.58 9.61 8.71 9.12 8.82 8.7 8.93 8.28 9.04 7.92L9.78 5.6 10.86 5.6 9.22 10.4ZM12.13 10.4L11.13 10.4 11.13 5.6 12.22 5.6 13.74 8.03Q13.88 8.26 14.03 8.55 14.18 8.83 14.34 9.2 14.32 8.85 14.3 8.49 14.28 8.14 14.28 7.9L14.28 5.6 15.29 5.6 15.29 10.4 14.19 10.4 12.81 8.2Q12.68 7.98 12.56 7.78 12.45 7.57 12.33 7.34 12.22 7.11 12.07 6.81 12.09 7.25 12.11 7.62 12.13 7.98 12.13 8.19L12.13 10.4Z"/></symbol>
+<symbol id="p-config" viewBox="0 0 16 16"><path fill="#7F8FA6" d="M1.6 3.75h12.8v1.3H1.6zM9 2.8h2.4v3.2H9zM1.6 7.35h12.8v1.3H1.6zM4.2 6.4h2.4v3.2H4.2zM1.6 10.95h12.8v1.3H1.6zM9.8 10h2.4v3.2H9.8z"/></symbol>
+<symbol id="p-log" viewBox="0 0 16 16"><path fill="#96A17E" d="M1.6 3.4h2.6v1.3H1.6zM5.4 3.4h9v1.3h-9zM1.6 6.2h2.6v1.3H1.6zM5.4 6.2h7.5v1.3H5.4zM1.6 9h2.6v1.3H1.6zM5.4 9h9v1.3h-9zM1.6 11.8h2.6v1.3H1.6zM5.4 11.8h5.8v1.3H5.4z"/></symbol>
+<symbol id="p-diff" viewBox="0 0 16 16"><path fill="#5FA894" d="M2.65 3.8h1.3v3.6h-1.3zM1.5 4.95h3.6v1.3H1.5zM6.3 4.95h8.2v1.3H6.3zM1.5 10.95h3.6v1.3H1.5zM6.3 10.95h6.3v1.3H6.3z"/></symbol>
+<symbol id="p-typescriptdef" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#3178C6"/><path fill="#FFFFFF" d="M4.1 10.94L2.65 10.94 2.65 6.84 4.11 6.84Q4.73 6.84 5.17 7.09 5.62 7.33 5.85 7.79 6.09 8.25 6.09 8.89 6.09 9.53 5.85 9.99 5.62 10.45 5.17 10.69 4.72 10.94 4.1 10.94ZM3.49 7.56L3.49 10.22 4.06 10.22Q4.65 10.22 4.95 9.9 5.26 9.58 5.26 8.89 5.26 8.2 4.95 7.88 4.65 7.56 4.06 7.56L3.49 7.56ZM7.7 7.54L6.45 7.54 6.45 6.84 9.8 6.84 9.8 7.54 8.54 7.54 8.54 10.94 7.7 10.94 7.7 7.54ZM11.76 11Q11.02 11 10.58 10.66 10.14 10.32 10.12 9.67L10.94 9.67Q10.96 9.98 11.19 10.14 11.42 10.29 11.75 10.29 12.09 10.29 12.3 10.15 12.5 10 12.5 9.77 12.5 9.56 12.31 9.44 12.13 9.33 11.79 9.25L11.34 9.14Q10.82 9.01 10.53 8.74 10.23 8.47 10.23 8.02 10.23 7.65 10.43 7.37 10.63 7.09 10.98 6.94 11.33 6.79 11.77 6.79 12.23 6.79 12.57 6.94 12.9 7.1 13.09 7.37 13.28 7.65 13.29 8.01L12.48 8.01Q12.46 7.76 12.27 7.63 12.08 7.49 11.77 7.49 11.44 7.49 11.27 7.63 11.09 7.76 11.09 7.97 11.09 8.19 11.29 8.31 11.49 8.42 11.75 8.48L12.12 8.57Q12.46 8.65 12.74 8.8 13.02 8.95 13.18 9.19 13.35 9.43 13.35 9.77 13.35 10.33 12.93 10.67 12.51 11 11.76 11Z"/></symbol>
+<symbol id="p-jsconfig" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#E8D44D"/><path fill="#323330" d="M4.65 8a3.35 3.35 0 1 1 6.7 0a3.35 3.35 0 1 1-6.7 0ZM6.55 8a1.45 1.45 0 1 0 2.9 0a1.45 1.45 0 1 0-2.9 0ZM10.9 7.05h1.85v1.9H10.9ZM10.27 10.04L11.2 11.64 9.55 12.59 8.63 10.99ZM7.37 10.99L6.45 12.59 4.8 11.64 5.73 10.04ZM3.25 7.05h1.85v1.9H3.25ZM5.73 5.96L4.8 4.36 6.45 3.41 7.37 5.01ZM8.63 5.01L9.55 3.41 11.2 4.36 10.27 5.96Z"/></symbol>
+<symbol id="p-class" viewBox="0 0 16 16"><path fill="#9A8C84" d="M3.6 3.6h7v5.6a2.4 2.4 0 0 1-2.4 2.4H6a2.4 2.4 0 0 1-2.4-2.4ZM10.4 4.8h1.2a2.4 2.4 0 0 1 0 4.8h-1.2V8.3h1.2a1.1 1.1 0 0 0 0-2.2h-1.2ZM2.6 12.4h9a1.5 1.5 0 0 1-1.5 1.5H4.1a1.5 1.5 0 0 1-1.5-1.5Z"/></symbol>
+<symbol id="p-nginx" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#3E9E5C"/><path fill="#FFFFFF" d="M3.13 10.86L2.32 10.86 2.32 6.96 3.21 6.96 4.44 8.93Q4.56 9.12 4.68 9.35 4.8 9.58 4.93 9.89 4.91 9.6 4.89 9.31 4.88 9.02 4.88 8.83L4.88 6.96 5.7 6.96 5.7 10.86 4.8 10.86 3.68 9.07Q3.58 8.89 3.48 8.73 3.39 8.56 3.3 8.38 3.2 8.19 3.08 7.95 3.1 8.3 3.12 8.6 3.13 8.89 3.13 9.07L3.13 10.86ZM8.02 10.91Q7.48 10.91 7.06 10.67 6.65 10.43 6.42 9.98 6.19 9.53 6.19 8.91 6.19 8.28 6.43 7.83 6.67 7.38 7.08 7.14 7.49 6.91 8.01 6.91 8.44 6.91 8.8 7.07 9.16 7.24 9.38 7.54 9.61 7.83 9.67 8.22L8.86 8.22Q8.77 7.94 8.56 7.78 8.34 7.62 8.02 7.62 7.57 7.62 7.28 7.95 7 8.29 7 8.91 7 9.53 7.28 9.86 7.56 10.2 8.03 10.2 8.44 10.2 8.68 9.98 8.92 9.76 8.93 9.39L8.08 9.39 8.08 8.78 9.71 8.78 9.71 9.27Q9.71 9.78 9.49 10.15 9.27 10.52 8.89 10.71 8.51 10.91 8.02 10.91ZM10.92 10.86L9.99 10.86 11.39 8.86 10.12 6.96 11.04 6.96 11.47 7.61Q11.61 7.82 11.69 7.99 11.77 8.15 11.85 8.31 11.92 8.15 12.01 7.99 12.09 7.82 12.23 7.61L12.66 6.96 13.57 6.96 12.3 8.84 13.68 10.86 12.74 10.86 12.19 10.04Q12.06 9.84 11.99 9.7 11.91 9.57 11.84 9.43 11.76 9.57 11.69 9.7 11.61 9.84 11.48 10.04L10.92 10.86Z"/></symbol>
+<symbol id="n-typescript" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#3178C6"/><path fill="#FFFFFF" d="M4.76 7.07L3.17 7.07 3.17 6.19 7.43 6.19 7.43 7.07 5.83 7.07 5.83 11.4 4.76 11.4 4.76 7.07ZM10.54 11.48Q9.6 11.48 9.03 11.04 8.47 10.61 8.45 9.78L9.49 9.78Q9.52 10.18 9.81 10.38 10.1 10.57 10.53 10.57 10.95 10.57 11.22 10.39 11.48 10.21 11.48 9.91 11.48 9.64 11.24 9.5 11 9.35 10.58 9.25L10 9.1Q9.34 8.94 8.97 8.6 8.59 8.25 8.59 7.69 8.59 7.21 8.85 6.86 9.1 6.51 9.54 6.31 9.99 6.12 10.55 6.12 11.13 6.12 11.56 6.31 11.99 6.51 12.23 6.86 12.47 7.21 12.48 7.67L11.45 7.67Q11.42 7.36 11.18 7.19 10.94 7.02 10.54 7.02 10.13 7.02 9.91 7.19 9.69 7.35 9.69 7.62 9.69 7.91 9.94 8.05 10.19 8.19 10.52 8.28L10.99 8.39Q11.43 8.49 11.78 8.68 12.14 8.87 12.34 9.18 12.55 9.48 12.55 9.92 12.55 10.63 12.02 11.05 11.49 11.48 10.54 11.48Z"/></symbol>
+<symbol id="n-js" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#E8D44D"/><path fill="#323330" d="M5.44 11.59Q4.58 11.59 4.09 11.14 3.6 10.69 3.6 9.86L3.6 9.54 4.72 9.54 4.72 9.88Q4.72 10.27 4.92 10.48 5.11 10.68 5.44 10.68 5.77 10.68 5.96 10.48 6.15 10.27 6.15 9.88L6.15 6.02 7.27 6.02 7.27 9.86Q7.27 10.69 6.78 11.14 6.29 11.59 5.44 11.59ZM10.28 11.6Q9.29 11.6 8.69 11.14 8.1 10.68 8.08 9.81L9.18 9.81Q9.21 10.23 9.51 10.44 9.81 10.64 10.27 10.64 10.72 10.64 10.99 10.45 11.27 10.26 11.27 9.94 11.27 9.66 11.02 9.51 10.77 9.36 10.32 9.24L9.71 9.09Q9.02 8.92 8.62 8.56 8.23 8.2 8.23 7.6 8.23 7.1 8.49 6.73 8.76 6.35 9.23 6.15 9.7 5.94 10.29 5.94 10.9 5.94 11.36 6.15 11.81 6.36 12.07 6.73 12.32 7.1 12.33 7.58L11.24 7.58Q11.21 7.25 10.96 7.07 10.7 6.89 10.28 6.89 9.85 6.89 9.62 7.07 9.38 7.25 9.38 7.52 9.38 7.83 9.65 7.98 9.91 8.13 10.26 8.22L10.76 8.34Q11.22 8.45 11.59 8.65 11.97 8.85 12.18 9.17 12.4 9.49 12.4 9.95 12.4 10.7 11.84 11.15 11.28 11.6 10.28 11.6Z"/></symbol>
+<symbol id="n-css" viewBox="0 0 16 16"><path fill="#1572B6" d="M2.6 1.5h10.8l-.98 11L8 14.5l-4.42-2z"/><path fill="#FFFFFF" d="M7.87 10.67Q7.32 10.67 6.89 10.48 6.46 10.29 6.21 9.95 5.97 9.62 5.96 9.18L7.01 9.18Q7.02 9.46 7.27 9.63 7.51 9.81 7.87 9.81 8.25 9.81 8.48 9.61 8.72 9.42 8.72 9.11 8.72 8.8 8.47 8.6 8.22 8.4 7.78 8.4L7.31 8.4 7.31 7.63 7.78 7.63Q8.15 7.63 8.38 7.44 8.61 7.25 8.61 6.95 8.61 6.65 8.41 6.47 8.21 6.29 7.88 6.29 7.55 6.29 7.31 6.46 7.07 6.64 7.06 6.93L6.06 6.93Q6.07 6.5 6.31 6.17 6.55 5.83 6.96 5.65 7.37 5.46 7.88 5.46 8.41 5.46 8.8 5.65 9.19 5.84 9.4 6.16 9.62 6.49 9.62 6.88 9.62 7.31 9.36 7.6 9.09 7.88 8.67 7.96L8.67 8Q9.23 8.07 9.52 8.39 9.8 8.71 9.8 9.18 9.8 9.61 9.56 9.95 9.31 10.28 8.87 10.48 8.43 10.67 7.87 10.67Z"/></symbol>
+<symbol id="n-html" viewBox="0 0 16 16"><path fill="#DB5430" d="M2.6 1.5h10.8l-.98 11L8 14.5l-4.42-2z"/><path fill="#FFFFFF" d="M7.97 10.67Q7.45 10.67 7.04 10.48 6.64 10.28 6.4 9.95 6.16 9.61 6.15 9.18L7.16 9.18Q7.18 9.47 7.41 9.66 7.65 9.84 7.97 9.84 8.35 9.84 8.6 9.59 8.84 9.34 8.84 8.94 8.84 8.53 8.59 8.28 8.34 8.02 7.95 8.02 7.73 8.02 7.52 8.11 7.31 8.2 7.19 8.35L6.26 8.19 6.5 5.53 9.57 5.53 9.57 6.38 7.36 6.38 7.23 7.67 7.26 7.67Q7.4 7.48 7.66 7.37 7.93 7.25 8.26 7.25 8.72 7.25 9.08 7.46 9.44 7.68 9.64 8.05 9.85 8.43 9.85 8.91 9.85 9.43 9.61 9.82 9.38 10.22 8.95 10.44 8.53 10.67 7.97 10.67Z"/></symbol>
+<symbol id="n-markdown" viewBox="0 0 16 16"><rect x="0.75" y="3.75" width="14.5" height="8.5" rx="1.6" fill="none" stroke="#519ABA" stroke-width="1.3"/><path fill="#519ABA" d="M2.9 10.4V5.9h1.35L5.6 7.6l1.35-1.7H8.3v4.5H6.95V7.9L5.6 9.6 4.25 7.9v2.5z"/><path fill="#519ABA" d="M10.55 5.9h1.5v2.3h1.35L11.3 10.7 9.2 8.2h1.35z"/></symbol>
+<symbol id="n-json" viewBox="0 0 16 16"><path fill="#D6C13C" d="M6.7 2C5.35 2 4.6 2.75 4.6 4.1V6.05C4.6 6.75 4.05 7.15 3.1 7.15V8.85C4.05 8.85 4.6 9.25 4.6 9.95V11.9C4.6 13.25 5.35 14 6.7 14V12.3C6.5 12.3 6.3 12.15 6.3 11.9V9.95C6.3 9 5.9 8.35 5.15 8C5.9 7.65 6.3 7 6.3 6.05V4.1C6.3 3.85 6.5 3.7 6.7 3.7ZM9.3 2C10.65 2 11.4 2.75 11.4 4.1V6.05C11.4 6.75 11.95 7.15 12.9 7.15V8.85C11.95 8.85 11.4 9.25 11.4 9.95V11.9C11.4 13.25 10.65 14 9.3 14V12.3C9.5 12.3 9.7 12.15 9.7 11.9V9.95C9.7 9 10.1 8.35 10.85 8C10.1 7.65 9.7 7 9.7 6.05V4.1C9.7 3.85 9.5 3.7 9.3 3.7Z"/></symbol>
+<symbol id="n-dotenv" viewBox="0 0 16 16"><path fill="#E3CB4E" d="M4.46 10.6L.97 10.6 .97 5.4 4.45 5.4 4.45 6.28 2.04 6.28 2.04 7.54 4.27 7.54 4.27 8.41 2.04 8.41 2.04 9.72 4.46 9.72 4.46 10.6ZM6.19 10.6L5.1 10.6 5.1 5.4 6.29 5.4 7.93 8.03Q8.08 8.29 8.25 8.59 8.41 8.9 8.58 9.31 8.55 8.92 8.54 8.54 8.52 8.15 8.52 7.9L8.52 5.4 9.61 5.4 9.61 10.6 8.42 10.6 6.92 8.21Q6.78 7.98 6.66 7.76 6.53 7.54 6.41 7.29 6.28 7.04 6.12 6.72 6.15 7.19 6.17 7.58 6.19 7.98 6.19 8.21L6.19 10.6ZM13.25 10.6L11.85 10.6 10.03 5.4 11.22 5.4 12.05 7.91Q12.17 8.3 12.3 8.76 12.42 9.21 12.56 9.74 12.69 9.21 12.81 8.76 12.93 8.3 13.05 7.91L13.85 5.4 15.03 5.4 13.25 10.6Z"/></symbol>
+<symbol id="n-git" viewBox="0 0 16 16"><path fill="#E0603C" d="M3.85 3.6h1.6v8.8h-1.6zM6.6 3.6C6.6 4.68 5.73 5.55 4.65 5.55C3.57 5.55 2.7 4.68 2.7 3.6C2.7 2.52 3.57 1.65 4.65 1.65C5.73 1.65 6.6 2.52 6.6 3.6ZM6.6 12.4C6.6 13.48 5.73 14.35 4.65 14.35C3.57 14.35 2.7 13.48 2.7 12.4C2.7 11.32 3.57 10.45 4.65 10.45C5.73 10.45 6.6 11.32 6.6 12.4ZM13.3 4.4C13.3 5.48 12.43 6.35 11.35 6.35C10.27 6.35 9.4 5.48 9.4 4.4C9.4 3.32 10.27 2.45 11.35 2.45C12.43 2.45 13.3 3.32 13.3 4.4ZM12.15 4.4v2.9c0 .49-.41.9-.9.9H5.45V6.6h4.9c.11 0 .2-.09.2-.2V4.4z"/></symbol>
+<symbol id="n-shell" viewBox="0 0 16 16"><path fill="#79BE4A" d="M3.8 3.3L1.8 5.3 4.5 8l-2.7 2.7 2 2L8.5 8zM9.2 11h5.2v1.6H9.2z"/></symbol>
+<symbol id="n-sql" viewBox="0 0 16 16"><path fill="#3E9B8E" fill-rule="evenodd" d="M2.4 3.6C2.4 2.44 4.91 1.5 8 1.5s5.6.94 5.6 2.1v8.8c0 1.16-2.51 2.1-5.6 2.1s-5.6-.94-5.6-2.1zM2.4 6.2h11.2v.8H2.4zM2.4 9.6h11.2v.8H2.4z"/></symbol>
+<symbol id="n-npm" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="#CB3837"/><path fill="#FFFFFF" d="M3.26 8.83L3.26 10.4 2.53 10.4 2.53 7.68 3.22 7.68 3.23 8.24Q3.35 7.96 3.56 7.8 3.76 7.65 4.08 7.65 4.5 7.65 4.76 7.92 5.01 8.19 5.01 8.67L5.01 10.4 4.28 10.4 4.28 8.8Q4.28 8.54 4.15 8.4 4.02 8.26 3.79 8.26 3.56 8.26 3.41 8.41 3.26 8.56 3.26 8.83ZM6.65 11.42L5.92 11.42 5.92 7.68 6.64 7.68 6.64 8.14 6.68 8.14Q6.72 8.03 6.82 7.92 6.91 7.8 7.07 7.72 7.22 7.65 7.45 7.65 7.75 7.65 8 7.8 8.26 7.96 8.4 8.27 8.55 8.58 8.55 9.04 8.55 9.5 8.41 9.81 8.26 10.12 8.01 10.28 7.76 10.45 7.45 10.45 7.23 10.45 7.07 10.37 6.92 10.3 6.82 10.18 6.73 10.07 6.68 9.96L6.65 9.96 6.65 11.42ZM7.22 9.86Q7.51 9.86 7.66 9.63 7.81 9.4 7.81 9.04 7.81 8.68 7.66 8.46 7.51 8.23 7.22 8.23 6.94 8.23 6.79 8.45 6.64 8.67 6.64 9.04 6.64 9.41 6.79 9.64 6.94 9.86 7.22 9.86ZM10.08 10.4L9.35 10.4 9.35 7.68 10.03 7.68 10.06 8.21Q10.17 7.91 10.38 7.77 10.59 7.64 10.84 7.64 11.35 7.64 11.54 8.25 11.65 7.94 11.89 7.79 12.13 7.64 12.41 7.64 12.78 7.64 13.03 7.88 13.28 8.12 13.28 8.57L13.28 10.4 12.55 10.4 12.55 8.7Q12.55 8.48 12.42 8.36 12.3 8.25 12.12 8.25 11.91 8.25 11.79 8.38 11.67 8.51 11.67 8.73L11.67 10.4 10.96 10.4 10.96 8.68Q10.96 8.49 10.84 8.37 10.73 8.25 10.54 8.25 10.35 8.25 10.22 8.38 10.08 8.51 10.08 8.76L10.08 10.4Z"/></symbol>
+<symbol id="n-lock" viewBox="0 0 16 16"><path fill="#979CA3" fill-rule="evenodd" d="M4.9 7.2V5.5C4.9 3.79 6.29 2.4 8 2.4s3.1 1.39 3.1 3.1v1.7H9.7V5.5C9.7 4.56 8.94 3.8 8 3.8S6.3 4.56 6.3 5.5v1.7zM4.2 7.2h7.6c.66 0 1.2.54 1.2 1.2V13c0 .66-.54 1.2-1.2 1.2H4.2C3.54 14.2 3 13.66 3 13V8.4c0-.66.54-1.2 1.2-1.2zM8.95 10.3C8.95 10.82 8.52 11.25 8 11.25C7.48 11.25 7.05 10.82 7.05 10.3C7.05 9.78 7.48 9.35 8 9.35C8.52 9.35 8.95 9.78 8.95 10.3Z"/></symbol>
+<symbol id="n-image" viewBox="0 0 16 16"><path fill="#A08BCC" d="M1.5 13.6L6.1 5.4l4.6 8.2zM8.3 13.6l3.4-5.8 3.4 5.8zM13.65 4.2C13.65 5 13 5.65 12.2 5.65C11.4 5.65 10.75 5 10.75 4.2C10.75 3.4 11.4 2.75 12.2 2.75C13 2.75 13.65 3.4 13.65 4.2Z"/></symbol>
+<symbol id="n-docker" viewBox="0 0 16 16"><path fill="#2E92D8" d="M3.25 3.7h2.7v2.7h-2.7zM6.65 3.7h2.7v2.7h-2.7zM10.05 3.7h2.7v2.7h-2.7zM1 6.9h13v1.4c0 2.9-2.3 5.2-5.2 5.2H6.2C3.3 13.5 1 11.2 1 8.3zM14 6.9l1.8-1.5v3.8L14 8.3z"/></symbol>
+<symbol id="n-node" viewBox="0 0 16 16"><path fill="#5FA04E" d="M8 1.4l5.7 3.3v6.6L8 14.6 2.3 11.3V4.7z"/></symbol>
+<symbol id="n-yaml" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#7E6086"/><path fill="#FFFFFF" d="M4.54 10.86L3.74 10.86 3.74 9.39 2.3 6.96 3.23 6.96 3.89 8.17Q3.97 8.31 4.03 8.44 4.09 8.57 4.15 8.72 4.2 8.56 4.26 8.43 4.32 8.3 4.39 8.17L5.03 6.96 5.96 6.96 4.54 9.39 4.54 10.86ZM7.13 10.86L6.33 10.86 6.33 6.96 7.56 6.96 8.19 8.75Q8.23 8.87 8.28 9.07 8.33 9.27 8.38 9.5 8.44 9.73 8.48 9.94 8.53 9.73 8.58 9.5 8.63 9.27 8.68 9.07 8.73 8.87 8.77 8.75L9.39 6.96 10.62 6.96 10.62 10.86 9.82 10.86 9.82 9.02Q9.82 8.87 9.83 8.64 9.83 8.42 9.84 8.16 9.85 7.89 9.85 7.65 9.78 7.91 9.71 8.17 9.64 8.44 9.57 8.66 9.51 8.88 9.46 9.02L8.82 10.86 8.14 10.86 7.49 9.02Q7.44 8.89 7.38 8.67 7.31 8.46 7.24 8.2 7.17 7.94 7.1 7.68 7.1 7.91 7.11 8.17 7.12 8.42 7.12 8.65 7.13 8.87 7.13 9.02L7.13 10.86ZM13.7 10.86L11.22 10.86 11.22 6.96 12.02 6.96 12.02 10.2 13.7 10.2 13.7 10.86Z"/></symbol>
+<symbol id="n-svg" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#DFA046"/><path fill="#33260C" d="M4.04 10.96Q3.32 10.96 2.89 10.63 2.46 10.3 2.44 9.66L3.24 9.66Q3.26 9.96 3.48 10.11 3.7 10.27 4.03 10.27 4.36 10.27 4.56 10.13 4.76 9.98 4.76 9.76 4.76 9.55 4.58 9.44 4.4 9.33 4.07 9.25L3.63 9.14Q3.12 9.02 2.84 8.75 2.55 8.49 2.55 8.05 2.55 7.69 2.74 7.42 2.94 7.15 3.28 7 3.62 6.85 4.05 6.85 4.5 6.85 4.83 7 5.16 7.15 5.34 7.42 5.53 7.69 5.53 8.04L4.74 8.04Q4.72 7.8 4.53 7.67 4.35 7.54 4.04 7.54 3.73 7.54 3.56 7.67 3.39 7.8 3.39 8 3.39 8.22 3.58 8.33 3.77 8.44 4.03 8.5L4.39 8.59Q4.73 8.67 5 8.82 5.27 8.96 5.43 9.19 5.59 9.43 5.59 9.76 5.59 10.31 5.18 10.63 4.77 10.96 4.04 10.96ZM8.31 10.9L7.24 10.9 5.83 6.9 6.74 6.9 7.38 8.83Q7.48 9.13 7.58 9.48 7.67 9.83 7.78 10.24 7.88 9.83 7.97 9.48 8.06 9.13 8.15 8.83L8.77 6.9 9.68 6.9 8.31 10.9ZM11.83 10.95Q11.27 10.95 10.85 10.71 10.42 10.46 10.19 10 9.95 9.54 9.95 8.91 9.95 8.26 10.2 7.8 10.44 7.33 10.86 7.09 11.29 6.85 11.81 6.85 12.26 6.85 12.63 7.02 12.99 7.19 13.23 7.49 13.46 7.79 13.52 8.19L12.69 8.19Q12.6 7.9 12.38 7.74 12.16 7.57 11.83 7.57 11.37 7.57 11.07 7.92 10.78 8.26 10.78 8.9 10.78 9.53 11.07 9.88 11.36 10.23 11.84 10.23 12.26 10.23 12.51 10 12.75 9.78 12.76 9.39L11.89 9.39 11.89 8.77 13.56 8.77 13.56 9.27Q13.56 9.79 13.34 10.17 13.11 10.55 12.72 10.75 12.33 10.95 11.83 10.95Z"/></symbol>
+<symbol id="n-rust" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" fill="#A0523C"/><path fill="#FFFFFF" d="M4.57 11.52L3.45 11.52 3.45 6.02 5.59 6.02Q6.53 6.02 7.05 6.5 7.56 6.99 7.56 7.81 7.56 8.37 7.31 8.77 7.06 9.17 6.59 9.37L7.76 11.52 6.51 11.52 5.46 9.55 4.57 9.55 4.57 11.52ZM4.57 6.95L4.57 8.64 5.39 8.64Q6.4 8.64 6.4 7.81 6.4 7.39 6.15 7.17 5.9 6.95 5.38 6.95L4.57 6.95ZM10.43 11.6Q9.44 11.6 8.84 11.14 8.25 10.68 8.23 9.81L9.33 9.81Q9.35 10.23 9.66 10.44 9.96 10.64 10.42 10.64 10.87 10.64 11.14 10.45 11.42 10.26 11.42 9.94 11.42 9.66 11.17 9.51 10.92 9.36 10.47 9.24L9.86 9.09Q9.17 8.92 8.77 8.56 8.38 8.2 8.38 7.6 8.38 7.1 8.64 6.73 8.91 6.35 9.38 6.15 9.85 5.94 10.44 5.94 11.05 5.94 11.51 6.15 11.96 6.36 12.22 6.73 12.47 7.1 12.48 7.58L11.39 7.58Q11.36 7.25 11.11 7.07 10.85 6.89 10.43 6.89 10 6.89 9.77 7.07 9.53 7.25 9.53 7.52 9.53 7.83 9.8 7.98 10.06 8.13 10.41 8.22L10.91 8.34Q11.37 8.45 11.74 8.65 12.12 8.85 12.33 9.17 12.55 9.49 12.55 9.95 12.55 10.7 11.99 11.15 11.43 11.6 10.43 11.6Z"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+<header>
+  <h1>M11 Batch 4 — production contact sheet</h1>
+  <p class="sub">core-tier ranks 73–96: office documents, media, archives, binaries, build systems
+  and the config/log utilities. Hand-authored SVGs, 24 icons. No &lt;text&gt;, no font-family,
+  no gradients, no external references: every letterform is an Inter&nbsp;Bold outline baked by
+  tools/letterpath.mjs.</p>
+  <div class="meta">
+    <span class="tag">24 icons</span>
+    <span class="tag">13360 bytes total</span>
+    <span class="tag">avg 557 B</span>
+    <span class="tag">max 1259 B</span>
+    <span class="tag">bg #121314</span>
+  </div>
+</header>
+
+<section>
+  <h2>Size ladder</h2>
+  <p class="lede">16&nbsp;px is the primary target; the 22&nbsp;px tree row with its real filename is the
+  usage context; 32 and 64 only have to stay clean.</p>
+  <table>
+    <thead><tr><th>concept</th><th>16</th><th>22</th><th>tree row (22 px)</th><th>32</th><th>64</th></tr></thead>
+    <tbody>
+  <tr>
+    <th scope="row"><span class="nm">word</span><span class="arch">73 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="word 16px"><use href="#p-word"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="word 22px"><use href="#p-word"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-word"/></svg><span>Report.docx</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="word 32px"><use href="#p-word"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="word 64px"><use href="#p-word"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">powerpoint</span><span class="arch">74 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="powerpoint 16px"><use href="#p-powerpoint"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="powerpoint 22px"><use href="#p-powerpoint"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powerpoint"/></svg><span>Deck.pptx</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="powerpoint 32px"><use href="#p-powerpoint"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="powerpoint 64px"><use href="#p-powerpoint"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">mdx</span><span class="arch">75 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="mdx 16px"><use href="#p-mdx"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="mdx 22px"><use href="#p-mdx"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-mdx"/></svg><span>post.mdx</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="mdx 32px"><use href="#p-mdx"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="mdx 64px"><use href="#p-mdx"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">asciidoc</span><span class="arch">76 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="asciidoc 16px"><use href="#p-asciidoc"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="asciidoc 22px"><use href="#p-asciidoc"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-asciidoc"/></svg><span>guide.adoc</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="asciidoc 32px"><use href="#p-asciidoc"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="asciidoc 64px"><use href="#p-asciidoc"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">tex</span><span class="arch">77 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="tex 16px"><use href="#p-tex"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="tex 22px"><use href="#p-tex"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-tex"/></svg><span>paper.tex</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="tex 32px"><use href="#p-tex"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="tex 64px"><use href="#p-tex"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">audio</span><span class="arch">78 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="audio 16px"><use href="#p-audio"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="audio 22px"><use href="#p-audio"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-audio"/></svg><span>theme.mp3</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="audio 32px"><use href="#p-audio"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="audio 64px"><use href="#p-audio"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">video</span><span class="arch">79 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="video 16px"><use href="#p-video"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="video 22px"><use href="#p-video"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-video"/></svg><span>demo.mp4</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="video 32px"><use href="#p-video"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="video 64px"><use href="#p-video"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">zip</span><span class="arch">80 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="zip 16px"><use href="#p-zip"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="zip 22px"><use href="#p-zip"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-zip"/></svg><span>release.zip</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="zip 32px"><use href="#p-zip"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="zip 64px"><use href="#p-zip"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">binary</span><span class="arch">81 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="binary 16px"><use href="#p-binary"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="binary 22px"><use href="#p-binary"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-binary"/></svg><span>app.bin</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="binary 32px"><use href="#p-binary"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="binary 64px"><use href="#p-binary"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">exe</span><span class="arch">82 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="exe 16px"><use href="#p-exe"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="exe 22px"><use href="#p-exe"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-exe"/></svg><span>setup.exe</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="exe 32px"><use href="#p-exe"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="exe 64px"><use href="#p-exe"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">key</span><span class="arch">83 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="key 16px"><use href="#p-key"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="key 22px"><use href="#p-key"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-key"/></svg><span>id_rsa.pem</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="key 32px"><use href="#p-key"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="key 64px"><use href="#p-key"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">cert</span><span class="arch">84 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="cert 16px"><use href="#p-cert"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="cert 22px"><use href="#p-cert"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cert"/></svg><span>server.crt</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="cert 32px"><use href="#p-cert"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="cert 64px"><use href="#p-cert"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">powershell</span><span class="arch">85 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="powershell 16px"><use href="#p-powershell"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="powershell 22px"><use href="#p-powershell"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powershell"/></svg><span>build.ps1</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="powershell 32px"><use href="#p-powershell"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="powershell 64px"><use href="#p-powershell"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">makefile</span><span class="arch">86 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="makefile 16px"><use href="#p-makefile"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="makefile 22px"><use href="#p-makefile"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-makefile"/></svg><span>Makefile</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="makefile 32px"><use href="#p-makefile"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="makefile 64px"><use href="#p-makefile"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">cmake</span><span class="arch">87 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="cmake 16px"><use href="#p-cmake"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="cmake 22px"><use href="#p-cmake"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cmake"/></svg><span>CMakeLists.txt</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="cmake 32px"><use href="#p-cmake"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="cmake 64px"><use href="#p-cmake"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">gradle</span><span class="arch">88 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="gradle 16px"><use href="#p-gradle"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="gradle 22px"><use href="#p-gradle"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-gradle"/></svg><span>build.gradle</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="gradle 32px"><use href="#p-gradle"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="gradle 64px"><use href="#p-gradle"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">maven</span><span class="arch">89 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="maven 16px"><use href="#p-maven"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="maven 22px"><use href="#p-maven"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-maven"/></svg><span>pom.xml</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="maven 32px"><use href="#p-maven"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="maven 64px"><use href="#p-maven"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">config</span><span class="arch">90 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="config 16px"><use href="#p-config"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="config 22px"><use href="#p-config"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-config"/></svg><span>app.conf</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="config 32px"><use href="#p-config"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="config 64px"><use href="#p-config"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">log</span><span class="arch">91 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="log 16px"><use href="#p-log"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="log 22px"><use href="#p-log"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-log"/></svg><span>error.log</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="log 32px"><use href="#p-log"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="log 64px"><use href="#p-log"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">diff</span><span class="arch">92 · GLYPH</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="diff 16px"><use href="#p-diff"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="diff 22px"><use href="#p-diff"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-diff"/></svg><span>patch.diff</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="diff 32px"><use href="#p-diff"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="diff 64px"><use href="#p-diff"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">typescriptdef</span><span class="arch">93 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="typescriptdef 16px"><use href="#p-typescriptdef"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="typescriptdef 22px"><use href="#p-typescriptdef"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-typescriptdef"/></svg><span>index.d.ts</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="typescriptdef 32px"><use href="#p-typescriptdef"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="typescriptdef 64px"><use href="#p-typescriptdef"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">jsconfig</span><span class="arch">94 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="jsconfig 16px"><use href="#p-jsconfig"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="jsconfig 22px"><use href="#p-jsconfig"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-jsconfig"/></svg><span>jsconfig.json</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="jsconfig 32px"><use href="#p-jsconfig"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="jsconfig 64px"><use href="#p-jsconfig"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">class</span><span class="arch">95 · SILHOUETTE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="class 16px"><use href="#p-class"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="class 22px"><use href="#p-class"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-class"/></svg><span>Main.class</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="class 32px"><use href="#p-class"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="class 64px"><use href="#p-class"/></svg></td>
+  </tr>
+  <tr>
+    <th scope="row"><span class="nm">nginx</span><span class="arch">96 · BADGE</span></th>
+    <td><svg class="ico" width="16" height="16" role="img" aria-label="nginx 16px"><use href="#p-nginx"/></svg></td>
+    <td><svg class="ico" width="22" height="22" role="img" aria-label="nginx 22px"><use href="#p-nginx"/></svg></td>
+    <td class="rowcell"><span class="trow"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-nginx"/></svg><span>nginx.conf</span></span></td>
+    <td><svg class="ico" width="32" height="32" role="img" aria-label="nginx 32px"><use href="#p-nginx"/></svg></td>
+    <td><svg class="ico" width="64" height="64" role="img" aria-label="nginx 64px"><use href="#p-nginx"/></svg></td>
+  </tr></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>As a set</h2>
+  <p class="lede">The whole batch as one explorer listing, on the editor background and on #1E1E1E.</p>
+  <div class="strips"><div class="tree">
+  <div class="treehead">explorer · 22px rows · 16px icons</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-word"/></svg><span>Report.docx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powerpoint"/></svg><span>Deck.pptx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-mdx"/></svg><span>post.mdx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-asciidoc"/></svg><span>guide.adoc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-tex"/></svg><span>paper.tex</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-audio"/></svg><span>theme.mp3</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-video"/></svg><span>demo.mp4</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-zip"/></svg><span>release.zip</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-binary"/></svg><span>app.bin</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-exe"/></svg><span>setup.exe</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-key"/></svg><span>id_rsa.pem</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cert"/></svg><span>server.crt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powershell"/></svg><span>build.ps1</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-makefile"/></svg><span>Makefile</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cmake"/></svg><span>CMakeLists.txt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-gradle"/></svg><span>build.gradle</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-maven"/></svg><span>pom.xml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-config"/></svg><span>app.conf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-log"/></svg><span>error.log</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-diff"/></svg><span>patch.diff</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-typescriptdef"/></svg><span>index.d.ts</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-jsconfig"/></svg><span>jsconfig.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-class"/></svg><span>Main.class</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-nginx"/></svg><span>nginx.conf</span></div>
+</div><div class="tree">
+  <div class="treehead">on #1E1E1E</div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-word"/></svg><span>Report.docx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powerpoint"/></svg><span>Deck.pptx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-mdx"/></svg><span>post.mdx</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-asciidoc"/></svg><span>guide.adoc</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-tex"/></svg><span>paper.tex</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-audio"/></svg><span>theme.mp3</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-video"/></svg><span>demo.mp4</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-zip"/></svg><span>release.zip</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-binary"/></svg><span>app.bin</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-exe"/></svg><span>setup.exe</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-key"/></svg><span>id_rsa.pem</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cert"/></svg><span>server.crt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-powershell"/></svg><span>build.ps1</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-makefile"/></svg><span>Makefile</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-cmake"/></svg><span>CMakeLists.txt</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-gradle"/></svg><span>build.gradle</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-maven"/></svg><span>pom.xml</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-config"/></svg><span>app.conf</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-log"/></svg><span>error.log</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-diff"/></svg><span>patch.diff</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-typescriptdef"/></svg><span>index.d.ts</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-jsconfig"/></svg><span>jsconfig.json</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-class"/></svg><span>Main.class</span></div>
+  <div class="row"><svg class="ico" width="16" height="16" role="img" aria-label=""><use href="#p-nginx"/></svg><span>nginx.conf</span></div>
+</div></div>
+</section>
+
+<section>
+  <h2>Against batch 1</h2>
+  <p class="lede">Batch-1 neighbours at 22&nbsp;px, for hue and weight comparison — the batch must not
+  put a same-archetype hue twin beside any of these.</p>
+  <div class="swatches"><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="typescript 22px"><use href="#n-typescript"/></svg><span>typescript</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="js 22px"><use href="#n-js"/></svg><span>js</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="css 22px"><use href="#n-css"/></svg><span>css</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="html 22px"><use href="#n-html"/></svg><span>html</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="markdown 22px"><use href="#n-markdown"/></svg><span>markdown</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="json 22px"><use href="#n-json"/></svg><span>json</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="dotenv 22px"><use href="#n-dotenv"/></svg><span>dotenv</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="git 22px"><use href="#n-git"/></svg><span>git</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="shell 22px"><use href="#n-shell"/></svg><span>shell</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="sql 22px"><use href="#n-sql"/></svg><span>sql</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="npm 22px"><use href="#n-npm"/></svg><span>npm</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="lock 22px"><use href="#n-lock"/></svg><span>lock</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="image 22px"><use href="#n-image"/></svg><span>image</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="docker 22px"><use href="#n-docker"/></svg><span>docker</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="node 22px"><use href="#n-node"/></svg><span>node</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="yaml 22px"><use href="#n-yaml"/></svg><span>yaml</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="svg 22px"><use href="#n-svg"/></svg><span>svg</span></span><span class="sw"><svg class="ico" width="22" height="22" role="img" aria-label="rust 22px"><use href="#n-rust"/></svg><span>rust</span></span></div>
+</section>
+
+<section>
+  <h2>Manifest</h2>
+  <table class="ftable">
+    <thead><tr><th class="num">rank</th><th>id</th><th>path</th><th>archetype</th><th class="num">bytes</th><th>colour source</th></tr></thead>
+    <tbody>
+  <tr>
+    <td class="mono num">73</td>
+    <td class="mono">word</td>
+    <td class="mono dim">svg/file/word.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">554</td>
+    <td class="mono dim">brand #2B579A → #37588C</td>
+  </tr>
+  <tr>
+    <td class="mono num">74</td>
+    <td class="mono">powerpoint</td>
+    <td class="mono dim">svg/file/powerpoint.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">287</td>
+    <td class="mono dim">off-brand #C74C57 (html clash)</td>
+  </tr>
+  <tr>
+    <td class="mono num">75</td>
+    <td class="mono">mdx</td>
+    <td class="mono dim">svg/file/mdx.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">1259</td>
+    <td class="mono dim">no brand → #7B68CE</td>
+  </tr>
+  <tr>
+    <td class="mono num">76</td>
+    <td class="mono">asciidoc</td>
+    <td class="mono dim">svg/file/asciidoc.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">679</td>
+    <td class="mono dim">no brand → #A85EA0</td>
+  </tr>
+  <tr>
+    <td class="mono num">77</td>
+    <td class="mono">tex</td>
+    <td class="mono dim">svg/file/tex.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">632</td>
+    <td class="mono dim">brand #008080 → #3FA6A6</td>
+  </tr>
+  <tr>
+    <td class="mono num">78</td>
+    <td class="mono">audio</td>
+    <td class="mono dim">svg/file/audio.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">206</td>
+    <td class="mono dim">no brand → #C06E9E</td>
+  </tr>
+  <tr>
+    <td class="mono num">79</td>
+    <td class="mono">video</td>
+    <td class="mono dim">svg/file/video.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">418</td>
+    <td class="mono dim">no brand → #6E76CE</td>
+  </tr>
+  <tr>
+    <td class="mono num">80</td>
+    <td class="mono">zip</td>
+    <td class="mono dim">svg/file/zip.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">311</td>
+    <td class="mono dim">no brand → #93A05B</td>
+  </tr>
+  <tr>
+    <td class="mono num">81</td>
+    <td class="mono">binary</td>
+    <td class="mono dim">svg/file/binary.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">519</td>
+    <td class="mono dim">no brand → #6F9E77</td>
+  </tr>
+  <tr>
+    <td class="mono num">82</td>
+    <td class="mono">exe</td>
+    <td class="mono dim">svg/file/exe.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">726</td>
+    <td class="mono dim">no brand → #87817A</td>
+  </tr>
+  <tr>
+    <td class="mono num">83</td>
+    <td class="mono">key</td>
+    <td class="mono dim">svg/file/key.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">322</td>
+    <td class="mono dim">no brand → #BFAA4E</td>
+  </tr>
+  <tr>
+    <td class="mono num">84</td>
+    <td class="mono">cert</td>
+    <td class="mono dim">svg/file/cert.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">169</td>
+    <td class="mono dim">no brand → #C79A4A</td>
+  </tr>
+  <tr>
+    <td class="mono num">85</td>
+    <td class="mono">powershell</td>
+    <td class="mono dim">svg/file/powershell.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">1083</td>
+    <td class="mono dim">brand #5391FE → #6478C8</td>
+  </tr>
+  <tr>
+    <td class="mono num">86</td>
+    <td class="mono">makefile</td>
+    <td class="mono dim">svg/file/makefile.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">218</td>
+    <td class="mono dim">no brand → #A08D78</td>
+  </tr>
+  <tr>
+    <td class="mono num">87</td>
+    <td class="mono">cmake</td>
+    <td class="mono dim">svg/file/cmake.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">164</td>
+    <td class="mono dim">brand #064F8C → #3D71B5</td>
+  </tr>
+  <tr>
+    <td class="mono num">88</td>
+    <td class="mono">gradle</td>
+    <td class="mono dim">svg/file/gradle.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">914</td>
+    <td class="mono dim">brand #02303A → #6E8A92</td>
+  </tr>
+  <tr>
+    <td class="mono num">89</td>
+    <td class="mono">maven</td>
+    <td class="mono dim">svg/file/maven.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">1043</td>
+    <td class="mono dim">brand #C71A36 → #A93F4A</td>
+  </tr>
+  <tr>
+    <td class="mono num">90</td>
+    <td class="mono">config</td>
+    <td class="mono dim">svg/file/config.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">222</td>
+    <td class="mono dim">no brand → #7F8FA6</td>
+  </tr>
+  <tr>
+    <td class="mono num">91</td>
+    <td class="mono">log</td>
+    <td class="mono dim">svg/file/log.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">254</td>
+    <td class="mono dim">no brand → #96A17E</td>
+  </tr>
+  <tr>
+    <td class="mono num">92</td>
+    <td class="mono">diff</td>
+    <td class="mono dim">svg/file/diff.svg</td>
+    <td class="mono">GLYPH</td>
+    <td class="mono num">207</td>
+    <td class="mono dim">no brand → #5FA894</td>
+  </tr>
+  <tr>
+    <td class="mono num">93</td>
+    <td class="mono">typescriptdef</td>
+    <td class="mono dim">svg/file/typescriptdef.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">1175</td>
+    <td class="mono dim">canon #3178C6 (typescript sibling)</td>
+  </tr>
+  <tr>
+    <td class="mono num">94</td>
+    <td class="mono">jsconfig</td>
+    <td class="mono dim">svg/file/jsconfig.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">484</td>
+    <td class="mono dim">batch-1 js plate #E8D44D (sibling)</td>
+  </tr>
+  <tr>
+    <td class="mono num">95</td>
+    <td class="mono">class</td>
+    <td class="mono dim">svg/file/class.svg</td>
+    <td class="mono">SILHOUETTE</td>
+    <td class="mono num">287</td>
+    <td class="mono dim">no brand → #9A8C84</td>
+  </tr>
+  <tr>
+    <td class="mono num">96</td>
+    <td class="mono">nginx</td>
+    <td class="mono dim">svg/file/nginx.svg</td>
+    <td class="mono">BADGE</td>
+    <td class="mono num">1227</td>
+    <td class="mono dim">brand #009639 → #3E9E5C</td>
+  </tr></tbody>
+    <tfoot><tr><td colspan="4">24 icons</td><td class="num">13360</td><td>—</td></tr></tfoot>
+  </table>
+</section>
+</div>

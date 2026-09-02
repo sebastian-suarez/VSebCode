@@ -1,0 +1,4210 @@
+{
+	"note": "Maintained metadata map for the M11 production set. fills/dominant/coverage/bytes are recomputed by tools/make-set-manifest.mjs from the SVGs; archetype/colourSource/batch/emblem are hand-maintained (a rerun preserves them unless --fresh).",
+	"generated": "2026-09-02",
+	"counts": {
+		"file": 155,
+		"folder": 82
+	},
+	"icons": [
+		{
+			"id": "agents",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A98FD6"
+			],
+			"dominant": "#A98FD6",
+			"coverage": {
+				"#A98FD6": 1
+			},
+			"colourSource": "no brand → #A98FD6",
+			"batch": "batch6",
+			"bytes": 395
+		},
+		{
+			"id": "angular",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#CC3462"
+			],
+			"dominant": "#CC3462",
+			"coverage": {
+				"#CC3462": 1
+			},
+			"colourSource": "brand #DD0031 → #CC3462",
+			"batch": "batch5",
+			"bytes": 306
+		},
+		{
+			"id": "asciidoc",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#A85EA0",
+				"#FFFFFF"
+			],
+			"dominant": "#A85EA0",
+			"coverage": {
+				"#A85EA0": 0.8648,
+				"#FFFFFF": 0.1352
+			},
+			"colourSource": "no brand → #A85EA0",
+			"batch": "batch4",
+			"bytes": 679
+		},
+		{
+			"id": "assembly",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#468B6F"
+			],
+			"dominant": "#468B6F",
+			"coverage": {
+				"#468B6F": 1
+			},
+			"colourSource": "no brand → #468B6F (reconciled from #4F9E7E)",
+			"batch": "batch3",
+			"bytes": 435,
+			"round1": {
+				"kind": "retint",
+				"from": "#4F9E7E",
+				"to": "#468B6F"
+			}
+		},
+		{
+			"id": "astro",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#8E52BE"
+			],
+			"dominant": "#8E52BE",
+			"coverage": {
+				"#8E52BE": 1
+			},
+			"colourSource": "off-brand #8E52BE (orange band full)",
+			"batch": "batch5",
+			"bytes": 207
+		},
+		{
+			"id": "audio",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#C77FA9"
+			],
+			"dominant": "#C77FA9",
+			"coverage": {
+				"#C77FA9": 1
+			},
+			"colourSource": "no brand → #C77FA9 (reconciled from #C06E9E)",
+			"batch": "batch4",
+			"bytes": 206,
+			"round1": {
+				"kind": "retint",
+				"from": "#C06E9E",
+				"to": "#C77FA9"
+			}
+		},
+		{
+			"id": "babel",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A6862A"
+			],
+			"dominant": "#A6862A",
+			"coverage": {
+				"#A6862A": 1
+			},
+			"colourSource": "brand #F9DC3E → #A6862A (yellow band)",
+			"batch": "batch5",
+			"bytes": 171
+		},
+		{
+			"id": "binary",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#6F9E77"
+			],
+			"dominant": "#6F9E77",
+			"coverage": {
+				"#6F9E77": 1
+			},
+			"colourSource": "no brand → #6F9E77",
+			"batch": "batch4",
+			"bytes": 519
+		},
+		{
+			"id": "biome",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#A5A3E8",
+				"#23204D"
+			],
+			"dominant": "#A5A3E8",
+			"coverage": {
+				"#A5A3E8": 0.8604,
+				"#23204D": 0.1396
+			},
+			"colourSource": "brand #60A5FA → #A5A3E8 (reconciled from #6E6FCC)",
+			"batch": "batch5",
+			"bytes": 668,
+			"round1": {
+				"kind": "retint",
+				"from": "#6E6FCC",
+				"to": "#A5A3E8"
+			}
+		},
+		{
+			"id": "bun",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#E5D9C3",
+				"#3B3020"
+			],
+			"dominant": "#E5D9C3",
+			"coverage": {
+				"#E5D9C3": 0.8842,
+				"#3B3020": 0.1158
+			},
+			"colourSource": "brand #FBF0DF → #E5D9C3",
+			"batch": "batch5",
+			"bytes": 1184
+		},
+		{
+			"id": "c",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#A8B9CC",
+				"#232C38"
+			],
+			"dominant": "#A8B9CC",
+			"coverage": {
+				"#A8B9CC": 0.8899,
+				"#232C38": 0.1101
+			},
+			"colourSource": "brand #A8B9CC (dark letter #232C38)",
+			"batch": "batch2",
+			"bytes": 607
+		},
+		{
+			"id": "cert",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#93A0AE"
+			],
+			"dominant": "#93A0AE",
+			"coverage": {
+				"#93A0AE": 1
+			},
+			"colourSource": "no brand → #93A0AE steel, neutral lane (reconciled from #C79A4A)",
+			"batch": "batch4",
+			"bytes": 169,
+			"round1": {
+				"kind": "retint",
+				"from": "#C79A4A",
+				"to": "#93A0AE"
+			}
+		},
+		{
+			"id": "cheader",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#A6ACB4",
+				"#1B2026"
+			],
+			"dominant": "#A6ACB4",
+			"coverage": {
+				"#A6ACB4": 0.8727,
+				"#1B2026": 0.1273
+			},
+			"colourSource": "brand #A8B9CC → #A6ACB4 (neutralised)",
+			"batch": "batch3",
+			"bytes": 296
+		},
+		{
+			"id": "class",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#9A8C84"
+			],
+			"dominant": "#9A8C84",
+			"coverage": {
+				"#9A8C84": 1
+			},
+			"colourSource": "no brand → #9A8C84",
+			"batch": "batch4",
+			"bytes": 287
+		},
+		{
+			"id": "claude",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#E2957E"
+			],
+			"dominant": "#E2957E",
+			"coverage": {
+				"#E2957E": 1
+			},
+			"colourSource": "brand #D97757 → #E2957E (brand hue kept, escaped via lightness)",
+			"batch": "batch6",
+			"bytes": 351,
+			"round2": {
+				"kind": "retint",
+				"from": "#D97757",
+				"note": "Ruling B — ΔL 13.3 vs the restored git. Moved LIGHTER, not darker: the 16 px proof put the darker candidates at 45% faint ink and peak contrast 0.22 against 0.50 for the original"
+			},
+			"reconciled": true
+		},
+		{
+			"id": "clojure",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6BB881",
+				"#FFFFFF"
+			],
+			"dominant": "#6BB881",
+			"coverage": {
+				"#6BB881": 0.7862,
+				"#FFFFFF": 0.2138
+			},
+			"colourSource": "brand green #91DC47 → #6BB881 (unchanged)",
+			"batch": "batch3",
+			"bytes": 396,
+			"round2": {
+				"kind": "mark",
+				"from": "letters CLJ",
+				"note": "Ruling C SHIPPED — the brand split circle, white on the plate. 16 px proof: peak contrast 1.00, 2% faint, both lobes and ball heads resolve; no new R7/R8 finding"
+			},
+			"reconciled": true,
+			"round1": {
+				"kind": "retint",
+				"from": "#55AD6E",
+				"to": "#6BB881"
+			}
+		},
+		{
+			"id": "cmake",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#2F588E"
+			],
+			"dominant": "#2F588E",
+			"coverage": {
+				"#2F588E": 1
+			},
+			"colourSource": "brand #064F8C → #2F588E (reconciled from #3D71B5)",
+			"batch": "batch4",
+			"bytes": 164,
+			"round1": {
+				"kind": "retint",
+				"from": "#3D71B5",
+				"to": "#2F588E"
+			}
+		},
+		{
+			"id": "codeowners",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A89C8E"
+			],
+			"dominant": "#A89C8E",
+			"coverage": {
+				"#A89C8E": 1
+			},
+			"colourSource": "no brand → #A89C8E",
+			"batch": "batch6",
+			"bytes": 196
+		},
+		{
+			"id": "config",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#7F8FA6"
+			],
+			"dominant": "#7F8FA6",
+			"coverage": {
+				"#7F8FA6": 1
+			},
+			"colourSource": "no brand → #7F8FA6",
+			"batch": "batch4",
+			"bytes": 222
+		},
+		{
+			"id": "copilot",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C6CBD1"
+			],
+			"dominant": "#C6CBD1",
+			"coverage": {
+				"#C6CBD1": 1
+			},
+			"colourSource": "no brand → #C6CBD1",
+			"batch": "batch6",
+			"bytes": 450
+		},
+		{
+			"id": "cpp",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#325B81",
+				"#FFFFFF"
+			],
+			"dominant": "#325B81",
+			"coverage": {
+				"#325B81": 0.8732,
+				"#FFFFFF": 0.1268
+			},
+			"colourSource": "brand #00599C → #325B81 (reconciled from #37648E)",
+			"batch": "batch2",
+			"bytes": 849,
+			"round1": {
+				"kind": "retint",
+				"from": "#37648E",
+				"to": "#325B81"
+			}
+		},
+		{
+			"id": "cppheader",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6F7982",
+				"#FFFFFF"
+			],
+			"dominant": "#6F7982",
+			"coverage": {
+				"#6F7982": 0.879,
+				"#FFFFFF": 0.121
+			},
+			"colourSource": "off-brand #6F7982 (C family; #00599C = TS band)",
+			"batch": "batch3",
+			"bytes": 929
+		},
+		{
+			"id": "csharp",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#3D8F44",
+				"#FFFFFF"
+			],
+			"dominant": "#3D8F44",
+			"coverage": {
+				"#3D8F44": 0.8694,
+				"#FFFFFF": 0.1306
+			},
+			"colourSource": "brand #239120 → #3D8F44 (reconciled from #3E8F4A)",
+			"batch": "batch2",
+			"bytes": 952,
+			"round1": {
+				"kind": "retint",
+				"from": "#3E8F4A",
+				"to": "#3D8F44"
+			}
+		},
+		{
+			"id": "css",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#1572B6",
+				"#FFFFFF"
+			],
+			"dominant": "#1572B6",
+			"coverage": {
+				"#1572B6": 0.9117,
+				"#FFFFFF": 0.0883
+			},
+			"colourSource": "canon #1572B6",
+			"batch": "batch1",
+			"bytes": 782
+		},
+		{
+			"id": "cursor",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#9FAAB8"
+			],
+			"dominant": "#9FAAB8",
+			"coverage": {
+				"#9FAAB8": 1
+			},
+			"colourSource": "no brand → #9FAAB8",
+			"batch": "batch6",
+			"bytes": 160
+		},
+		{
+			"id": "cypress",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#56BFA0"
+			],
+			"dominant": "#56BFA0",
+			"coverage": {
+				"#56BFA0": 1
+			},
+			"colourSource": "brand #69D3A7 → #56BFA0",
+			"batch": "batch5",
+			"bytes": 801
+		},
+		{
+			"id": "dartlang",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#35709E"
+			],
+			"dominant": "#35709E",
+			"coverage": {
+				"#35709E": 1
+			},
+			"colourSource": "brand #0175C2 → #35709E",
+			"batch": "batch2",
+			"bytes": 128
+		},
+		{
+			"id": "deno",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#4FB88A",
+				"#0E3527"
+			],
+			"dominant": "#4FB88A",
+			"coverage": {
+				"#4FB88A": 0.8682,
+				"#0E3527": 0.1318
+			},
+			"colourSource": "brand #70FFAF → #4FB88A",
+			"batch": "batch5",
+			"bytes": 451
+		},
+		{
+			"id": "diff",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#95C6B9"
+			],
+			"dominant": "#95C6B9",
+			"coverage": {
+				"#95C6B9": 1
+			},
+			"colourSource": "no brand → #95C6B9 (reconciled from #5FA894)",
+			"batch": "batch4",
+			"bytes": 207,
+			"round1": {
+				"kind": "retint",
+				"from": "#5FA894",
+				"to": "#95C6B9"
+			}
+		},
+		{
+			"id": "django",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#408263",
+				"#FFFFFF"
+			],
+			"dominant": "#408263",
+			"coverage": {
+				"#408263": 0.8284,
+				"#FFFFFF": 0.1716
+			},
+			"colourSource": "brand #092E20 ↑ #408263 (reconciled from #43885F)",
+			"batch": "batch6",
+			"bytes": 1006,
+			"round1": {
+				"kind": "retint",
+				"from": "#43885F",
+				"to": "#408263"
+			}
+		},
+		{
+			"id": "docker",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#2E92D8"
+			],
+			"dominant": "#2E92D8",
+			"coverage": {
+				"#2E92D8": 1
+			},
+			"colourSource": "brand #2496ED → #2E92D8",
+			"batch": "batch1",
+			"bytes": 253
+		},
+		{
+			"id": "dotenv",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#E7DF6E"
+			],
+			"dominant": "#E7DF6E",
+			"coverage": {
+				"#E7DF6E": 1
+			},
+			"colourSource": "brand #ECD53F → #E7DF6E (reconciled from #E3CB4E)",
+			"batch": "batch1",
+			"bytes": 674,
+			"round1": {
+				"kind": "retint",
+				"from": "#E3CB4E",
+				"to": "#E7DF6E"
+			}
+		},
+		{
+			"id": "editorconfig",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#6F8F82"
+			],
+			"dominant": "#6F8F82",
+			"coverage": {
+				"#6F8F82": 1
+			},
+			"colourSource": "no brand → #6F8F82",
+			"batch": "batch2",
+			"bytes": 488
+		},
+		{
+			"id": "elixir",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#9A5FAD"
+			],
+			"dominant": "#9A5FAD",
+			"coverage": {
+				"#9A5FAD": 1
+			},
+			"colourSource": "brand #4B275F → #9A5FAD (lifted)",
+			"batch": "batch3",
+			"bytes": 171
+		},
+		{
+			"id": "erlang",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#CD7A8D"
+			],
+			"dominant": "#CD7A8D",
+			"coverage": {
+				"#CD7A8D": 1
+			},
+			"colourSource": "brand #A90533 ↑ #CD7A8D (reconciled from #B8455F)",
+			"batch": "batch3",
+			"bytes": 564,
+			"round2": {
+				"kind": "kept",
+				"note": "Ruling C KEPT LETTERS — the Erlang mark could not be verified to a shippable standard, and the ruling forbids inventing one"
+			},
+			"round1": {
+				"kind": "retint",
+				"from": "#B8455F",
+				"to": "#CD7A8D"
+			}
+		},
+		{
+			"id": "esbuild",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#ADB544"
+			],
+			"dominant": "#ADB544",
+			"coverage": {
+				"#ADB544": 1
+			},
+			"colourSource": "brand #FFCF00 → #ADB544 (yellow band)",
+			"batch": "batch5",
+			"bytes": 137
+		},
+		{
+			"id": "eslint",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#5D4EBE"
+			],
+			"dominant": "#5D4EBE",
+			"coverage": {
+				"#5D4EBE": 1
+			},
+			"colourSource": "brand #4B32C3 → #5D4EBE",
+			"batch": "batch2",
+			"bytes": 156
+		},
+		{
+			"id": "excel",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#2F8F55"
+			],
+			"dominant": "#2F8F55",
+			"coverage": {
+				"#2F8F55": 1
+			},
+			"colourSource": "brand #217346 → #2F8F55",
+			"batch": "batch3",
+			"bytes": 257
+		},
+		{
+			"id": "exe",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#87817A",
+				"#FFFFFF"
+			],
+			"dominant": "#87817A",
+			"coverage": {
+				"#87817A": 0.8732,
+				"#FFFFFF": 0.1268
+			},
+			"colourSource": "no brand → #87817A",
+			"batch": "batch4",
+			"bytes": 726
+		},
+		{
+			"id": "expo",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#68779E",
+				"#FFFFFF"
+			],
+			"dominant": "#68779E",
+			"coverage": {
+				"#68779E": 0.8092,
+				"#FFFFFF": 0.1908
+			},
+			"colourSource": "brand #000020 ↑ #68779E (unchanged)",
+			"batch": "batch6",
+			"bytes": 225,
+			"round2": {
+				"kind": "mark",
+				"from": "letters E",
+				"note": "Ruling C SHIPPED — the rounded arch. 16 px proof: peak contrast 1.00, 2% faint ink, arch and counter both resolve; no new R7/R8 finding"
+			},
+			"reconciled": true
+		},
+		{
+			"id": "favicon",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DCBB5C"
+			],
+			"dominant": "#DCBB5C",
+			"coverage": {
+				"#DCBB5C": 1
+			},
+			"colourSource": "no brand → #DCBB5C",
+			"batch": "batch6",
+			"bytes": 188
+		},
+		{
+			"id": "file",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C5C5C5",
+				"#9C9C9C"
+			],
+			"dominant": "#C5C5C5",
+			"coverage": {
+				"#C5C5C5": 0.9464,
+				"#9C9C9C": 0.0536
+			},
+			"colourSource": "pilot default #C5C5C5 / #9C9C9C",
+			"batch": "batch6",
+			"bytes": 240
+		},
+		{
+			"id": "firebase",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#EBBE45"
+			],
+			"dominant": "#EBBE45",
+			"coverage": {
+				"#EBBE45": 1
+			},
+			"colourSource": "brand #FFCA28 → #EBBE45",
+			"batch": "batch6",
+			"bytes": 234
+		},
+		{
+			"id": "font",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#B4907A"
+			],
+			"dominant": "#B4907A",
+			"coverage": {
+				"#B4907A": 1
+			},
+			"colourSource": "no brand → #B4907A (mark redrawn: bare A → Aa, freeing the A for angular)",
+			"batch": "batch2",
+			"bytes": 1008,
+			"round1": {
+				"kind": "mark",
+				"mark": "bare A -> Aa"
+			}
+		},
+		{
+			"id": "fsharp",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#35A0A0"
+			],
+			"dominant": "#35A0A0",
+			"coverage": {
+				"#35A0A0": 1
+			},
+			"colourSource": "off-brand #35A0A0 (#378BBA = css/markdown/docker band)",
+			"batch": "batch3",
+			"bytes": 558
+		},
+		{
+			"id": "generic-archive",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#96805E"
+			],
+			"dominant": "#96805E",
+			"coverage": {
+				"#96805E": 1
+			},
+			"colourSource": "6 concepts → #96805E",
+			"batch": "batch6",
+			"bytes": 412
+		},
+		{
+			"id": "generic-binary",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6F7A85"
+			],
+			"dominant": "#6F7A85",
+			"coverage": {
+				"#6F7A85": 1
+			},
+			"colourSource": "8 concepts → #6F7A85",
+			"batch": "batch6",
+			"bytes": 417
+		},
+		{
+			"id": "generic-code",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#7C8CA0"
+			],
+			"dominant": "#7C8CA0",
+			"coverage": {
+				"#7C8CA0": 1
+			},
+			"colourSource": "645 concepts → #7C8CA0",
+			"batch": "batch6",
+			"bytes": 183
+		},
+		{
+			"id": "generic-config",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#93887A"
+			],
+			"dominant": "#93887A",
+			"coverage": {
+				"#93887A": 1
+			},
+			"colourSource": "297 concepts → #93887A",
+			"batch": "batch6",
+			"bytes": 495
+		},
+		{
+			"id": "generic-data",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6F958F"
+			],
+			"dominant": "#6F958F",
+			"coverage": {
+				"#6F958F": 1
+			},
+			"colourSource": "16 concepts → #6F958F",
+			"batch": "batch6",
+			"bytes": 291
+		},
+		{
+			"id": "generic-doc",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#8D9298"
+			],
+			"dominant": "#8D9298",
+			"coverage": {
+				"#8D9298": 1
+			},
+			"colourSource": "28 concepts → #8D9298",
+			"batch": "batch6",
+			"bytes": 188
+		},
+		{
+			"id": "generic-font",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#8E9575"
+			],
+			"dominant": "#8E9575",
+			"coverage": {
+				"#8E9575": 1
+			},
+			"colourSource": "3 concepts → #8E9575 (mark redrawn: bare A → Aa, freeing the A for angular)",
+			"batch": "batch6",
+			"bytes": 1008,
+			"round1": {
+				"kind": "mark",
+				"mark": "bare A -> Aa"
+			}
+		},
+		{
+			"id": "generic-image",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#8A7FA0"
+			],
+			"dominant": "#8A7FA0",
+			"coverage": {
+				"#8A7FA0": 1
+			},
+			"colourSource": "17 concepts → #8A7FA0",
+			"batch": "batch6",
+			"bytes": 386
+		},
+		{
+			"id": "generic-media",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#9B7F87"
+			],
+			"dominant": "#9B7F87",
+			"coverage": {
+				"#9B7F87": 1
+			},
+			"colourSource": "5 concepts → #9B7F87",
+			"batch": "batch6",
+			"bytes": 118
+		},
+		{
+			"id": "git",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#E0603C"
+			],
+			"dominant": "#E0603C",
+			"coverage": {
+				"#E0603C": 1
+			},
+			"colourSource": "brand #F05032 → #E0603C (restored)",
+			"batch": "batch1",
+			"bytes": 570,
+			"round2": {
+				"kind": "retint",
+				"from": "#8C3017",
+				"note": "Ruling B — round-1 retint reverted; claude moved instead"
+			},
+			"reconciled": true,
+			"round1": {
+				"kind": "retint",
+				"from": "#E0603C",
+				"to": "#8C3017"
+			}
+		},
+		{
+			"id": "github-actions-workflow",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#4E93D6"
+			],
+			"dominant": "#4E93D6",
+			"coverage": {
+				"#4E93D6": 1
+			},
+			"colourSource": "no brand → #4E93D6",
+			"batch": "batch6",
+			"bytes": 196
+		},
+		{
+			"id": "gitlab",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#E8973E"
+			],
+			"dominant": "#E8973E",
+			"coverage": {
+				"#E8973E": 1
+			},
+			"colourSource": "brand #FC6D26 → #E8973E",
+			"batch": "batch6",
+			"bytes": 151
+		},
+		{
+			"id": "go",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#2E88A0",
+				"#FFFFFF"
+			],
+			"dominant": "#2E88A0",
+			"coverage": {
+				"#2E88A0": 0.8661,
+				"#FFFFFF": 0.1339
+			},
+			"colourSource": "brand #00ADD8 → #2E88A0",
+			"batch": "batch2",
+			"bytes": 1071
+		},
+		{
+			"id": "gradle",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6E8A92",
+				"#FFFFFF"
+			],
+			"dominant": "#6E8A92",
+			"coverage": {
+				"#6E8A92": 0.8511,
+				"#FFFFFF": 0.1489
+			},
+			"colourSource": "brand #02303A → #6E8A92",
+			"batch": "batch4",
+			"bytes": 914
+		},
+		{
+			"id": "graphql",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#C43E93"
+			],
+			"dominant": "#C43E93",
+			"coverage": {
+				"#C43E93": 1
+			},
+			"colourSource": "brand #E10098 → #C43E93",
+			"batch": "batch3",
+			"bytes": 375
+		},
+		{
+			"id": "haskell",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#948AC9"
+			],
+			"dominant": "#948AC9",
+			"coverage": {
+				"#948AC9": 1
+			},
+			"colourSource": "brand #5D4F85 → #948AC9 (reconciled from #8E80C6)",
+			"batch": "batch3",
+			"bytes": 538,
+			"round1": {
+				"kind": "retint",
+				"from": "#8E80C6",
+				"to": "#948AC9"
+			}
+		},
+		{
+			"id": "helm",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6A7ED0"
+			],
+			"dominant": "#6A7ED0",
+			"coverage": {
+				"#6A7ED0": 1
+			},
+			"colourSource": "brand #0F1689 ↑ #6A7ED0",
+			"batch": "batch6",
+			"bytes": 519
+		},
+		{
+			"id": "html",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DB5430",
+				"#FFFFFF"
+			],
+			"dominant": "#DB5430",
+			"coverage": {
+				"#DB5430": 0.9079,
+				"#FFFFFF": 0.0921
+			},
+			"colourSource": "brand #E34F26 → #DB5430",
+			"batch": "batch1",
+			"bytes": 632
+		},
+		{
+			"id": "http",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#89A3C2"
+			],
+			"dominant": "#89A3C2",
+			"coverage": {
+				"#89A3C2": 1
+			},
+			"colourSource": "no brand → #89A3C2 (reconciled from #6E93B4)",
+			"batch": "batch6",
+			"bytes": 177,
+			"round1": {
+				"kind": "retint",
+				"from": "#6E93B4",
+				"to": "#89A3C2"
+			}
+		},
+		{
+			"id": "image",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A08BCC"
+			],
+			"dominant": "#A08BCC",
+			"coverage": {
+				"#A08BCC": 1
+			},
+			"colourSource": "no brand → #A08BCC",
+			"batch": "batch1",
+			"bytes": 269
+		},
+		{
+			"id": "java",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C9832F"
+			],
+			"dominant": "#C9832F",
+			"coverage": {
+				"#C9832F": 1
+			},
+			"colourSource": "brand #ED8B00 → #C9832F",
+			"batch": "batch2",
+			"bytes": 384
+		},
+		{
+			"id": "jenkins",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#7E241A",
+				"#FFFFFF"
+			],
+			"dominant": "#7E241A",
+			"coverage": {
+				"#7E241A": 0.925,
+				"#FFFFFF": 0.075
+			},
+			"colourSource": "brand #D24939 → #7E241A (reconciled from #C0554A)",
+			"batch": "batch6",
+			"bytes": 407,
+			"round1": {
+				"kind": "retint",
+				"from": "#C0554A",
+				"to": "#7E241A"
+			}
+		},
+		{
+			"id": "jest",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#B23A55"
+			],
+			"dominant": "#B23A55",
+			"coverage": {
+				"#B23A55": 1
+			},
+			"colourSource": "brand #C21325 → #B23A55",
+			"batch": "batch5",
+			"bytes": 205
+		},
+		{
+			"id": "js",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#E8D44D",
+				"#323330"
+			],
+			"dominant": "#E8D44D",
+			"coverage": {
+				"#E8D44D": 0.881,
+				"#323330": 0.119
+			},
+			"colourSource": "brand #F7DF1E → #E8D44D",
+			"batch": "batch1",
+			"bytes": 1025
+		},
+		{
+			"id": "jsconfig",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#E8D44D",
+				"#323330"
+			],
+			"dominant": "#E8D44D",
+			"coverage": {
+				"#E8D44D": 0.7599,
+				"#323330": 0.2401
+			},
+			"colourSource": "batch-1 js plate #E8D44D (sibling)",
+			"batch": "batch4",
+			"bytes": 484
+		},
+		{
+			"id": "json",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#D6C13C"
+			],
+			"dominant": "#D6C13C",
+			"coverage": {
+				"#D6C13C": 1
+			},
+			"colourSource": "brand #F5DE19 → #D6C13C",
+			"batch": "batch1",
+			"bytes": 588
+		},
+		{
+			"id": "json5",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#D6C13C"
+			],
+			"dominant": "#D6C13C",
+			"coverage": {
+				"#D6C13C": 1
+			},
+			"colourSource": "json family #D6C13C (declared rhyme)",
+			"batch": "batch3",
+			"bytes": 1105
+		},
+		{
+			"id": "julia",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C4534C",
+				"#529A46",
+				"#9968C4"
+			],
+			"dominant": "#C4534C",
+			"coverage": {
+				"#C4534C": 0.3334,
+				"#529A46": 0.3333,
+				"#9968C4": 0.3332
+			},
+			"colourSource": "brand trio → #C4534C / #529A46 / #9968C4",
+			"batch": "batch3",
+			"bytes": 297
+		},
+		{
+			"id": "jupyter",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#E3A772"
+			],
+			"dominant": "#E3A772",
+			"coverage": {
+				"#E3A772": 1
+			},
+			"colourSource": "brand #F37626 → #E3A772 (reconciled from #D97A3C)",
+			"batch": "batch6",
+			"bytes": 412,
+			"round1": {
+				"kind": "retint",
+				"from": "#D97A3C",
+				"to": "#E3A772"
+			}
+		},
+		{
+			"id": "key",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#BFAA4E"
+			],
+			"dominant": "#BFAA4E",
+			"coverage": {
+				"#BFAA4E": 1
+			},
+			"colourSource": "no brand → #BFAA4E",
+			"batch": "batch4",
+			"bytes": 322
+		},
+		{
+			"id": "kotlin",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#9A5FBE",
+				"#FFFFFF"
+			],
+			"dominant": "#9A5FBE",
+			"coverage": {
+				"#9A5FBE": 0.8747,
+				"#FFFFFF": 0.1253
+			},
+			"colourSource": "brand #7F52FF → #9A5FBE",
+			"batch": "batch2",
+			"bytes": 437
+		},
+		{
+			"id": "license",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C2A253"
+			],
+			"dominant": "#C2A253",
+			"coverage": {
+				"#C2A253": 1
+			},
+			"colourSource": "no brand → #C2A253",
+			"batch": "batch2",
+			"bytes": 204
+		},
+		{
+			"id": "lock",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#979CA3"
+			],
+			"dominant": "#979CA3",
+			"coverage": {
+				"#979CA3": 1
+			},
+			"colourSource": "no brand → #979CA3",
+			"batch": "batch1",
+			"bytes": 466
+		},
+		{
+			"id": "log",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#96A17E"
+			],
+			"dominant": "#96A17E",
+			"coverage": {
+				"#96A17E": 1
+			},
+			"colourSource": "no brand → #96A17E",
+			"batch": "batch4",
+			"bytes": 254
+		},
+		{
+			"id": "lua",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6C6ACB"
+			],
+			"dominant": "#6C6ACB",
+			"coverage": {
+				"#6C6ACB": 1
+			},
+			"colourSource": "brand #2C2D72 → #6C6ACB (lifted)",
+			"batch": "batch3",
+			"bytes": 263
+		},
+		{
+			"id": "makefile",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#A08D78"
+			],
+			"dominant": "#A08D78",
+			"coverage": {
+				"#A08D78": 1
+			},
+			"colourSource": "no brand → #A08D78",
+			"batch": "batch4",
+			"bytes": 218
+		},
+		{
+			"id": "markdown",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#519ABA"
+			],
+			"dominant": "#519ABA",
+			"coverage": {
+				"#519ABA": 1
+			},
+			"colourSource": "canon #519ABA",
+			"batch": "batch1",
+			"bytes": 350
+		},
+		{
+			"id": "maven",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#A4656B"
+			],
+			"dominant": "#A4656B",
+			"coverage": {
+				"#A4656B": 1
+			},
+			"colourSource": "brand #C71A36 ↑ #A4656B (reconciled from #A93F4A → #86323A)",
+			"batch": "batch4",
+			"bytes": 1043,
+			"round2": {
+				"kind": "retint",
+				"from": "#86323A",
+				"note": "Ruling C KEPT LETTERS (the feather collapsed to a blade at 16 px); Ruling D lifted the fill — the dimmest icon in the set escapes up the saturation axis, ΔS ≈ 34 against angular and turborepo, so turborepo did not have to move"
+			},
+			"round1": {
+				"kind": "retint",
+				"from": "#A93F4A",
+				"to": "#86323A"
+			}
+		},
+		{
+			"id": "mdx",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#633EC1",
+				"#FFFFFF"
+			],
+			"dominant": "#633EC1",
+			"coverage": {
+				"#633EC1": 0.8714,
+				"#FFFFFF": 0.1286
+			},
+			"colourSource": "no brand → #633EC1 (reconciled from #7B68CE)",
+			"batch": "batch4",
+			"bytes": 1259,
+			"round1": {
+				"kind": "retint",
+				"from": "#7B68CE",
+				"to": "#633EC1"
+			}
+		},
+		{
+			"id": "mermaid",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#D4547B"
+			],
+			"dominant": "#D4547B",
+			"coverage": {
+				"#D4547B": 1
+			},
+			"colourSource": "brand #FF3670 → #D4547B",
+			"batch": "batch6",
+			"bytes": 509
+		},
+		{
+			"id": "nestjs",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C4485F"
+			],
+			"dominant": "#C4485F",
+			"coverage": {
+				"#C4485F": 1
+			},
+			"colourSource": "brand #E0234E → #C4485F",
+			"batch": "batch6",
+			"bytes": 193
+		},
+		{
+			"id": "netlify",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3AAFB9"
+			],
+			"dominant": "#3AAFB9",
+			"coverage": {
+				"#3AAFB9": 1
+			},
+			"colourSource": "brand #00C7B7 → #3AAFB9",
+			"batch": "batch6",
+			"bytes": 163
+		},
+		{
+			"id": "next",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DADCE0"
+			],
+			"dominant": "#DADCE0",
+			"coverage": {
+				"#DADCE0": 1
+			},
+			"colourSource": "brand #000000 → #DADCE0",
+			"batch": "batch1",
+			"bytes": 506
+		},
+		{
+			"id": "nginx",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#3E9E5C",
+				"#FFFFFF"
+			],
+			"dominant": "#3E9E5C",
+			"coverage": {
+				"#3E9E5C": 0.8787,
+				"#FFFFFF": 0.1213
+			},
+			"colourSource": "brand #009639 → #3E9E5C",
+			"batch": "batch4",
+			"bytes": 1227
+		},
+		{
+			"id": "nim",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C6C24C"
+			],
+			"dominant": "#C6C24C",
+			"coverage": {
+				"#C6C24C": 1
+			},
+			"colourSource": "off-brand #C6C24C (#FFE953 = js/json yellow)",
+			"batch": "batch3",
+			"bytes": 179
+		},
+		{
+			"id": "node",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#5FA04E"
+			],
+			"dominant": "#5FA04E",
+			"coverage": {
+				"#5FA04E": 1
+			},
+			"colourSource": "brand #5FA04E",
+			"batch": "batch1",
+			"bytes": 133
+		},
+		{
+			"id": "npm",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#CB3837",
+				"#FFFFFF"
+			],
+			"dominant": "#CB3837",
+			"coverage": {
+				"#CB3837": 0.8986,
+				"#FFFFFF": 0.1014
+			},
+			"colourSource": "canon #CB3837",
+			"batch": "batch1",
+			"bytes": 1363
+		},
+		{
+			"id": "nuxt",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#2CA675"
+			],
+			"dominant": "#2CA675",
+			"coverage": {
+				"#2CA675": 1
+			},
+			"colourSource": "brand #00DC82 → #2CA675",
+			"batch": "batch5",
+			"bytes": 151
+		},
+		{
+			"id": "nx",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#5E6E94",
+				"#FFFFFF"
+			],
+			"dominant": "#5E6E94",
+			"coverage": {
+				"#5E6E94": 0.8742,
+				"#FFFFFF": 0.1258
+			},
+			"colourSource": "brand #143055 → #5E6E94 (lifted)",
+			"batch": "batch5",
+			"bytes": 766
+		},
+		{
+			"id": "objectivec",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#7C8CA6",
+				"#FFFFFF"
+			],
+			"dominant": "#7C8CA6",
+			"coverage": {
+				"#7C8CA6": 0.8875,
+				"#FFFFFF": 0.1125
+			},
+			"colourSource": "no brand → #7C8CA6 slate, neutral lane (reconciled from #A85596)",
+			"batch": "batch3",
+			"bytes": 1048,
+			"round1": {
+				"kind": "retint",
+				"from": "#A85596",
+				"to": "#7C8CA6"
+			}
+		},
+		{
+			"id": "ocaml",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#CC9038"
+			],
+			"dominant": "#CC9038",
+			"coverage": {
+				"#CC9038": 1
+			},
+			"colourSource": "brand #EC6813 → #CC9038",
+			"batch": "batch3",
+			"bytes": 297
+		},
+		{
+			"id": "pdf",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C2483C",
+				"#E08573"
+			],
+			"dominant": "#C2483C",
+			"coverage": {
+				"#C2483C": 0.924,
+				"#E08573": 0.076
+			},
+			"colourSource": "brand #EC1C24 → #C2483C (+#E08573 flap)",
+			"batch": "batch2",
+			"bytes": 185
+		},
+		{
+			"id": "perl",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#49599C",
+				"#FFFFFF"
+			],
+			"dominant": "#49599C",
+			"coverage": {
+				"#49599C": 0.8869,
+				"#FFFFFF": 0.1131
+			},
+			"colourSource": "brand #39457E → #49599C (reconciled from #5E6DB4)",
+			"batch": "batch3",
+			"bytes": 529,
+			"round1": {
+				"kind": "retint",
+				"from": "#5E6DB4",
+				"to": "#49599C"
+			}
+		},
+		{
+			"id": "php",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6A7BC8",
+				"#FFFFFF"
+			],
+			"dominant": "#6A7BC8",
+			"coverage": {
+				"#6A7BC8": 0.8606,
+				"#FFFFFF": 0.1394
+			},
+			"colourSource": "brand #777BB4 → #6A7BC8",
+			"batch": "batch2",
+			"bytes": 1425
+		},
+		{
+			"id": "playwright",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3C9E52"
+			],
+			"dominant": "#3C9E52",
+			"coverage": {
+				"#3C9E52": 1
+			},
+			"colourSource": "brand #2EAD33 → #3C9E52",
+			"batch": "batch5",
+			"bytes": 347
+		},
+		{
+			"id": "pnpm",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#D4832F"
+			],
+			"dominant": "#D4832F",
+			"coverage": {
+				"#D4832F": 1
+			},
+			"colourSource": "brand #F69220 → #D4832F",
+			"batch": "batch5",
+			"bytes": 276
+		},
+		{
+			"id": "postcss",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#D0942F"
+			],
+			"dominant": "#D0942F",
+			"coverage": {
+				"#D0942F": 1
+			},
+			"colourSource": "brand #DD3A0A → #D0942F (red-orange band)",
+			"batch": "batch5",
+			"bytes": 841
+		},
+		{
+			"id": "powerpoint",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C74C57",
+				"#FFFFFF"
+			],
+			"dominant": "#C74C57",
+			"coverage": {
+				"#C74C57": 0.8344,
+				"#FFFFFF": 0.1656
+			},
+			"colourSource": "off-brand #C74C57 (html clash)",
+			"batch": "batch4",
+			"bytes": 287
+		},
+		{
+			"id": "powershell",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6A95D2",
+				"#FFFFFF"
+			],
+			"dominant": "#6A95D2",
+			"coverage": {
+				"#6A95D2": 0.8601,
+				"#FFFFFF": 0.1399
+			},
+			"colourSource": "brand #5391FE → #6A95D2 (reconciled from #6478C8)",
+			"batch": "batch4",
+			"bytes": 1083,
+			"round1": {
+				"kind": "retint",
+				"from": "#6478C8",
+				"to": "#6A95D2"
+			}
+		},
+		{
+			"id": "prettier",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#E0A83E"
+			],
+			"dominant": "#E0A83E",
+			"coverage": {
+				"#E0A83E": 1
+			},
+			"colourSource": "brand #F7B93E → #E0A83E",
+			"batch": "batch2",
+			"bytes": 248
+		},
+		{
+			"id": "prisma",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#8592AD"
+			],
+			"dominant": "#8592AD",
+			"coverage": {
+				"#8592AD": 1
+			},
+			"colourSource": "brand #2D3748 → #8592AD",
+			"batch": "batch1",
+			"bytes": 121
+		},
+		{
+			"id": "protobuf",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#8CA24A",
+				"#FFFFFF"
+			],
+			"dominant": "#8CA24A",
+			"coverage": {
+				"#8CA24A": 0.8439,
+				"#FFFFFF": 0.1561
+			},
+			"colourSource": "no brand → #8CA24A",
+			"batch": "batch3",
+			"bytes": 987
+		},
+		{
+			"id": "python",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3776AB",
+				"#D8B44A"
+			],
+			"dominant": "#3776AB",
+			"coverage": {
+				"#3776AB": 0.5,
+				"#D8B44A": 0.5
+			},
+			"colourSource": "brand #3776AB + #D8B44A",
+			"batch": "batch2",
+			"bytes": 467
+		},
+		{
+			"id": "r",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#3D6EC8"
+			],
+			"dominant": "#3D6EC8",
+			"coverage": {
+				"#3D6EC8": 1
+			},
+			"colourSource": "brand #276DC3 → #3D6EC8 (nudged off the markdown blue)",
+			"batch": "batch3",
+			"bytes": 369
+		},
+		{
+			"id": "reactjs",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#46B5D1",
+				"#10262E"
+			],
+			"dominant": "#46B5D1",
+			"coverage": {
+				"#46B5D1": 0.8997,
+				"#10262E": 0.1003
+			},
+			"colourSource": "brand #61DAFB → #46B5D1",
+			"batch": "batch1",
+			"bytes": 1281
+		},
+		{
+			"id": "reactts",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#46B5D1",
+				"#10262E"
+			],
+			"dominant": "#46B5D1",
+			"coverage": {
+				"#46B5D1": 0.8971,
+				"#10262E": 0.1029
+			},
+			"colourSource": "brand #61DAFB → #46B5D1",
+			"batch": "batch1",
+			"bytes": 1140
+		},
+		{
+			"id": "readme",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#7EA6C2"
+			],
+			"dominant": "#7EA6C2",
+			"coverage": {
+				"#7EA6C2": 1
+			},
+			"colourSource": "no brand → #7EA6C2",
+			"batch": "batch2",
+			"bytes": 318
+		},
+		{
+			"id": "rollup",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C43C3C"
+			],
+			"dominant": "#C43C3C",
+			"coverage": {
+				"#C43C3C": 1
+			},
+			"colourSource": "brand #EC4A3F → #C43C3C",
+			"batch": "batch5",
+			"bytes": 277
+		},
+		{
+			"id": "ruby",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A94152"
+			],
+			"dominant": "#A94152",
+			"coverage": {
+				"#A94152": 1
+			},
+			"colourSource": "brand #CC342D → #A94152",
+			"batch": "batch2",
+			"bytes": 131
+		},
+		{
+			"id": "rust",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#A0523C",
+				"#FFFFFF"
+			],
+			"dominant": "#A0523C",
+			"coverage": {
+				"#A0523C": 0.8472,
+				"#FFFFFF": 0.1528
+			},
+			"colourSource": "brand #CE422B → #A0523C",
+			"batch": "batch1",
+			"bytes": 1059
+		},
+		{
+			"id": "sass",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#C4708F",
+				"#FFFFFF"
+			],
+			"dominant": "#C4708F",
+			"coverage": {
+				"#C4708F": 0.8833,
+				"#FFFFFF": 0.1167
+			},
+			"colourSource": "brand #CC6699 → #C4708F",
+			"batch": "batch1",
+			"bytes": 766
+		},
+		{
+			"id": "scala",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#C93A4A"
+			],
+			"dominant": "#C93A4A",
+			"coverage": {
+				"#C93A4A": 1
+			},
+			"colourSource": "brand #DC322F → #C93A4A",
+			"batch": "batch3",
+			"bytes": 220
+		},
+		{
+			"id": "shell",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#79BE4A"
+			],
+			"dominant": "#79BE4A",
+			"coverage": {
+				"#79BE4A": 1
+			},
+			"colourSource": "brand #4EAA25 → #79BE4A",
+			"batch": "batch1",
+			"bytes": 156
+		},
+		{
+			"id": "solidity",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#B2B0AC"
+			],
+			"dominant": "#B2B0AC",
+			"coverage": {
+				"#B2B0AC": 1
+			},
+			"colourSource": "brand #363636 → #B2B0AC (lifted)",
+			"batch": "batch3",
+			"bytes": 155
+		},
+		{
+			"id": "sql",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3E9B8E"
+			],
+			"dominant": "#3E9B8E",
+			"coverage": {
+				"#3E9B8E": 1
+			},
+			"colourSource": "no brand → #3E9B8E",
+			"batch": "batch1",
+			"bytes": 249
+		},
+		{
+			"id": "sqlite",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#35897E",
+				"#FFFFFF"
+			],
+			"dominant": "#35897E",
+			"coverage": {
+				"#35897E": 0.8505,
+				"#FFFFFF": 0.1495
+			},
+			"colourSource": "off-brand #35897E (sql family; #003B57 = docker band)",
+			"batch": "batch3",
+			"bytes": 972
+		},
+		{
+			"id": "storybook",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#D0559B"
+			],
+			"dominant": "#D0559B",
+			"coverage": {
+				"#D0559B": 1
+			},
+			"colourSource": "brand #FF4785 → #D0559B",
+			"batch": "batch5",
+			"bytes": 266
+		},
+		{
+			"id": "stylelint",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#9AA3A9"
+			],
+			"dominant": "#9AA3A9",
+			"coverage": {
+				"#9AA3A9": 1
+			},
+			"colourSource": "brand #263238 → #9AA3A9 (lifted)",
+			"batch": "batch5",
+			"bytes": 757
+		},
+		{
+			"id": "supabase",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#4CB984"
+			],
+			"dominant": "#4CB984",
+			"coverage": {
+				"#4CB984": 1
+			},
+			"colourSource": "brand #3FCF8E → #4CB984",
+			"batch": "batch6",
+			"bytes": 144
+		},
+		{
+			"id": "svelte",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#B15B25"
+			],
+			"dominant": "#B15B25",
+			"coverage": {
+				"#B15B25": 1
+			},
+			"colourSource": "brand #FF3E00 → #B15B25",
+			"batch": "batch5",
+			"bytes": 206,
+			"round2": {
+				"kind": "retint",
+				"from": "#BE6329",
+				"note": "consequence of Ruling B — restoring git revived the git↔svelte twin; svelte is the less brand-anchored member and moved 3 L points inside its own hue"
+			},
+			"reconciled": true
+		},
+		{
+			"id": "svg",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#DFA046",
+				"#33260C"
+			],
+			"dominant": "#DFA046",
+			"coverage": {
+				"#DFA046": 0.8843,
+				"#33260C": 0.1157
+			},
+			"colourSource": "brand #FFB13B → #DFA046",
+			"batch": "batch1",
+			"bytes": 1408
+		},
+		{
+			"id": "swagger",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6FA83C"
+			],
+			"dominant": "#6FA83C",
+			"coverage": {
+				"#6FA83C": 1
+			},
+			"colourSource": "no brand → #6FA83C",
+			"batch": "batch6",
+			"bytes": 260
+		},
+		{
+			"id": "swift",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DD6E5B"
+			],
+			"dominant": "#DD6E5B",
+			"coverage": {
+				"#DD6E5B": 1
+			},
+			"colourSource": "brand #F05138 → #DD6E5B",
+			"batch": "batch2",
+			"bytes": 378
+		},
+		{
+			"id": "tailwind",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3FAFC4"
+			],
+			"dominant": "#3FAFC4",
+			"coverage": {
+				"#3FAFC4": 1
+			},
+			"colourSource": "brand #06B6D4 → #3FAFC4",
+			"batch": "batch2",
+			"bytes": 643
+		},
+		{
+			"id": "tauri",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#D19A3C"
+			],
+			"dominant": "#D19A3C",
+			"coverage": {
+				"#D19A3C": 1
+			},
+			"colourSource": "brand #FFC131 → #D19A3C",
+			"batch": "batch6",
+			"bytes": 378
+		},
+		{
+			"id": "terraform",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#8A63BE"
+			],
+			"dominant": "#8A63BE",
+			"coverage": {
+				"#8A63BE": 1
+			},
+			"colourSource": "brand #844FBA → #8A63BE",
+			"batch": "batch6",
+			"bytes": 199
+		},
+		{
+			"id": "testjs",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DFCA55"
+			],
+			"dominant": "#DFCA55",
+			"coverage": {
+				"#DFCA55": 1
+			},
+			"colourSource": "no brand → #DFCA55 (js hue)",
+			"batch": "batch5",
+			"bytes": 179
+		},
+		{
+			"id": "testts",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6FA8DB"
+			],
+			"dominant": "#6FA8DB",
+			"coverage": {
+				"#6FA8DB": 1
+			},
+			"colourSource": "no brand → #6FA8DB (ts hue)",
+			"batch": "batch5",
+			"bytes": 179
+		},
+		{
+			"id": "tex",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#59C0C0"
+			],
+			"dominant": "#59C0C0",
+			"coverage": {
+				"#59C0C0": 1
+			},
+			"colourSource": "brand #008080 → #59C0C0 (reconciled from #3FA6A6)",
+			"batch": "batch4",
+			"bytes": 632,
+			"round1": {
+				"kind": "retint",
+				"from": "#3FA6A6",
+				"to": "#59C0C0"
+			}
+		},
+		{
+			"id": "text",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#95918C"
+			],
+			"dominant": "#95918C",
+			"coverage": {
+				"#95918C": 1
+			},
+			"colourSource": "no brand → #95918C",
+			"batch": "batch2",
+			"bytes": 167
+		},
+		{
+			"id": "todo",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#8F7228"
+			],
+			"dominant": "#8F7228",
+			"coverage": {
+				"#8F7228": 1
+			},
+			"colourSource": "no brand → #8F7228 (reconciled from #C9A241; mark redrawn: bare check → checkbox + tick)",
+			"batch": "batch6",
+			"bytes": 422,
+			"round1": {
+				"kind": "retint + mark",
+				"from": "#C9A241",
+				"to": "#8F7228",
+				"mark": "bare check -> checkbox + tick"
+			}
+		},
+		{
+			"id": "toml",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#6B3E26",
+				"#FFFFFF"
+			],
+			"dominant": "#6B3E26",
+			"coverage": {
+				"#6B3E26": 0.9171,
+				"#FFFFFF": 0.0829
+			},
+			"colourSource": "brand #9C4121 → #6B3E26 (reconciled from #7E4A2E)",
+			"batch": "batch1",
+			"bytes": 253,
+			"round1": {
+				"kind": "retint",
+				"from": "#7E4A2E",
+				"to": "#6B3E26"
+			}
+		},
+		{
+			"id": "tsconfig",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#3178C6"
+			],
+			"dominant": "#3178C6",
+			"coverage": {
+				"#3178C6": 1
+			},
+			"colourSource": "canon #3178C6 (TS family tie)",
+			"batch": "batch2",
+			"bytes": 489
+		},
+		{
+			"id": "turborepo",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#CC333B"
+			],
+			"dominant": "#CC333B",
+			"coverage": {
+				"#CC333B": 1
+			},
+			"colourSource": "brand #EF4444 → #CC333B",
+			"batch": "batch5",
+			"bytes": 390
+		},
+		{
+			"id": "typescript",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#3178C6",
+				"#FFFFFF"
+			],
+			"dominant": "#3178C6",
+			"coverage": {
+				"#3178C6": 0.8907,
+				"#FFFFFF": 0.1093
+			},
+			"colourSource": "canon #3178C6",
+			"batch": "batch1",
+			"bytes": 881
+		},
+		{
+			"id": "typescriptdef",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#3178C6",
+				"#FFFFFF"
+			],
+			"dominant": "#3178C6",
+			"coverage": {
+				"#3178C6": 0.8852,
+				"#FFFFFF": 0.1148
+			},
+			"colourSource": "canon #3178C6 (typescript sibling)",
+			"batch": "batch4",
+			"bytes": 1175
+		},
+		{
+			"id": "vercel",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#DADCE0"
+			],
+			"dominant": "#DADCE0",
+			"coverage": {
+				"#DADCE0": 1
+			},
+			"colourSource": "brand #000000 ↑ #DADCE0",
+			"batch": "batch6",
+			"bytes": 119
+		},
+		{
+			"id": "video",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#6E76CE"
+			],
+			"dominant": "#6E76CE",
+			"coverage": {
+				"#6E76CE": 1
+			},
+			"colourSource": "no brand → #6E76CE",
+			"batch": "batch4",
+			"bytes": 418
+		},
+		{
+			"id": "vite",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#A96BD8"
+			],
+			"dominant": "#A96BD8",
+			"coverage": {
+				"#A96BD8": 1
+			},
+			"colourSource": "brand #646CFF → #A96BD8",
+			"batch": "batch2",
+			"bytes": 145
+		},
+		{
+			"id": "vitest",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#93A833"
+			],
+			"dominant": "#93A833",
+			"coverage": {
+				"#93A833": 1
+			},
+			"colourSource": "brand #6E9F18 → #93A833",
+			"batch": "batch5",
+			"bytes": 136
+		},
+		{
+			"id": "vscode",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#2782C2"
+			],
+			"dominant": "#2782C2",
+			"coverage": {
+				"#2782C2": 1
+			},
+			"colourSource": "brand #007ACC → #2782C2",
+			"batch": "batch6",
+			"bytes": 273
+		},
+		{
+			"id": "vue",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#4CB392"
+			],
+			"dominant": "#4CB392",
+			"coverage": {
+				"#4CB392": 1
+			},
+			"colourSource": "brand #4FC08D → #4CB392",
+			"batch": "batch2",
+			"bytes": 135
+		},
+		{
+			"id": "wasm",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#866ED6",
+				"#FFFFFF"
+			],
+			"dominant": "#866ED6",
+			"coverage": {
+				"#866ED6": 0.8505,
+				"#FFFFFF": 0.1495
+			},
+			"colourSource": "brand #654FF0 → #866ED6",
+			"batch": "batch3",
+			"bytes": 765
+		},
+		{
+			"id": "webpack",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#7FBBD8"
+			],
+			"dominant": "#7FBBD8",
+			"coverage": {
+				"#7FBBD8": 1
+			},
+			"colourSource": "brand #8DD6F9 → #7FBBD8",
+			"batch": "batch5",
+			"bytes": 221
+		},
+		{
+			"id": "word",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#37588C",
+				"#FFFFFF"
+			],
+			"dominant": "#37588C",
+			"coverage": {
+				"#37588C": 0.822,
+				"#FFFFFF": 0.178
+			},
+			"colourSource": "brand #2B579A → #37588C",
+			"batch": "batch4",
+			"bytes": 554
+		},
+		{
+			"id": "xml",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#7C93A6"
+			],
+			"dominant": "#7C93A6",
+			"coverage": {
+				"#7C93A6": 1
+			},
+			"colourSource": "no brand → #7C93A6",
+			"batch": "batch2",
+			"bytes": 191
+		},
+		{
+			"id": "yaml",
+			"kind": "file",
+			"archetype": "BADGE",
+			"fills": [
+				"#CB171E",
+				"#FFFFFF"
+			],
+			"dominant": "#CB171E",
+			"coverage": {
+				"#CB171E": 0.8894,
+				"#FFFFFF": 0.1106
+			},
+			"colourSource": "brand #CB171E exactly (R10 ruled exception, Sebastian 2026-09-01)",
+			"batch": "batch1",
+			"bytes": 922,
+			"round2": {
+				"kind": "retint",
+				"from": "#7E6086",
+				"note": "Ruling A — brand fidelity over separation; the R7 twin against canon npm is knowingly accepted"
+			},
+			"reconciled": true
+		},
+		{
+			"id": "yarn",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#2A8496"
+			],
+			"dominant": "#2A8496",
+			"coverage": {
+				"#2A8496": 1
+			},
+			"colourSource": "brand #2C8EBB → #2A8496 (blue band)",
+			"batch": "batch5",
+			"bytes": 791
+		},
+		{
+			"id": "zig",
+			"kind": "file",
+			"archetype": "GLYPH",
+			"fills": [
+				"#E3C172"
+			],
+			"dominant": "#E3C172",
+			"coverage": {
+				"#E3C172": 1
+			},
+			"colourSource": "brand #F7A41D → #E3C172 (reconciled from #D89238)",
+			"batch": "batch3",
+			"bytes": 148,
+			"round1": {
+				"kind": "retint",
+				"from": "#D89238",
+				"to": "#E3C172"
+			}
+		},
+		{
+			"id": "zip",
+			"kind": "file",
+			"archetype": "SILHOUETTE",
+			"fills": [
+				"#93A05B"
+			],
+			"dominant": "#93A05B",
+			"coverage": {
+				"#93A05B": 1
+			},
+			"colourSource": "no brand → #93A05B",
+			"batch": "batch4",
+			"bytes": 311
+		},
+		{
+			"id": "api-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6133,
+				"#8F6D37": 0.2932,
+				"#4E545B": 0.0935
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 979,
+			"emblem": "plug"
+		},
+		{
+			"id": "api",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8604,
+				"#4E545B": 0.1396
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 904,
+			"emblem": "plug"
+		},
+		{
+			"id": "app-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5586,
+				"#8F6D37": 0.291,
+				"#4E545B": 0.1503
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 964,
+			"emblem": "2x2 app grid"
+		},
+		{
+			"id": "app",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7716,
+				"#4E545B": 0.2284
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 911,
+			"emblem": "2x2 app grid"
+		},
+		{
+			"id": "assets-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6056,
+				"#8F6D37": 0.2913,
+				"#4E545B": 0.1031
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 405,
+			"emblem": "gem / diamond"
+		},
+		{
+			"id": "assets",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8443,
+				"#4E545B": 0.1557
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 364,
+			"emblem": "gem / diamond"
+		},
+		{
+			"id": "components-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5755,
+				"#8F6D37": 0.2939,
+				"#4E545B": 0.1306
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 483,
+			"emblem": "puzzle piece — one nub, one notch"
+		},
+		{
+			"id": "components",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8019,
+				"#4E545B": 0.1981
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 432,
+			"emblem": "puzzle piece — one nub, one notch"
+		},
+		{
+			"id": "config-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5939,
+				"#8F6D37": 0.2941,
+				"#4E545B": 0.112
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 893,
+			"emblem": "six-tooth gear"
+		},
+		{
+			"id": "config",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8282,
+				"#4E545B": 0.1718
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 862,
+			"emblem": "six-tooth gear"
+		},
+		{
+			"id": "coverage-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5802,
+				"#8F6D37": 0.2943,
+				"#4E545B": 0.1255
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 408,
+			"emblem": "pie chart with a missing quadrant"
+		},
+		{
+			"id": "coverage",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8078,
+				"#4E545B": 0.1922
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 369,
+			"emblem": "pie chart with a missing quadrant"
+		},
+		{
+			"id": "db-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5598,
+				"#8F6D37": 0.2942,
+				"#4E545B": 0.146
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 538,
+			"emblem": "database cylinder with a rim line"
+		},
+		{
+			"id": "db",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7772,
+				"#4E545B": 0.2228
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 485,
+			"emblem": "database cylinder with a rim line"
+		},
+		{
+			"id": "dist-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6348,
+				"#8F6D37": 0.2914,
+				"#4E545B": 0.0738
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 596,
+			"emblem": "down arrow onto a baseline (build output)"
+		},
+		{
+			"id": "dist",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8869,
+				"#4E545B": 0.1131
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 552,
+			"emblem": "down arrow onto a baseline (build output)"
+		},
+		{
+			"id": "docker-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#1E6EA8"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5967,
+				"#8F6D37": 0.2914,
+				"#1E6EA8": 0.1118
+			},
+			"colourSource": "brand #2496ED → #1E6EA8",
+			"batch": "folders",
+			"bytes": 730,
+			"emblem": "two containers on a hull"
+		},
+		{
+			"id": "docker",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#1E6EA8"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8336,
+				"#1E6EA8": 0.1664
+			},
+			"colourSource": "brand #2496ED → #1E6EA8",
+			"batch": "folders",
+			"bytes": 664,
+			"emblem": "two containers on a hull"
+		},
+		{
+			"id": "docs-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5852,
+				"#8F6D37": 0.2967,
+				"#4E545B": 0.1181
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 532,
+			"emblem": "page with a folded corner, two text lines"
+		},
+		{
+			"id": "docs",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8154,
+				"#4E545B": 0.1846
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 483,
+			"emblem": "page with a folded corner, two text lines"
+		},
+		{
+			"id": "folder-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.7106,
+				"#8F6D37": 0.2894
+			},
+			"colourSource": "canon #8F6D37 / #C09553",
+			"batch": "canon",
+			"bytes": 339,
+			"emblem": "none (canon flared lip)"
+		},
+		{
+			"id": "folder",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 1
+			},
+			"colourSource": "canon #BF9354",
+			"batch": "canon",
+			"bytes": 292,
+			"emblem": "none (canon plate)"
+		},
+		{
+			"id": "fonts-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6248,
+				"#8F6D37": 0.2932,
+				"#4E545B": 0.082
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 601,
+			"emblem": "letter A (Inter Bold outline)"
+		},
+		{
+			"id": "fonts",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8745,
+				"#4E545B": 0.1255
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 537,
+			"emblem": "letter A (Inter Bold outline)"
+		},
+		{
+			"id": "git-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#9C3A1F"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6137,
+				"#8F6D37": 0.2924,
+				"#9C3A1F": 0.0939
+			},
+			"colourSource": "brand #F05032 → #9C3A1F",
+			"batch": "folders",
+			"bytes": 682,
+			"emblem": "branch fork — three commit nodes"
+		},
+		{
+			"id": "git",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#9C3A1F"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8499,
+				"#9C3A1F": 0.1501
+			},
+			"colourSource": "brand #F05032 → #9C3A1F",
+			"batch": "folders",
+			"bytes": 643,
+			"emblem": "branch fork — three commit nodes"
+		},
+		{
+			"id": "github-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#34383D"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5888,
+				"#8F6D37": 0.293,
+				"#34383D": 0.1182
+			},
+			"colourSource": "no brandColor → dimmed near-black #34383D",
+			"batch": "folders",
+			"bytes": 495,
+			"emblem": "octocat head — round head, two ears"
+		},
+		{
+			"id": "github",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#34383D"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8217,
+				"#34383D": 0.1783
+			},
+			"colourSource": "no brandColor → dimmed near-black #34383D",
+			"batch": "folders",
+			"bytes": 444,
+			"emblem": "octocat head — round head, two ears"
+		},
+		{
+			"id": "hooks-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6315,
+				"#8F6D37": 0.293,
+				"#4E545B": 0.0754
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 487,
+			"emblem": "hook"
+		},
+		{
+			"id": "hooks",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8868,
+				"#4E545B": 0.1132
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 430,
+			"emblem": "hook"
+		},
+		{
+			"id": "i18n-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5613,
+				"#8F6D37": 0.2919,
+				"#4E545B": 0.1468
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 561,
+			"emblem": "speech bubble"
+		},
+		{
+			"id": "i18n",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7775,
+				"#4E545B": 0.2225
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 505,
+			"emblem": "speech bubble"
+		},
+		{
+			"id": "images-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6167,
+				"#8F6D37": 0.2946,
+				"#4E545B": 0.0887
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 489,
+			"emblem": "two peaks and a sun"
+		},
+		{
+			"id": "images",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8626,
+				"#4E545B": 0.1374
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 454,
+			"emblem": "two peaks and a sun"
+		},
+		{
+			"id": "layout-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5672,
+				"#8F6D37": 0.2962,
+				"#4E545B": 0.1366
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 833,
+			"emblem": "layout wireframe — sidebar and two panes"
+		},
+		{
+			"id": "layout",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7928,
+				"#4E545B": 0.2072
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 786,
+			"emblem": "layout wireframe — sidebar and two panes"
+		},
+		{
+			"id": "library-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5811,
+				"#8F6D37": 0.2932,
+				"#4E545B": 0.1257
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 456,
+			"emblem": "open book"
+		},
+		{
+			"id": "library",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8075,
+				"#4E545B": 0.1925
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 409,
+			"emblem": "open book"
+		},
+		{
+			"id": "log-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6176,
+				"#8F6D37": 0.2923,
+				"#4E545B": 0.0901
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 826,
+			"emblem": "three record lines"
+		},
+		{
+			"id": "log",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8612,
+				"#4E545B": 0.1388
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 774,
+			"emblem": "three record lines"
+		},
+		{
+			"id": "middleware-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5865,
+				"#8F6D37": 0.2979,
+				"#4E545B": 0.1156
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 830,
+			"emblem": "three layers, the middle one inset"
+		},
+		{
+			"id": "middleware",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8185,
+				"#4E545B": 0.1815
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 781,
+			"emblem": "three layers, the middle one inset"
+		},
+		{
+			"id": "mock-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.644,
+				"#8F6D37": 0.2908,
+				"#4E545B": 0.0653
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 447,
+			"emblem": "pencil"
+		},
+		{
+			"id": "mock",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.9007,
+				"#4E545B": 0.0993
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 396,
+			"emblem": "pencil"
+		},
+		{
+			"id": "model-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6183,
+				"#8F6D37": 0.2916,
+				"#4E545B": 0.0901
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 845,
+			"emblem": "entity diagram — one block over two"
+		},
+		{
+			"id": "model",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.865,
+				"#4E545B": 0.135
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 785,
+			"emblem": "entity diagram — one block over two"
+		},
+		{
+			"id": "next-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#2E3236"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5696,
+				"#8F6D37": 0.2981,
+				"#2E3236": 0.1323
+			},
+			"colourSource": "brand #000000 → #2E3236",
+			"batch": "folders",
+			"bytes": 766,
+			"emblem": "Next.js disc with a knocked-out N"
+		},
+		{
+			"id": "next",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#2E3236"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7948,
+				"#2E3236": 0.2052
+			},
+			"colourSource": "brand #000000 → #2E3236",
+			"batch": "folders",
+			"bytes": 704,
+			"emblem": "Next.js disc with a knocked-out N"
+		},
+		{
+			"id": "node-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#3D7A31"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5549,
+				"#8F6D37": 0.2941,
+				"#3D7A31": 0.151
+			},
+			"colourSource": "brand #5FA04E → #3D7A31",
+			"batch": "folders",
+			"bytes": 424,
+			"emblem": "node hexagon"
+		},
+		{
+			"id": "node",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#3D7A31"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.771,
+				"#3D7A31": 0.229
+			},
+			"colourSource": "brand #5FA04E → #3D7A31",
+			"batch": "folders",
+			"bytes": 385,
+			"emblem": "node hexagon"
+		},
+		{
+			"id": "package-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5702,
+				"#8F6D37": 0.2898,
+				"#4E545B": 0.14
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 582,
+			"emblem": "box with a lid seam"
+		},
+		{
+			"id": "package",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7929,
+				"#4E545B": 0.2071
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 537,
+			"emblem": "box with a lid seam"
+		},
+		{
+			"id": "public-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5542,
+				"#8F6D37": 0.2982,
+				"#4E545B": 0.1475
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 697,
+			"emblem": "browser window"
+		},
+		{
+			"id": "public",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7713,
+				"#4E545B": 0.2287
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 644,
+			"emblem": "browser window"
+		},
+		{
+			"id": "route-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6139,
+				"#8F6D37": 0.2928,
+				"#4E545B": 0.0933
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 552,
+			"emblem": "map pin"
+		},
+		{
+			"id": "route",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8574,
+				"#4E545B": 0.1426
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 493,
+			"emblem": "map pin"
+		},
+		{
+			"id": "scripts-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6561,
+				"#8F6D37": 0.2925,
+				"#4E545B": 0.0514
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 591,
+			"emblem": "shell prompt >_"
+		},
+		{
+			"id": "scripts",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.9193,
+				"#4E545B": 0.0807
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 536,
+			"emblem": "shell prompt >_"
+		},
+		{
+			"id": "server-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5665,
+				"#8F6D37": 0.295,
+				"#4E545B": 0.1385
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 772,
+			"emblem": "two rack units with status slots"
+		},
+		{
+			"id": "server",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7871,
+				"#4E545B": 0.2129
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 713,
+			"emblem": "two rack units with status slots"
+		},
+		{
+			"id": "services-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5962,
+				"#8F6D37": 0.2928,
+				"#4E545B": 0.111
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 649,
+			"emblem": "cloud"
+		},
+		{
+			"id": "services",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.835,
+				"#4E545B": 0.165
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 609,
+			"emblem": "cloud"
+		},
+		{
+			"id": "src-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6354,
+				"#8F6D37": 0.2915,
+				"#4E545B": 0.0731
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 496,
+			"emblem": "angle brackets < >"
+		},
+		{
+			"id": "src",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8866,
+				"#4E545B": 0.1134
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 441,
+			"emblem": "angle brackets < >"
+		},
+		{
+			"id": "styles-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6562,
+				"#8F6D37": 0.2926,
+				"#4E545B": 0.0512
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 492,
+			"emblem": "paint brush"
+		},
+		{
+			"id": "styles",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.921,
+				"#4E545B": 0.079
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 437,
+			"emblem": "paint brush"
+		},
+		{
+			"id": "temp-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5754,
+				"#8F6D37": 0.2955,
+				"#4E545B": 0.1291
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 737,
+			"emblem": "hourglass"
+		},
+		{
+			"id": "temp",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8026,
+				"#4E545B": 0.1974
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 665,
+			"emblem": "hourglass"
+		},
+		{
+			"id": "template-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5725,
+				"#8F6D37": 0.292,
+				"#4E545B": 0.1355
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 673,
+			"emblem": "duplicated sheets"
+		},
+		{
+			"id": "template",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7945,
+				"#4E545B": 0.2055
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 617,
+			"emblem": "duplicated sheets"
+		},
+		{
+			"id": "test-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6395,
+				"#8F6D37": 0.2917,
+				"#4E545B": 0.0688
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 432,
+			"emblem": "check mark"
+		},
+		{
+			"id": "test",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.8957,
+				"#4E545B": 0.1043
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 383,
+			"emblem": "check mark"
+		},
+		{
+			"id": "theme-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5857,
+				"#8F6D37": 0.2917,
+				"#4E545B": 0.1226
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 464,
+			"emblem": "colour drop"
+		},
+		{
+			"id": "theme",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.815,
+				"#4E545B": 0.185
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 421,
+			"emblem": "colour drop"
+		},
+		{
+			"id": "types-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6558,
+				"#8F6D37": 0.2899,
+				"#4E545B": 0.0542
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 466,
+			"emblem": "letter T (Inter Bold outline)"
+		},
+		{
+			"id": "types",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.921,
+				"#4E545B": 0.079
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 401,
+			"emblem": "letter T (Inter Bold outline)"
+		},
+		{
+			"id": "utils-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5771,
+				"#8F6D37": 0.2913,
+				"#4E545B": 0.1316
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 738,
+			"emblem": "toolbox with a handle"
+		},
+		{
+			"id": "utils",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7999,
+				"#4E545B": 0.2001
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 688,
+			"emblem": "toolbox with a handle"
+		},
+		{
+			"id": "view-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#4E545B"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.6666,
+				"#8F6D37": 0.2928,
+				"#4E545B": 0.0407
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 490,
+			"emblem": "eye"
+		},
+		{
+			"id": "view",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#4E545B"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.9366,
+				"#4E545B": 0.0634
+			},
+			"colourSource": "no brand → neutral",
+			"batch": "folders",
+			"bytes": 458,
+			"emblem": "eye"
+		},
+		{
+			"id": "vscode-open",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#8F6D37",
+				"#C09553",
+				"#0A5081"
+			],
+			"dominant": "#C09553",
+			"coverage": {
+				"#C09553": 0.5585,
+				"#8F6D37": 0.294,
+				"#0A5081": 0.1475
+			},
+			"colourSource": "brand #007ACC → #0A5081",
+			"batch": "folders",
+			"bytes": 432,
+			"emblem": "VS Code ribbon"
+		},
+		{
+			"id": "vscode",
+			"kind": "folder",
+			"archetype": "FOLDER",
+			"fills": [
+				"#BF9354",
+				"rgba(0,0,0,.14)",
+				"#0A5081"
+			],
+			"dominant": "#BF9354",
+			"coverage": {
+				"#BF9354": 0.7772,
+				"#0A5081": 0.2228
+			},
+			"colourSource": "brand #007ACC → #0A5081",
+			"batch": "folders",
+			"bytes": 386,
+			"emblem": "VS Code ribbon"
+		}
+	]
+}

@@ -1,0 +1,7345 @@
+{
+  "note": "Curated core tier for the VSebCode default file-icon theme. Rank is draw order; matcherCollisions lists matchers claimed by more than one core concept (lowest rank wins).",
+  "selectionRule": "every concept in >=2 upstream themes that is plausibly common in 2026 web/systems development, UNION the must-haves from Sebastian stack",
+  "counts": {
+    "file": 145,
+    "folder": 40
+  },
+  "files": [
+    {
+      "rank": 1,
+      "id": "typescript",
+      "kind": "file",
+      "label": "TypeScript",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "cts",
+          "mts",
+          "ts"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "ets",
+          "typescript",
+          "typescriptreact"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#3178C6"
+    },
+    {
+      "rank": 2,
+      "id": "reactts",
+      "kind": "file",
+      "label": "React (TypeScript)",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "tsx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "typescriptreact"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#61DAFB"
+    },
+    {
+      "rank": 3,
+      "id": "js",
+      "kind": "file",
+      "label": "JavaScript",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "cjs",
+          "es",
+          "es6",
+          "esx",
+          "jake",
+          "js",
+          "jsm",
+          "jsx",
+          "mjs",
+          "njs",
+          "pac",
+          "sjs",
+          "ssjs",
+          "xsjs",
+          "xsjslib"
+        ],
+        "filenames": [
+          "jakefile"
+        ],
+        "languageIds": [
+          "javascript",
+          "javascriptreact"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F7DF1E"
+    },
+    {
+      "rank": 4,
+      "id": "reactjs",
+      "kind": "file",
+      "label": "React",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "jsx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "javascriptreact",
+          "react"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#61DAFB"
+    },
+    {
+      "rank": 5,
+      "id": "json",
+      "kind": "file",
+      "label": "JSON",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "geojson",
+          "har",
+          "json",
+          "json-tmlanguage",
+          "json5",
+          "jsonc",
+          "jsonl",
+          "jsonld",
+          "ndjson",
+          "ts.map",
+          "tsbuildinfo",
+          "webmanifest"
+        ],
+        "filenames": [
+          ".esformatter",
+          ".jsbeautifyrc",
+          ".jscsrc",
+          ".jshintrc",
+          ".whitesource",
+          "cdp.pid",
+          "composer.lock",
+          "jsconfig.json",
+          "tsconfig.json"
+        ],
+        "languageIds": [
+          "json",
+          "json-tmlanguage",
+          "json5",
+          "jsonc",
+          "jsonl"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F5DE19"
+    },
+    {
+      "rank": 6,
+      "id": "markdown",
+      "kind": "file",
+      "label": "Markdown",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "copilotmd",
+          "litcoffee",
+          "markdn",
+          "markdown",
+          "md",
+          "mdown",
+          "mdtext",
+          "mdtxt",
+          "mdwn",
+          "mkd",
+          "mkdn",
+          "ronn",
+          "rst",
+          "workbook"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "chatagent",
+          "markdown"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 7,
+      "id": "css",
+      "kind": "file",
+      "label": "CSS",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "acss",
+          "ccss",
+          "css",
+          "less",
+          "mcss",
+          "nss",
+          "pcss",
+          "postcss",
+          "sass",
+          "scss",
+          "wxss"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "css"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#1572B6"
+    },
+    {
+      "rank": 8,
+      "id": "sass",
+      "kind": "file",
+      "label": "Sass",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "sass",
+          "scss"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "sass",
+          "sass.hover",
+          "scss"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#CC6699"
+    },
+    {
+      "rank": 9,
+      "id": "html",
+      "kind": "file",
+      "label": "HTML",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "asp",
+          "aspx",
+          "htm",
+          "html",
+          "html_vm",
+          "jshtm",
+          "rhtml",
+          "shtml",
+          "volt",
+          "xht",
+          "xhtml"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "html"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#E34F26"
+    },
+    {
+      "rank": 10,
+      "id": "rust",
+      "kind": "file",
+      "label": "Rust",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "ron",
+          "rs"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "rust"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#CE422B"
+    },
+    {
+      "rank": 11,
+      "id": "toml",
+      "kind": "file",
+      "label": "TOML",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "toml"
+        ],
+        "filenames": [
+          "@.toml",
+          "poetry.lock"
+        ],
+        "languageIds": [
+          "toml"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#9C4121"
+    },
+    {
+      "rank": 12,
+      "id": "yaml",
+      "kind": "file",
+      "label": "YAML",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "cff",
+          "eyaml",
+          "eyml",
+          "winget",
+          "yaml",
+          "yaml-tmlanguage",
+          "yaml-tmpreferences",
+          "yaml-tmtheme",
+          "yaml.dist",
+          "yml",
+          "yml.dist"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "ansible",
+          "ansible-jinja",
+          "spring-boot-properties-yaml",
+          "yaml",
+          "yaml-tmlanguage"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#CB171E"
+    },
+    {
+      "rank": 13,
+      "id": "docker",
+      "kind": "file",
+      "label": "Docker",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "compose.yaml",
+          "compose.yml",
+          "containerfile",
+          "containerignore",
+          "docker-compose-dev.yml",
+          "docker-compose-dist.yml",
+          "docker-compose-prod.yml",
+          "docker-compose.dev.yml",
+          "docker-compose.dist.yml",
+          "docker-compose.prod.yml",
+          "docker-compose.yaml",
+          "docker-compose.yml",
+          "dockerfile",
+          "dockerfile.dev",
+          "dockerfile.dist",
+          "dockerfile.environment",
+          "dockerfile.prod",
+          "dockerignore",
+          "environment.dockerfile",
+          "hcl"
+        ],
+        "filenames": [
+          ".dockerignore",
+          "compose.alpha.yaml",
+          "compose.alpha.yml",
+          "compose.beta.yaml",
+          "compose.beta.yml",
+          "compose.ci.yaml",
+          "compose.ci.yml",
+          "compose.dev.yaml",
+          "compose.dev.yml",
+          "compose.development.yaml",
+          "compose.development.yml",
+          "compose.local.yaml",
+          "compose.local.yml",
+          "compose.override.yaml",
+          "compose.override.yml",
+          "compose.prod.yaml",
+          "compose.prod.yml",
+          "compose.production.yaml",
+          "compose.production.yml",
+          "compose.stage.yaml",
+          "compose.stage.yml",
+          "compose.staging.yaml",
+          "compose.staging.yml",
+          "compose.test.yaml",
+          "compose.test.yml",
+          "compose.testing.yaml",
+          "compose.testing.yml",
+          "compose.web.yaml",
+          "compose.web.yml",
+          "compose.worker.yaml",
+          "compose.worker.yml",
+          "compose.yaml",
+          "compose.yml",
+          "containerfile",
+          "containerfile.alpha",
+          "containerfile.beta",
+          "containerfile.ci",
+          "containerfile.dev",
+          "containerfile.development",
+          "containerfile.local",
+          "containerfile.prod",
+          "containerfile.production",
+          "containerfile.stage",
+          "containerfile.staging",
+          "containerfile.test",
+          "containerfile.testing",
+          "containerfile.web",
+          "containerfile.worker",
+          "docker-cloud.yaml",
+          "docker-cloud.yml",
+          "docker-compose.alpha.yaml",
+          "docker-compose.alpha.yml",
+          "docker-compose.beta.yaml",
+          "docker-compose.beta.yml",
+          "docker-compose.ci-build.yaml",
+          "docker-compose.ci-build.yml",
+          "docker-compose.ci.yaml",
+          "docker-compose.ci.yml",
+          "docker-compose.debug.yaml",
+          "docker-compose.debug.yml",
+          "docker-compose.dev.yaml",
+          "docker-compose.dev.yml",
+          "docker-compose.development.yaml",
+          "docker-compose.development.yml",
+          "docker-compose.local.yaml",
+          "docker-compose.local.yml",
+          "docker-compose.override.yaml",
+          "docker-compose.override.yml",
+          "docker-compose.prod.yaml",
+          "docker-compose.prod.yml",
+          "docker-compose.production.yaml",
+          "docker-compose.production.yml",
+          "docker-compose.stage.yaml",
+          "docker-compose.stage.yml",
+          "docker-compose.staging.yaml",
+          "docker-compose.staging.yml",
+          "docker-compose.test.yaml",
+          "docker-compose.test.yml",
+          "docker-compose.testing.yaml",
+          "docker-compose.testing.yml",
+          "docker-compose.vs.debug.yaml",
+          "docker-compose.vs.debug.yml",
+          "docker-compose.vs.release.yaml",
+          "docker-compose.vs.release.yml",
+          "docker-compose.web.yaml",
+          "docker-compose.web.yml",
+          "docker-compose.worker.yaml",
+          "docker-compose.worker.yml",
+          "docker-compose.yaml",
+          "docker-compose.yml",
+          "docker.yaml",
+          "docker.yml",
+          "dockerfile",
+          "dockerfile.alpha",
+          "dockerfile.beta",
+          "dockerfile.ci",
+          "dockerfile.dev",
+          "dockerfile.development",
+          "dockerfile.environment",
+          "dockerfile.local",
+          "dockerfile.prod",
+          "dockerfile.production",
+          "dockerfile.stage",
+          "dockerfile.staging",
+          "dockerfile.test",
+          "dockerfile.testing",
+          "dockerfile.web",
+          "dockerfile.windows",
+          "dockerfile.worker",
+          "environment.dockerfile",
+          "nginx.dockerfile"
+        ],
+        "languageIds": [
+          "docker",
+          "dockerbake",
+          "dockercompose",
+          "dockerfile"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#2496ED"
+    },
+    {
+      "rank": 14,
+      "id": "dotenv",
+      "kind": "file",
+      "label": "Environment Variables",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "env",
+          "env.accept",
+          "env.acceptance",
+          "env.dev",
+          "env.development",
+          "env.development.local",
+          "env.example",
+          "env.local",
+          "env.local.example",
+          "env.production",
+          "env.production.example",
+          "env.production.local",
+          "env.staging",
+          "env.staging.example",
+          "env.test"
+        ],
+        "filenames": [
+          ".dev.vars",
+          ".env.alpha",
+          ".env.defaults",
+          ".env.dev",
+          ".env.dev.local",
+          ".env.development",
+          ".env.development.local",
+          ".env.dist",
+          ".env.e2e",
+          ".env.example",
+          ".env.local",
+          ".env.preprod",
+          ".env.preview",
+          ".env.prod",
+          ".env.prod.example",
+          ".env.prod.local",
+          ".env.production",
+          ".env.production.example",
+          ".env.production.local",
+          ".env.qa",
+          ".env.qa.local",
+          ".env.sample",
+          ".env.schema",
+          ".env.stage",
+          ".env.staging",
+          ".env.staging.local",
+          ".env.stg",
+          ".env.stg.local",
+          ".env.template",
+          ".env.test",
+          ".env.test.local",
+          ".env.testing",
+          ".env.uat",
+          ".vars",
+          "envvars"
+        ],
+        "languageIds": [
+          "dotenv",
+          "env"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#ECD53F"
+    },
+    {
+      "rank": 15,
+      "id": "prisma",
+      "kind": "file",
+      "label": "Prisma",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "prisma"
+        ],
+        "filenames": [
+          "prisma.config.ts",
+          "prisma.yml"
+        ],
+        "languageIds": [
+          "prisma"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#2D3748"
+    },
+    {
+      "rank": 16,
+      "id": "next",
+      "kind": "file",
+      "label": "Next.js",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "next.config.cjs",
+          "next.config.js",
+          "next.config.mjs",
+          "next.config.mts",
+          "next.config.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#000000"
+    },
+    {
+      "rank": 17,
+      "id": "node",
+      "kind": "file",
+      "label": "Node.js",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "webmanifest"
+        ],
+        "filenames": [
+          ".esmrc",
+          ".node-version",
+          ".nvmrc",
+          "node.config.json",
+          "package-lock.json",
+          "package.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#5FA04E"
+    },
+    {
+      "rank": 18,
+      "id": "npm",
+      "kind": "file",
+      "label": "npm",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "npmignore",
+          "npmrc"
+        ],
+        "filenames": [
+          ".npmignore",
+          ".npmrc",
+          ".package-lock.json",
+          "npm-debug.log",
+          "npm-shrinkwrap.json",
+          "package-lock.json",
+          "package.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#CB3837"
+    },
+    {
+      "rank": 19,
+      "id": "lock",
+      "kind": "file",
+      "label": "Lock File",
+      "category": "config",
+      "sources": [
+        "material"
+      ],
+      "selectedBy": "must-have",
+      "match": {
+        "extensions": [
+          "lock"
+        ],
+        "filenames": [
+          "security",
+          "security.md",
+          "security.txt"
+        ],
+        "languageIds": [
+          "ssh_config"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 20,
+      "id": "git",
+      "kind": "file",
+      "label": "Git",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "git",
+          "gitattributes",
+          "gitkeep",
+          "gitmodules",
+          "patch"
+        ],
+        "filenames": [
+          ".git",
+          ".git-blame-ignore",
+          ".git-blame-ignore-revs",
+          ".git-for-windows-updater",
+          ".gitattributes",
+          ".gitattributes-global",
+          ".gitattributes_global",
+          ".gitconfig",
+          ".gitignore",
+          ".gitignore-global",
+          ".gitignore_global",
+          ".gitinclude",
+          ".gitkeep",
+          ".gitmessage",
+          ".gitmodules",
+          ".gitpreserve",
+          ".issuetracker",
+          ".keep",
+          ".mailmap",
+          "commit_editmsg",
+          "git-history",
+          "git-rebase-todo",
+          "merge_msg"
+        ],
+        "languageIds": [
+          "diff",
+          "git",
+          "git-commit",
+          "git-rebase",
+          "gitignore",
+          "ignore"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F05032"
+    },
+    {
+      "rank": 21,
+      "id": "shell",
+      "kind": "file",
+      "label": "Shell Script",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "awk",
+          "bash",
+          "bash_aliases",
+          "bash_login",
+          "bash_logout",
+          "bash_profile",
+          "bashrc",
+          "bat",
+          "cmd",
+          "csh",
+          "cshrc",
+          "ebuild",
+          "eclass",
+          "exp",
+          "fish",
+          "ksh",
+          "nu",
+          "profile",
+          "sh",
+          "tcsh",
+          "tcshrc",
+          "xprofile",
+          "xsession",
+          "xsessionrc",
+          "xsh",
+          "yash_profile",
+          "yashrc",
+          "zlogin",
+          "zlogout",
+          "zprofile",
+          "zsh",
+          "zsh-theme",
+          "zshenv",
+          "zshrc"
+        ],
+        "filenames": [
+          ".envrc",
+          ".hushlogin",
+          "apkbuild",
+          "bashrc_apple_terminal",
+          "commit-msg",
+          "pkgbuild",
+          "post-merge",
+          "pre-commit",
+          "pre-push",
+          "zlogin",
+          "zlogout",
+          "zprofile",
+          "zshenv",
+          "zshrc",
+          "zshrc_apple_terminal"
+        ],
+        "languageIds": [
+          "awk",
+          "bat",
+          "shellscript"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#4EAA25"
+    },
+    {
+      "rank": 22,
+      "id": "sql",
+      "kind": "file",
+      "label": "SQL",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "accdb",
+          "accde",
+          "adp",
+          "bak",
+          "bdb",
+          "db",
+          "db3",
+          "dbf",
+          "dblite",
+          "dblite3",
+          "debugsymbols",
+          "dsql",
+          "fdb",
+          "feather",
+          "frm",
+          "gdb",
+          "ibd",
+          "kdbx",
+          "ldf",
+          "mdb",
+          "mde",
+          "mdf",
+          "myd",
+          "myi",
+          "mysql_hystory",
+          "ndf",
+          "odb",
+          "orc",
+          "parquet",
+          "pdb",
+          "pgsql",
+          "pkb",
+          "pks",
+          "plpgsql",
+          "postgres",
+          "psql",
+          "rdl",
+          "sdf",
+          "sql",
+          "sqlbook",
+          "sqlite",
+          "sqlite3",
+          "trn"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "sql",
+          "sqlbook"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 23,
+      "id": "svg",
+      "kind": "file",
+      "label": "SVG",
+      "category": "image",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "svg"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "svg"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FFB13B"
+    },
+    {
+      "rank": 24,
+      "id": "image",
+      "kind": "file",
+      "label": "Image",
+      "category": "image",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "3fr",
+          "afphoto",
+          "ami",
+          "apx",
+          "ari",
+          "arw",
+          "ase",
+          "aseprite",
+          "avif",
+          "bay",
+          "bmp",
+          "bpg",
+          "braw",
+          "brk",
+          "cap",
+          "clip",
+          "cpt",
+          "cr2",
+          "cr3",
+          "crw",
+          "cur",
+          "data",
+          "dcr",
+          "dcs",
+          "dds",
+          "dng",
+          "drf",
+          "eip",
+          "eps",
+          "erf",
+          "exr",
+          "fff",
+          "fpx",
+          "gbr",
+          "gif",
+          "gpr",
+          "heic",
+          "heif",
+          "icns",
+          "ico",
+          "iiq",
+          "img",
+          "jb2",
+          "jbig2",
+          "jfif",
+          "jng",
+          "jpeg",
+          "jpg",
+          "jxl",
+          "jxr",
+          "k25",
+          "kdc",
+          "kra",
+          "ktx",
+          "ktx2",
+          "mdc",
+          "mdp",
+          "mef",
+          "mos",
+          "mrw",
+          "nef",
+          "nrw",
+          "obm",
+          "ora",
+          "orf",
+          "pbm",
+          "pdn",
+          "pef",
+          "pgf",
+          "pgm",
+          "pic",
+          "png",
+          "pnm",
+          "ppm",
+          "ptx",
+          "pxn",
+          "r3d",
+          "raf",
+          "raw",
+          "reb",
+          "rw2",
+          "rwl",
+          "rwz",
+          "sai",
+          "sr2",
+          "srf",
+          "srw",
+          "tga",
+          "tif",
+          "tiff",
+          "webp",
+          "x3f",
+          "xcf"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 25,
+      "id": "font",
+      "kind": "file",
+      "label": "Font",
+      "category": "font",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "bmap",
+          "eot",
+          "fnt",
+          "font",
+          "fonts",
+          "mrf",
+          "ntf",
+          "odttf",
+          "otf",
+          "pfa",
+          "pfb",
+          "sfd",
+          "sui",
+          "suit",
+          "ttc",
+          "ttf",
+          "woff",
+          "woff2"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 26,
+      "id": "pdf",
+      "kind": "file",
+      "label": "PDF",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "pdf"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "pdf"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#EC1C24"
+    },
+    {
+      "rank": 27,
+      "id": "xml",
+      "kind": "file",
+      "label": "XML",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "ascx",
+          "atom",
+          "axaml",
+          "axml",
+          "bpmn",
+          "csl",
+          "csproj.user",
+          "dita",
+          "ditamap",
+          "dmn",
+          "dtd",
+          "dtml",
+          "ent",
+          "fxml",
+          "iml",
+          "isml",
+          "jmx",
+          "jrxml",
+          "launch",
+          "manifest",
+          "menu",
+          "opml",
+          "owl",
+          "pex",
+          "plist",
+          "proj",
+          "project",
+          "publishsettings",
+          "pubxml",
+          "pubxml.user",
+          "rdf",
+          "resx",
+          "rng",
+          "rss",
+          "shproj",
+          "storyboard",
+          "targets",
+          "tld",
+          "tmlanguage",
+          "tmx",
+          "vbproj",
+          "vbproj.user",
+          "wsdl",
+          "wxi",
+          "wxl",
+          "wxs",
+          "xbl",
+          "xib",
+          "xliff",
+          "xml",
+          "xml.dist",
+          "xml.dist.sample",
+          "xmp",
+          "xoml",
+          "xpdl",
+          "xquery",
+          "xsd",
+          "xsl",
+          "xslt",
+          "xul"
+        ],
+        "filenames": [
+          ".htaccess"
+        ],
+        "languageIds": [
+          "xml",
+          "xquery",
+          "xsl"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 28,
+      "id": "python",
+      "kind": "file",
+      "label": "Python",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "cpy",
+          "gyp",
+          "gypi",
+          "ipy",
+          "pxd",
+          "pxi",
+          "py",
+          "pyc",
+          "pyd",
+          "pyi",
+          "pyl",
+          "pyo",
+          "pyt",
+          "pyw",
+          "pyx",
+          "rpy"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "pylite",
+          "python"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#3776AB"
+    },
+    {
+      "rank": 29,
+      "id": "go",
+      "kind": "file",
+      "label": "Go",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "go"
+        ],
+        "filenames": [
+          "go.mod"
+        ],
+        "languageIds": [
+          "go"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#00ADD8"
+    },
+    {
+      "rank": 30,
+      "id": "swift",
+      "kind": "file",
+      "label": "Swift",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "swift",
+          "swiftdeps",
+          "swiftdoc",
+          "swiftmodule",
+          "swiftsourceinfo",
+          "xcplayground"
+        ],
+        "filenames": [
+          ".swift-format",
+          ".swift-version",
+          ".swiftformat",
+          ".xcode-version",
+          "package.pins"
+        ],
+        "languageIds": [
+          "swift"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F05138"
+    },
+    {
+      "rank": 31,
+      "id": "c",
+      "kind": "file",
+      "label": "C",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "c",
+          "i",
+          "mi"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "c"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#A8B9CC"
+    },
+    {
+      "rank": 32,
+      "id": "cpp",
+      "kind": "file",
+      "label": "C++",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "c++",
+          "c++m",
+          "cc",
+          "ccm",
+          "cp",
+          "cpp",
+          "cppm",
+          "cxx",
+          "cxxm",
+          "h.in",
+          "hpp.in",
+          "ii",
+          "ipp",
+          "ixx",
+          "mii",
+          "tpp",
+          "txx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "cpp"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#00599C"
+    },
+    {
+      "rank": 33,
+      "id": "java",
+      "kind": "file",
+      "label": "Java",
+      "category": "archive",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "jar",
+          "jav",
+          "java",
+          "jsp"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "java"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#ED8B00"
+    },
+    {
+      "rank": 34,
+      "id": "vue",
+      "kind": "file",
+      "label": "Vue",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "vue",
+          "vue2",
+          "vue3",
+          "vuerc",
+          "vues",
+          "vuex"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "vue",
+          "vue-directives",
+          "vue-html",
+          "vue-injection-markdown",
+          "vue-interpoloations",
+          "vue-postcss",
+          "vue-sfc-style-variable-injection"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#4FC08D"
+    },
+    {
+      "rank": 35,
+      "id": "license",
+      "kind": "file",
+      "label": "License",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "enc",
+          "lic",
+          "license"
+        ],
+        "filenames": [
+          "copying",
+          "copying.lesser",
+          "copying.lesser.md",
+          "copying.lesser.rst",
+          "copying.lesser.txt",
+          "copying.md",
+          "copying.rst",
+          "copying.txt",
+          "copyright",
+          "copyright.md",
+          "copyright.rst",
+          "copyright.txt",
+          "licence",
+          "licence-agpl",
+          "licence-apache",
+          "licence-bsd",
+          "licence-gpl",
+          "licence-lgpl",
+          "licence-mit",
+          "licence.md",
+          "licence.rst",
+          "licence.txt",
+          "license",
+          "license-agpl",
+          "license-agpl.md",
+          "license-agpl.rst",
+          "license-agpl.txt",
+          "license-apache",
+          "license-apache.md",
+          "license-apache.rst",
+          "license-apache.txt",
+          "license-bsd",
+          "license-gpl",
+          "license-gpl.md",
+          "license-gpl.rst",
+          "license-gpl.txt",
+          "license-lgpl",
+          "license-mit",
+          "license-mit.md",
+          "license-mit.rst",
+          "license-mit.txt",
+          "license.md",
+          "license.rst",
+          "license.txt"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 36,
+      "id": "readme",
+      "kind": "file",
+      "label": "Readme",
+      "category": "doc",
+      "sources": [
+        "material"
+      ],
+      "selectedBy": "must-have",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "readme",
+          "readme.md",
+          "readme.rst",
+          "readme.txt"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 37,
+      "id": "editorconfig",
+      "kind": "file",
+      "label": "EditorConfig",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "editorconfig"
+        ],
+        "filenames": [
+          ".ecrc",
+          ".editorconfig",
+          ".editorconfig-checker.json"
+        ],
+        "languageIds": [
+          "editorconfig"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 38,
+      "id": "eslint",
+      "kind": "file",
+      "label": "ESLint",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "eslintignore",
+          "eslintrc",
+          "eslintrc.js",
+          "eslintrc.json",
+          "eslintrc.yaml",
+          "eslintrc.yml"
+        ],
+        "filenames": [
+          ".config/eslintrc",
+          ".config/eslintrc.cjs",
+          ".config/eslintrc.cts",
+          ".config/eslintrc.js",
+          ".config/eslintrc.json",
+          ".config/eslintrc.json5",
+          ".config/eslintrc.jsonc",
+          ".config/eslintrc.mjs",
+          ".config/eslintrc.mts",
+          ".config/eslintrc.toml",
+          ".config/eslintrc.ts",
+          ".config/eslintrc.yaml",
+          ".config/eslintrc.yml",
+          ".eslintcache",
+          ".eslintignore",
+          ".eslintrc",
+          ".eslintrc-jsdoc.js",
+          ".eslintrc-md.js",
+          ".eslintrc.base.json",
+          ".eslintrc.cjs",
+          ".eslintrc.cts",
+          ".eslintrc.js",
+          ".eslintrc.json",
+          ".eslintrc.json5",
+          ".eslintrc.jsonc",
+          ".eslintrc.mjs",
+          ".eslintrc.mts",
+          ".eslintrc.toml",
+          ".eslintrc.ts",
+          ".eslintrc.yaml",
+          ".eslintrc.yml",
+          "eslint-options.js",
+          "eslint.config.cjs",
+          "eslint.config.cts",
+          "eslint.config.js",
+          "eslint.config.json",
+          "eslint.config.json5",
+          "eslint.config.jsonc",
+          "eslint.config.mjs",
+          "eslint.config.mts",
+          "eslint.config.toml",
+          "eslint.config.ts",
+          "eslint.config.yaml",
+          "eslint.config.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#4B32C3"
+    },
+    {
+      "rank": 39,
+      "id": "prettier",
+      "kind": "file",
+      "label": "Prettier",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".config/prettierrc",
+          ".config/prettierrc.cjs",
+          ".config/prettierrc.cts",
+          ".config/prettierrc.js",
+          ".config/prettierrc.json",
+          ".config/prettierrc.json5",
+          ".config/prettierrc.jsonc",
+          ".config/prettierrc.mjs",
+          ".config/prettierrc.mts",
+          ".config/prettierrc.toml",
+          ".config/prettierrc.ts",
+          ".config/prettierrc.yaml",
+          ".config/prettierrc.yml",
+          ".prettierignore",
+          ".prettierrc",
+          ".prettierrc.cjs",
+          ".prettierrc.cts",
+          ".prettierrc.js",
+          ".prettierrc.json",
+          ".prettierrc.json5",
+          ".prettierrc.jsonc",
+          ".prettierrc.mjs",
+          ".prettierrc.mts",
+          ".prettierrc.toml",
+          ".prettierrc.ts",
+          ".prettierrc.yaml",
+          ".prettierrc.yml",
+          "prettier.config.cjs",
+          "prettier.config.coffee",
+          "prettier.config.cts",
+          "prettier.config.js",
+          "prettier.config.json",
+          "prettier.config.json5",
+          "prettier.config.jsonc",
+          "prettier.config.mjs",
+          "prettier.config.mts",
+          "prettier.config.toml",
+          "prettier.config.ts",
+          "prettier.config.yaml",
+          "prettier.config.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#F7B93E"
+    },
+    {
+      "rank": 40,
+      "id": "tsconfig",
+      "kind": "file",
+      "label": "tsconfig.json",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "tsconfig.json"
+        ],
+        "filenames": [
+          "tsconfig.app.json",
+          "tsconfig.base.json",
+          "tsconfig.build.json",
+          "tsconfig.cjs.json",
+          "tsconfig.client.json",
+          "tsconfig.common.json",
+          "tsconfig.config.json",
+          "tsconfig.debug.json",
+          "tsconfig.declaration.json",
+          "tsconfig.dev.json",
+          "tsconfig.development.json",
+          "tsconfig.doc.json",
+          "tsconfig.e2e.json",
+          "tsconfig.editor.json",
+          "tsconfig.eslint.json",
+          "tsconfig.esm.json",
+          "tsconfig.json",
+          "tsconfig.lib.json",
+          "tsconfig.lib.prod.json",
+          "tsconfig.main.json",
+          "tsconfig.mjs.json",
+          "tsconfig.node.json",
+          "tsconfig.paths.json",
+          "tsconfig.prod.json",
+          "tsconfig.production.json",
+          "tsconfig.release.json",
+          "tsconfig.renderer.json",
+          "tsconfig.server.json",
+          "tsconfig.spec.json",
+          "tsconfig.staging.json",
+          "tsconfig.test.json",
+          "tsconfig.types.json",
+          "tsconfig.vitest.json",
+          "tsconfig.web.json",
+          "tsconfig.webworker.json",
+          "tsconfig.worker.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#3178C6"
+    },
+    {
+      "rank": 41,
+      "id": "vite",
+      "kind": "file",
+      "label": "Vite",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "vite.config.cjs",
+          "vite.config.cts",
+          "vite.config.js",
+          "vite.config.mjs",
+          "vite.config.mts",
+          "vite.config.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#646CFF"
+    },
+    {
+      "rank": 42,
+      "id": "tailwind",
+      "kind": "file",
+      "label": "Tailwind CSS",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "css"
+        ],
+        "filenames": [
+          ".tailwind.cjs",
+          ".tailwind.coffee",
+          ".tailwind.js",
+          ".tailwind.json",
+          ".tailwind.mjs",
+          ".tailwind.ts",
+          ".tailwindrc.cjs",
+          ".tailwindrc.coffee",
+          ".tailwindrc.js",
+          ".tailwindrc.json",
+          ".tailwindrc.mjs",
+          ".tailwindrc.ts",
+          "tailwind.cjs",
+          "tailwind.coffee",
+          "tailwind.config.cjs",
+          "tailwind.config.coffee",
+          "tailwind.config.cts",
+          "tailwind.config.js",
+          "tailwind.config.json",
+          "tailwind.config.mjs",
+          "tailwind.config.mts",
+          "tailwind.config.ts",
+          "tailwind.js",
+          "tailwind.json",
+          "tailwind.mjs",
+          "tailwind.ts"
+        ],
+        "languageIds": [
+          "tailwindcss"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#06B6D4"
+    },
+    {
+      "rank": 43,
+      "id": "text",
+      "kind": "file",
+      "label": "Plain Text",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "csv",
+          "tsv",
+          "txt"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "csv",
+          "csv (pipe)",
+          "csv (semicolon)",
+          "csv (whitespace)",
+          "dynamic csv",
+          "plaintext",
+          "tsv",
+          "vim-help"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 44,
+      "id": "csharp",
+      "kind": "file",
+      "label": "C#",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cs",
+          "csharp",
+          "csx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "csharp"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#239120"
+    },
+    {
+      "rank": 45,
+      "id": "php",
+      "kind": "file",
+      "label": "PHP",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "aw",
+          "ctp",
+          "inc",
+          "module",
+          "phar",
+          "php",
+          "php1",
+          "php2",
+          "php3",
+          "php4",
+          "php5",
+          "php6",
+          "php7",
+          "php8",
+          "phps",
+          "phpsa",
+          "phpt",
+          "phtml",
+          "theme",
+          "tpl"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "php"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#777BB4"
+    },
+    {
+      "rank": 46,
+      "id": "ruby",
+      "kind": "file",
+      "label": "Ruby",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "builder",
+          "erb",
+          "gemfile",
+          "gemspec",
+          "jbuilder",
+          "podspec",
+          "prawn",
+          "rabl",
+          "rake",
+          "rakefile",
+          "rb",
+          "rbi",
+          "rbs",
+          "rbw",
+          "rbx",
+          "rjs",
+          "rsel",
+          "ru",
+          "rxml",
+          "thor"
+        ],
+        "filenames": [
+          ".ruby-version",
+          "appraisals",
+          "berksfile",
+          "berksfile.lock",
+          "brewfile",
+          "capfile",
+          "cheffile",
+          "dangerfile",
+          "deliverfile",
+          "gemfile",
+          "gemfile.lock",
+          "guardfile",
+          "gymfile",
+          "hobofile",
+          "matchfile",
+          "podfile",
+          "puppetfile",
+          "rakefile",
+          "rantfile",
+          "scanfile",
+          "snapfile",
+          "steepfile",
+          "thorfile"
+        ],
+        "languageIds": [
+          "ruby"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#CC342D"
+    },
+    {
+      "rank": 47,
+      "id": "kotlin",
+      "kind": "file",
+      "label": "Kotlin",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "kt",
+          "ktm",
+          "kts"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "kotlin",
+          "kotlinscript"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#7F52FF"
+    },
+    {
+      "rank": 48,
+      "id": "dartlang",
+      "kind": "file",
+      "label": "Dart",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "dart"
+        ],
+        "filenames": [
+          ".pubignore"
+        ],
+        "languageIds": [
+          "dart"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#0175C2"
+    },
+    {
+      "rank": 49,
+      "id": "elixir",
+      "kind": "file",
+      "label": "Elixir",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "eex",
+          "ex",
+          "exs",
+          "heex",
+          "leex"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "elixir"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#4B275F"
+    },
+    {
+      "rank": 50,
+      "id": "haskell",
+      "kind": "file",
+      "label": "Haskell",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "gf",
+          "has",
+          "hs",
+          "lhs",
+          "lit"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "haskell",
+          "literate haskell"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#5D4F85"
+    },
+    {
+      "rank": 51,
+      "id": "scala",
+      "kind": "file",
+      "label": "Scala",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "sc",
+          "scala"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "scala"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#DC322F"
+    },
+    {
+      "rank": 52,
+      "id": "lua",
+      "kind": "file",
+      "label": "Lua",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "lua"
+        ],
+        "filenames": [
+          ".luacheckrc"
+        ],
+        "languageIds": [
+          "glua",
+          "lua"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#2C2D72"
+    },
+    {
+      "rank": 53,
+      "id": "perl",
+      "kind": "file",
+      "label": "Perl",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "perl",
+          "pl",
+          "pm",
+          "pod",
+          "psgi",
+          "raku",
+          "t"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "perl",
+          "perl6"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#39457E"
+    },
+    {
+      "rank": 54,
+      "id": "r",
+      "kind": "file",
+      "label": "R",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "r",
+          "rda",
+          "rdata",
+          "rds",
+          "rhistory",
+          "rmd",
+          "rprofile",
+          "rt"
+        ],
+        "filenames": [
+          ".rhistory"
+        ],
+        "languageIds": [
+          "r",
+          "rsweave"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#276DC3"
+    },
+    {
+      "rank": 55,
+      "id": "julia",
+      "kind": "file",
+      "label": "Julia",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "jl"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "julia",
+          "juliamarkdown"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#9558B2"
+    },
+    {
+      "rank": 56,
+      "id": "zig",
+      "kind": "file",
+      "label": "Zig",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "zig",
+          "zon"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "zig"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F7A41D"
+    },
+    {
+      "rank": 57,
+      "id": "nim",
+      "kind": "file",
+      "label": "Nim",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "nim",
+          "nimble"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "nim",
+          "nimble"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FFE953"
+    },
+    {
+      "rank": 58,
+      "id": "ocaml",
+      "kind": "file",
+      "label": "OCaml",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cmx",
+          "merlin",
+          "ml",
+          "mli",
+          "mll",
+          "mly",
+          "ocamlmakefile"
+        ],
+        "filenames": [
+          ".merlin"
+        ],
+        "languageIds": [
+          "menhir",
+          "ocaml",
+          "ocamllex"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#EC6813"
+    },
+    {
+      "rank": 59,
+      "id": "clojure",
+      "kind": "file",
+      "label": "Clojure",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cjm",
+          "clj",
+          "cljc",
+          "cljs",
+          "cljx",
+          "clojure",
+          "edn"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "clojure"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#5881D8"
+    },
+    {
+      "rank": 60,
+      "id": "erlang",
+      "kind": "file",
+      "label": "Erlang",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "emakefile",
+          "emakerfile",
+          "erl",
+          "hrl"
+        ],
+        "filenames": [
+          ".emakerfile",
+          "emakefile"
+        ],
+        "languageIds": [
+          "erlang"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#A90533"
+    },
+    {
+      "rank": 61,
+      "id": "fsharp",
+      "kind": "file",
+      "label": "F#",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "fs",
+          "fsi",
+          "fsproj",
+          "fsscript",
+          "fsx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "fsharp"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#378BBA"
+    },
+    {
+      "rank": 62,
+      "id": "objectivec",
+      "kind": "file",
+      "label": "Objective-C",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "m"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "objective-c"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 63,
+      "id": "assembly",
+      "kind": "file",
+      "label": "Assembly",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "a51",
+          "aea",
+          "agc",
+          "ags",
+          "argus",
+          "asm",
+          "binsource",
+          "inc",
+          "mitigus",
+          "ms",
+          "nasm",
+          "s"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "arm",
+          "asm",
+          "asm-collection",
+          "asm-intel-x86-generic",
+          "assembly",
+          "platformio-debug.asm"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 64,
+      "id": "solidity",
+      "kind": "file",
+      "label": "Solidity",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "sol"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "solidity"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#363636"
+    },
+    {
+      "rank": 65,
+      "id": "wasm",
+      "kind": "file",
+      "label": "WebAssembly",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "wasm",
+          "wast",
+          "wast.js",
+          "wat",
+          "wit",
+          "witx",
+          "wsm"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "wasm",
+          "wat",
+          "webassembly"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#654FF0"
+    },
+    {
+      "rank": 66,
+      "id": "cheader",
+      "kind": "file",
+      "label": "C Header",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "h"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#A8B9CC"
+    },
+    {
+      "rank": 67,
+      "id": "cppheader",
+      "kind": "file",
+      "label": "C++ Header",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "h++",
+          "hh",
+          "hp",
+          "hpp",
+          "hxx",
+          "inl",
+          "tcc"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#00599C"
+    },
+    {
+      "rank": 68,
+      "id": "graphql",
+      "kind": "file",
+      "label": "GraphQL",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "gql",
+          "graphql"
+        ],
+        "filenames": [
+          ".config/graphqlrc",
+          ".config/graphqlrc.cjs",
+          ".config/graphqlrc.cts",
+          ".config/graphqlrc.js",
+          ".config/graphqlrc.json",
+          ".config/graphqlrc.json5",
+          ".config/graphqlrc.jsonc",
+          ".config/graphqlrc.mjs",
+          ".config/graphqlrc.mts",
+          ".config/graphqlrc.toml",
+          ".config/graphqlrc.ts",
+          ".config/graphqlrc.yaml",
+          ".config/graphqlrc.yml",
+          ".gqlconfig",
+          ".graphqlconfig",
+          ".graphqlrc",
+          ".graphqlrc.cjs",
+          ".graphqlrc.cts",
+          ".graphqlrc.js",
+          ".graphqlrc.json",
+          ".graphqlrc.json5",
+          ".graphqlrc.jsonc",
+          ".graphqlrc.mjs",
+          ".graphqlrc.mts",
+          ".graphqlrc.toml",
+          ".graphqlrc.ts",
+          ".graphqlrc.yaml",
+          ".graphqlrc.yml",
+          "graphql.config.cjs",
+          "graphql.config.cts",
+          "graphql.config.js",
+          "graphql.config.json",
+          "graphql.config.json5",
+          "graphql.config.jsonc",
+          "graphql.config.mjs",
+          "graphql.config.mts",
+          "graphql.config.toml",
+          "graphql.config.ts",
+          "graphql.config.yaml",
+          "graphql.config.yml"
+        ],
+        "languageIds": [
+          "graphql"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#E10098"
+    },
+    {
+      "rank": 69,
+      "id": "protobuf",
+      "kind": "file",
+      "label": "Protocol Buffers",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "proto"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "proto",
+          "proto3",
+          "prototext",
+          "textproto"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 70,
+      "id": "json5",
+      "kind": "file",
+      "label": "JSON5",
+      "category": "data",
+      "sources": [
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [
+          "json5"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "json5"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 71,
+      "id": "sqlite",
+      "kind": "file",
+      "label": "SQLite",
+      "category": "data",
+      "sources": [
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "db",
+          "db2",
+          "db3",
+          "sqlite",
+          "sqlite2",
+          "sqlite3"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#003B57"
+    },
+    {
+      "rank": 72,
+      "id": "excel",
+      "kind": "file",
+      "label": "Spreadsheet",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "csv",
+          "fods",
+          "ods",
+          "psv",
+          "tsv",
+          "xla",
+          "xlam",
+          "xls",
+          "xlsb",
+          "xlsm",
+          "xlsx",
+          "xlt",
+          "xltm",
+          "xltx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "csv",
+          "excel",
+          "psv",
+          "tsv"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#217346"
+    },
+    {
+      "rank": 73,
+      "id": "word",
+      "kind": "file",
+      "label": "Word Document",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "doc",
+          "docm",
+          "docx",
+          "dot",
+          "dotm",
+          "dotx",
+          "odt",
+          "rtf",
+          "wll"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#2B579A"
+    },
+    {
+      "rank": 74,
+      "id": "powerpoint",
+      "kind": "file",
+      "label": "Presentation",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "odp",
+          "pa",
+          "pot",
+          "potm",
+          "potx",
+          "ppa",
+          "ppam",
+          "pps",
+          "ppsm",
+          "ppsx",
+          "ppt",
+          "pptm",
+          "pptx",
+          "sldm",
+          "sldx"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#B7472A"
+    },
+    {
+      "rank": 75,
+      "id": "mdx",
+      "kind": "file",
+      "label": "MDX",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "mdx"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "mdx"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 76,
+      "id": "asciidoc",
+      "kind": "file",
+      "label": "AsciiDoc",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "ad",
+          "adoc",
+          "asciidoc"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "asciidoc"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 77,
+      "id": "tex",
+      "kind": "file",
+      "label": "TeX",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "aux",
+          "bib",
+          "clo",
+          "cls",
+          "dtx",
+          "latex",
+          "ltx",
+          "sty",
+          "synctex",
+          "synctex.gz",
+          "tex",
+          "texi",
+          "tikz"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "bibtex",
+          "doctex",
+          "latex",
+          "tex"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#008080"
+    },
+    {
+      "rank": 78,
+      "id": "audio",
+      "kind": "file",
+      "label": "Audio",
+      "category": "media",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "8svx",
+          "aa",
+          "aac",
+          "aax",
+          "ac3",
+          "act",
+          "aif",
+          "aiff",
+          "alac",
+          "amr",
+          "ape",
+          "au",
+          "caf",
+          "cda",
+          "cdr",
+          "dct",
+          "dss",
+          "dvf",
+          "ec3",
+          "efs",
+          "enc",
+          "flac",
+          "flp",
+          "gp",
+          "gsm",
+          "iklax",
+          "it",
+          "ivs",
+          "m3u",
+          "m3u8",
+          "m4a",
+          "m4b",
+          "m4p",
+          "m4r",
+          "mid",
+          "mka",
+          "mmf",
+          "mod",
+          "mogg",
+          "mp3",
+          "mpc",
+          "mscz",
+          "msv",
+          "mtm",
+          "mui",
+          "musx",
+          "mxl",
+          "nsa",
+          "oga",
+          "ogg",
+          "opus",
+          "pkf",
+          "qcp",
+          "ra",
+          "raw",
+          "rf64",
+          "rip",
+          "sdt",
+          "sesx",
+          "sf2",
+          "stap",
+          "tg",
+          "tta",
+          "voc",
+          "vox",
+          "vqf",
+          "wav",
+          "weba",
+          "wfp",
+          "wma",
+          "wpl",
+          "wproj",
+          "wv"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 79,
+      "id": "video",
+      "kind": "file",
+      "label": "Video",
+      "category": "media",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "3g2",
+          "3gp",
+          "amv",
+          "asf",
+          "avi",
+          "divx",
+          "f4a",
+          "f4b",
+          "f4p",
+          "f4v",
+          "flv",
+          "gifv",
+          "m2v",
+          "m4v",
+          "mk3d",
+          "mkv",
+          "mov",
+          "mp2",
+          "mp4",
+          "mpe",
+          "mpeg",
+          "mpeg2",
+          "mpg",
+          "mpv",
+          "nsv",
+          "ogg",
+          "ogv",
+          "qt",
+          "rm",
+          "rmvb",
+          "svi",
+          "vob",
+          "webm",
+          "wmv",
+          "yuv"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 80,
+      "id": "zip",
+      "kind": "file",
+      "label": "Archive",
+      "category": "archive",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "001",
+          "7z",
+          "apfs",
+          "arj",
+          "br",
+          "brotli",
+          "bz",
+          "bz2",
+          "bzip2",
+          "cab",
+          "cpio",
+          "deb",
+          "esd",
+          "far",
+          "fat",
+          "gz",
+          "gzip",
+          "hfs",
+          "lha",
+          "liz",
+          "lz",
+          "lz4",
+          "lz5",
+          "lzh",
+          "lzma",
+          "lzma2",
+          "ntfs",
+          "rar",
+          "rpm",
+          "squashfs",
+          "swm",
+          "tar",
+          "taz",
+          "tbz",
+          "tbz2",
+          "tgz",
+          "tlz",
+          "tpz",
+          "txz",
+          "tz",
+          "tzst",
+          "tzstd",
+          "whl",
+          "wim",
+          "xar",
+          "xz",
+          "z",
+          "zip",
+          "zipx",
+          "zst",
+          "zstd"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "zip"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 81,
+      "id": "binary",
+      "kind": "file",
+      "label": "Binary",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "a",
+          "app",
+          "bin",
+          "cma",
+          "cmi",
+          "cmo",
+          "cmx",
+          "cmxa",
+          "dll",
+          "exe",
+          "hl",
+          "ilk",
+          "lib",
+          "n",
+          "ndll",
+          "o",
+          "obj",
+          "pdb",
+          "pyc",
+          "pyd",
+          "pyo",
+          "scpt",
+          "scptd",
+          "so"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "code-text-binary"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 82,
+      "id": "exe",
+      "kind": "file",
+      "label": "Executable",
+      "category": "binary",
+      "sources": [
+        "material",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "exe",
+          "msi",
+          "prg"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 83,
+      "id": "key",
+      "kind": "file",
+      "label": "Key",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "asc",
+          "gpg",
+          "key",
+          "passwd",
+          "pem",
+          "ppk",
+          "pub",
+          "secret",
+          "sha256",
+          "sha256sum",
+          "sha256sums",
+          "shasum"
+        ],
+        "filenames": [
+          ".htpasswd",
+          ".secrets",
+          "licence",
+          "licence.md",
+          "license",
+          "license.md",
+          "license_apache",
+          "license_mit",
+          "sha256sums"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 84,
+      "id": "cert",
+      "kind": "file",
+      "label": "Certificate",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cer",
+          "cert",
+          "crl",
+          "crt",
+          "csr",
+          "der",
+          "p12",
+          "p7b",
+          "p7r",
+          "pfx",
+          "src",
+          "sst",
+          "stl"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 85,
+      "id": "powershell",
+      "kind": "file",
+      "label": "PowerShell",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "ps1",
+          "ps1xml",
+          "psc1",
+          "psd1",
+          "psm1",
+          "psrc",
+          "pssc"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "powershell"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#5391FE"
+    },
+    {
+      "rank": 86,
+      "id": "makefile",
+      "kind": "file",
+      "label": "Makefile",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "am",
+          "ld",
+          "m4",
+          "makefile",
+          "mk"
+        ],
+        "filenames": [
+          "gnumakefile",
+          "kbuild",
+          "makefile"
+        ],
+        "languageIds": [
+          "automake",
+          "m4",
+          "makefile",
+          "makefile2"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 87,
+      "id": "cmake",
+      "kind": "file",
+      "label": "CMake",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cmake",
+          "cmakelists.txt"
+        ],
+        "filenames": [
+          "cmakecache.txt",
+          "cmakelists.txt",
+          "cmakepresets.json"
+        ],
+        "languageIds": [
+          "cmake",
+          "cmake-cache"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#064F8C"
+    },
+    {
+      "rank": 88,
+      "id": "gradle",
+      "kind": "file",
+      "label": "Gradle",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "gradle",
+          "gradle.kts"
+        ],
+        "filenames": [
+          "gradle-wrapper.properties",
+          "gradle.properties",
+          "gradlew",
+          "gradlew.bat"
+        ],
+        "languageIds": [
+          "gradle-kotlin-dsl"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#02303A"
+    },
+    {
+      "rank": 89,
+      "id": "maven",
+      "kind": "file",
+      "label": "Maven",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "extensions.xml",
+          "jvm.config",
+          "maven.config",
+          "pom.xml",
+          "settings.xml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#C71A36"
+    },
+    {
+      "rank": 90,
+      "id": "config",
+      "kind": "file",
+      "label": "Config",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cfg",
+          "cnf",
+          "conf",
+          "config",
+          "directory",
+          "dlc",
+          "htmlhintrc",
+          "ini",
+          "load",
+          "mak",
+          "npmrc",
+          "opt",
+          "option",
+          "plist",
+          "prefs",
+          "prop",
+          "properties",
+          "props",
+          "repo",
+          "settings",
+          "sln.dotsettings",
+          "sln.dotsettings.user",
+          "targets",
+          "tool-versions"
+        ],
+        "filenames": [
+          ".buildignore",
+          ".clang-format",
+          ".clang-format-ignore",
+          ".clang-tidy",
+          ".conf",
+          ".jshintignore",
+          ".mrconfig",
+          ".tool-versions",
+          ".yardopts",
+          "compile_flags.txt",
+          "manifest.mf"
+        ],
+        "languageIds": [
+          "ini",
+          "java-properties",
+          "makefile",
+          "properties",
+          "spring-boot-properties"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 91,
+      "id": "log",
+      "kind": "file",
+      "label": "Log",
+      "category": "data",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "log",
+          "tlg"
+        ],
+        "filenames": [
+          "error_log"
+        ],
+        "languageIds": [
+          "log"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 92,
+      "id": "diff",
+      "kind": "file",
+      "label": "Diff",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "diff",
+          "rej"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "diff"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 93,
+      "id": "typescriptdef",
+      "kind": "file",
+      "label": "TypeScript Declaration",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "d.cts",
+          "d.ets",
+          "d.mts",
+          "d.ts"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#3178C6"
+    },
+    {
+      "rank": 94,
+      "id": "jsconfig",
+      "kind": "file",
+      "label": "jsconfig.json",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "jsconfig.json"
+        ],
+        "filenames": [
+          "jsconfig.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#F7DF1E"
+    },
+    {
+      "rank": 95,
+      "id": "class",
+      "kind": "file",
+      "label": "Java Class",
+      "category": "binary",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "class"
+        ],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 96,
+      "id": "nginx",
+      "kind": "file",
+      "label": "nginx",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "nconf",
+          "nginx",
+          "nginxconf",
+          "nginxconfig"
+        ],
+        "filenames": [
+          "nginx.conf"
+        ],
+        "languageIds": [
+          "nginx"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#009639"
+    },
+    {
+      "rank": 97,
+      "id": "yarn",
+      "kind": "file",
+      "label": "Yarn",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "yarnclean"
+        ],
+        "filenames": [
+          ".yarn-integrity",
+          ".yarn-metadata.json",
+          ".yarn-state.yml",
+          ".yarnclean",
+          ".yarnignore",
+          ".yarnrc",
+          ".yarnrc.yaml",
+          ".yarnrc.yml",
+          "yarn-error.log",
+          "yarn.lock"
+        ],
+        "languageIds": [
+          "yarnlock"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#2C8EBB"
+    },
+    {
+      "rank": 98,
+      "id": "pnpm",
+      "kind": "file",
+      "label": "pnpm",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".pnpmfile.cjs",
+          "pnpm-lock.js",
+          "pnpm-lock.yaml",
+          "pnpm-workspace.js",
+          "pnpm-workspace.yaml",
+          "pnpmfile.cjs",
+          "pnpmfile.js",
+          "pnpmfile.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#F69220"
+    },
+    {
+      "rank": 99,
+      "id": "bun",
+      "kind": "file",
+      "label": "Bun",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "lockb"
+        ],
+        "filenames": [
+          ".bun-version",
+          ".bunfig.toml",
+          "bun.lock",
+          "bun.lockb",
+          "bunfig.toml"
+        ],
+        "languageIds": [
+          "bun.lockb"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FBF0DF"
+    },
+    {
+      "rank": 100,
+      "id": "deno",
+      "kind": "file",
+      "label": "Deno",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "deno.json",
+          "deno.jsonc",
+          "deno.lock"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#70FFAF"
+    },
+    {
+      "rank": 101,
+      "id": "webpack",
+      "kind": "file",
+      "label": "webpack",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "webpack.base.cjs",
+          "webpack.base.conf.cjs",
+          "webpack.base.conf.coffee",
+          "webpack.base.conf.js",
+          "webpack.base.conf.mjs",
+          "webpack.base.conf.ts",
+          "webpack.base.cts",
+          "webpack.base.js",
+          "webpack.base.mjs",
+          "webpack.base.mts",
+          "webpack.base.ts",
+          "webpack.cjs",
+          "webpack.client.cjs",
+          "webpack.client.cts",
+          "webpack.client.js",
+          "webpack.client.mjs",
+          "webpack.client.mts",
+          "webpack.client.ts",
+          "webpack.common.cjs",
+          "webpack.common.coffee",
+          "webpack.common.cts",
+          "webpack.common.js",
+          "webpack.common.mjs",
+          "webpack.common.mts",
+          "webpack.common.ts",
+          "webpack.conf.cjs",
+          "webpack.conf.js",
+          "webpack.conf.ts",
+          "webpack.config.babel.cjs",
+          "webpack.config.babel.coffee",
+          "webpack.config.babel.cts",
+          "webpack.config.babel.js",
+          "webpack.config.babel.mjs",
+          "webpack.config.babel.mts",
+          "webpack.config.babel.ts",
+          "webpack.config.base.babel.cjs",
+          "webpack.config.base.babel.coffee",
+          "webpack.config.base.babel.cts",
+          "webpack.config.base.babel.js",
+          "webpack.config.base.babel.mjs",
+          "webpack.config.base.babel.mts",
+          "webpack.config.base.babel.ts",
+          "webpack.config.base.cjs",
+          "webpack.config.base.coffee",
+          "webpack.config.base.cts",
+          "webpack.config.base.js",
+          "webpack.config.base.mjs",
+          "webpack.config.base.mts",
+          "webpack.config.base.ts",
+          "webpack.config.build.cjs",
+          "webpack.config.build.coffee",
+          "webpack.config.build.js",
+          "webpack.config.build.mjs",
+          "webpack.config.build.ts",
+          "webpack.config.cjs",
+          "webpack.config.client.cjs",
+          "webpack.config.client.cts",
+          "webpack.config.client.js",
+          "webpack.config.client.mjs",
+          "webpack.config.client.mts",
+          "webpack.config.client.ts",
+          "webpack.config.coffee",
+          "webpack.config.common.babel.cjs",
+          "webpack.config.common.babel.coffee",
+          "webpack.config.common.babel.cts",
+          "webpack.config.common.babel.js",
+          "webpack.config.common.babel.mjs",
+          "webpack.config.common.babel.mts",
+          "webpack.config.common.babel.ts",
+          "webpack.config.common.cjs",
+          "webpack.config.common.coffee",
+          "webpack.config.common.cts",
+          "webpack.config.common.js",
+          "webpack.config.common.mjs",
+          "webpack.config.common.mts",
+          "webpack.config.common.ts",
+          "webpack.config.cts",
+          "webpack.config.dev.babel.cjs",
+          "webpack.config.dev.babel.coffee",
+          "webpack.config.dev.babel.cts",
+          "webpack.config.dev.babel.js",
+          "webpack.config.dev.babel.mjs",
+          "webpack.config.dev.babel.mts",
+          "webpack.config.dev.babel.ts",
+          "webpack.config.dev.cjs",
+          "webpack.config.dev.coffee",
+          "webpack.config.dev.cts",
+          "webpack.config.dev.js",
+          "webpack.config.dev.mjs",
+          "webpack.config.dev.mts",
+          "webpack.config.dev.ts",
+          "webpack.config.development.babel.cjs",
+          "webpack.config.development.babel.coffee",
+          "webpack.config.development.babel.js",
+          "webpack.config.development.babel.mjs",
+          "webpack.config.development.babel.ts",
+          "webpack.config.development.cjs",
+          "webpack.config.development.coffee",
+          "webpack.config.development.js",
+          "webpack.config.development.mjs",
+          "webpack.config.development.ts",
+          "webpack.config.js",
+          "webpack.config.main.cjs",
+          "webpack.config.main.cts",
+          "webpack.config.main.js",
+          "webpack.config.main.mjs",
+          "webpack.config.main.mts",
+          "webpack.config.main.ts",
+          "webpack.config.mjs",
+          "webpack.config.mts",
+          "webpack.config.parts.cjs",
+          "webpack.config.parts.js",
+          "webpack.config.parts.ts",
+          "webpack.config.prod.babel.cjs",
+          "webpack.config.prod.babel.coffee",
+          "webpack.config.prod.babel.cts",
+          "webpack.config.prod.babel.js",
+          "webpack.config.prod.babel.mjs",
+          "webpack.config.prod.babel.mts",
+          "webpack.config.prod.babel.ts",
+          "webpack.config.prod.cjs",
+          "webpack.config.prod.coffee",
+          "webpack.config.prod.cts",
+          "webpack.config.prod.js",
+          "webpack.config.prod.mjs",
+          "webpack.config.prod.mts",
+          "webpack.config.prod.ts",
+          "webpack.config.production.babel.cjs",
+          "webpack.config.production.babel.coffee",
+          "webpack.config.production.babel.cts",
+          "webpack.config.production.babel.js",
+          "webpack.config.production.babel.mjs",
+          "webpack.config.production.babel.mts",
+          "webpack.config.production.babel.ts",
+          "webpack.config.production.cjs",
+          "webpack.config.production.coffee",
+          "webpack.config.production.cts",
+          "webpack.config.production.js",
+          "webpack.config.production.mjs",
+          "webpack.config.production.mts",
+          "webpack.config.production.ts",
+          "webpack.config.renderer.cjs",
+          "webpack.config.renderer.cts",
+          "webpack.config.renderer.js",
+          "webpack.config.renderer.mjs",
+          "webpack.config.renderer.mts",
+          "webpack.config.renderer.ts",
+          "webpack.config.server.cjs",
+          "webpack.config.server.cts",
+          "webpack.config.server.js",
+          "webpack.config.server.mjs",
+          "webpack.config.server.mts",
+          "webpack.config.server.ts",
+          "webpack.config.staging.babel.cjs",
+          "webpack.config.staging.babel.coffee",
+          "webpack.config.staging.babel.cts",
+          "webpack.config.staging.babel.js",
+          "webpack.config.staging.babel.mjs",
+          "webpack.config.staging.babel.mts",
+          "webpack.config.staging.babel.ts",
+          "webpack.config.staging.cjs",
+          "webpack.config.staging.coffee",
+          "webpack.config.staging.cts",
+          "webpack.config.staging.js",
+          "webpack.config.staging.mjs",
+          "webpack.config.staging.mts",
+          "webpack.config.staging.ts",
+          "webpack.config.test.babel.cjs",
+          "webpack.config.test.babel.coffee",
+          "webpack.config.test.babel.js",
+          "webpack.config.test.babel.mjs",
+          "webpack.config.test.babel.ts",
+          "webpack.config.test.cjs",
+          "webpack.config.test.coffee",
+          "webpack.config.test.cts",
+          "webpack.config.test.js",
+          "webpack.config.test.mjs",
+          "webpack.config.test.mts",
+          "webpack.config.test.ts",
+          "webpack.config.ts",
+          "webpack.config.vendor.cjs",
+          "webpack.config.vendor.cts",
+          "webpack.config.vendor.js",
+          "webpack.config.vendor.mjs",
+          "webpack.config.vendor.mts",
+          "webpack.config.vendor.production.cjs",
+          "webpack.config.vendor.production.cts",
+          "webpack.config.vendor.production.js",
+          "webpack.config.vendor.production.mjs",
+          "webpack.config.vendor.production.mts",
+          "webpack.config.vendor.production.ts",
+          "webpack.config.vendor.ts",
+          "webpack.cts",
+          "webpack.dev.cjs",
+          "webpack.dev.coffee",
+          "webpack.dev.conf.cjs",
+          "webpack.dev.conf.coffee",
+          "webpack.dev.conf.js",
+          "webpack.dev.conf.mjs",
+          "webpack.dev.conf.ts",
+          "webpack.dev.cts",
+          "webpack.dev.js",
+          "webpack.dev.mjs",
+          "webpack.dev.mts",
+          "webpack.dev.ts",
+          "webpack.development.cjs",
+          "webpack.development.cts",
+          "webpack.development.js",
+          "webpack.development.mjs",
+          "webpack.development.mts",
+          "webpack.development.ts",
+          "webpack.dist.cjs",
+          "webpack.dist.cts",
+          "webpack.dist.js",
+          "webpack.dist.mjs",
+          "webpack.dist.mts",
+          "webpack.dist.ts",
+          "webpack.js",
+          "webpack.local.cjs",
+          "webpack.local.coffee",
+          "webpack.local.js",
+          "webpack.local.mjs",
+          "webpack.local.ts",
+          "webpack.main.config.cjs",
+          "webpack.main.config.coffee",
+          "webpack.main.config.js",
+          "webpack.main.config.mjs",
+          "webpack.main.config.ts",
+          "webpack.mix.cjs",
+          "webpack.mix.coffee",
+          "webpack.mix.cts",
+          "webpack.mix.js",
+          "webpack.mix.mjs",
+          "webpack.mix.mts",
+          "webpack.mix.ts",
+          "webpack.mjs",
+          "webpack.mts",
+          "webpack.plugins.cjs",
+          "webpack.plugins.coffee",
+          "webpack.plugins.js",
+          "webpack.plugins.mjs",
+          "webpack.plugins.ts",
+          "webpack.prod.cjs",
+          "webpack.prod.coffee",
+          "webpack.prod.conf.cjs",
+          "webpack.prod.conf.coffee",
+          "webpack.prod.conf.js",
+          "webpack.prod.conf.mjs",
+          "webpack.prod.conf.ts",
+          "webpack.prod.config.cjs",
+          "webpack.prod.config.cts",
+          "webpack.prod.config.js",
+          "webpack.prod.config.mjs",
+          "webpack.prod.config.mts",
+          "webpack.prod.config.ts",
+          "webpack.prod.cts",
+          "webpack.prod.js",
+          "webpack.prod.mjs",
+          "webpack.prod.mts",
+          "webpack.prod.ts",
+          "webpack.production.cjs",
+          "webpack.production.cts",
+          "webpack.production.js",
+          "webpack.production.mjs",
+          "webpack.production.mts",
+          "webpack.production.ts",
+          "webpack.renderer.config.cjs",
+          "webpack.renderer.config.coffee",
+          "webpack.renderer.config.js",
+          "webpack.renderer.config.mjs",
+          "webpack.renderer.config.ts",
+          "webpack.rules.cjs",
+          "webpack.rules.coffee",
+          "webpack.rules.js",
+          "webpack.rules.mjs",
+          "webpack.rules.ts",
+          "webpack.server.cjs",
+          "webpack.server.cts",
+          "webpack.server.js",
+          "webpack.server.mjs",
+          "webpack.server.mts",
+          "webpack.server.ts",
+          "webpack.test.cjs",
+          "webpack.test.conf.cjs",
+          "webpack.test.conf.coffee",
+          "webpack.test.conf.js",
+          "webpack.test.conf.mjs",
+          "webpack.test.conf.ts",
+          "webpack.test.cts",
+          "webpack.test.js",
+          "webpack.test.mjs",
+          "webpack.test.mts",
+          "webpack.test.ts",
+          "webpack.ts",
+          "webpackfile.cjs",
+          "webpackfile.cts",
+          "webpackfile.js",
+          "webpackfile.mjs",
+          "webpackfile.mts",
+          "webpackfile.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#8DD6F9"
+    },
+    {
+      "rank": 102,
+      "id": "rollup",
+      "kind": "file",
+      "label": "Rollup",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "rollup-config.js",
+          "rollup-config.mjs",
+          "rollup-config.ts",
+          "rollup.config.base.js",
+          "rollup.config.base.mjs",
+          "rollup.config.base.ts",
+          "rollup.config.cjs",
+          "rollup.config.coffee",
+          "rollup.config.common.cjs",
+          "rollup.config.common.coffee",
+          "rollup.config.common.js",
+          "rollup.config.common.mjs",
+          "rollup.config.common.ts",
+          "rollup.config.dev.cjs",
+          "rollup.config.dev.coffee",
+          "rollup.config.dev.js",
+          "rollup.config.dev.mjs",
+          "rollup.config.dev.ts",
+          "rollup.config.js",
+          "rollup.config.mjs",
+          "rollup.config.prod.cjs",
+          "rollup.config.prod.coffee",
+          "rollup.config.prod.js",
+          "rollup.config.prod.mjs",
+          "rollup.config.prod.ts",
+          "rollup.config.prod.vendor.js",
+          "rollup.config.prod.vendor.mjs",
+          "rollup.config.prod.vendor.ts",
+          "rollup.config.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#EC4A3F"
+    },
+    {
+      "rank": 103,
+      "id": "esbuild",
+      "kind": "file",
+      "label": "esbuild",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "esbuild.cjs",
+          "esbuild.config.cjs",
+          "esbuild.config.cts",
+          "esbuild.config.js",
+          "esbuild.config.mjs",
+          "esbuild.config.mts",
+          "esbuild.config.ts",
+          "esbuild.cts",
+          "esbuild.dev.cjs",
+          "esbuild.dev.cts",
+          "esbuild.dev.js",
+          "esbuild.dev.mjs",
+          "esbuild.dev.mts",
+          "esbuild.dev.ts",
+          "esbuild.js",
+          "esbuild.mjs",
+          "esbuild.mts",
+          "esbuild.prod.cjs",
+          "esbuild.prod.cts",
+          "esbuild.prod.js",
+          "esbuild.prod.mjs",
+          "esbuild.prod.mts",
+          "esbuild.prod.ts",
+          "esbuild.stage.cjs",
+          "esbuild.stage.cts",
+          "esbuild.stage.js",
+          "esbuild.stage.mjs",
+          "esbuild.stage.mts",
+          "esbuild.stage.ts",
+          "esbuild.test.cjs",
+          "esbuild.test.cts",
+          "esbuild.test.js",
+          "esbuild.test.mjs",
+          "esbuild.test.mts",
+          "esbuild.test.ts",
+          "esbuild.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#FFCF00"
+    },
+    {
+      "rank": 104,
+      "id": "babel",
+      "kind": "file",
+      "label": "Babel",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "babelrc"
+        ],
+        "filenames": [
+          ".babel-plugin-macrosrc",
+          ".babel-plugin-macrosrc.cjs",
+          ".babel-plugin-macrosrc.cts",
+          ".babel-plugin-macrosrc.js",
+          ".babel-plugin-macrosrc.json",
+          ".babel-plugin-macrosrc.json5",
+          ".babel-plugin-macrosrc.jsonc",
+          ".babel-plugin-macrosrc.mjs",
+          ".babel-plugin-macrosrc.mts",
+          ".babel-plugin-macrosrc.toml",
+          ".babel-plugin-macrosrc.ts",
+          ".babel-plugin-macrosrc.yaml",
+          ".babel-plugin-macrosrc.yml",
+          ".babelignore",
+          ".babelrc",
+          ".babelrc.cjs",
+          ".babelrc.cts",
+          ".babelrc.js",
+          ".babelrc.json",
+          ".babelrc.json5",
+          ".babelrc.jsonc",
+          ".babelrc.mjs",
+          ".babelrc.mts",
+          ".babelrc.toml",
+          ".babelrc.ts",
+          ".babelrc.yaml",
+          ".babelrc.yml",
+          ".config/babel-plugin-macrosrc",
+          ".config/babel-plugin-macrosrc.cjs",
+          ".config/babel-plugin-macrosrc.cts",
+          ".config/babel-plugin-macrosrc.js",
+          ".config/babel-plugin-macrosrc.json",
+          ".config/babel-plugin-macrosrc.json5",
+          ".config/babel-plugin-macrosrc.jsonc",
+          ".config/babel-plugin-macrosrc.mjs",
+          ".config/babel-plugin-macrosrc.mts",
+          ".config/babel-plugin-macrosrc.toml",
+          ".config/babel-plugin-macrosrc.ts",
+          ".config/babel-plugin-macrosrc.yaml",
+          ".config/babel-plugin-macrosrc.yml",
+          ".config/babelrc",
+          ".config/babelrc.cjs",
+          ".config/babelrc.cts",
+          ".config/babelrc.js",
+          ".config/babelrc.json",
+          ".config/babelrc.json5",
+          ".config/babelrc.jsonc",
+          ".config/babelrc.mjs",
+          ".config/babelrc.mts",
+          ".config/babelrc.toml",
+          ".config/babelrc.ts",
+          ".config/babelrc.yaml",
+          ".config/babelrc.yml",
+          "babel-plugin-macros.config.cjs",
+          "babel-plugin-macros.config.cts",
+          "babel-plugin-macros.config.js",
+          "babel-plugin-macros.config.json",
+          "babel-plugin-macros.config.json5",
+          "babel-plugin-macros.config.jsonc",
+          "babel-plugin-macros.config.mjs",
+          "babel-plugin-macros.config.mts",
+          "babel-plugin-macros.config.toml",
+          "babel-plugin-macros.config.ts",
+          "babel-plugin-macros.config.yaml",
+          "babel-plugin-macros.config.yml",
+          "babel-transform.js",
+          "babel.config.cjs",
+          "babel.config.cts",
+          "babel.config.js",
+          "babel.config.json",
+          "babel.config.json5",
+          "babel.config.jsonc",
+          "babel.config.mjs",
+          "babel.config.mts",
+          "babel.config.toml",
+          "babel.config.ts",
+          "babel.config.yaml",
+          "babel.config.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#F9DC3E"
+    },
+    {
+      "rank": 105,
+      "id": "biome",
+      "kind": "file",
+      "label": "Biome",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "rast"
+        ],
+        "filenames": [
+          ".biome.json",
+          ".biome.jsonc",
+          "biome.json",
+          "biome.jsonc"
+        ],
+        "languageIds": [
+          "biome_syntax_tree"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#60A5FA"
+    },
+    {
+      "rank": 106,
+      "id": "turborepo",
+      "kind": "file",
+      "label": "Turborepo",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "microfrontends.json",
+          "microfrontends.jsonc",
+          "turbo.json",
+          "turbo.jsonc"
+        ],
+        "languageIds": [
+          "turbo"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#EF4444"
+    },
+    {
+      "rank": 107,
+      "id": "nx",
+      "kind": "file",
+      "label": "Nx",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".nxignore",
+          "nx.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#143055"
+    },
+    {
+      "rank": 108,
+      "id": "vitest",
+      "kind": "file",
+      "label": "Vitest",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "vitest-snap"
+        ],
+        "filenames": [
+          "vitest.config.cjs",
+          "vitest.config.cts",
+          "vitest.config.js",
+          "vitest.config.mjs",
+          "vitest.config.mts",
+          "vitest.config.ts",
+          "vitest.e2e.config.cjs",
+          "vitest.e2e.config.cts",
+          "vitest.e2e.config.js",
+          "vitest.e2e.config.mjs",
+          "vitest.e2e.config.mts",
+          "vitest.e2e.config.ts",
+          "vitest.projects.cjs",
+          "vitest.projects.cts",
+          "vitest.projects.js",
+          "vitest.projects.json",
+          "vitest.projects.mjs",
+          "vitest.projects.mts",
+          "vitest.projects.ts",
+          "vitest.unit.config.cjs",
+          "vitest.unit.config.cts",
+          "vitest.unit.config.js",
+          "vitest.unit.config.mjs",
+          "vitest.unit.config.mts",
+          "vitest.unit.config.ts",
+          "vitest.workspace.cjs",
+          "vitest.workspace.cts",
+          "vitest.workspace.js",
+          "vitest.workspace.json",
+          "vitest.workspace.mjs",
+          "vitest.workspace.mts",
+          "vitest.workspace.ts"
+        ],
+        "languageIds": [
+          "vitest",
+          "vitest-snapshot"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#6E9F18"
+    },
+    {
+      "rank": 109,
+      "id": "jest",
+      "kind": "file",
+      "label": "Jest",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".jest.config.cjs",
+          ".jest.config.js",
+          ".jest.config.ts",
+          ".jestrc",
+          ".jestrc.js",
+          ".jestrc.json",
+          "jest-e2e.config.cjs",
+          "jest-e2e.config.cts",
+          "jest-e2e.config.js",
+          "jest-e2e.config.json",
+          "jest-e2e.config.mjs",
+          "jest-e2e.config.mts",
+          "jest-e2e.config.ts",
+          "jest-e2e.json",
+          "jest-github-actions-reporter.js",
+          "jest-preset.cjs",
+          "jest-preset.js",
+          "jest-preset.json",
+          "jest-preset.mjs",
+          "jest-unit.config.js",
+          "jest.config.babel.js",
+          "jest.config.base.cjs",
+          "jest.config.base.cts",
+          "jest.config.base.js",
+          "jest.config.base.json",
+          "jest.config.base.mjs",
+          "jest.config.base.mts",
+          "jest.config.base.ts",
+          "jest.config.cjs",
+          "jest.config.common.cjs",
+          "jest.config.common.cts",
+          "jest.config.common.js",
+          "jest.config.common.json",
+          "jest.config.common.mjs",
+          "jest.config.common.mts",
+          "jest.config.common.ts",
+          "jest.config.cts",
+          "jest.config.e2e.cjs",
+          "jest.config.e2e.cts",
+          "jest.config.e2e.js",
+          "jest.config.e2e.json",
+          "jest.config.e2e.mjs",
+          "jest.config.e2e.mts",
+          "jest.config.e2e.ts",
+          "jest.config.int.cjs",
+          "jest.config.int.cts",
+          "jest.config.int.js",
+          "jest.config.int.json",
+          "jest.config.int.mjs",
+          "jest.config.int.mts",
+          "jest.config.int.ts",
+          "jest.config.integration.cjs",
+          "jest.config.integration.cts",
+          "jest.config.integration.js",
+          "jest.config.integration.json",
+          "jest.config.integration.mjs",
+          "jest.config.integration.mts",
+          "jest.config.integration.ts",
+          "jest.config.js",
+          "jest.config.json",
+          "jest.config.mjs",
+          "jest.config.mts",
+          "jest.config.ts",
+          "jest.config.unit.cjs",
+          "jest.config.unit.cts",
+          "jest.config.unit.js",
+          "jest.config.unit.json",
+          "jest.config.unit.mjs",
+          "jest.config.unit.mts",
+          "jest.config.unit.ts",
+          "jest.e2e.config.cjs",
+          "jest.e2e.config.cts",
+          "jest.e2e.config.js",
+          "jest.e2e.config.json",
+          "jest.e2e.config.mjs",
+          "jest.e2e.config.mts",
+          "jest.e2e.config.ts",
+          "jest.e2e.json",
+          "jest.json",
+          "jest.preset.cjs",
+          "jest.preset.js",
+          "jest.preset.json",
+          "jest.preset.mjs",
+          "jest.setup.js",
+          "jest.setup.ts",
+          "jest.teardown.js"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#C21325"
+    },
+    {
+      "rank": 110,
+      "id": "cypress",
+      "kind": "file",
+      "label": "Cypress",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cy.js",
+          "cy.jsx",
+          "cy.ts"
+        ],
+        "filenames": [
+          "cypress.config.cjs",
+          "cypress.config.cts",
+          "cypress.config.js",
+          "cypress.config.jsx",
+          "cypress.config.mjs",
+          "cypress.config.mts",
+          "cypress.config.ts",
+          "cypress.env.json",
+          "cypress.json"
+        ],
+        "languageIds": [
+          "cypress"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#69D3A7"
+    },
+    {
+      "rank": 111,
+      "id": "playwright",
+      "kind": "file",
+      "label": "Playwright",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "playwright-ct.config.cjs",
+          "playwright-ct.config.cts",
+          "playwright-ct.config.js",
+          "playwright-ct.config.mjs",
+          "playwright-ct.config.mts",
+          "playwright-ct.config.ts",
+          "playwright.config.base.cjs",
+          "playwright.config.base.cts",
+          "playwright.config.base.js",
+          "playwright.config.base.mjs",
+          "playwright.config.base.mts",
+          "playwright.config.base.ts",
+          "playwright.config.cjs",
+          "playwright.config.cts",
+          "playwright.config.js",
+          "playwright.config.mjs",
+          "playwright.config.mts",
+          "playwright.config.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#2EAD33"
+    },
+    {
+      "rank": 112,
+      "id": "storybook",
+      "kind": "file",
+      "label": "Storybook",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "stories.js",
+          "stories.jsx",
+          "stories.mdx",
+          "stories.svelte",
+          "stories.ts",
+          "stories.tsx",
+          "stories.vue",
+          "story.js",
+          "story.jsx",
+          "story.mdx",
+          "story.ts",
+          "story.tsx",
+          "storybook"
+        ],
+        "filenames": [
+          "stories.js",
+          "stories.jsx",
+          "stories.mdx",
+          "stories.svelte",
+          "stories.ts",
+          "stories.tsx",
+          "story.js",
+          "story.jsx",
+          "story.mdx",
+          "story.svelte",
+          "story.ts",
+          "story.tsx"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#FF4785"
+    },
+    {
+      "rank": 113,
+      "id": "testjs",
+      "kind": "file",
+      "label": "JavaScript Test",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cy.js",
+          "e2e-spec.cjs",
+          "e2e-spec.js",
+          "e2e-spec.mjs",
+          "js.snap",
+          "spec.cjs",
+          "spec.js",
+          "spec.mjs",
+          "test-d.cjs",
+          "test-d.js",
+          "test.cjs",
+          "test.js",
+          "test.jsx",
+          "test.mjs",
+          "tests.cjs",
+          "tests.js",
+          "tests.jsx",
+          "tests.mjs",
+          "unit.js"
+        ],
+        "filenames": [
+          "spec.js",
+          "spec.jsx",
+          "spec.mjs",
+          "test.js",
+          "test.jsx",
+          "test.mjs"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 114,
+      "id": "testts",
+      "kind": "file",
+      "label": "TypeScript Test",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "cy.ts",
+          "e2e-spec.cts",
+          "e2e-spec.mts",
+          "e2e-spec.ts",
+          "spec-d.ts",
+          "spec.cts",
+          "spec.mts",
+          "spec.ts",
+          "spec.tsx",
+          "test-d.ts",
+          "test-d.tsx",
+          "test.cts",
+          "test.mts",
+          "test.ts",
+          "test.tsx",
+          "tests.ts",
+          "tests.tsx",
+          "ts.snap",
+          "unit.ts",
+          "unit.tsx"
+        ],
+        "filenames": [
+          "e2e-spec.mts",
+          "e2e-spec.ts",
+          "e2e-spec.tsx",
+          "e2e-test.mts",
+          "e2e-test.ts",
+          "e2e-test.tsx",
+          "spec.mts",
+          "spec.ts",
+          "spec.tsx",
+          "test-d.mts",
+          "test-d.ts",
+          "test-d.tsx",
+          "test.mts",
+          "test.ts",
+          "test.tsx"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 115,
+      "id": "stylelint",
+      "kind": "file",
+      "label": "Stylelint",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "stylelintcache",
+          "stylelintignore",
+          "stylelintrc"
+        ],
+        "filenames": [
+          ".config/stylelintrc",
+          ".config/stylelintrc.cjs",
+          ".config/stylelintrc.cts",
+          ".config/stylelintrc.js",
+          ".config/stylelintrc.json",
+          ".config/stylelintrc.json5",
+          ".config/stylelintrc.jsonc",
+          ".config/stylelintrc.mjs",
+          ".config/stylelintrc.mts",
+          ".config/stylelintrc.toml",
+          ".config/stylelintrc.ts",
+          ".config/stylelintrc.yaml",
+          ".config/stylelintrc.yml",
+          ".stylelintcache",
+          ".stylelintignore",
+          ".stylelintrc",
+          ".stylelintrc.cjs",
+          ".stylelintrc.cts",
+          ".stylelintrc.js",
+          ".stylelintrc.json",
+          ".stylelintrc.json5",
+          ".stylelintrc.jsonc",
+          ".stylelintrc.mjs",
+          ".stylelintrc.mts",
+          ".stylelintrc.toml",
+          ".stylelintrc.ts",
+          ".stylelintrc.yaml",
+          ".stylelintrc.yml",
+          "stylelint.config.cjs",
+          "stylelint.config.cts",
+          "stylelint.config.js",
+          "stylelint.config.json",
+          "stylelint.config.json5",
+          "stylelint.config.jsonc",
+          "stylelint.config.mjs",
+          "stylelint.config.mts",
+          "stylelint.config.toml",
+          "stylelint.config.ts",
+          "stylelint.config.yaml",
+          "stylelint.config.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#263238"
+    },
+    {
+      "rank": 116,
+      "id": "postcss",
+      "kind": "file",
+      "label": "PostCSS",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "pcss",
+          "postcss",
+          "postcssrc",
+          "sss"
+        ],
+        "filenames": [
+          ".config/postcssrc",
+          ".config/postcssrc.cjs",
+          ".config/postcssrc.cts",
+          ".config/postcssrc.js",
+          ".config/postcssrc.json",
+          ".config/postcssrc.json5",
+          ".config/postcssrc.jsonc",
+          ".config/postcssrc.mjs",
+          ".config/postcssrc.mts",
+          ".config/postcssrc.toml",
+          ".config/postcssrc.ts",
+          ".config/postcssrc.yaml",
+          ".config/postcssrc.yml",
+          ".postcssrc",
+          ".postcssrc.cjs",
+          ".postcssrc.cts",
+          ".postcssrc.js",
+          ".postcssrc.json",
+          ".postcssrc.json5",
+          ".postcssrc.jsonc",
+          ".postcssrc.mjs",
+          ".postcssrc.mts",
+          ".postcssrc.toml",
+          ".postcssrc.ts",
+          ".postcssrc.yaml",
+          ".postcssrc.yml",
+          "postcss.config.cjs",
+          "postcss.config.cts",
+          "postcss.config.js",
+          "postcss.config.json",
+          "postcss.config.json5",
+          "postcss.config.jsonc",
+          "postcss.config.mjs",
+          "postcss.config.mts",
+          "postcss.config.toml",
+          "postcss.config.ts",
+          "postcss.config.yaml",
+          "postcss.config.yml"
+        ],
+        "languageIds": [
+          "postcss"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#DD3A0A"
+    },
+    {
+      "rank": 117,
+      "id": "svelte",
+      "kind": "file",
+      "label": "Svelte",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "svelte",
+          "svelte.js",
+          "svelte.ts"
+        ],
+        "filenames": [
+          "svelte.config",
+          "svelte.config.cjs",
+          "svelte.config.cts",
+          "svelte.config.js",
+          "svelte.config.mjs",
+          "svelte.config.mts",
+          "svelte.config.ts"
+        ],
+        "languageIds": [
+          "svelte"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FF3E00"
+    },
+    {
+      "rank": 118,
+      "id": "angular",
+      "kind": "file",
+      "label": "Angular",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "module.js",
+          "module.ts",
+          "ng-template"
+        ],
+        "filenames": [
+          ".angular-cli.json",
+          ".angular.json",
+          "angular-cli.json",
+          "angular.json",
+          "ng-package.json"
+        ],
+        "languageIds": [
+          "ng-template"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#DD0031"
+    },
+    {
+      "rank": 119,
+      "id": "astro",
+      "kind": "file",
+      "label": "Astro",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "astro"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "astro"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FF5D01"
+    },
+    {
+      "rank": 120,
+      "id": "nuxt",
+      "kind": "file",
+      "label": "Nuxt",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".nuxtignore",
+          ".nuxtrc",
+          "nuxt.config.js",
+          "nuxt.config.mjs",
+          "nuxt.config.ts",
+          "nuxt.js",
+          "nuxt.mjs",
+          "nuxt.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#00DC82"
+    },
+    {
+      "rank": 121,
+      "id": "nestjs",
+      "kind": "file",
+      "label": "NestJS",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".nest-cli.json",
+          ".nestconfig.json",
+          "nest-cli.json",
+          "nestconfig.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#E0234E"
+    },
+    {
+      "rank": 122,
+      "id": "django",
+      "kind": "file",
+      "label": "Django",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "djt",
+          "html"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "django-html",
+          "django-txt"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#092E20"
+    },
+    {
+      "rank": 123,
+      "id": "expo",
+      "kind": "file",
+      "label": "Expo",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".easignore",
+          "app.config.js",
+          "app.config.json",
+          "app.config.json5",
+          "app.json",
+          "eas.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#000020"
+    },
+    {
+      "rank": 124,
+      "id": "tauri",
+      "kind": "file",
+      "label": "Tauri",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "tauri"
+        ],
+        "filenames": [
+          ".taurignore",
+          "tauri.conf.json",
+          "tauri.config.json",
+          "tauri.linux.conf.json",
+          "tauri.macos.conf.json",
+          "tauri.windows.conf.json"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#FFC131"
+    },
+    {
+      "rank": 125,
+      "id": "jupyter",
+      "kind": "file",
+      "label": "Jupyter",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "ipynb"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "jupyter"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#F37626"
+    },
+    {
+      "rank": 126,
+      "id": "terraform",
+      "kind": "file",
+      "label": "Terraform",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "terraformignore",
+          "tf",
+          "tf.json",
+          "tfbackend",
+          "tfstate",
+          "tfvars"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "terraform"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#844FBA"
+    },
+    {
+      "rank": 127,
+      "id": "helm",
+      "kind": "file",
+      "label": "Helm",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "helm.tpl"
+        ],
+        "filenames": [
+          ".helmignore",
+          "chart.lock",
+          "chart.yaml"
+        ],
+        "languageIds": [
+          "helm"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#0F1689"
+    },
+    {
+      "rank": 128,
+      "id": "github-actions-workflow",
+      "kind": "file",
+      "label": "GitHub Actions Workflow",
+      "category": "config",
+      "sources": [
+        "material"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [
+          "github-actions-workflow"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 129,
+      "id": "gitlab",
+      "kind": "file",
+      "label": "GitLab",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "gitlab-ci.yaml",
+          "gitlab-ci.yml"
+        ],
+        "filenames": [
+          ".gitlab-ci.yaml",
+          ".gitlab-ci.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#FC6D26"
+    },
+    {
+      "rank": 130,
+      "id": "jenkins",
+      "kind": "file",
+      "label": "Jenkins",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "jenkins",
+          "jenkinsfile"
+        ],
+        "filenames": [
+          "jenkinsfile"
+        ],
+        "languageIds": [
+          "declarative",
+          "jenkins",
+          "jenkinsfile"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#D24939"
+    },
+    {
+      "rank": 131,
+      "id": "vercel",
+      "kind": "file",
+      "label": "Vercel",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".nowignore",
+          ".vercel.approvers",
+          ".vercelignore",
+          "now.json",
+          "vercel.cjs",
+          "vercel.js",
+          "vercel.json",
+          "vercel.mjs",
+          "vercel.mts",
+          "vercel.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#000000"
+    },
+    {
+      "rank": 132,
+      "id": "netlify",
+      "kind": "file",
+      "label": "Netlify",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "netlify.json",
+          "netlify.toml",
+          "netlify.yaml",
+          "netlify.yml"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#00C7B7"
+    },
+    {
+      "rank": 133,
+      "id": "firebase",
+      "kind": "file",
+      "label": "Firebase",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".firebaserc",
+          "firebase.cjs",
+          "firebase.config.js",
+          "firebase.js",
+          "firebase.json",
+          "firebase.ts",
+          "firestore.indexes.json",
+          "firestore.rules"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#FFCA28"
+    },
+    {
+      "rank": 134,
+      "id": "supabase",
+      "kind": "file",
+      "label": "Supabase",
+      "category": "config",
+      "sources": [
+        "material"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "supabase.js",
+          "supabase.py",
+          "supabase.ts"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#3FCF8E"
+    },
+    {
+      "rank": 135,
+      "id": "http",
+      "kind": "file",
+      "label": "HTTP Request",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "http",
+          "rest"
+        ],
+        "filenames": [
+          "cname"
+        ],
+        "languageIds": [
+          "http"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 136,
+      "id": "swagger",
+      "kind": "file",
+      "label": "Swagger",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "swagger",
+          "swagger.json",
+          "swagger.yaml",
+          "swagger.yml"
+        ],
+        "filenames": [
+          "swagger.json",
+          "swagger.yaml",
+          "swagger.yml"
+        ],
+        "languageIds": [
+          "swagger"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 137,
+      "id": "mermaid",
+      "kind": "file",
+      "label": "Mermaid",
+      "category": "code",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "mermaid",
+          "mmd"
+        ],
+        "filenames": [],
+        "languageIds": [
+          "mermaid",
+          "mermaid.architecture",
+          "mermaid.block",
+          "mermaid.c4diagram",
+          "mermaid.classdiagram",
+          "mermaid.erdiagram",
+          "mermaid.flowchart",
+          "mermaid.gantt",
+          "mermaid.gitgraph",
+          "mermaid.info",
+          "mermaid.journey",
+          "mermaid.kanban",
+          "mermaid.mindmap",
+          "mermaid.packet",
+          "mermaid.pie",
+          "mermaid.quadrantchart",
+          "mermaid.radar",
+          "mermaid.requirementdiagram",
+          "mermaid.sankey",
+          "mermaid.sequencediagram",
+          "mermaid.statediagram",
+          "mermaid.timeline",
+          "mermaid.xychart",
+          "mermaid.zenuml"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#FF3670"
+    },
+    {
+      "rank": 138,
+      "id": "claude",
+      "kind": "file",
+      "label": "Claude",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "claude.local.md",
+          "claude.md"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      },
+      "brandColor": "#D97757"
+    },
+    {
+      "rank": 139,
+      "id": "copilot",
+      "kind": "file",
+      "label": "GitHub Copilot",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "instructions.md"
+        ],
+        "filenames": [
+          ".copilotignore",
+          "copilot-instructions.md",
+          "github-copilot.xml"
+        ],
+        "languageIds": [
+          "instructions",
+          "prompt"
+        ],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 140,
+      "id": "agents",
+      "kind": "file",
+      "label": "AGENTS.md",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "agents.md"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 141,
+      "id": "cursor",
+      "kind": "file",
+      "label": "Cursor",
+      "category": "config",
+      "sources": [
+        "material",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          ".cursor",
+          ".cursor.json",
+          ".cursorignore",
+          ".cursorindexingignore",
+          ".cursorrc",
+          ".cursorrules"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 142,
+      "id": "vscode",
+      "kind": "file",
+      "label": "VS Code",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "code-profile",
+          "code-snippets",
+          "code-workplace",
+          "code-workspace",
+          "msbuild",
+          "vscodeignore",
+          "vsix",
+          "vsixmanifest"
+        ],
+        "filenames": [
+          ".vscodeignore",
+          "extensions.json",
+          "launch.json",
+          "settings.json",
+          "tasks.json",
+          "vscodeignore.json"
+        ],
+        "languageIds": [
+          "snippets"
+        ],
+        "folderNames": []
+      },
+      "brandColor": "#007ACC"
+    },
+    {
+      "rank": 143,
+      "id": "favicon",
+      "kind": "file",
+      "label": "Favicon",
+      "category": "image",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "favicon.ico"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 144,
+      "id": "todo",
+      "kind": "file",
+      "label": "TODO",
+      "category": "doc",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [
+          "todo"
+        ],
+        "filenames": [
+          "todo.md",
+          "todos.md"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    },
+    {
+      "rank": 145,
+      "id": "codeowners",
+      "kind": "file",
+      "label": "CODEOWNERS",
+      "category": "config",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [
+          "codeowners",
+          "owners"
+        ],
+        "languageIds": [],
+        "folderNames": []
+      }
+    }
+  ],
+  "folders": [
+    {
+      "rank": 1,
+      "id": "src",
+      "kind": "folder",
+      "label": "Source",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "__src__",
+          "code",
+          "source",
+          "sources",
+          "src",
+          "srcs"
+        ]
+      }
+    },
+    {
+      "rank": 2,
+      "id": "node",
+      "kind": "folder",
+      "label": "Node Modules",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "node",
+          "node_modules",
+          "nodejs"
+        ]
+      },
+      "brandColor": "#5FA04E"
+    },
+    {
+      "rank": 3,
+      "id": "dist",
+      "kind": "folder",
+      "label": "Distribution / Build Output",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".build",
+          ".dist",
+          ".out",
+          "_utils",
+          "bin",
+          "build",
+          "builds",
+          "built",
+          "compiled",
+          "dist",
+          "distribution",
+          "dists",
+          "export",
+          "exports",
+          "out",
+          "output",
+          "outputs",
+          "outs",
+          "release",
+          "releases",
+          "target",
+          "targets",
+          "utils"
+        ]
+      }
+    },
+    {
+      "rank": 4,
+      "id": "test",
+      "kind": "folder",
+      "label": "Tests",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".spec",
+          ".specs",
+          ".test",
+          ".tests",
+          "__mocks__",
+          "__test__",
+          "__tests__",
+          "integration",
+          "mocks",
+          "snapshots",
+          "spec",
+          "specs",
+          "stubs",
+          "test",
+          "testfiles",
+          "testing",
+          "tests"
+        ]
+      }
+    },
+    {
+      "rank": 5,
+      "id": "docs",
+      "kind": "folder",
+      "label": "Documentation",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "article",
+          "articles",
+          "blog",
+          "diary",
+          "doc",
+          "docs",
+          "document",
+          "documentation",
+          "documents",
+          "knowledge",
+          "news",
+          "note",
+          "notes",
+          "post",
+          "posts",
+          "wiki"
+        ]
+      }
+    },
+    {
+      "rank": 6,
+      "id": "assets",
+      "kind": "folder",
+      "label": "Assets",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".assets",
+          "asset",
+          "assets",
+          "report",
+          "reports",
+          "res",
+          "resource",
+          "resources",
+          "static"
+        ]
+      }
+    },
+    {
+      "rank": 7,
+      "id": "images",
+      "kind": "folder",
+      "label": "Images",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".fig",
+          ".figs",
+          ".img",
+          ".imgs",
+          "fig",
+          "figs",
+          "figure",
+          "figures",
+          "ico",
+          "icon",
+          "icons",
+          "icos",
+          "image",
+          "images",
+          "img",
+          "imgs",
+          "photo",
+          "photograph",
+          "photographs",
+          "photos",
+          "pic",
+          "pics",
+          "picture",
+          "pictures",
+          "screengrab",
+          "screengrabs",
+          "screenshot",
+          "screenshots",
+          "svg",
+          "texture",
+          "textures"
+        ]
+      }
+    },
+    {
+      "rank": 8,
+      "id": "components",
+      "kind": "folder",
+      "label": "Components",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".components",
+          "component",
+          "components",
+          "fragments",
+          "gui",
+          "src-ui",
+          "ui",
+          "widget",
+          "widgets"
+        ]
+      }
+    },
+    {
+      "rank": 9,
+      "id": "config",
+      "kind": "folder",
+      "label": "Config",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".conf",
+          ".config",
+          ".configs",
+          ".configuration",
+          ".configurations",
+          ".ini",
+          ".initializers",
+          ".setting",
+          ".settings",
+          "cfg",
+          "cfgs",
+          "conf",
+          "config",
+          "configs",
+          "configuration",
+          "configurations",
+          "confs",
+          "ini",
+          "initializers",
+          "meta-inf",
+          "option",
+          "options",
+          "pref",
+          "preference",
+          "preferences",
+          "prefs",
+          "properties",
+          "props",
+          "setting",
+          "settings"
+        ]
+      }
+    },
+    {
+      "rank": 10,
+      "id": "git",
+      "kind": "folder",
+      "label": "Git",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".git",
+          ".github",
+          ".gitlab",
+          ".submodules",
+          "git",
+          "githooks",
+          "patches",
+          "submodules"
+        ]
+      },
+      "brandColor": "#F05032"
+    },
+    {
+      "rank": 11,
+      "id": "github",
+      "kind": "folder",
+      "label": "GitHub",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".github",
+          "github"
+        ]
+      }
+    },
+    {
+      "rank": 12,
+      "id": "vscode",
+      "kind": "folder",
+      "label": "VS Code",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".vscode",
+          ".vscode-test",
+          "vscode",
+          "vscode-test"
+        ]
+      },
+      "brandColor": "#007ACC"
+    },
+    {
+      "rank": 13,
+      "id": "public",
+      "kind": "folder",
+      "label": "Public",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".public",
+          "browser",
+          "browsers",
+          "proxy",
+          "public",
+          "site",
+          "web",
+          "website",
+          "websites",
+          "www",
+          "wwwroot"
+        ]
+      }
+    },
+    {
+      "rank": 14,
+      "id": "scripts",
+      "kind": "folder",
+      "label": "Scripts",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "script",
+          "scripting",
+          "scripts",
+          "xtask"
+        ]
+      }
+    },
+    {
+      "rank": 15,
+      "id": "types",
+      "kind": "folder",
+      "label": "Types",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "@types",
+          "cts",
+          "mts",
+          "ts",
+          "types",
+          "typescript",
+          "typings"
+        ]
+      }
+    },
+    {
+      "rank": 16,
+      "id": "hooks",
+      "kind": "folder",
+      "label": "Hooks",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".hook",
+          ".hooks",
+          "hook",
+          "hooks"
+        ]
+      }
+    },
+    {
+      "rank": 17,
+      "id": "utils",
+      "kind": "folder",
+      "label": "Utilities",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".tools",
+          "tool",
+          "tooling",
+          "tools",
+          "util",
+          "utilities",
+          "utility",
+          "utils"
+        ]
+      }
+    },
+    {
+      "rank": 18,
+      "id": "library",
+      "kind": "folder",
+      "label": "Library",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".lib",
+          ".libs",
+          "__lib__",
+          "__libs__",
+          "crates",
+          "external",
+          "externals",
+          "lib",
+          "lib64",
+          "libraries",
+          "library",
+          "libs",
+          "third-party",
+          "thirdparty",
+          "vendor",
+          "vendors"
+        ]
+      }
+    },
+    {
+      "rank": 19,
+      "id": "api",
+      "kind": "folder",
+      "label": "API",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".api",
+          ".apis",
+          "api",
+          "apis",
+          "restapi"
+        ]
+      }
+    },
+    {
+      "rank": 20,
+      "id": "styles",
+      "kind": "folder",
+      "label": "Styles",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "css",
+          "style",
+          "styles",
+          "stylesheet",
+          "stylesheets"
+        ]
+      }
+    },
+    {
+      "rank": 21,
+      "id": "app",
+      "kind": "folder",
+      "label": "App",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".app",
+          "app",
+          "application",
+          "applications",
+          "apps"
+        ]
+      }
+    },
+    {
+      "rank": 22,
+      "id": "view",
+      "kind": "folder",
+      "label": "Views",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_layout",
+          "_layouts",
+          "_page",
+          "_pages",
+          "_view",
+          "_views",
+          "html",
+          "layout",
+          "layouts",
+          "page",
+          "pages",
+          "public_html",
+          "screen",
+          "screens",
+          "view",
+          "views"
+        ]
+      }
+    },
+    {
+      "rank": 23,
+      "id": "server",
+      "kind": "folder",
+      "label": "Server",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "backend",
+          "backends",
+          "infra",
+          "infrastructure",
+          "inventories",
+          "inventory",
+          "server",
+          "servers"
+        ]
+      }
+    },
+    {
+      "rank": 24,
+      "id": "db",
+      "kind": "folder",
+      "label": "Database",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "must-have + multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_data",
+          "data",
+          "database",
+          "databases",
+          "db",
+          "repo",
+          "repositories",
+          "repository",
+          "sql",
+          "sql_schema",
+          "sqlite",
+          "storage",
+          "storages",
+          "store",
+          "stores"
+        ]
+      }
+    },
+    {
+      "rank": 25,
+      "id": "route",
+      "kind": "folder",
+      "label": "Routes",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_route",
+          "_routes",
+          "navigation",
+          "navigations",
+          "route",
+          "router",
+          "routers",
+          "routes",
+          "routing"
+        ]
+      }
+    },
+    {
+      "rank": 26,
+      "id": "layout",
+      "kind": "folder",
+      "label": "Layouts",
+      "category": "folder",
+      "sources": [
+        "material",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_layout",
+          "_layouts",
+          "layout",
+          "layouts"
+        ]
+      }
+    },
+    {
+      "rank": 27,
+      "id": "model",
+      "kind": "folder",
+      "label": "Models",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".entities",
+          ".model",
+          ".models",
+          "class",
+          "classes",
+          "entities",
+          "model",
+          "models",
+          "schema",
+          "schemas"
+        ]
+      }
+    },
+    {
+      "rank": 28,
+      "id": "middleware",
+      "kind": "folder",
+      "label": "Middleware",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "middleware",
+          "middlewares"
+        ]
+      }
+    },
+    {
+      "rank": 29,
+      "id": "services",
+      "kind": "folder",
+      "label": "Services",
+      "category": "folder",
+      "sources": [
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_service",
+          "_services",
+          "service",
+          "services"
+        ]
+      }
+    },
+    {
+      "rank": 30,
+      "id": "next",
+      "kind": "folder",
+      "label": "Next.js",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".next",
+          "next"
+        ]
+      },
+      "brandColor": "#000000"
+    },
+    {
+      "rank": 31,
+      "id": "docker",
+      "kind": "folder",
+      "label": "Docker",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".docker",
+          "docker",
+          "dockerfiles",
+          "dockerhub"
+        ]
+      },
+      "brandColor": "#2496ED"
+    },
+    {
+      "rank": 32,
+      "id": "coverage",
+      "kind": "folder",
+      "label": "Coverage",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "coverage",
+          "e2e",
+          "integration-test",
+          "integration-tests",
+          "it",
+          "nyc-output",
+          "nyc_output"
+        ]
+      }
+    },
+    {
+      "rank": 33,
+      "id": "i18n",
+      "kind": "folder",
+      "label": "Internationalization",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "_locale",
+          "_locales",
+          "g11n",
+          "globalization",
+          "i18n",
+          "internationalization",
+          "l10n",
+          "lang",
+          "langs",
+          "language",
+          "languages",
+          "locale",
+          "locales",
+          "localization",
+          "translate",
+          "translation",
+          "translations",
+          "tx"
+        ]
+      }
+    },
+    {
+      "rank": 34,
+      "id": "fonts",
+      "kind": "folder",
+      "label": "Fonts",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "fnt",
+          "font",
+          "fonts",
+          "typeface",
+          "typefaces",
+          "webfonts"
+        ]
+      }
+    },
+    {
+      "rank": 35,
+      "id": "template",
+      "kind": "folder",
+      "label": "Templates",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".template",
+          ".templates",
+          "github/issue_template",
+          "github/pull_request_template",
+          "template",
+          "templates"
+        ]
+      }
+    },
+    {
+      "rank": 36,
+      "id": "theme",
+      "kind": "folder",
+      "label": "Theme",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons",
+        "greaticons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "color",
+          "colors",
+          "colour",
+          "colours",
+          "design",
+          "designs",
+          "palette",
+          "palettes",
+          "styles",
+          "theme",
+          "themes"
+        ]
+      }
+    },
+    {
+      "rank": 37,
+      "id": "log",
+      "kind": "folder",
+      "label": "Logs",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          "log",
+          "logger",
+          "loggers",
+          "logging",
+          "logs"
+        ]
+      }
+    },
+    {
+      "rank": 38,
+      "id": "temp",
+      "kind": "folder",
+      "label": "Temporary",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".temp",
+          ".tmp",
+          "cache",
+          "cached",
+          "temp",
+          "tmp"
+        ]
+      }
+    },
+    {
+      "rank": 39,
+      "id": "mock",
+      "kind": "folder",
+      "label": "Mocks",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".mocks",
+          "__mocks__",
+          "concept",
+          "concepts",
+          "draft",
+          "drafts",
+          "fixture",
+          "fixtures",
+          "mock",
+          "mocks",
+          "sketch",
+          "sketches"
+        ]
+      }
+    },
+    {
+      "rank": 40,
+      "id": "package",
+      "kind": "folder",
+      "label": "Packages",
+      "category": "folder",
+      "sources": [
+        "material",
+        "vsicons"
+      ],
+      "selectedBy": "multi-source",
+      "match": {
+        "extensions": [],
+        "filenames": [],
+        "languageIds": [],
+        "folderNames": [
+          ".package",
+          ".packages",
+          "dependencies",
+          "devpackages",
+          "package",
+          "packages",
+          "pkg",
+          "pkgs",
+          "serverpackages"
+        ]
+      }
+    }
+  ],
+  "matcherCollisions": [
+    {
+      "matcher": "lang:typescriptreact",
+      "kind": "file",
+      "winner": "reactts",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "typescript"
+      ]
+    },
+    {
+      "matcher": "ext:jsx",
+      "kind": "file",
+      "winner": "reactjs",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "js"
+      ]
+    },
+    {
+      "matcher": "lang:javascriptreact",
+      "kind": "file",
+      "winner": "reactjs",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "js"
+      ]
+    },
+    {
+      "matcher": "ext:json5",
+      "kind": "file",
+      "winner": "json5",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "json"
+      ]
+    },
+    {
+      "matcher": "ext:webmanifest",
+      "kind": "file",
+      "winner": "json",
+      "resolvedBy": "rank",
+      "losers": [
+        "node"
+      ]
+    },
+    {
+      "matcher": "name:jsconfig.json",
+      "kind": "file",
+      "winner": "jsconfig",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "json"
+      ]
+    },
+    {
+      "matcher": "name:tsconfig.json",
+      "kind": "file",
+      "winner": "tsconfig",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "json"
+      ]
+    },
+    {
+      "matcher": "lang:json5",
+      "kind": "file",
+      "winner": "json5",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "json"
+      ]
+    },
+    {
+      "matcher": "ext:css",
+      "kind": "file",
+      "winner": "css",
+      "resolvedBy": "rank",
+      "losers": [
+        "tailwind"
+      ]
+    },
+    {
+      "matcher": "ext:pcss",
+      "kind": "file",
+      "winner": "postcss",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "css"
+      ]
+    },
+    {
+      "matcher": "ext:postcss",
+      "kind": "file",
+      "winner": "postcss",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "css"
+      ]
+    },
+    {
+      "matcher": "ext:sass",
+      "kind": "file",
+      "winner": "sass",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "css"
+      ]
+    },
+    {
+      "matcher": "ext:scss",
+      "kind": "file",
+      "winner": "sass",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "css"
+      ]
+    },
+    {
+      "matcher": "ext:html",
+      "kind": "file",
+      "winner": "html",
+      "resolvedBy": "rank",
+      "losers": [
+        "django"
+      ]
+    },
+    {
+      "matcher": "name:package-lock.json",
+      "kind": "file",
+      "winner": "npm",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "node"
+      ]
+    },
+    {
+      "matcher": "name:package.json",
+      "kind": "file",
+      "winner": "npm",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "node"
+      ]
+    },
+    {
+      "matcher": "ext:npmrc",
+      "kind": "file",
+      "winner": "npm",
+      "resolvedBy": "rank",
+      "losers": [
+        "config"
+      ]
+    },
+    {
+      "matcher": "lang:diff",
+      "kind": "file",
+      "winner": "diff",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "git"
+      ]
+    },
+    {
+      "matcher": "ext:db",
+      "kind": "file",
+      "winner": "sqlite",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "sql"
+      ]
+    },
+    {
+      "matcher": "ext:db3",
+      "kind": "file",
+      "winner": "sqlite",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "sql"
+      ]
+    },
+    {
+      "matcher": "ext:pdb",
+      "kind": "file",
+      "winner": "binary",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "sql"
+      ]
+    },
+    {
+      "matcher": "ext:sqlite",
+      "kind": "file",
+      "winner": "sqlite",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "sql"
+      ]
+    },
+    {
+      "matcher": "ext:sqlite3",
+      "kind": "file",
+      "winner": "sqlite",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "sql"
+      ]
+    },
+    {
+      "matcher": "ext:raw",
+      "kind": "file",
+      "winner": "image",
+      "resolvedBy": "rank",
+      "losers": [
+        "audio"
+      ]
+    },
+    {
+      "matcher": "ext:plist",
+      "kind": "file",
+      "winner": "xml",
+      "resolvedBy": "rank",
+      "losers": [
+        "config"
+      ]
+    },
+    {
+      "matcher": "ext:targets",
+      "kind": "file",
+      "winner": "xml",
+      "resolvedBy": "rank",
+      "losers": [
+        "config"
+      ]
+    },
+    {
+      "matcher": "ext:pyc",
+      "kind": "file",
+      "winner": "python",
+      "resolvedBy": "rank",
+      "losers": [
+        "binary"
+      ]
+    },
+    {
+      "matcher": "ext:pyd",
+      "kind": "file",
+      "winner": "python",
+      "resolvedBy": "rank",
+      "losers": [
+        "binary"
+      ]
+    },
+    {
+      "matcher": "ext:pyo",
+      "kind": "file",
+      "winner": "python",
+      "resolvedBy": "rank",
+      "losers": [
+        "binary"
+      ]
+    },
+    {
+      "matcher": "ext:enc",
+      "kind": "file",
+      "winner": "license",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "audio"
+      ]
+    },
+    {
+      "matcher": "name:licence",
+      "kind": "file",
+      "winner": "license",
+      "resolvedBy": "rank",
+      "losers": [
+        "key"
+      ]
+    },
+    {
+      "matcher": "name:licence.md",
+      "kind": "file",
+      "winner": "license",
+      "resolvedBy": "rank",
+      "losers": [
+        "key"
+      ]
+    },
+    {
+      "matcher": "name:license",
+      "kind": "file",
+      "winner": "license",
+      "resolvedBy": "rank",
+      "losers": [
+        "key"
+      ]
+    },
+    {
+      "matcher": "name:license.md",
+      "kind": "file",
+      "winner": "license",
+      "resolvedBy": "rank",
+      "losers": [
+        "key"
+      ]
+    },
+    {
+      "matcher": "ext:csv",
+      "kind": "file",
+      "winner": "excel",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "text"
+      ]
+    },
+    {
+      "matcher": "ext:tsv",
+      "kind": "file",
+      "winner": "excel",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "text"
+      ]
+    },
+    {
+      "matcher": "lang:csv",
+      "kind": "file",
+      "winner": "excel",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "text"
+      ]
+    },
+    {
+      "matcher": "lang:tsv",
+      "kind": "file",
+      "winner": "excel",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "text"
+      ]
+    },
+    {
+      "matcher": "ext:inc",
+      "kind": "file",
+      "winner": "php",
+      "resolvedBy": "rank",
+      "losers": [
+        "assembly"
+      ]
+    },
+    {
+      "matcher": "ext:cmx",
+      "kind": "file",
+      "winner": "ocaml",
+      "resolvedBy": "rank",
+      "losers": [
+        "binary"
+      ]
+    },
+    {
+      "matcher": "ext:ogg",
+      "kind": "file",
+      "winner": "audio",
+      "resolvedBy": "rank",
+      "losers": [
+        "video"
+      ]
+    },
+    {
+      "matcher": "ext:exe",
+      "kind": "file",
+      "winner": "exe",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "binary"
+      ]
+    },
+    {
+      "matcher": "lang:makefile",
+      "kind": "file",
+      "winner": "makefile",
+      "resolvedBy": "rank",
+      "losers": [
+        "config"
+      ]
+    },
+    {
+      "matcher": "ext:cy.js",
+      "kind": "file",
+      "winner": "cypress",
+      "resolvedBy": "rank",
+      "losers": [
+        "testjs"
+      ]
+    },
+    {
+      "matcher": "ext:cy.ts",
+      "kind": "file",
+      "winner": "cypress",
+      "resolvedBy": "rank",
+      "losers": [
+        "testts"
+      ]
+    },
+    {
+      "matcher": "dir:utils",
+      "kind": "folder",
+      "winner": "utils",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "dist"
+      ]
+    },
+    {
+      "matcher": "dir:__mocks__",
+      "kind": "folder",
+      "winner": "mock",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "test"
+      ]
+    },
+    {
+      "matcher": "dir:mocks",
+      "kind": "folder",
+      "winner": "mock",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "test"
+      ]
+    },
+    {
+      "matcher": "dir:.github",
+      "kind": "folder",
+      "winner": "github",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "git"
+      ]
+    },
+    {
+      "matcher": "dir:styles",
+      "kind": "folder",
+      "winner": "styles",
+      "resolvedBy": "rank",
+      "losers": [
+        "theme"
+      ]
+    },
+    {
+      "matcher": "dir:_layout",
+      "kind": "folder",
+      "winner": "layout",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "view"
+      ]
+    },
+    {
+      "matcher": "dir:_layouts",
+      "kind": "folder",
+      "winner": "layout",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "view"
+      ]
+    },
+    {
+      "matcher": "dir:layout",
+      "kind": "folder",
+      "winner": "layout",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "view"
+      ]
+    },
+    {
+      "matcher": "dir:layouts",
+      "kind": "folder",
+      "winner": "layout",
+      "resolvedBy": "hand-pinned",
+      "losers": [
+        "view"
+      ]
+    }
+  ]
+}
