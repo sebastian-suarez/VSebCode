@@ -177,13 +177,17 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   1554 generic name rules that would shadow core extension rules are
   dropped by build-theme.mjs. Geist r6 checked: view-1 icon defs still
   `-apple-system` — icon letterforms (Inter paths matched to the approved
-  canon) unaffected. **GATE: Sebastian's full-set pass** — flag list on
-  the sheet §5 (yaml plum veto · git↔claude dark-retint swap [session
-  recommends: restore git #E0603C, nudge claude] · swagger ring · maven
-  MVN vs feather · clojure/erlang letters vs marks · expo E · C-trio
-  post-retint read · css/html shared canon shield). Then fork packaging
-  (built-in extension + default flip; theme PATH_PREFIX one-string
-  change).
+  canon) unaffected. **GATE RULED 2026-09-01 ("Do all of them") +
+  three-round execution complete**: yaml brand-true (R10a), git
+  bright/claude lighter (measured deviation accepted), expo arch +
+  clojure split-circle shipped on 16px proofs, maven/erlang letters kept
+  on failed proofs, maven lifted via the saturation escape #A4656B after
+  the micro-fix agent disproved the stated targets and withdrew the
+  two-icon plan on evidence — full detail in Tasks § M11 +
+  reconciliation.md. Audit exit 0, validator 237/237, sheet republished
+  (same URL, `full-set-v2-ruled`). **FORK PACKAGING IN FLIGHT**: built-in
+  extension + FILE_ICON_THEME default flip; then pin bump + Sebastian's
+  compile/virgin-boot.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

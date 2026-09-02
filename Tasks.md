@@ -934,14 +934,34 @@ default icon theme in the fork. Working dir: `m11-icons/` (umbrella).
   https://claude.ai/code/artifact/e3f8fc9e-9d7d-4ce3-98ba-f39b7a24cb83 ;
   validator 237/237 re-run by the session; Geist r6 checked — icon canon
   letterforms unaffected (view-1 defs still -apple-system)
-- [ ] **GATE — Sebastian's full-set pass** (sheet §5 flag list; session
-  recommendations recorded on the board M11 entry). Known small calls:
-  requirements.txt → text not python (inventory matcher, one-line);
-  contact-full.png is 5.1MB (chat upload will fail; artifact is the view)
-- [ ] Fork packaging after the gate (delegated implementation): built-in
-  icon-theme extension in `vscode/` modeled on theme-seti, svg tree +
-  theme JSON (PATH_PREFIX → ./icons), product default flip D15-style;
-  hooks ON; then Sebastian compiles + virgin-boot verifies per house rules
+- [x] **GATE RULED 2026-09-01 — Sebastian: "Do all of them"** (three-round
+  execution, all gates green): yaml → brand `#CB171E` (R10a ruled
+  exception vs npm — his call, separation rests on letters + value gap);
+  git restored `#E0603C`, claude → `#E2957E` (LIGHTER, vs the ruling's
+  "darker" — measured: every R7-clearing dark bury ~45% of the sunburst's
+  thin spikes; one-line invert `#85381E` recorded; svelte −3L
+  consequence); expo → rounded-arch mark SHIPPED (16px proof 1.00/2%),
+  clojure → brand split-circle SHIPPED (1.00/2%, white-on-plate); maven
+  feather + erlang mark FAILED the 16px proof honestly → letters kept.
+  Maven legibility follow-up: micro-fix agent DISPROVED the stated
+  peak/faint targets (peak = hex-vs-bg property, faint = letterform alpha
+  floor), withdrew the approved two-icon exit on evidence (turborepo
+  would become the new dimmest at 0.18) and surfaced the saturation
+  escape — ruled + shipped `#A4656B` (0.21→0.40 peak, 62→32% faint, ONE
+  icon, turborepo untouched; erlang-axis ΔL 12.2 thin-margin accepted,
+  `#A15E65` alternative recorded). Audit exit 0 (accepted: npm/yaml
+  ruled · css/html · font/generic-font), validator 237/237, sheet
+  republished (`full-set-v2-ruled`, same artifact URL). Tooling caveat:
+  `make-set-manifest.mjs` rerun would strip hand-added round keys — fix
+  before any manifest regen. requirements.txt → text (inventory matcher
+  call, revisit if wanted)
+- [ ] Fork packaging IN FLIGHT 2026-09-01 (delegated implementation):
+  built-in icon-theme extension in `vscode/` modeled on theme-seti's full
+  footprint, svg tree + theme JSON (iconPath prefix adjusted + structural
+  self-check re-run), `ThemeSettingDefaults.FILE_ICON_THEME` flip
+  D15-style, hooks ON, compile + checks; vscode commit only — push =
+  Sebastian, pin-bump + workshop commit = session, then Sebastian
+  compiles + virgin-boot verifies per house rules
 - [ ] Package as a built-in icon-theme extension in `vscode/` + product default
   (delegated implementation; D15-style bake)
 - [ ] Acceptance: virgin build boots with the VSebCode icon set as default
