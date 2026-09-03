@@ -210,8 +210,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   verdict (shared-tree state incl. the peer D23 records — all
   post-ruling). M12 remains open only for the packaged-verification
   close-out (markers list in Tasks § M12 Close).
-- **M13 — Grid surgery BUILT + battery-green 2026-09-03 — SEBASTIAN
-  CHECKPOINT PENDING**: the D20-amendment geometry is in source — the
+- **M13 — Grid surgery BUILT + battery-green 2026-09-03 — CHECKPOINT
+  APPROVED same day ("Approved, commit it"; flags ruled in-session,
+  see Tasks § M13)**: the D20-amendment geometry is in source — the
   sidebar rail runs the FULL window height and owns the bottom-left
   corner; statusbar + banner live INSIDE the editor column (root =
   [titlebar, main row]; column = editor → panel → banner → statusbar).
@@ -231,12 +232,11 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   all-green incl. the in-column Restricted-Mode banner, aux-maximized
   evacuation (S3's live find: the statusbar used to pin to the WINDOW
   TOP), S0's banner-split repro dead, stored-splash + splash-frame
-  proofs; screenshots delivered. Awaiting his corner + seam pass;
-  7 flags for verdicts (key: vertical-panel fallback ratification,
-  maximize-predicate clamp, the inert sidebar focus-radius rule,
-  launch-vm arg-forwarding bug found en route). Details + resume in
-  Tasks § M13; packaged markers ride the next packaged pass with
-  M12's.
+  proofs; screenshots delivered. Corner + seam pass APPROVED
+  2026-09-03; pin bump committed on the verdict (docs rode the peer
+  M20 fold `9d44a81`), pushes his. Flag verdicts + any follow-ups
+  recorded in Tasks § M13; packaged markers ride the next packaged
+  pass with M12's.
 - **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as

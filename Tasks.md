@@ -1730,11 +1730,9 @@ cleanest).
   (full-height strip, column statusbar, before the workbench loads).
   Screenshots delivered in-chat (banner scene, SCM one-column scene on the
   full-height rail, stacked panel scene, splash frame).
-- [ ] **Checkpoint (Sebastian) — the judge**: the corner (rail owns bottom-left,
-  sections reach the bottom), the seam (statusbar starts at the editor
-  column's left edge; top hairline spans only the column), banner-in-column
-  (open any untrusted folder), panel/aux interplay if you care. Quit + relaunch
-  `./scripts/code.sh` — out/ is current.
+- [x] **Checkpoint (Sebastian) — APPROVED 2026-09-03 ("Approved, commit it")**:
+  corner + seam pass on the dev instance; pin bump committed on the verdict.
+  Flag verdicts ruled in-session, recorded below.
 - [ ] **Flags for verdicts** (all implemented-as-described; none block the judge):
   (1) VERTICAL panel (left/right) falls back to the stock full-width statusbar
   — session call consistent with the ratified sidebar-right fallback (no
