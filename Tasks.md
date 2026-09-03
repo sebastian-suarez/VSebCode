@@ -1791,14 +1791,116 @@ cleanest).
 
 ### M14 — Lualine statusbar (approved bar: NORMAL │ branch · +n ~n −n · ⚠n … Ln,Col · % · UTF-8 · LF · lang; NO mode block until M17)
 
-- [ ] Composition contribution on the existing entry model (addEntry /
-  overrideEntry / updateEntryVisibility + flat-segment CSS; custom-DOM entry for
-  the tri-color diff segment); stock drop-list = flag round at the brief
-  (hide-set is user-overridable by construction)
-- [ ] NEW segments built fresh: working-tree diff counts (SCM resource groups /
-  quick-diff) + scroll % (active editor visible ranges)
-- [ ] Don't trample: M1 drag/no-drag pair, D9/D10 opaque backstop, banner-last
-  grid, hover-grouping inline-background JS
+- [x] **Brief flag round RULED (Sebastian 2026-09-03, all four as recommended)**:
+  (1) DROP-LIST — all five hidden by default via `updateEntryVisibility`
+  (user-restorable by right-click; seed applied ONCE per profile so re-shows
+  stick): `status.host` remote indicator, `status.scm.1` sync-changes,
+  `status.editor.indentation`, `status.notifications` bell,
+  `status.languageStatus` braces. Conditional stock entries (debug, tasks,
+  ports, zoom, screen-reader…) untouched — they appear in their scenarios.
+  (2) ZERO-HIDING — lualine-true: problems segment shows only non-zero tiers
+  (info tier never; whole segment gone at 0/0, stock `status.problems` hidden,
+  replaced by an own entry), diff segment gone when the active file is clean;
+  dot separators collapse with their segment. (3) SCROLL % — vim ruler
+  formula: floor(cursorLine × 100 / totalLines), plain `N%` (session finding:
+  the mockup's 33% = Ln 35 of the ~106-line scene = cursor-line %, NOT
+  viewport offset ~5% — coherent-numbers law). (4) BRANCH TEXT — bare name:
+  dirty-suffix markers stripped in the built-in git extension's checkout
+  title; the diff segment carries dirtiness. Session groundwork verified:
+  every mockup hex IS the 2026-dark resolved value (statusBar #191A1B/#8C8C8C,
+  diff = editorGutter added/modified/deleted #72C892/#0078D4/#F28772, warn
+  #CCA700) — zero theme edits; diff counts = ACTIVE-FILE line hunks
+  (board: "+6 ~2 −1 ↔ drawn gutter hunks"), quick-diff sourced.
+- [x] **Both commits LANDED 2026-09-03** (delegated; diffs reviewed; hooks ON,
+  no attribution; NOT pushed, pin bump waits on the checkpoint):
+  `7156c311105` composition — new contrib
+  `src/vs/workbench/contrib/lualineStatus/` (layering-legal home for the
+  quick-diff import; registered desktop.main, `isMacintosh && isNative`,
+  AfterRestored) + M14 CSS block appended to statusbarpart.css (agent call,
+  fork precedent; zero `!important`, backgrounds/radii untouched); entries
+  `status.vsebcode.diff` LEFT 9999 / `.problems` LEFT 9998 (replaces stock
+  `status.problems`, cmd toggleProblems, 10K+ packing kept) /
+  `.scroll` RIGHT 100.45; seed key
+  `workbench.statusbar.vsebcode.dropSeed` (PROFILE/USER — same scope as the
+  hidden set); custom-DOM segments ride a BLANK stock label (' ', not '')
+  stretched inset:0 under the painted content — keeps hitbox/hover/focus/
+  aria/command alive with no `!important` (empty text would be display:none
+  + aria-hidden); dot = ::before at right:100% in a 22px margin gutter on
+  the vsebcode items, `first-visible-item` kills the leading dot; diff
+  counts replicate QuickDiffDecorator's filter byte-for-byte (visible
+  providers, non-primary overlap suppressed); U+2212 escaped (hygiene
+  unicode allowlist). `a6ec5af786d` git ext — checkout TITLE uses new
+  `bareHeadLabel` (headLabel's ref line minus the `*`/`+`/`!` ternaries —
+  no regex, a `feat+` branch survives); tooltip/icon/rebase/running-ref
+  untouched. Verification (agent, reviewed): compile 0, typecheck-client 0,
+  valid-layers-check 0, git-ext tsc 0, eslint 0 on touched files, hooks
+  passed, statusbar model suite 10/10 pre=post, drop ids ×1 each,
+  i18n.resources.json entry (eslint code-translation-remind).
+- [x] Don't trample — verified in review + live: M1 drag/no-drag (probed:
+  bar=drag, items=no-drag), D9/D10 backstop + M13 radius rules untouched
+  (CSS diff), hover-grouping JS live (hover paints #323233 inline).
+- [x] **Session VM battery (D23) ALL-GREEN 2026-09-03** (virgin guest UDD,
+  /tmp/m14-demo repo, branch `vsebcode`, 106-line clean file): trust-gated
+  boot then bar = bare `vsebcode` alone (clean repo: no dots, no diff/
+  problems segments; scroll 0% at Ln 1; right order selection→scroll→
+  encoding→eol→mode; NO Spaces/braces/bell/remote/sync — all 6 hidden in
+  DOM); disk edits +6/~2/−1 (3 hunks, numstat 8/3) → segment `+6 ~2 −1` in
+  the exact theme rgb (114,200,146 / 0,120,212 / 242,135,114), branch stays
+  BARE with dirty tree (commit 2 live), aria "6 lines added…"; bad.json
+  (1 err + 2 dup-key warns) → `⊗1 ⚠2` (#F14C4C / #CCA700), tooltip
+  "Errors: 1, Warnings: 2"; active-editor switch to clean file → diff
+  segment fully REMOVED (0 DOM nodes), problems dot follows branch directly
+  (no stray dots any combination); Ln 37 → 33% = floor(37·100/111) exact;
+  native context menu (native titlebar ⇒ native menus, invisible to CDP —
+  driven via guest osascript key codes, no extra TCC needed) shows every
+  drop as an unchecked restorable row; bell re-shown through the REAL menu
+  → visible, then NEW WINDOW ran the seed path again: marker respected,
+  bell STAYS (state.vscdb: hidden = the 5 ids minus notifications,
+  dropSeed=true); bell re-hidden for the design state. Screenshots
+  delivered (full bar + context menu + flow-ins flag scene + design
+  state). Battery ledger adds: playwright daemon idle-drops the CDP
+  attach — re-attach same session name; statusbar right-click = NATIVE
+  menu under our titlebar default (osascript `key code` drives it).
+- [x] **Flag round RULED 2026-09-03 (question round)**: (3) FLOW-INS — the
+  auto-attach chip (`vscode.debug-auto-launch.status.debug.autoAttach`) and
+  `statusbar.currentProblem` JOIN the default drop set (functionality
+  keeps working — auto-attach setting + problems.showCurrentInStatus bake
+  both stay; chips right-click restorable); the GIT BLAME statusbar item
+  stays VISIBLE as stock (the editor's inline blame is a separate surface,
+  unaffected). (4) diff zero-tier hiding APPROVED as built. Fix round
+  delegated (same agent): the two new drops behind a VERSIONED seed —
+  already-seeded profiles get ONLY the delta, user re-shows survive, v1
+  five never re-applied; plural nit ("1 lines removed") folded in.
+  Spacing flags (1) 0-inset hover boxes + (2) 22px dot gutter = judged at
+  Sebastian's visual pass with the checkpoint verdict.
+- [x] **Fix round LANDED + upgrade-battery green 2026-09-03** (same agent;
+  diff reviewed): `6d907e2fc2a` — drop set restructured into GENERATIONS
+  (g1 = the six, g2 = auto-attach chip id
+  `vscode.debug-auto-launch.status.debug.autoAttach` — verified in source:
+  extHostStatusBar composes `${extensionId}.${entryId}` — +
+  `statusbar.currentProblem`); marker now stores the seeded generation
+  (legacy boolean 'true' parses as g1; NaN-safe), `DROP_SEED_GENERATION`
+  derived from the last group so the pair can't drift; upgrade contract
+  commented: NEVER extend an old generation, always add a new one. Plural
+  nit fixed house-style (conditional 1/N localize per tier; aria keeps
+  zero tiers enumerated — agent deviation, kept: fuller for screen
+  readers). git blame item untouched (grep-proved). Compile 0,
+  typecheck-client 0, eslint 0, hooks passed. VM battery: VIRGIN profile →
+  all 8 hidden in one pass, marker '2', auto-attach chip gone from the
+  boot bar; V1→V2 UPGRADE simulated for real (DB downgraded to
+  marker='true' + hidden=five-minus-bell, manual same-UDD relaunch) →
+  delta applied (7 hidden: five + two new), bell STAYED visible, marker
+  → '2'. Battery ledger adds: recompiling while the VM runs poisons the
+  guest's virtiofs view of out/ (dir listing fine, reads ENOENT) — reboot
+  the VM after host recompiles before launching.
+- [x] **CHECKPOINT APPROVED 2026-09-03 ("Approved the mas commit and
+  continue with the next step")**: both sight-flags stand as built
+  (0-inset hover boxes, 22px dot gutter); pin bump + doc fold committed
+  on the verdict (docs carry the peer M20 A01 gate-pending records —
+  shared-tree precedent); pushes his (fork ahead 3 + the pin bump).
+  Parity note stands: the branch TOOLTIP still reads
+  `vsebcode*, Checkout Branch/Tag...`. Packaged markers ride the next
+  packaged pass with M12/M13's.
 
 ### M15 — Neo-tree explorer keyboard UX
 
@@ -2000,16 +2102,55 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   the 7-box deck stands. Pilot committed `0007b9b` (84 files: pilot/ +
   tools/ + sources-svg/, add-by-path; rejected bytes kept in
   `pilot/rejected/` as history).
-- [ ] Production slices (NEXT, own sessions — one slice batch per session):
+- [ ] Production slices (own sessions — one slice batch per session):
   file + folder slices sized like v1's A01–A12 / F01–F06, each review-gated on
   its contact sheet. Worklist = `m11-icons/production/longtail-worklist.json` +
-  set-manifest ids (payload-only swap, associations untouched). Toolchain
-  ready: extend `m20-icons-v2/tools/sources.mjs` per subject (the pilot's 20
-  specs are the pattern — parts in source coords + envelope fit + provenance +
-  logged simplifications), outputs/gates run via `node tools/gates.mjs`; §5 +
-  the pilot-ruled errata are the law (gestalt erratum, color tiebreak,
+  set-manifest ids (payload-only swap, associations untouched); §5 + the
+  pilot-ruled errata are the law (gestalt erratum, color tiebreak,
   backdrop-lift scope, open-folder shade formula, plate lane in the audit).
   Letter audit stays dormant in R1 (assert 0 typeset letters per slice)
+- [ ] **SLICE A01 BUILT 2026-09-03 (own session, 3 delegated tranches; session
+  re-ran gates + reviewed proofs/sheet each round) — SEBASTIAN GATE PENDING.**
+  All 84 worklist concepts (5 archive · 8 binary · 71 code, android→bolt).
+  Toolchain made SLICE-AWARE this session: `node tools/gates.mjs A01` builds +
+  gates `slices/A01/` (no arg = pilot mode, unchanged); slice registry =
+  `tools/slices/A01.mjs` merging tranche modules `A01.t1/t2/t3.mjs` (contract
+  at the top of A01.mjs — dropping a module file in is the whole integration);
+  shared spec engine extracted to `tools/spec-engine.mjs` + `targets.mjs` /
+  `roster.mjs` / `build-slice.mjs` / `check-slice.mjs` / `build-slice-sheet.mjs` /
+  `studies.mjs`; pilot re-gated BYTE-FROZEN after every round (git-clean proven;
+  the slice check re-asserts it every run). Gates green: check 0 fail /
+  4 advisories (debian+python-misc >2KB, D22-priced), 16px proofs 79 pass +
+  5 marginal (debian, onnx, alchemy, avro, bats — each the mark's own
+  construction, recorded per icon), twin audit 0 twins / 0 form collisions
+  (52 colour hits separated by form; 29 family + 782 collapse pairs declared
+  in their own lanes, never silent), letter audit 0 typeset. 20 branded ships
+  incl. SAP, chrome (Google's own file), TOTVS's advpl family in its own four
+  official hues (new family mode `recolour`), bicep (FIRST Microsoft mark:
+  Azure/bicep plain MIT, no trademark rider — checked), arduino, bazel, avro,
+  gpg, pytorch, adonis, allure. TWO WORKING RULES opened with the slice
+  (recorded in manifest + on the sheet, need ratification): R1-families
+  (variant glyph in official colours / byte-identical base / brand's own
+  recolour) and R2-collapse (mark-less → neutral vocabulary). Headline flags:
+  **40/84 byte-identical on the gray generic-code glyph** (letters banned +
+  marks unsourceable or 16px-hostile; two relief levers measured — 3 extra
+  object glyphs or L2 tier-3 relaxation); **angular ×7 one red payload**
+  (Material has NO variant geometry — clone+colour entries only, verified in
+  the pinned source); antlr's real mark REMOVED by the twin gate vs chrome
+  (0.798 form on the 0.72 bar); corporate-mark line ruled testable + then
+  CORRECTED by t3 (flag 25: simple-icons DOES carry `dotnet`/`blazor`;
+  github.com/dotnet/brand is CC0 — csharp/fsharp/vb noted for later slices);
+  Azure declined on Microsoft's own published terms (but Azure/bicep vendors
+  the full Azure icon set under MIT — Sebastian's call, flag 26); bench-*
+  per-language family precedent (flag 24, generalises to test-js/spec-ts
+  kin). 35 numbered flags total, full text on the sheet §5 +
+  `slices/A01/manifest.json`. Sheet →
+  https://claude.ai/code/artifact/8a69846a-43c3-4479-a078-c52b901e9cd1
+  (`slices/A01/sheet.html`, same path = same URL). NOTHING committed:
+  slice outputs + tranche modules + 25 new sources-svg files untracked, 6
+  tool files modified unstaged — commit rides the gate verdict (pilot
+  precedent). `.playwright-cli/` at repo root = disposable headless-shell
+  cache from the shot tooling, not a deliverable.
 - [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
   associations untouched, iconPaths only
 - [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
@@ -2017,10 +2158,19 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
   folder differentiation at tree size)
 
-Resume cold: read the style guide (§5 + the pilot errata = the law). PILOT CLOSED
-2026-09-03, approved + committed (`0007b9b`); sheet artifact a6ff6bf2… (republish =
-same `pilot/sheet.html` path from its session, or pass the URL). Next phase =
-production slices (see that item above for worklist/toolchain/laws). Start a slice
-session by picking the first file-slice ids from the m11 worklist, extending
-sources.mjs, and gating on `node tools/gates.mjs`; slice sheets get their own
-artifact URLs, one per slice review.
+Resume cold: read the style guide (§5 + the pilot errata = the law) and the
+SLICE A01 item above. STATE 2026-09-03: A01 built, gates green, GATE PENDING —
+Sebastian rules the sheet's 35 flags (headliners: the 40-way collapse, angular ×7,
+antlr-vs-chrome, the corporate-mark line incl. flag 26's Azure-via-MIT question,
+bench-* precedent). Sheet artifact 8a69846a… (republish = same
+`slices/A01/sheet.html` path from its session, or pass the URL). Re-run gates:
+`cd m20-icons-v2 && node tools/gates.mjs A01` (pilot mode = no arg; both must stay
+green). ON APPROVAL: commit add-by-path (modified tools + tools/slices/ +
+slices/A01/ + new sources-svg/*, umbrella only, no pin) with ruled flags folded
+into the style guide as errata (working rules 1+2 become law; per-flag rulings
+recorded like the pilot's), rejected subjects get a fix round first (pilot
+precedent). THEN next slice session = A02 (`m11-icons/production/
+longtail-worklist.json` slices[1]): write `tools/slices/A02.t*.mjs` per the A01
+contract (A01.t1.mjs is the pattern), gate via `node tools/gates.mjs A02`, new
+sheet artifact per slice. Ruled A01 flags bind A02+ (esp. the collapse ruling,
+family modes, corporate line, dotnet-CC0 note for csharp/fsharp/vb).

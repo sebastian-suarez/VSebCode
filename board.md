@@ -237,6 +237,33 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   M20 fold `9d44a81`), pushes his. Flag verdicts + any follow-ups
   recorded in Tasks § M13; packaged markers ride the next packaged
   pass with M12's.
+- **M14 — Lualine statusbar BUILT + battery-green 2026-09-03 — CHECKPOINT
+  APPROVED same day ("Approved the mas commit"; both sight-flags stand as
+  built — 0-inset hover boxes, 22px dot separator gutter)**: the approved
+  bar is in source — `⎇ branch · +n ~n −n · ⊗n ⚠n … Ln,Col · % · UTF-8 ·
+  LF · lang`, NO mode block until M17. New contrib
+  `workbench/contrib/lualineStatus` (mac-native, AfterRestored):
+  tri-color active-file diff counts off the same quick-diff model the
+  gutter draws (visible-provider filter replicated), two-tier zero-hiding
+  problems segment (replaces stock `status.problems`, toggle command
+  kept), vim-ruler scroll % (floor(line·100/total)); custom-DOM segments
+  ride a blank stock label so hitbox/hover/aria/command stay stock. Drop
+  set seeded ONCE per profile behind a GENERATION-versioned marker (g1 =
+  six stock ids incl. stock problems, g2 = auto-attach chip +
+  `statusbar.currentProblem` per the flag round; right-click re-shows
+  survive upgrades). Git extension: checkout title shows the BARE branch
+  name (`bareHeadLabel`; tooltip keeps the dirty markers). Zero
+  `!important`; M1 drag map, D9/D10 backstop and M13 radii untouched.
+  Three delegated commits on the fork (`7156c311105` composition →
+  `a6ec5af786d` bare branch → `6d907e2fc2a` generational seed + plural
+  fix), each diff-reviewed, hooks ON. Two VM batteries (D23) all-green:
+  mockup-exact bar in exact theme rgb, Ln 37 → 33%, zero-hiding dot
+  collapse, bare branch on a dirty tree, native context-menu restore, and
+  the v1→v2 seed upgrade with a user re-show surviving (DB-proven);
+  screenshots delivered. Flag rounds + battery ledger in Tasks § M14. Pin
+  bump committed on the verdict (docs carry the peer M20 A01 gate-pending
+  records — shared-tree precedent); pushes his; packaged markers ride the
+  next packaged pass with M12's.
 - **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
@@ -308,10 +335,26 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   sheet republished, same URL. **APPROVED (Sebastian, same day) —
   PILOT CLOSED, committed `0007b9b`**; flag 14 ruled with it (the
   brand's own vector stays the source, its repo's missing license
-  recorded in provenance; CC0 fallback documented). NEXT (own
-  sessions, one slice batch each): production slices off the m11
-  worklist through the pilot toolchain — then assembly, then the
-  single integration swap commit. Details + resume in Tasks § M20.
+  recorded in provenance; CC0 fallback documented). **SLICE A01 BUILT
+  2026-09-03 (own session, 3 delegated tranches, gates re-run +
+  proofs/sheet reviewed per round) — SEBASTIAN GATE PENDING**: all 84
+  worklist concepts (android→bolt); toolchain made slice-aware
+  (`node tools/gates.mjs A01` → `slices/A01/`; pilot re-gated
+  BYTE-FROZEN, git-proven every round). Gates green (check 0 fail,
+  16px 79+5 marginal, twins 0/0 with family+collapse lanes declared,
+  letters 0). 20 branded ships (SAP, chrome, TOTVS's own 4-hue advpl
+  family, bicep = first Microsoft mark via clean MIT, arduino, bazel,
+  avro…); headline flags for the gate: 40/84 collapse byte-identical
+  onto the gray generic-code glyph (letters banned + marks
+  unsourceable/16px-hostile; relief levers measured), angular ×7 one
+  red payload (Material has no variant geometry), antlr's real mark
+  removed by the twin gate vs chrome, corporate-mark line + t3's
+  dotnet-CC0 correction, bench-* per-language precedent. 35 flags on
+  the sheet →
+  https://claude.ai/code/artifact/8a69846a-43c3-4479-a078-c52b901e9cd1
+  (`slices/A01/sheet.html`). Nothing committed until the verdict
+  (pilot precedent). Then: A02+ slices → assembly → the single
+  integration swap commit. Details + resume in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
