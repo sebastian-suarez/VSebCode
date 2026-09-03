@@ -1811,12 +1811,42 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   reductions for 16px-hostile official marks) — §5 recipe card locked into the
   guide; both rounds' errata folded in (L5 1.2px official floor, L6 achromatic
   exemption, L8 2KB advisory, neutral-folder white-mark rule)
-- [ ] Commit the samples workshop (rides with the pilot session: add
-  `m20-icons-v2/.gitignore` for `samples/tools/node_modules/` +
-  `samples/sources-svg/` call, then track masters/r1-true/tools/sheet/sources.json;
-  round1-rejected/ = history, session's call)
-- [ ] Pilot ~24 icons (8 sample subjects + worst v1 offenders + 4 folder pairs
-  closed+open) through all L9 gates → Sebastian gate BEFORE mass production
+- [x] Samples workshop committed (`2fef461`, 2026-09-03, pilot session):
+  `.gitignore` ignores `samples/tools/node_modules/` + `tools/node_modules/`;
+  session calls per the delegation — `sources-svg/` TRACKED (inputs to the
+  standing fidelity gate; licenses in sources.json) and `round1-rejected/`
+  TRACKED (rejected history, house style); everything else under samples/
+  tracked too (119 files — all four treatment dirs stay, check.mjs gates all
+  five; sheet.html/png + fidelity-proof.png = review evidence, m11 precedent)
+- [x] **Pilot BUILT 2026-09-03 (delegated; session re-ran gates + reviewed
+  proofs/sheet) — SEBASTIAN GATE PENDING.** 24 icons in `m20-icons-v2/pilot/`
+  + production toolchain `m20-icons-v2/tools/` + artwork store
+  `m20-icons-v2/sources-svg/` (all three UNTRACKED until the gate;
+  rebuild: `cd m20-icons-v2 && node tools/gates.mjs`). Roster: 10 carried
+  file masters (byte-identical to samples, asserted in check) + 6 autopsy
+  offenders rebuilt from official artwork (npm = the brand's own 16×16
+  square lockup; dotenv = prettier-rider ".E" reduction; yaml = the real
+  YA/ML lockup, NOT mark-less as guessed; git #F05032 diamond; go wordmark
+  minus 0.37px motion lines; vue two-tone from vuejs/art) + 4 folder pairs
+  closed+open (src, node carried; test = white check; docker = white whale,
+  containers dropped at face scale). Gates: check 0 fail / 6 advisories
+  (editorconfig·rust·python carried >2KB, D22-priced); 16px proofs 19 pass +
+  5 marginal (editorconfig, eslint, rust, yaml, vue — recorded per icon in
+  manifest.json); fidelity strips new+all; twin audit 0 twins / 0 form
+  collisions, 7 color hits separated by form, 4 blues measured clear, new
+  PLATE sub-rule (plates score glyph-to-glyph); letter audit 0 typeset.
+  Sheet → https://claude.ai/code/artifact/a6ff6bf2-1af0-4877-b5b4-f059239ec0d7
+  (`pilot/sheet.html`, same path = same URL) — 13 numbered flags, key ones:
+  open-folder NEW construction (v1 two-panel silhouette + shade(body)=
+  hsl(h,s,max(18,l−15)); white mark byte-identical both states so it crosses
+  the panel seam), color source-of-truth conflict (brand-colors.json vs the
+  brands' own files: npm/git/go differ; rule applied = brand-colors wins
+  primary, artwork wins secondary layers — UNRATIFIED), dotenv ".E"
+  (fallbacks: bare field or single E), yaml 16px = red letter block (the
+  mark's own construction, not a fit failure), vue inner #35495E at 2.01:1
+  kept faithful (eslint 2.25:1 = D22 precedent; lift-rule wording clarified:
+  applies to ink that MEETS THE BACKDROP — errata candidate). Pilot commit +
+  guide errata fold wait on the verdicts.
 - [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
   review-gated on its 16/22px contact sheet; letter audit (L3 table by measurement)
   where the style has letters
@@ -1827,6 +1857,8 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
   folder differentiation at tree size)
 
-Resume cold: read the style guide; check `m20-icons-v2/samples/` (sheet.png = the
-4-style comparison). If D22 is unruled, re-present the sheet and ask; if ruled, the
-board records it — proceed to the pilot.
+Resume cold: read the style guide (§5 = the law); the pilot is BUILT and untracked in
+`m20-icons-v2/pilot/` (sheet.png = the full review page; verify with
+`cd m20-icons-v2 && node tools/gates.mjs`). If the pilot gate is unruled, re-present
+the pilot sheet artifact and ask; on the verdicts: commit tools/ + sources-svg/ +
+pilot/ (+ fold any ruled errata into the guide), then start production slices.

@@ -248,10 +248,25 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   the ruled reduction. Sheet republished same URL (`round2-faithful`).
   Recipe card locked into the guide (§5); guide errata from both rounds
   folded in (L5 1.2px official floor, L6 achromatic exemption, L8 2KB
-  advisory, R2-folder neutral-white rule). NEXT (own session): pilot
-  ~24 icons through the §5 gates → Sebastian gate → slices. Samples
-  commit rides with the pilot session (tools need a node_modules
-  .gitignore first).
+  advisory, R2-folder neutral-white rule). **PILOT BUILT 2026-09-03
+  (pilot session, delegated; gates re-run + proofs reviewed by the
+  session) — SEBASTIAN GATE PENDING**: samples workshop committed
+  (`2fef461`; session calls — sources-svg + round1-rejected both
+  tracked); 24 icons untracked in `pilot/` + production toolchain
+  `tools/`: 10 carried masters byte-identical (asserted), 6 autopsy
+  offenders rebuilt from official artwork (npm square lockup ·
+  dotenv ".E" rider reduction · yaml's real YA/ML lockup · git
+  diamond · go wordmark · vue two-tone), 4 folder pairs closed+open
+  (src · node · test · docker). All gates green: check 0 fail,
+  16px proofs 19+5 marginal, twin audit 0 twins (4 blues clear),
+  0 typeset letters. Pilot sheet →
+  https://claude.ai/code/artifact/a6ff6bf2-1af0-4877-b5b4-f059239ec0d7
+  — 13 flags await verdicts, key: open-folder NEW construction
+  (shade formula, mark crosses the seam), color source-of-truth
+  rule unratified (brand-colors.json vs brand files), dotenv ".E",
+  yaml 16px readability, vue dark half faithful at 2.01:1 (eslint
+  D22 precedent). Details + resume in Tasks § M20. Pilot commit +
+  slices wait on the gate.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
