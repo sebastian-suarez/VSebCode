@@ -272,9 +272,15 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   lost the drawing. Fix round delegated + running (mascot rebuilt as
   drawn-feature rider reduction; deck densified at official box
   geometry, candidates measured, agent stops on a tie; other 22
-  byte-frozen, asserted). Then: session review → republish same URL
-  → his re-look at the two → pilot commit → slices. Details + resume
-  in Tasks § M20.
+  byte-frozen, asserted). **Fix round LANDED same day** (session
+  re-ran gates + reviewed): docker deck → 3+3+1 seven boxes (official
+  box geometry, 9-candidate study proves the ceiling), editorconfig
+  RE-SOURCED to the brand's own vector — the drawn mascot with solid
+  spectacles in official colors; only 4 SVGs changed (asserted);
+  sheet republished, same URL. PENDING: his re-look at the two +
+  flag 14 (editorconfig artwork repo has NO license; CC0 fallback
+  exists but needs a byte reduction) → pilot commit → slices.
+  Details + resume in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

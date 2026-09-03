@@ -1859,17 +1859,31 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   D22's per-icon fidelity verdicts AMENDED for the two carried subjects:
   docker's 3+1 deck lost the loaded-cargo pyramid; editorconfig's solid
   silhouette destroyed the drawn mascot (the official mark is line art).
-- [ ] Fix round (delegated, running): editorconfig re-derived as a
-  prettier-rider reduction of the drawn mascot (light face + dark features
-  ≥1.2px at official proportions; brand vector checked first per L2); docker
-  deck densified at official box geometry (3+2 / 4+2 candidates measured at
-  the 1.2px floor, comparison PNG saved regardless; agent stops on a tie);
-  folder-docker + the other 22 icons byte-frozen (asserted); carry-identity
-  gate reworked to 10 identical + 2 pilot-superseded; full gate re-run;
-  sheet regenerated with a fix-round strip (v1 → rejected pilot → fixed,
-  official source beside) and RULED markers on flags 1–5/8–10. Then:
-  session review → republish same artifact URL → Sebastian re-look at the
-  two fixed icons → pilot commit (tools/ + sources-svg/ + pilot/).
+- [x] **Fix round LANDED 2026-09-03 (delegated; session re-ran gates +
+  reviewed proofs) — republished, same URL.** Only 4 SVGs changed (docker +
+  editorconfig, master+icon; sha256-asserted the other 22 icons and all
+  other masters byte-identical, folder-docker untouched). docker: deck
+  3+1 → **3+3+1 (7 boxes)** — official box geometry translated only,
+  1.21px gaps over the 1.2 floor, rows fuse into columns exactly as the
+  official; 9-candidate study PNG proves 3 columns is the ceiling (4-wide
+  overruns the deck or shrinks the box; `proofs/docker-deck-candidates.png`);
+  fit now height-bound, ink 14.50×10.40. editorconfig: RE-SOURCED to the
+  brand's own vector (`editorconfig/editorconfig` assets/EditorConfig_Logo.svg
+  → `sources-svg/editorconfig-official.svg`) — ink contour + official
+  counters painted back in official colors (#FDFDFD face, pink ears),
+  spectacles ship SOLID (rim+lens+pupil merged; rider), nose solid; 2640B
+  (down from 3700). Rejected bytes kept in `pilot/rejected/` for the sheet's
+  fix-round strip. Gates: 0 fail, carry gate two-sided (10 frozen + 2
+  superseded-by-pilot), 16px proofs 20+4 marginal (editorconfig marginal →
+  pass), twin re-run clean (markdown↔editorconfig form 0.131). New flags
+  14–20 on the sheet; **flag 14 wants a ruling before slices**: the
+  editorconfig artwork repo ships NO license (recorded verbatim; fallback =
+  simple-icons CC0 same-construction, but 4475B = over the 4KB cap, would
+  need further reduction). Minor: 6-box variants (3+3 / 3+2+1) are a
+  one-line swap if 7 feels crowded.
+- [ ] Sebastian re-look at the two fixed icons (+ flag 14 license ruling) →
+  then pilot commit (tools/ + sources-svg/ + pilot/; add-by-path only — the
+  vscode submodule pointer is mid-flight in the peer M12 session).
 - [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
   review-gated on its 16/22px contact sheet; letter audit (L3 table by measurement)
   where the style has letters
