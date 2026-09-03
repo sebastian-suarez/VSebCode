@@ -169,10 +169,26 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   gutter collapsed (input/button x40→x24 w+16, list-mode resources
   x56→x24; tree mode/graph/explorer untouched; inline-padding defeated
   via absolute positioning, indent-proof). 2×2-split pixel scan: zero
-  translucent editor-body pixels. CHECKPOINT PENDING: his visual pass
-  (his 21:55 dev instance needs another Cmd+R — out/ is at `14bdc90`);
-  16 parked flags in Tasks § M12, flag 14 (list-mode SCM rows outdent
-  their group header) needs his verdict; both repo pushes his.
+  translucent editor-body pixels. **FIX ROUND 4 same night (fourth
+  findings, 2 commits `13f3363`+`8371053`, R14–R15 in Tasks § M12; D19
+  r13)**: his alignment doubt MEASURED TRUE — traffic lights centered
+  on 22 vs everything else on 23 (our `{18,16}` constant → y 17) and
+  pills on fractional x (a VENDORED `.icon` margin bleeding 1.99px into
+  the pill advance + a half-pixel flex-centering leftover → gated
+  margin-clear + `column-gap` + `round(down,100%,2px)` container: pills
+  integer at every sidebar width, advance exactly 36); SCM
+  guide-overlap ("tired of this bug") root-caused — guides draw at the
+  tree's indent stops, content sat left of them — and RULED "Flatten
+  the pane properly": the Changes view is ONE x24 column (input,
+  button, group headers, list-mode resources), repo rows keep the only
+  real twisties, guides not drawn in the pane at all; group folding
+  preserved (opacity-0 twistie keeps the sticky-row click path);
+  supersedes R13; resolves flag 14. CHECKPOINT PENDING: R14's lights
+  are MAIN-PROCESS — full relaunch, not Cmd+R (out/ at `8371053`);
+  19 parked flags in Tasks § M12; both repo pushes his. NOTE: this
+  round's pin bump committed ALONE — board/Tasks carry live edits from
+  concurrent peer sessions (M20 icons v2 + the D23 Tart-VM reference),
+  so doc state rides the shared working tree.
 - **M20 — Icon set v2 — OPENED 2026-09-02, style phase (D22 PENDING)**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
   different styles in one set; letter icons share no alignment/size/weight;
@@ -190,7 +206,31 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   D Duotone; session recommends B), and the production plan — M11's
   inventory/associations/pins REUSED verbatim (payload-only swap, far
   cheaper than v1). 8-subject × 4-style samples + comparison sheet
-  delegated (samples untracked until D22, M11 precedent).
+  delegated (samples untracked until D22, M11 precedent). **Round 1 RULED
+  same day**: samples built + sheet published →
+  https://claude.ai/code/artifact/08b4a297-9ebc-428f-b144-2ba16e33adb8
+  (`samples/sheet.html`, same path = same URL); Sebastian: brand-true
+  DIRECTION confirmed, ALL FOUR candidates REJECTED — freehand marks "not
+  even close to the real ones", "use another style system". L2 HARDENED:
+  mark geometry derives from official vector artwork (press-kit/repo SVGs,
+  simple-icons CC0, source-theme assets) — freehand geometry for a brand
+  that owns a mark = hard reject; per-icon provenance duty. Round 2 = four
+  TREATMENTS over one shared faithful master per subject (R1 true color /
+  R2 one tint / R3 chips / R4 tamed color), 12 subjects (8 + react ·
+  eslint · prettier · rust as fidelity stress tests); samples delegated,
+  round-1 sample dirs parked as rejected history. **Round 2 built +
+  RULED 2026-09-03 — D22 CLOSED: R1 TRUE COLOR** (+ prettier rider:
+  16px-hostile official marks ship as readable reductions). One master
+  per subject from the brand's own artwork (byte-level derivation gate
+  proves the four treatments shared geometry); fidelity gate honest:
+  10/12 "IS the logo", editorconfig solid-silhouette qualified, prettier
+  the ruled reduction. Sheet republished same URL (`round2-faithful`).
+  Recipe card locked into the guide (§5); guide errata from both rounds
+  folded in (L5 1.2px official floor, L6 achromatic exemption, L8 2KB
+  advisory, R2-folder neutral-white rule). NEXT (own session): pilot
+  ~24 icons through the §5 gates → Sebastian gate → slices. Samples
+  commit rides with the pilot session (tools need a node_modules
+  .gitignore first).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -685,14 +725,30 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   shape (VSCodeVim runs no upstream nvim plugins; its easymotion is the
   flash-adjacent surface — judged at the M19 brief). M4's marketplace gallery
   stays the hard prerequisite of the tail.
-- **D22 M20 icon style — PENDING** (opened 2026-09-02): pick the v2 icon
+- **D22 M20 icon style — RULED: R1 "TRUE COLOR" (Sebastian 2026-09-03)** —
+  the official mark verbatim in official colors over faithful sourced
+  geometry (guide §5 recipe card is the operative law), plus the PRETTIER
+  RIDER ruled the same round: an official mark physically unreadable at
+  16px ships as a readable reduction (official colors + distinctive
+  proportions kept, elements reduced/thickened to clear L5's 1.2px
+  official floor, every reduction logged). Ruling history: round 1
+  (2026-09-02) rejected all four freehand candidates and hardened L2;
+  round 2 offered R1–R4 treatments on faithful geometry, R1 won. Original
+  entry follows. (opened 2026-09-02): pick the v2 icon
   construction recipe among the four candidates in
   [m20-icons-v2/style-guide.md](m20-icons-v2/style-guide.md) §3 — A "Chips"
   (uniform colored container) / B "Brand true" (faithful official marks,
   normalized; session recommendation) / C "Wire" (monoline native-minimal) /
   D "Duotone" (two-tone flat, tamed 12-hue matrix). Guide laws L1–L10 bind
   whichever wins. Ruling locks the recipe card into the guide; pilot before
-  mass production.
+  mass production. **Round 1 (2026-09-02): A/B/C/D ALL REJECTED** —
+  brand-true direction confirmed but the freehand samples failed fidelity
+  ("not even close to the real ones"); L2 hardened — geometry must derive
+  from official vector artwork, freehand banned. **Round 2 candidates**
+  (all on identical faithful geometry, differing only in treatment):
+  R1 "True color" (official marks verbatim) / R2 "One tint" (faithful
+  shape, single brand hue) / R3 "Chips" (faithful mark white on uniform
+  chip) / R4 "Tamed color" (official colors normalized into set bands).
 - **D23 Isolated visual validation — TART VM (Sebastian 2026-09-02: live
   testing "is blocking me from using my computer"; Docker-style isolation
   requested; four options offered — headless code-web loop, background-window
@@ -710,10 +766,19 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   this project is about (SF Pro, vibrancy, native titlebar); in-VM vibrancy
   composites against the VM's own desktop = real compositor output. Known
   fallback if virtiofs launch is slow: copy `out/` guest-local pre-launch.
-  **Setup state 2026-09-02**: tart 2.32.1 installed (brew, `cirruslabs/cli`
-  tap trusted); image pull IN PROGRESS (27.8 GB compressed). Pending: first
-  boot, SSH key, guest screen-recording permission for `screencapture`, node
-  in guest, verified loop commands → Tasks.md.
+  **Setup state 2026-09-02: VERIFIED end-to-end** — tart 2.32.1 (brew,
+  `cirruslabs/cli` tap trusted); VM `vsebcode-vm` from
+  `macos-tahoe-base:latest` (guest macOS 26.6.2); SSH key
+  `~/.ssh/vsebcode_vm`; node v24.19.0 in guest; workbench launched from the
+  virtiofs mount (CDP up in ~5s — virtiofs slowness fear unfounded);
+  compositor `screencapture` over ssh captures vibrancy. Screen-capture TCC
+  needed a manual fix (macOS 26 renamed the ssh identity to
+  `com.apple.sshd-session`; the sqlite grant was classifier-blocked for the
+  session, Sebastian ran it by hand). Known limit: guest display stuck at
+  1024×768@2x despite `--display 1512x982` (open item; fix candidates in
+  Tasks.md). Launch-skill adaptation to the guest (virgin-only profiles
+  there) = pending Sebastian's call. Loop commands: Tasks.md §"isolated
+  visual validation". VM left STOPPED; restart one-liner in Tasks.md.
 - **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
   "the tabs are too big"; two options offered — combine tabs+breadcrumbs
   inside the 46 band, or drop the tab/top-bar alignment and take stock
@@ -851,6 +916,27 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   column; list-mode resources included, tree mode untouched) — the
   16px row grammar stays; flag 14 holds the files-vs-group-header
   outdent for his verdict.
+- **D19 amendment round 13 — ONE CENTERLINE + FLAT CHANGES PANE (Sebastian
+  2026-09-02/03, fourth M12 checkpoint: "are you sure all the components
+  in the top bar are aligned? … I'm tired of this bug, and ran out of
+  solutions. suggest me something"; SCM fork put through the question
+  tool — RULED "Flatten the pane properly")**: (1) the 46pt band's
+  optical contract is EXPLICIT — every component centers on 23: traffic
+  lights move to `{18,17}` (12pt buttons → center 23; supersedes M1's
+  `{18,16}`), pills sit on whole pixels with a uniform 36px advance
+  (vendored `.icon` margin cleared in the gated block, `column-gap`
+  parts them, container width rounds down to even so flex-centering
+  halves come out whole), tab icons already on 23, tab TEXT stays on 22
+  by design (the optical ink lift — rows and tabs alike). (2) the
+  Source Control CHANGES view adopts the flat one-column grammar AHEAD
+  of M15 (the explorer's own flattening): commit input, action button,
+  resource-group headers and list-mode resources all on one column 8px
+  inside the rows; repo rows keep the only real twisties; INDENT GUIDES
+  ARE NOT DRAWN in the pane (both view modes) — the class of
+  content-over-guide bugs dies structurally, not per-case. Tree mode
+  keeps stock folder nesting inside groups (flag 17 watches the header→
+  folder step). Supersedes the round-12 gutter-collapse shape (R13);
+  resolves its flag 14.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:

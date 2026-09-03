@@ -63,6 +63,54 @@ Harness-era-only notes (kept in case VSCodium's build scripts ever return): `car
 `~/.cargo/bin` on PATH for `build_cli.sh`; `dev/build.sh -s` needs
 `rm -rf vscode/cli/openssl` first.
 
+## Reference — isolated visual validation (Tart VM, D23)
+
+Session-driven launches + screenshots run inside a local macOS VM so the host screen stays
+free. Verified end-to-end 2026-09-02 (workbench launch from the shared mount, CDP up,
+compositor `screencapture` with menu-bar/Dock vibrancy visible, no permission dialogs).
+Sebastian's side is unchanged: `npm run watch` + optional `./scripts/code.sh` on the host.
+
+| Action | Command (host) |
+|---|---|
+| Start VM (headless, repo shared) | `tart run vsebcode-vm --no-graphics --dir=vsebcode:/Users/sebastian.suarez/Projects/VSebCode` (long-running; background it) |
+| VM IP (has been stable) | `tart ip vsebcode-vm` → `192.168.64.2` |
+| SSH into guest | `ssh -i ~/.ssh/vsebcode_vm -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null admin@$(tart ip vsebcode-vm)` |
+| Stop VM (end of session) | `tart stop vsebcode-vm` |
+
+Guest facts: macOS 26.6.2 (Tahoe, matches host generation) · repo mounted at
+`/Volumes/My Shared Files/vsebcode` (space in path — always quote) · node v24.19.0 in
+`/usr/local/bin` (NOT on non-interactive ssh PATH — `export PATH=/usr/local/bin:$PATH`
+first) · jq + curl present · SIP disabled · user `admin` (password `admin`), passwordless
+sudo · remote shell is zsh (avoid bare `~` inside command strings — named-dir expansion).
+
+Verified in-guest launch (host `out/` + `.build/electron` used directly — same arm64
+macOS, ONE checkout serves both; nothing ever builds in the guest):
+
+```
+cd "/Volumes/My Shared Files/vsebcode/vscode" && export PATH=/usr/local/bin:$PATH && \
+  (nohup ./scripts/code.sh --user-data-dir=/tmp/<short-udd> --remote-debugging-port=9222 \
+   >/tmp/vseb-launch.log 2>&1 &)
+# readiness: poll  curl -sf http://127.0.0.1:9222/json/version   (up in ~5-10s)
+# capture:   screencapture -x /tmp/shot.png   (compositor-level, vibrancy included)
+# fetch:     scp the PNG back to the host scratchpad
+```
+
+Rules & known limits:
+
+- **Guest never writes to the mount** — host owns watch, git, and all repo writes.
+- Mid-compile hazard is shared with the host loop: verify `out/` markers before launching.
+- Screen-capture TCC: base image pre-grants the pre-Tahoe ssh identity only; macOS 26
+  asks under `com.apple.sshd-session`. Fixed by a manual row insert (Sebastian ran it,
+  2026-09-02). If capture ever prompts again, re-check that row.
+- **Display stuck at 1024×768@2x** (captures are 2048×1536): `tart set --display
+  1512x982` is stored (visible in `tart get`) but the guest keeps its remembered mode
+  even after clearing `com.apple.windowserver.displays.plist`. Open item — candidate
+  fixes: `displayplacer` binary in the guest, or a one-time `tart run` WITH graphics to
+  let the display refit. Current size is fine for band/vibrancy/type checks.
+- The launch skill (`vscode/.claude/skills/launch/scripts/launch.sh`) is NOT yet adapted
+  to the guest (no authed profile there; smoke test used raw `code.sh` + virgin UDD).
+  Adapting it (or a guest-side variant) is pending Sebastian's call.
+
 ## M0 — Prove the toolchain (redo under D7; Sebastian drives the build)
 
 - [x] Prereqs (gh, rustup, jq, Node, Xcode, disk) — carried, verified 2026-08-28
@@ -1420,18 +1468,64 @@ D19 amendment round 12 on the board):
   probe (battery had one tab open). Session instances killed + runDirs
   removed; Sebastian's own 21:55 hand-launched instance left running —
   it renders pre-round-3 code until a Cmd+R.
-- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `14bdc900aab`; your
-  running dev instance needs another Cmd+R (all round-3 fixes are
-  renderer-side too). Judge: ONE line at the top seam (editor-column
-  hairline only, nothing under the pills), the tab strip carrying the
-  sidebar's translucent material with vibrancy through it (inactive tabs
-  melt into it; active tab solid), the Source Control message box /
-  Commit button / file rows sitting close to the rail — and the flagged
-  quirk: in list mode the file rows now sit LEFT of their own group
-  header ("Changes" at x62, files at x24) — rule keep or re-shape (flag
-  14). Plus the round-2 surfaces if not yet judged: zoom behavior, row
-  centering. Pushes are yours (session pushes permission-denied):
-  `cd vscode && git push origin vsebcode` then umbrella `git push`.
+**FIX ROUND 4 2026-09-02/03 — Sebastian's fourth-round findings, two slices
+landed** (one opus-coder run, both diff-reviewed; hooks ON, no AI
+attribution; compile 0 each). His alignment doubt MEASURED TRUE (lights
+centered on 22, everything else on 23; pills on fractional x) and the SCM
+guide-overlap root-caused; the SCM way out put to him — RULED: "Flatten
+the pane properly" (D19 amendment round 13 on the board):
+
+- [x] **R14 landed** (`13f33637a09`) — one centerline for the top band:
+  (a) traffic lights `trafficLightPosition` y 16→17 — 12pt buttons now
+  center on 23 = the 46pt band's midline where pills and tab icons
+  already sit (tab TEXT stays on 22 by design — the optical ink lift);
+  MAIN-PROCESS constant, needs a full relaunch, invisible to CDP —
+  Sebastian's eye confirms. (b) pills on whole pixels: the fractional
+  35.99 advance root-caused to the VENDORED ui-custom-font rule
+  `.part.sidebar .icon { margin-right: calc(font-size × 0.153846) }` in
+  scm.css (meant for repo-row icons; a pill is `.action-item.icon`) —
+  vendored file untouched, our gated block clears the margin and parts
+  pills with `column-gap: calc(2px / zoom)` instead (a gap doesn't hang
+  off the last pill, so centering lands truer); the half-pixel centering
+  leftover killed via `flex: 0 0 auto; width: round(down, 100%, 2px)`
+  on the container (even box ⇒ whole-pixel halves at EVERY sidebar
+  width) + `getCompositeBarPadding() + 1` so the overflow budget never
+  counts the rounded-off pixel. Battery: pills 101/137/173/209/245,
+  advances exactly 36×4, integer at widths 298–303, zoom-3 live flip
+  clean, tabs unmoved.
+- [x] **R15 landed** (`8371053afc0`) — SUPERSEDES R13 (its two rules
+  reworked into one block): the Changes view reads as ONE COLUMN — commit
+  input, action button, resource-GROUP HEADERS and (list-mode) resources
+  all at x24 w259; repo rows keep their real twisties at x46 (the one
+  true hierarchy); indent guides NOT DRAWN anywhere in the pane (both
+  view modes — this kills the lines-through-content bug for good, they
+  can never overlap what no longer exists). Group-header twisties fade
+  via `opacity: 0` NOT `visibility` — an invisible box still answers the
+  mouse, preserving the sticky-row toggle path
+  (`expandOnlyOnTwistieClick` there); label-click fold/unfold verified
+  live both directions. Tree mode: input/button/header flat, folders
+  keep twisties + nesting (files x78/x94/x110/x126). Single-repo
+  workspace probed: same column, no repo row. Graph + explorer
+  byte-unchanged. Resolves flag 14 (nothing left to outdent).
+- [x] Session battery round 4: pills integer + uniform (above); SCM flat
+  column live on the umbrella workspace, 0 visible guides, group toggle
+  16→10→16 rows, input editor widened; graph keeps its guides.
+  INCIDENT, recorded: the round-4 agent's cleanup ran
+  `rm -rf /tmp/code-oss-dev` WHOLESALE, deleting the live profile of a
+  session-owned probe instance — instance killed, no durable loss; RULE
+  for every future agent brief: cleanup targets ONLY the runDirs the
+  agent itself created, never the shared parent.
+- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `8371053afc0`;
+  R14's lights are MAIN-PROCESS: quit the dev instance and relaunch
+  `./scripts/code.sh` (Cmd+R is NOT enough this round). Judge: lights /
+  pills / tab icons on one centerline (pills also mutually crisper on
+  whole pixels), the flat one-column Changes pane with zero guide
+  lines, group folding still working, plus the round-3 surfaces if not
+  yet judged (single seam line, translucent strip, inactive tabs).
+  Flagged for a look: TREE view mode steps from the x24 header straight
+  to x78 folders (the stock nesting you ruled kept) — flag 17. Pushes
+  are yours: `cd vscode && git push origin vsebcode` then umbrella
+  `git push`.
 - [ ] **Parked flags for verdicts** (updated after fix round 2; old flag 1
   RESOLVED by R3, old S4-padding flag superseded by R2):
   (1) S3 caption-row drag strip slightly smaller (no-drag actions box spans
@@ -1463,19 +1557,28 @@ D19 amendment round 12 on the board):
   toolbars. Fix wanted? (13) from R9/R12, cosmetic: getting-started
   walkthrough SVGs fill their mock title bars with
   `editorGroupHeader.tabsBackground` and now draw those rects as the 0.3
-  coat. (14) NEW from R13, needs a verdict at the checkpoint: list-mode
-  SCM file rows collapse to x24 — 38px LEFT of their own group header
-  ("Changes" keeps its real twistie at x62); the in-between reading
-  (files one indent step under the header, x40) is not expressible in
-  CSS without hardcoding the configurable indent — different mechanism +
-  ruling if wanted. (15) NEW from R12: single-tab mode
+  coat. (14) RESOLVED by round 4: the R15 flatten puts headers and files
+  on one x24 column — nothing outdents anything. (15) NEW from R12:
+  single-tab mode
   (`workbench.editor.showTabs: "single"`) keeps an OPAQUE band
   (`noTabsBackground` untouched, deliberate) — extend the material there
   if that mode ever matters? (16) NEW from R12, accepted approximation:
   tab overflow fade gradients flatten the 0.3 strip against the editor
   to solid `rgb(20,21,22)` — exact only while the strip was opaque.
+  (17) NEW from R15, for his eye: TREE view mode steps from the flat
+  x24 group header straight to x78 folders (stock nesting deliberately
+  kept — folders must read as folders); re-rule only if the 54px jump
+  reads wrong. (18) NEW from R14, left alone: the vendored
+  `.part.sidebar .icon` margin rule still over-matches every other
+  `.icon` in the sidebar — only the pills opt out; watch at M6
+  reimports. (19) pre-existing, noted by the round-4 agent: the
+  composite bar's overflow budget counts `clientWidth` per pill and
+  ignores the 2px gaps — optimistic by 8px at five pills; unchanged.
 - [ ] Close: packaged verification — bundle markers now REFLECT R6 + fix
-  rounds 2–3: NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
+  rounds 2–4 (round 4 adds: `trafficLightPosition` y 17 in main.js,
+  `round(down, 100%, 2px)` + `column-gap` in sidebarpart.css, the
+  one-column scm.css block with `.monaco-tl-indent` display:none):
+  NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
   strings, workbench falls back to `--monaco-font`; 46pt tab band restored
   (inlineTitleBar import back in the tabs control), `/ var(--zoom-factor`
   calcs in sidebarpart + multieditortabscontrol CSS, row-label lift rule;
@@ -1623,12 +1726,25 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
 
 - [x] Style guide authored (2026-09-02): failure autopsy, L1–L10, candidates
   A Chips / B Brand true / C Wire / D Duotone, production plan
-- [ ] 4-style samples: 8 subjects each (typescript · editorconfig · json · markdown ·
-  docker · python · folder-src · folder-node) + self-contained comparison sheet
-  (sheet.html/png, incl. shipped-v1 row) — delegated 2026-09-02; session review, then
-  to Sebastian. Samples stay UNTRACKED until D22 (M11 precedent)
-- [ ] **D22 ruling** — Sebastian picks the style (or amends one) → lock the winner as
-  a §5 recipe card in the guide (exact constants), record on the board
+- [x] ROUND 1 samples: 8 subjects × 4 styles + sheet — built, reviewed, published
+  (artifact 08b4a297), RULED 2026-09-02: all four REJECTED (freehand fidelity
+  failure); guide L2 hardened + §3 replaced by round-2 treatments; round-1 dirs
+  parked as rejected history
+- [x] ROUND 2 samples LANDED + review-green 2026-09-03: 12 subjects × 4 treatments
+  over ONE shared faithful master each (official artwork + simple-icons CC0;
+  byte-level derivation gate in check.mjs; fidelity proofs source-vs-master;
+  provenance in samples/sources.json); sheet republished, same artifact URL
+  (`round2-faithful`). Candid finds: prettier officially unreadable at 16px
+  (0.76px bars) → shipped reduction; editorconfig solid-silhouette (line-art
+  mascot under 0.5px); react absent from shipped v1 (nearest = reactjs JSX badge)
+- [x] **D22 RULED 2026-09-03: R1 TRUE COLOR** + prettier rider (readable
+  reductions for 16px-hostile official marks) — §5 recipe card locked into the
+  guide; both rounds' errata folded in (L5 1.2px official floor, L6 achromatic
+  exemption, L8 2KB advisory, neutral-folder white-mark rule)
+- [ ] Commit the samples workshop (rides with the pilot session: add
+  `m20-icons-v2/.gitignore` for `samples/tools/node_modules/` +
+  `samples/sources-svg/` call, then track masters/r1-true/tools/sheet/sources.json;
+  round1-rejected/ = history, session's call)
 - [ ] Pilot ~24 icons (8 sample subjects + worst v1 offenders + 4 folder pairs
   closed+open) through all L9 gates → Sebastian gate BEFORE mass production
 - [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
