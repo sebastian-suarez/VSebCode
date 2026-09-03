@@ -113,9 +113,19 @@ Rules & known limits:
   applies this automatically before launching. Related boot gotcha: `screencapture`
   right after VM boot fails with "could not create image from display" until the GUI
   session is up — retry-loop it.
-- The launch skill (`vscode/.claude/skills/launch/scripts/launch.sh`) is NOT yet adapted
-  to the guest (no authed profile there; smoke test used raw `code.sh` + virgin UDD).
-  Adapting it (or a guest-side variant) is pending Sebastian's call.
+- **Launch skill: ADAPTED (2026-09-03, ruled by Sebastian; fork commit `25326ee`,
+  umbrella pin `70886b6`)** — VM mode is the DEFAULT for visual-validation rounds.
+  `vscode/.claude/skills/launch/scripts/launch-vm.sh` does the whole dance (starts the
+  VM if stopped, re-applies the display mode, waits capture-ready, launches on a virgin
+  guest UDD + free CDP port, tunnels CDP to the host, prints launch.sh-style JSON);
+  `capture-vm.sh <out.png> [delay]` = compositor shot → host path (correct captures are
+  3024×1964). `--kill <id|all>` cleans instance+tunnel+dirs; `--stop-vm` also stops the
+  VM. Host-mode launch.sh remains for authed flows + final checkpoints. Full docs in
+  the skill's SKILL.md §"VM mode".
+- **Guest login-restore is OFF** (`TALLogoutSavesState=false`, set 2026-09-03): before
+  that, macOS resurrected old Code OSS instances at every VM boot (with stale argv —
+  one zombie survived plain `pkill`, needed `-9`). If a mystery instance ever shows up
+  in the guest again, check that defaults key first.
 
 ## M0 — Prove the toolchain (redo under D7; Sebastian drives the build)
 
@@ -1148,7 +1158,7 @@ Sebastian's call and HARD-GATES M17–M19 (the vim extension needs the marketpla
 Dev-loop reminders: this fork's watch never writes `out/` — compile by hand + verify
 markers; launch skill with `TMPDIR=/tmp`.
 
-### M12 — Base-scene parity (five slices + fix rounds 1–2 LANDED 2026-09-02; Sebastian's checkpoint pending)
+### M12 — Base-scene parity (five slices + fix rounds 1–5 LANDED 2026-09-02/03; Sebastian's checkpoint pending)
 
 All slices delegated (opus-coder), diff-reviewed, hooks ON, no AI attribution;
 per-slice `npm run compile` exit 0. Session dev battery run over CDP the same day
@@ -1521,24 +1531,75 @@ the pane properly" (D19 amendment round 13 on the board):
   session-owned probe instance — instance killed, no durable loss; RULE
   for every future agent brief: cleanup targets ONLY the runDirs the
   agent itself created, never the shared parent.
-- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `8371053afc0`;
-  R14's lights are MAIN-PROCESS: quit the dev instance and relaunch
-  `./scripts/code.sh` (Cmd+R is NOT enough this round). Judge: lights /
-  pills / tab icons on one centerline (pills also mutually crisper on
-  whole pixels), the flat one-column Changes pane with zero guide
-  lines, group folding still working, plus the round-3 surfaces if not
-  yet judged (single seam line, translucent strip, inactive tabs).
-  Flagged for a look: TREE view mode steps from the x24 header straight
-  to x78 folders (the stock nesting you ruled kept) — flag 17. Pushes
-  are yours: `cd vscode && git push origin vsebcode` then umbrella
-  `git push`.
+**FIX ROUND 5 2026-09-03 — Sebastian's fifth-round findings, two slices
+landed** (one opus-coder run, both diff-reviewed; hooks ON, no AI
+attribution; compile 0 + repo stylelint 0). His SCM call MEASURED TRUE —
+the accordion banner title sat at x32, the commit box and the button at
+x35 (stock 11px inner padding on `.scm-input`/`.button-container`),
+while the list ink sits at x24 — and his "visually confirm the traffic
+lights" exposed that R14 OVERSHOT: on the compositor the circles render
+centered at y+6.75 (not the nominal y+6), so y:17 = 23.75, 0.75pt BELOW
+the 23 midline, where the old y:16 = 22.75 was only 0.25 high;
+fractional y truncates (a y:16.25 out/-probe rendered pixel-identical
+to 16 — Electron's gfx::Point is integer), so 16 is the closest the API
+can express:
+
+- [x] **R16 landed** (`30fe602831d`) — banner, commit box and button
+  join the one column: `.scm-input` + `.button-container` stock
+  `padding-left: 11px` zeroed in the fork's one-column scm.css block
+  (boxes land x24; right edge stays 271 = the badge column, via the
+  vendored right padding); the M3 pane-header rule 12px → 4px so the
+  section title ink lands x24 (4 + twistie 2+16+2), the chevron hanging
+  in the 8px gutter like tree twisties — GLOBAL to every sidebar pane
+  header by the shared rule (explorer DEMO-REPO/OUTLINE/TIMELINE probed
+  x24 too; the mockup's one-text-column intent). Battery live: input
+  box 24..271, button 24..271, pane-header titles 23.98, group headers
+  + resource icons 24, badges right 271; explorer tree rows keep their
+  nesting (src x46, children x62). Resolves flag 3.
+- [x] **R17 landed** (`f0219155abb`) — lights on the MEASURED center
+  line: `trafficLightPosition` y 17 → 16, the windows.ts comment now
+  records the empirical model (Tahoe @2x centers the circles at
+  y+6.75; fractional positions truncate to whole points). Compositor
+  scan after: circles 22.75 vs pill ink 23.0 — half a device pixel
+  high, the best the integer API can do (17 re-measured 23.75).
+- [x] Session battery round 5 (Tart VM per D23; virgin throwaway
+  profile + a /tmp demo git repo; `security.workspace.trust.enabled:
+  false` seeded — Restricted Mode otherwise blocks git and the SCM
+  view renders EMPTY): all numbers above, plus pills
+  101/137/173/209/245 yc23 (advances 36, gaps 2, integer) and tab
+  {icon yc23, label ink 22 by design, close yc23, h46} re-verified
+  unchanged; before/after screenshots delivered in-chat. VM ledger
+  notes: after a host `npm run compile` rewrites out/ wholesale, the
+  guest's virtiofs view can serve stale ENOENT (out/main.js) — VM
+  restart remounts and clears it; one GPU-process crash took the app
+  AND the VM down mid-session (headless-VM flakiness; restart cured);
+  the display re-pick ritual + demo-repo + trust seed are all
+  re-applied per VM boot.
+- [x] **Checkpoint (Sebastian) — APPROVED 2026-09-03 ("Approved,
+  commit")**: round-5 surfaces pass; docs committed on the verdict
+  (the shared-tree doc state was all post-ruling record, incl. the
+  peer D23 VM-mode fold). Pushes remain his. The judged list, kept
+  for the record — out/ compiled at `f0219155abb`; R17's lights are
+  MAIN-PROCESS: quit the dev instance and relaunch
+  `./scripts/code.sh` (Cmd+R is NOT enough this round). Judge: the
+  one-column SCM pane (banner title, commit-box edge, button edge,
+  group headers, file icons on one left line; input/button/badges on
+  one right line), section titles on the content column in EVERY
+  sidebar view (explorer/debug too — global by design, mockup-true),
+  lights vs pills/tab icons (lights now sit half a device pixel HIGH —
+  the closest the integer API allows; exact 23 is not expressible),
+  plus the round-3/4 surfaces if not yet judged (single seam line,
+  translucent strip, inactive tabs, flat Changes pane, group folding).
+  Flag 17 still up for a look (tree-mode x24 header → x78 folders).
+  Pushes are yours: `cd vscode && git push origin vsebcode` then
+  umbrella `git push`.
 - [ ] **Parked flags for verdicts** (updated after fix round 2; old flag 1
   RESOLVED by R3, old S4-padding flag superseded by R2):
   (1) S3 caption-row drag strip slightly smaller (no-drag actions box spans
   its rail: ~+8px at 300px) — acceptable, or move no-drag onto the action
   items? (2) diff editors inherit relative line numbers — keep or pin `'on'`?
-  (3) pane-header TEXT sits x40 behind the stock twistie (x28 single-view) —
-  restyle twistie margin or accept? (4) empty-window virgin boot hides the
+  (3) RESOLVED by round 5 (R16): pane-header text on the x24 content
+  column everywhere, twistie in the gutter. (4) empty-window virgin boot hides the
   sidebar (pre-existing) — force visible as a default? (5) dev-only:
   rspack.serve-out.config.mts lacks a `.woff2` asset rule (component-explorer
   harness) — one-liner if wanted. (6) 2026-dark.json mixes `#8c8c8c` with
@@ -1581,8 +1642,11 @@ the pane properly" (D19 amendment round 13 on the board):
   composite bar's overflow budget counts `clientWidth` per pill and
   ignores the 2px gaps — optimistic by 8px at five pills; unchanged.
 - [ ] Close: packaged verification — bundle markers now REFLECT R6 + fix
-  rounds 2–4 (round 4 adds: `trafficLightPosition` y 17 in main.js,
-  `round(down, 100%, 2px)` + `column-gap` in sidebarpart.css, the
+  rounds 2–5 (round 5 adds: `trafficLightPosition` y 16 in main.js —
+  supersedes round 4's y 17 — plus scm.css `padding-left: 0` on the
+  input/button pair and pane-header `padding-left: 4px` in style.css;
+  round 4 added: `round(down, 100%, 2px)` + `column-gap` in
+  sidebarpart.css, the
   one-column scm.css block with `.monaco-tl-indent` display:none):
   NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
   strings, workbench falls back to `--monaco-font`; 46pt tab band restored

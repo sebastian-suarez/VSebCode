@@ -183,12 +183,33 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   button, group headers, list-mode resources), repo rows keep the only
   real twisties, guides not drawn in the pane at all; group folding
   preserved (opacity-0 twistie keeps the sticky-row click path);
-  supersedes R13; resolves flag 14. CHECKPOINT PENDING: R14's lights
-  are MAIN-PROCESS — full relaunch, not Cmd+R (out/ at `8371053`);
-  19 parked flags in Tasks § M12; both repo pushes his. NOTE: this
-  round's pin bump committed ALONE — board/Tasks carry live edits from
-  concurrent peer sessions (M20 icons v2 + the D23 Tart-VM reference),
-  so doc state rides the shared working tree.
+  supersedes R13; resolves flag 14. NOTE: that round's pin bump
+  committed ALONE — board/Tasks carry live edits from concurrent peer
+  sessions (M20 icons v2 + the D23 Tart-VM reference), so doc state
+  rides the shared working tree. **FIX ROUND 5 2026-09-03 (fifth
+  findings, 2 commits `30fe602`+`f021915`, R16–R17 in Tasks § M12; D19
+  r14)**: his SCM misalignment MEASURED TRUE — accordion banner title
+  x32, commit box + button x35 (stock 11px inner padding), list ink
+  x24 — fixed onto ONE column: input/button padding zeroed (boxes
+  24..271, right edge already the badge line) and the M3 pane-header
+  12px → 4px so section titles land x24 in EVERY sidebar view
+  (mockup's one-text-column; twistie hangs in the gutter; resolves
+  flag 3). His "visually confirm the traffic lights" exposed R14 as an
+  OVERSHOOT: compositor pixels show macOS centers the circles at
+  y+6.75 (not y+6) — y:17 rendered 23.75 (0.75 LOW) where old y:16
+  was 22.75 (0.25 high); fractional y truncates (16.25 probe =
+  16 pixel-identical), so RULED BY MEASUREMENT back to y:16, the
+  closest the integer API gets; comment records the model. Verified
+  live in the Tart VM (D23): one x24 left column + x271 right column
+  across the pane, explorer headers x24 with tree nesting intact,
+  pills 36-advance integer yc23, tab icon/close 23 + label 22, lights
+  22.75 vs pill ink 23.0; screenshots delivered. **CHECKPOINT
+  APPROVED 2026-09-03 ("Approved, commit")** — round-5 surfaces
+  stand; 18 parked flags stay in Tasks § M12; both repo pushes his.
+  Pin bump committed ALONE at landing; the doc fold committed on the
+  verdict (shared-tree state incl. the peer D23 records — all
+  post-ruling). M12 remains open only for the packaged-verification
+  close-out (markers list in Tasks § M12 Close).
 - **M20 — Icon set v2 — OPENED 2026-09-02, style phase (D22 PENDING)**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
   different styles in one set; letter icons share no alignment/size/weight;
@@ -774,11 +795,16 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   compositor `screencapture` over ssh captures vibrancy. Screen-capture TCC
   needed a manual fix (macOS 26 renamed the ssh identity to
   `com.apple.sshd-session`; the sqlite grant was classifier-blocked for the
-  session, Sebastian ran it by hand). Known limit: guest display stuck at
-  1024×768@2x despite `--display 1512x982` (open item; fix candidates in
-  Tasks.md). Launch-skill adaptation to the guest (virgin-only profiles
-  there) = pending Sebastian's call. Loop commands: Tasks.md §"isolated
-  visual validation". VM left STOPPED; restart one-liner in Tasks.md.
+  session, Sebastian ran it by hand). **Follow-up ruled 2026-09-03 ("fix the
+  display resolution and adapt the launch skill") — BOTH DONE**: display =
+  VZ config `3024x1964` + per-boot `displayplacer` re-apply (guest re-picks
+  1024×768@2x at every boot; re-apply is idempotent, launch-vm.sh does it) →
+  captures 3024×1964 = 1512×982@2x; launch skill = VM mode as DEFAULT for
+  visual rounds (delegated to opus-coder, reviewed; fork `25326ee`, pin
+  `70886b6` — launch-vm.sh / capture-vm.sh / SKILL.md §"VM mode", CDP
+  tunnelled to host, virgin-only). Guest login-restore disabled (boot
+  resurrected stale instances). Loop commands: Tasks.md §"isolated visual
+  validation". VM left STOPPED — launch-vm.sh auto-starts it.
 - **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
   "the tabs are too big"; two options offered — combine tabs+breadcrumbs
   inside the 46 band, or drop the tab/top-bar alignment and take stock
