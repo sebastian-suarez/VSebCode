@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "simple-icons": "^16.29.0",
+    "svg-path-bounds": "^1.0.2",
+    "svg-path-parser": "^1.1.0",
+    "svgpath": "^2.6.0"
+  }
+}

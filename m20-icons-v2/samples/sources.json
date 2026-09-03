@@ -1,0 +1,493 @@
+{
+	"note": "M20 icons v2, round 2. Per guide L2 every mark's geometry is adapted from official vector artwork; this file records where each one came from and exactly what L5 forced us to simplify. json and folder-src own no brand mark and use the set's neutral glyph vocabulary.",
+	"generated": "2026-09-03",
+	"tooling": {
+		"simple-icons": "16.29.0 (CC0-1.0)",
+		"fetched artwork": "m20-icons-v2/samples/sources-svg/ — brand-published SVGs, downloaded once and kept for the fidelity proof"
+	},
+	"palette_rules": {
+		"visibility_lift": "a mark whose official hex is below L 22 is raised to L 88 with hue and saturation intact (markdown #000000 only)",
+		"r3_chip_band": "S 45-70 / L 45-60, hue untouched",
+		"r4_set_band": "S 45-70 / L 45-62, hue untouched",
+		"achromatic_exemption": "inks below S 12 skip the saturation floor — clamping S on a hueless colour would invent a hue (editorconfig's white mascot)",
+		"assigned_hues": "brands with a mark but no canonical colour get a set hue for the container treatment only: markdown violet #8B6FDB, editorconfig rose #E0648A",
+		"neutral_ink": "#A6AEB6",
+		"folder_sand": "#BF9354"
+	},
+	"subjects": {
+		"typescript": {
+			"title": "TypeScript",
+			"kind": "file",
+			"source": {
+				"name": "simple-icons",
+				"slug": "typescript",
+				"license": "CC0-1.0",
+				"url": "https://www.typescriptlang.org/branding",
+				"note": "official square + TS letterforms, single path, 3 subpaths"
+			},
+			"colours": {
+				"official": [
+					"#3178C6",
+					"#FFFFFF"
+				],
+				"r1": [
+					"#3178C6",
+					"#FFFFFF"
+				],
+				"r2": "#3178C6",
+				"r3_chip": "#3178C6",
+				"r4": [
+					"#3178C6",
+					"#EBEBEB"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"folder_face_ink": null,
+			"simplifications": []
+		},
+		"editorconfig": {
+			"title": "EditorConfig",
+			"kind": "file",
+			"source": {
+				"name": "simple-icons",
+				"slug": "editorconfig",
+				"license": "CC0-1.0",
+				"url": "https://editorconfig.org",
+				"note": "mascot silhouette; official colours sampled from editorconfig/editorconfig.github.com logo.png (#FEFEFE body, #FFF2F2 ear)"
+			},
+			"colours": {
+				"official": [
+					"#FEFEFE",
+					"#FFF2F2"
+				],
+				"r1": [
+					"#FEFEFE",
+					"#FFF2F2"
+				],
+				"r2": "#FEFEFE",
+				"r3_chip": "#DD557F",
+				"r4": [
+					"#EBEBEB",
+					"#E25A5A"
+				],
+				"assigned_hue": "#E0648A"
+			},
+			"envelope": {
+				"w": 13.2,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 13.2,
+				"h": 12.72
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"kept subpaths 0/1/3/5/7 (silhouette, two ear counters, two spectacle lenses); dropped 2/4/6/8/9/10/11 — nose, mouth, jaw and tail linework, all under 0.5 px at 16"
+			]
+		},
+		"json": {
+			"title": "JSON (neutral glyph)",
+			"kind": "file",
+			"source": {
+				"name": "none — neutral glyph vocabulary",
+				"slug": null,
+				"license": null,
+				"url": null,
+				"note": "JSON publishes no mark; braces from the set's own glyph vocabulary (L2)"
+			},
+			"colours": {
+				"official": [
+					"#A6AEB6"
+				],
+				"r1": [
+					"#A6AEB6"
+				],
+				"r2": "#A6AEB6",
+				"r3_chip": "#5B6672",
+				"r4": [
+					"#A6AEB6"
+				],
+				"assigned_hue": "#5B6672"
+			},
+			"envelope": {
+				"w": 11.4,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 11.4,
+				"h": 13.02
+			},
+			"folder_face_ink": null,
+			"simplifications": []
+		},
+		"markdown": {
+			"title": "Markdown",
+			"kind": "file",
+			"source": {
+				"name": "markdown-mark (official repo)",
+				"slug": "markdown",
+				"license": "CC0-1.0",
+				"url": "https://github.com/dcurtis/markdown-mark",
+				"note": "svg/markdown-mark.svg — frame + M + down-arrow"
+			},
+			"colours": {
+				"official": [
+					"#E0E0E0"
+				],
+				"r1": [
+					"#E0E0E0"
+				],
+				"r2": "#E0E0E0",
+				"r3_chip": "#7C5CD6",
+				"r4": [
+					"#E0E0E0"
+				],
+				"assigned_hue": "#8B6FDB"
+			},
+			"envelope": {
+				"w": 15.2,
+				"h": 9.6
+			},
+			"ink": {
+				"w": 15.2,
+				"h": 9.36
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"frame stroke widened from the official 10/128 (0.63 px at 16) to 18/128 (1.32 px) using the file's own inset construction — L5 minimum stem",
+				"official black #000000 lifted to L 88 for the #121314 backdrop (the one L2 lift rule)"
+			]
+		},
+		"docker": {
+			"title": "Docker",
+			"kind": "file",
+			"source": {
+				"name": "simple-icons",
+				"slug": "docker",
+				"license": "CC0-1.0",
+				"url": "https://www.docker.com/company/newsroom/media-resources",
+				"note": "Moby whale, single path: 9 container squares + body"
+			},
+			"colours": {
+				"official": [
+					"#2496ED"
+				],
+				"r1": [
+					"#2496ED"
+				],
+				"r2": "#2496ED",
+				"r3_chip": "#3694DB",
+				"r4": [
+					"#3694DB"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 15.2,
+				"h": 10.4
+			},
+			"ink": {
+				"w": 15.2,
+				"h": 9.18
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"container grid reduced from the official 5+3+1 (nine boxes, 0.28 px gaps at 16) to 3+1; the box is official subpath #7 translated, so its size and corner radius are untouched and the gaps land at 1.27 px"
+			]
+		},
+		"python": {
+			"title": "Python",
+			"kind": "file",
+			"source": {
+				"name": "simple-icons",
+				"slug": "python",
+				"license": "CC0-1.0",
+				"url": "https://www.python.org/community/logos/",
+				"note": "two-snake mark; official gradients flattened to #3776AB / #FFD43B"
+			},
+			"colours": {
+				"official": [
+					"#3776AB",
+					"#FFD43B"
+				],
+				"r1": [
+					"#3776AB",
+					"#FFD43B"
+				],
+				"r2": "#3776AB",
+				"r3_chip": "#3878AE",
+				"r4": [
+					"#3878AE",
+					"#E2C458"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.74
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"official gradients flattened to their dominant flat stops (L2)"
+			]
+		},
+		"react": {
+			"title": "React",
+			"kind": "file",
+			"source": {
+				"name": "React logo (create-react-app fixture, the canonical file)",
+				"slug": "react",
+				"license": "CC BY 4.0 / MIT (facebook)",
+				"url": "https://github.com/facebook/create-react-app/blob/282c03f9525fdf8061ffa1ec50dce89296d916bd/test/fixtures/relative-paths/src/logo.svg",
+				"note": "circle r 2.05 + 3 ellipses rx 11 ry 4.2 at 0/60/120, stroke 1"
+			},
+			"colours": {
+				"official": [
+					"#61DAFB"
+				],
+				"r1": [
+					"#61DAFB"
+				],
+				"r2": "#61DAFB",
+				"r3_chip": "#52C2E0",
+				"r4": [
+					"#5AC5E2"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 13.6,
+				"h": 13.6
+			},
+			"ink": {
+				"w": 13.6,
+				"h": 13.46
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"orbit stroke widened from the official 1 unit (0.55 px at 16) to 2.73 units (1.50 px) — L5 minimum stem; radii, aspect and the 60-degree spacing are official"
+			]
+		},
+		"eslint": {
+			"title": "ESLint",
+			"kind": "file",
+			"source": {
+				"name": "ESLint (brand's own SVG)",
+				"slug": "eslint",
+				"license": "MIT (eslint.org)",
+				"url": "https://raw.githubusercontent.com/eslint/eslint.org/main/src/static/icon.svg",
+				"note": "two official layers: #4B32C3 outer ring, #8080F2 inner hexagon"
+			},
+			"colours": {
+				"official": [
+					"#4B32C3",
+					"#8080F2"
+				],
+				"r1": [
+					"#4B32C3",
+					"#8080F2"
+				],
+				"r2": "#4B32C3",
+				"r3_chip": "#4B32C3",
+				"r4": [
+					"#4B32C3",
+					"#5A5AE2"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 11.2
+			},
+			"folder_face_ink": null,
+			"simplifications": []
+		},
+		"prettier": {
+			"title": "Prettier",
+			"kind": "file",
+			"source": {
+				"name": "prettier-logo (official repo)",
+				"slug": "prettier",
+				"license": "MIT (prettier)",
+				"url": "https://github.com/prettier/prettier-logo/blob/master/images/prettier-icon-clean-centred.svg",
+				"note": "23 rounded bars on an 11-row grid; palette #56B3B4 #EA5E5E #F7BA3E #BF85BF"
+			},
+			"colours": {
+				"official": [
+					"#56B3B4",
+					"#F7BA3E",
+					"#EA5E5E",
+					"#BF85BF"
+				],
+				"r1": [
+					"#56B3B4",
+					"#F7BA3E",
+					"#EA5E5E",
+					"#BF85BF"
+				],
+				"r2": "#F7B93E",
+				"r3_chip": "#E0B152",
+				"r4": [
+					"#4EBBBC",
+					"#E1B254",
+					"#E25A5A",
+					"#CA72CA"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 11.6,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 11.2,
+				"h": 13.2
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"rows reduced from 11 to 4 (official rows 0 / 60 / 120 / 160 kept, re-pitched to 62)",
+				"bar height raised from 10 to 26 source units so a bar is 1.62 px at 16 (L5)",
+				"segment gaps widened from 10 to 22 units, segments rescaled to hold each row's official right edge; shortest bar is 1.54 px"
+			]
+		},
+		"rust": {
+			"title": "Rust",
+			"kind": "file",
+			"source": {
+				"name": "simple-icons",
+				"slug": "rust",
+				"license": "CC0-1.0",
+				"url": "https://www.rust-lang.org/policies/media-guide",
+				"note": "gear + inner ring + R, single path, 10 subpaths"
+			},
+			"colours": {
+				"official": [
+					"#CE422B"
+				],
+				"r1": [
+					"#CE422B"
+				],
+				"r2": "#CE422B",
+				"r3_chip": "#CE422B",
+				"r4": [
+					"#CE422B"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 13.2,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 13.2,
+				"h": 13.2
+			},
+			"folder_face_ink": null,
+			"simplifications": [
+				"the five 1.5-unit bolt circles (subpaths 1/3/4/8/9) dropped — 0.83 px at 16"
+			]
+		},
+		"folder-src": {
+			"title": "src/ (neutral glyph)",
+			"kind": "folder",
+			"source": {
+				"name": "none — neutral glyph vocabulary",
+				"slug": null,
+				"license": null,
+				"url": null,
+				"note": "no brand owns \"src\"; chevrons from the set's own glyph vocabulary (L2)"
+			},
+			"colours": {
+				"official": [
+					"#A6AEB6"
+				],
+				"r1": [
+					"#A6AEB6"
+				],
+				"r2": {
+					"body": "#BF9354",
+					"mark": "#FFFFFF"
+				},
+				"r3_chip": "#5B6672",
+				"r4": [
+					"#A6AEB6"
+				],
+				"assigned_hue": "#5B6672"
+			},
+			"envelope": {
+				"w": 13.6,
+				"h": 10.4
+			},
+			"ink": {
+				"w": 13.61,
+				"h": 10.37
+			},
+			"folder_face_ink": {
+				"w": 10.2,
+				"h": 7.78,
+				"largest": 10.2
+			},
+			"simplifications": []
+		},
+		"folder-node": {
+			"title": "node_modules/ (Node.js)",
+			"kind": "folder",
+			"source": {
+				"name": "simple-icons",
+				"slug": "nodedotjs",
+				"license": "CC0-1.0",
+				"url": "https://nodejs.org/en/about/branding",
+				"note": "hexagon outline with JS; outer silhouette taken solid"
+			},
+			"colours": {
+				"official": [
+					"#5FA04E"
+				],
+				"r1": [
+					"#5FA04E"
+				],
+				"r2": {
+					"body": "#BF9354",
+					"mark": "#5FA04E"
+				},
+				"r3_chip": "#58AD41",
+				"r4": [
+					"#58AD41"
+				],
+				"assigned_hue": null
+			},
+			"envelope": {
+				"w": 11.2,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 11.2,
+				"h": 12.35
+			},
+			"folder_face_ink": {
+				"w": 7.44,
+				"h": 8.2,
+				"largest": 8.2
+			},
+			"simplifications": [
+				"hexagon taken as a solid at the official 21.28 x 24.08 aspect: the official ring is 0.70 px and the JS letterforms unreadable at the folder face's 8 px (L5/L7)"
+			]
+		}
+	}
+}
