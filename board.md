@@ -264,9 +264,9 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   bump committed on the verdict (docs carry the peer M20 A01 gate-pending
   records — shared-tree precedent); pushes his; packaged markers ride the
   next packaged pass with M12's.
-- **M15 — Neo-tree explorer BUILT + battery-green 2026-09-03 — SEBASTIAN
-  CHECKPOINT PENDING (opened same day in the M14 session on his
-  "continue")**: the letter keymap is in source — j/k walk · h/l fold ·
+- **M15 — Neo-tree explorer BUILT + battery-green 2026-09-03 — CHECKPOINT
+  APPROVED same day ("Looks good to me, approved, commit"; all sight-flags
+  stand as built; opened in the M14 session on his "continue")**: the letter keymap is in source — j/k walk · h/l fold ·
   a add / shift+A folder (ruled) · r rename · d trash · / find, nine
   additive keybinding rules at the explorer's own weight under
   `FilesExplorerFocusCondition`, each carrying its stock counterpart's
@@ -293,9 +293,17 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   customTitleBarVisibility to "auto" whenever the activity bar moves
   top/bottom under "never" — the gate drops to stock by config, our
   footer/switcher collision branch governs only layered corners.
-  Screenshots delivered. His part: relaunch `./scripts/code.sh`
-  (out/ current) and sight-judge; pin bump + doc fold on the verdict.
-  Records + battery ledger in Tasks § M15.
+  Screenshots delivered. **Fix round same day (his live look: "all the
+  commands fit, so add delete hint back and center all of them")**:
+  `6d85b1d199d` — the line carries all SIX hints (`d delete` restored,
+  keymap order) and CENTERS with symmetric 16px insets; supersedes BOTH
+  D19-r9 crop rulings (drop-d + right-align — mockup-crop reasons,
+  neither survives the real window); VM re-verified equal 6.7px gaps at
+  the default rail, crop delivered; committed mockups keep the r9
+  five-hint line as design history (r11 precedent). Pin bump committed
+  on the verdict; pushes his (fork ahead 7 with M14's trio); packaged
+  markers ride the next packaged pass with M12's. Records + battery
+  ledger in Tasks § M15.
 - **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as

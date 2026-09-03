@@ -1981,11 +1981,31 @@ cleanest).
   stock (no `list.inactiveFocusBackground` theme add; wash returns with
   focus; revisit if daily use disorients). Screenshots delivered (window,
   tree, seam band).
-- [ ] **CHECKPOINT (Sebastian)**: quit + relaunch `./scripts/code.sh` (out/
-  current at `f9604dacaf7` — renderer-side only); sight-judge: hint line
-  tone/size vs the mockup, the 6px git-letter inset, the missing focus ring
-  across sidebar lists, cursor wash on j/k. Pin bump + doc fold on the
-  verdict.
+- [x] **Fix round LANDED 2026-09-03 (checkpoint verdict at his live look:
+  "all the commands fit, so add delete hint back and center all of them";
+  same agent; diff reviewed)**: `6d85b1d199d` — the hint line carries SIX
+  hints in keymap order (`d delete` restored between rename and filter)
+  and CENTERS on the row with symmetric 16px padding. Supersedes BOTH
+  D19-r9 crop rulings (drop-d + right-align-16px — made against the
+  mockup's crop; neither reason survives the real window; the commit body
+  records the supersession). A stays undisplayed (the shifted half of the
+  `a` already on the line). TS/CSS comments rewritten to the new truth.
+  Compile 0, eslint 0, hooks passed, targeted suites 62/0, change proven
+  in out/. VM re-verified live: six hints, justify center, gaps EQUAL
+  both sides — 6.7px each at the default 299px rail (the 286px line eats
+  symmetrically into the 16px inset, unclipped; narrow rails now give up
+  BOTH ends evenly where r9's pin lost only the left; glance at the
+  corner at the pass); crop delivered. Committed mockups keep the r9
+  five-hint line as design history (r11 precedent — the implementation
+  is the live truth).
+- [x] **CHECKPOINT APPROVED 2026-09-03 ("Looks good to me, approved,
+  commit")**: all sight-flags stand as built — centered six-hint line
+  (snug sides + corner clearance included), hint tone/size, 6px
+  git-letter inset, sidebar-wide ring removal, cursor wash. Pin bump +
+  doc fold committed on the verdict (peer M20 A02 work-in-progress rides
+  the shared tree untracked, not committed); pushes his (fork ahead 7:
+  M14's three + M15's four). Packaged markers ride the next packaged
+  pass with M12/M13/M14's. M15 CLOSED except that packaged close-out.
 
 ### M16 — Telescope quick input (one widget = every picker; restyle is global)
 
