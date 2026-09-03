@@ -39,6 +39,11 @@ Environment notes (carried from the harness era, still apply):
   died. If `out/` goes stale under a "running" watch, `ps aux | grep build/next` — no
   process = the transpile lane crashed; restart the watch or one-shot `npm run compile`.
   Also: dev workbench loads CSS/JS from `out/` (not `src/`), so CSS edits need that lane.
+- **Stale-stylesheet probe gotcha** (learned 2026-09-02, M12 round 3): reusing a
+  throwaway `--user-data-dir` across relaunches can serve a CACHED stylesheet —
+  the css was current on disk (fetch returned it) yet absent from
+  `document.styleSheets`. Before measuring CSS changes over CDP, reload with
+  `Page.reload {ignoreCache: true}` (or use a fresh profile).
 - `[vscodium]` import commits bypass hooks (`--no-verify`): vscode's husky hygiene rejects
   VSCodium's placeholder strings. Keep hooks ON for our own commits — since 2026-08-31
   that works EVERYWHERE: the `00-ui-custom-font` hygiene arc (874 → 0 errors) landed as
@@ -1351,13 +1356,81 @@ symmetric), so the real shared defect was the row-label seat — R10:
   removed; Sebastian's own hand-launched dev instance (relative-path
   `./scripts/code.sh` tree) left RUNNING — it renders pre-round code until
   a Cmd+R.
-- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `b1640cfb612`; your
-  running dev instance needs Cmd+R (all four fixes are renderer-side).
-  Judge: the 46pt tab band next to the rail header (lights spacing +
-  hairline), zoom through +1/+2/+3 (band and its content should hold
-  physical size, nothing overflows), the tab strip showing plain editor
-  color, and selected rows in explorer + Source Control Graph reading
-  centered. Pushes are yours (session pushes permission-denied):
+**FIX ROUND 3 2026-09-02 — Sebastian's third checkpoint verdicts, three
+slices landed same day** (one opus-coder run, three commits, each
+diff-reviewed; hooks ON, no AI attribution; compile 0 each). His three
+findings measured first, then the two design forks put to him via the
+question tool — all three recommendations APPROVED (rulings recorded as
+D19 amendment round 12 on the board):
+
+- [x] **R11 landed** (`20e0e77a660`) — "the line under the tabs and under
+  the activity bar arent aligned": the rail line = stock
+  `paneCompositePart.css:41` border under a top-located composite bar
+  (`sideBarActivityBarTop.border`, defaulting from
+  `sideBarSectionHeader.border` `#2A2B2C`); the editor hairline
+  (breadcrumbs border-top `rgba(204,204,204,0.2)` at y=46) is a DIFFERENT
+  color and each 1px line subpixel-snaps on its own at fractional zooms.
+  The approved mockup draws NO rail line — RULED: remove it (gated CSS,
+  9-vs-4 specificity, no `!important`); with the gate off the stock
+  separator returns (probe-proven both ways). The one probe-instance
+  where the whole editor title stack once measured y=-1 (post
+  reload+zoom-cycle with a diff editor) stayed UNREPRODUCED on clean
+  boots — with the rail line gone, seam misalignment is structurally
+  impossible; watch at checkpoints.
+- [x] **R12 landed** (`71fca7614b7`) — "the background of the tabs
+  container ... not transparent like the sidebar": R9's alpha-0-over-
+  opaque-editor superseded — `editorGroupHeader.tabsBackground` MOVES to
+  `MAC_TRANSLUCENT_SURFACES` (the 0.30 coat: strip resolves
+  `rgba(25,26,27,0.3)`, byte-identical to the sidebar) and the M1 opaque
+  backstop moves DOWN a layer: `.part.editor` + `EditorPart.updateStyles`
+  container paint go clear on mac-native, the opaque pin now sits on
+  `.editor-group-container > .editor-container` plus, for EMPTY groups,
+  on the grid's `.split-view-view:has(> .editor-group-container.empty)`
+  box — deliberately NOT the group itself: an inactive empty group dims
+  to opacity 0.5, which would take an own-fill down with it and leak
+  vibrancy (D9 violation). RULED with it: inactive tabs paint NO fill
+  (mockup-true) — `tab.inactiveBackground` + `tab.unfocusedInactive-
+  Background` join the alpha-0 set; active tab stays solid editor color;
+  hover/drop/markers/borders untouched. Audit held: grid seams are
+  overlay-drawn (pixel scan: 0 of 3,675,360 device px below the band
+  translucent in a 2×2 split), centered-layout margins self-paint,
+  modal editor part self-paints, aux/floating windows same-path.
+  Accepted approximations, flagged: tab fade gradients flatten to
+  `rgb(20,21,22)`; single-tab `noTabsBackground` band stays opaque.
+- [x] **R13 landed** (`14bdc900aab`) — "too much padding inside the
+  'changes' accordion": RULED collapse the dead twistie gutter, keep the
+  16px row grammar. The gutter is INLINE padding `TreeRenderer` writes on
+  the twistie box (CSS can't outrank it without `!important`) → the
+  empty twistie goes `position: absolute` (already w0 + hidden) and
+  `.monaco-tl-contents` takes `margin-left: 8px` — indent-proof, no
+  baked `tree.indent` constant. Scope: commit-input + action-button rows
+  (both view modes) and resource rows in `list-view-mode` only; tree
+  mode stock (leaves must not outdent their folders); repo + group rows
+  keep their REAL twisties; graph view excluded BY NAME
+  (`:not(.scm-history-view)` — it carries `.scm-view.list-view-mode`
+  too). `SCMInputWidget.layout` measures the DOM (no widthOffset-style
+  constant) so the input widened by itself. Numbers: input/button
+  x40 w243 → x24 w259 (editor inside x36 w234), list-mode resources
+  x56 → x24; repo x46, group x62, graph x16, explorer — all unchanged.
+- [x] Session battery round 3 (cache-busting reload — see the new env
+  note): rail border `0px none` + hairline intact; strip
+  `rgba(25,26,27,0.3)` with part/content transparent, editor body
+  `#121314` opaque, active tab solid; SCM input/button x24 w259, graph
+  row x16 w267 unchanged. Inactive-tab alpha-0 verified in the agent's
+  probe (battery had one tab open). Session instances killed + runDirs
+  removed; Sebastian's own 21:55 hand-launched instance left running —
+  it renders pre-round-3 code until a Cmd+R.
+- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `14bdc900aab`; your
+  running dev instance needs another Cmd+R (all round-3 fixes are
+  renderer-side too). Judge: ONE line at the top seam (editor-column
+  hairline only, nothing under the pills), the tab strip carrying the
+  sidebar's translucent material with vibrancy through it (inactive tabs
+  melt into it; active tab solid), the Source Control message box /
+  Commit button / file rows sitting close to the rail — and the flagged
+  quirk: in list mode the file rows now sit LEFT of their own group
+  header ("Changes" at x62, files at x24) — rule keep or re-shape (flag
+  14). Plus the round-2 surfaces if not yet judged: zoom behavior, row
+  centering. Pushes are yours (session pushes permission-denied):
   `cd vscode && git push origin vsebcode` then umbrella `git push`.
 - [ ] **Parked flags for verdicts** (updated after fix round 2; old flag 1
   RESOLVED by R3, old S4-padding flag superseded by R2):
@@ -1374,32 +1447,46 @@ symmetric), so the real shared defect was the row-label seat — R10:
   could outrank them (moot-ish: `workbench.enableExperiments: false` is
   itself baked) — set the flag anyway? (8) NEW from R3: baked
   `security.workspace.trust.untrustedFiles: "open"` — his value, noted
-  because it is security-relevant. (9) NEW from R9: inactive tabs still
-  paint their own `#191A1B` fills on the now-editor-colored strip — keep
-  (tabs read as tabs) or force flat too? (10) NEW from R8: the pill count
-  badge is pinned `top: calc(50% - 13px)` for the 28px pill — at zoom 3 it
-  rides ~5px above the shrunken pill; rule wanted? (11) NEW from R8, gaps
-  accepted by scope: glyph-FONT icon themes in tabs still scale with zoom
-  (our SVG set is pinned; only bites if a font icon theme is ever
-  installed); toggling the inline title bar itself, or zooming while the
-  sidebar is hidden, can leave the pill-width cache stale until the next
-  item change (same pre-existing cache shape). (12) OBSERVED, pre-existing
-  stock behavior, untouched: the Source Control Graph pane HEADER's action
-  toolbar (repo picker + branch picker + 5 actions) is ~279px wide and
-  clips at a 300px rail — its last icons cut at the edge, title crushed to
-  "G…"; stock has no max-width plumbing for pane-header toolbars. Fix
-  wanted? (13) NEW from R9, cosmetic: getting-started walkthrough SVGs fill
-  their mock title bars with the now-transparent variable and draw those
-  rects clear.
+  because it is security-relevant. (9) RESOLVED by round 3: inactive tabs
+  RULED no-fill (mockup-true), landed in R12. (10) NEW from R8: the pill
+  count badge is pinned `top: calc(50% - 13px)` for the 28px pill — at
+  zoom 3 it rides ~5px above the shrunken pill; rule wanted? (11) NEW
+  from R8, gaps accepted by scope: glyph-FONT icon themes in tabs still
+  scale with zoom (our SVG set is pinned; only bites if a font icon theme
+  is ever installed); toggling the inline title bar itself, or zooming
+  while the sidebar is hidden, can leave the pill-width cache stale until
+  the next item change (same pre-existing cache shape). (12) OBSERVED,
+  pre-existing stock behavior, untouched: the Source Control Graph pane
+  HEADER's action toolbar (repo picker + branch picker + 5 actions) is
+  ~279px wide and clips at a 300px rail — its last icons cut at the edge,
+  title crushed to "G…"; stock has no max-width plumbing for pane-header
+  toolbars. Fix wanted? (13) from R9/R12, cosmetic: getting-started
+  walkthrough SVGs fill their mock title bars with
+  `editorGroupHeader.tabsBackground` and now draw those rects as the 0.3
+  coat. (14) NEW from R13, needs a verdict at the checkpoint: list-mode
+  SCM file rows collapse to x24 — 38px LEFT of their own group header
+  ("Changes" keeps its real twistie at x62); the in-between reading
+  (files one indent step under the header, x40) is not expressible in
+  CSS without hardcoding the configurable indent — different mechanism +
+  ruling if wanted. (15) NEW from R12: single-tab mode
+  (`workbench.editor.showTabs: "single"`) keeps an OPAQUE band
+  (`noTabsBackground` untouched, deliberate) — extend the material there
+  if that mode ever matters? (16) NEW from R12, accepted approximation:
+  tab overflow fade gradients flatten the 0.3 strip against the editor
+  to solid `rgb(20,21,22)` — exact only while the strip was opaque.
 - [ ] Close: packaged verification — bundle markers now REFLECT R6 + fix
-  round 2: NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
+  rounds 2–3: NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
   strings, workbench falls back to `--monaco-font`; 46pt tab band restored
   (inlineTitleBar import back in the tabs control), `/ var(--zoom-factor`
-  calcs in sidebarpart + multieditortabscontrol CSS, tabsBackground in the
-  transparent set, row-label lift rule; plus the standing slice markers
-  (pane-body insets, defaults blob, systemColorTheme dark). Font ruling
-  DONE (R6); experiments deleted. Board/Tasks close-out. Pin bumps recorded
-  2026-09-02 at each landing.
+  calcs in sidebarpart + multieditortabscontrol CSS, row-label lift rule;
+  round 3: `editorGroupHeader.tabsBackground` in the TRANSLUCENT set +
+  both inactive-tab fills in the transparent set, `.part.editor` OUT of
+  the opaque backstop with `.editor-container` + `:has(empty)` pins in,
+  rail-header `border-bottom: none` gated rule, scm.css gutter-collapse
+  rules; plus the standing slice markers (pane-body insets, defaults
+  blob, systemColorTheme dark). Font ruling DONE (R6); experiments
+  deleted. Board/Tasks close-out. Pin bumps recorded 2026-09-02 at each
+  landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 
@@ -1523,3 +1610,37 @@ data-migration tasks. All changes are commits to `product.json` and resources in
 - [ ] Retire `zoom-css-vars.js` / `tree-sticky-mask.js` / `hn-weight-shift.css` from the
   Settings repo (shipped in product now)
 - [ ] Update Settings/CLAUDE.md to point here
+
+## M20 — Icon set v2 (D22; NON-BLOCKING)
+
+Full redesign of the icon set under ONE construction recipe. Gates nothing — the M11
+set keeps shipping for testing; v2 integrates in one swap commit when finished.
+Working dir: `m20-icons-v2/` (umbrella). The law: [style-guide.md](m20-icons-v2/style-guide.md)
+(v1 autopsy · laws L1–L10 · 4 style candidates · production plan). Reused from
+`m11-icons/` verbatim: inventory, name/ext/lang associations, pins, theme logic
+(payload-only swap — 1,161 file + 618 folder ids), tools (validate / letterpath /
+chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
+
+- [x] Style guide authored (2026-09-02): failure autopsy, L1–L10, candidates
+  A Chips / B Brand true / C Wire / D Duotone, production plan
+- [ ] 4-style samples: 8 subjects each (typescript · editorconfig · json · markdown ·
+  docker · python · folder-src · folder-node) + self-contained comparison sheet
+  (sheet.html/png, incl. shipped-v1 row) — delegated 2026-09-02; session review, then
+  to Sebastian. Samples stay UNTRACKED until D22 (M11 precedent)
+- [ ] **D22 ruling** — Sebastian picks the style (or amends one) → lock the winner as
+  a §5 recipe card in the guide (exact constants), record on the board
+- [ ] Pilot ~24 icons (8 sample subjects + worst v1 offenders + 4 folder pairs
+  closed+open) through all L9 gates → Sebastian gate BEFORE mass production
+- [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
+  review-gated on its 16/22px contact sheet; letter audit (L3 table by measurement)
+  where the style has letters
+- [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
+  associations untouched, iconPaths only
+- [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
+  in `extensions/theme-vsebcode-icons` + pin bump; acceptance = M11 runbook (compile
+  + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
+  folder differentiation at tree size)
+
+Resume cold: read the style guide; check `m20-icons-v2/samples/` (sheet.png = the
+4-style comparison). If D22 is unruled, re-present the sheet and ask; if ruled, the
+board records it — proceed to the pilot.

@@ -157,9 +157,40 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   root-caused as INK sitting ~1px low in the 22px row (the M2 tab
   half-leading skew) → −1px lift on the row text container, all
   sidebar lists. Batteries green at zoom 0 and live-flip 1.728.
-  CHECKPOINT PENDING: his visual pass (his running dev instance needs
-  Cmd+R — out/ is at `b1640cf`); 13 parked flags in Tasks § M12; both
-  repo pushes his (session pushes permission-denied).
+  **FIX ROUND 3 same day (third checkpoint verdicts + two question-tool
+  rulings, 3 commits `20e0e77`→`14bdc90`, R11–R13 in Tasks § M12; D19
+  r12)**: rail-header line REMOVED (mockup-true — the seam keeps only
+  the editor-column hairline); the strip's transparency REDONE as the
+  ask meant it — `tabsBackground` moves to the 0.30 TRANSLUCENT set
+  (byte-same coat as the sidebar, vibrancy through the strip) with the
+  M1 opaque backstop pushed down to the editor body (+ empty-group grid
+  boxes; the dimmed-group opacity trap dodged), and inactive tabs ruled
+  NO-FILL (both variants alpha-0; active stays solid); SCM Changes
+  gutter collapsed (input/button x40→x24 w+16, list-mode resources
+  x56→x24; tree mode/graph/explorer untouched; inline-padding defeated
+  via absolute positioning, indent-proof). 2×2-split pixel scan: zero
+  translucent editor-body pixels. CHECKPOINT PENDING: his visual pass
+  (his 21:55 dev instance needs another Cmd+R — out/ is at `14bdc90`);
+  16 parked flags in Tasks § M12, flag 14 (list-mode SCM rows outdent
+  their group header) needs his verdict; both repo pushes his.
+- **M20 — Icon set v2 — OPENED 2026-09-02, style phase (D22 PENDING)**:
+  Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
+  different styles in one set; letter icons share no alignment/size/weight;
+  generic drawings where brands own logos (editorconfig shipped as generic
+  sliders); folder emblems too small to differentiate. **NON-BLOCKING by
+  directive**: gates nothing, M11 keeps shipping as the testing set; v2
+  integrates in ONE swap commit only when finished. Workshop
+  `m20-icons-v2/` (umbrella): [style-guide.md](m20-icons-v2/style-guide.md)
+  authored — v1 failure autopsy (root cause: the v1 spec legalized variety —
+  3 archetypes mixed, per-icon optical letter sizing, optional brand
+  fidelity, micro-emblem folders), binding craft laws L1–L10 (one
+  construction recipe; brand-first with verification duty; rigid letter
+  system; 16-grid zoom-don't-scale authoring; ≥8.5px centered folder
+  glyphs), FOUR candidate styles for D22 (A Chips / B Brand true / C Wire /
+  D Duotone; session recommends B), and the production plan — M11's
+  inventory/associations/pins REUSED verbatim (payload-only swap, far
+  cheaper than v1). 8-subject × 4-style samples + comparison sheet
+  delegated (samples untracked until D22, M11 precedent).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -654,6 +685,35 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   shape (VSCodeVim runs no upstream nvim plugins; its easymotion is the
   flash-adjacent surface — judged at the M19 brief). M4's marketplace gallery
   stays the hard prerequisite of the tail.
+- **D22 M20 icon style — PENDING** (opened 2026-09-02): pick the v2 icon
+  construction recipe among the four candidates in
+  [m20-icons-v2/style-guide.md](m20-icons-v2/style-guide.md) §3 — A "Chips"
+  (uniform colored container) / B "Brand true" (faithful official marks,
+  normalized; session recommendation) / C "Wire" (monoline native-minimal) /
+  D "Duotone" (two-tone flat, tamed 12-hue matrix). Guide laws L1–L10 bind
+  whichever wins. Ruling locks the recipe card into the guide; pilot before
+  mass production.
+- **D23 Isolated visual validation — TART VM (Sebastian 2026-09-02: live
+  testing "is blocking me from using my computer"; Docker-style isolation
+  requested; four options offered — headless code-web loop, background-window
+  capture, macOS VM, batching — ruled: Tart with a shared volume)**:
+  session-driven launch/CDP/`screencapture` rounds move into a local macOS VM
+  (`vsebcode-vm`, cloned from `ghcr.io/cirruslabs/macos-tahoe-base` — Tahoe
+  guest to match the host's rendering). The repo is shared into the guest via
+  `tart run --dir` (virtiofs, Docker-volume style); host and guest are both
+  arm64 macOS, so ONE checkout + one `out/` + one node_modules serve both
+  sides — nothing builds inside the guest. D7 roles unchanged: Sebastian runs
+  `npm run watch` + judges (and can launch `./scripts/code.sh` on the host
+  anytime); the session drives the guest over SSH, so nothing appears on the
+  host screen. Convention: the guest only READS the mount (host owns watch +
+  git). Docker itself rejected — Linux guests can't render the macOS surfaces
+  this project is about (SF Pro, vibrancy, native titlebar); in-VM vibrancy
+  composites against the VM's own desktop = real compositor output. Known
+  fallback if virtiofs launch is slow: copy `out/` guest-local pre-launch.
+  **Setup state 2026-09-02**: tart 2.32.1 installed (brew, `cirruslabs/cli`
+  tap trusted); image pull IN PROGRESS (27.8 GB compressed). Pending: first
+  boot, SSH key, guest screen-recording permission for `screencapture`, node
+  in guest, verified loop commands → Tasks.md.
 - **D19 amendments round 4 — tab row reverts to stock (Sebastian 2026-09-01:
   "the tabs are too big"; two options offered — combine tabs+breadcrumbs
   inside the 46 band, or drop the tab/top-bar alignment and take stock
@@ -768,6 +828,29 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   his call. The committed mockups keep round 4's 35px tab row as design
   history — the implementation is the live truth. Amends rounds 4 and the
   M3-era deferred-overflow record.
+- **D19 amendment round 12 — SEAM LINE, STRIP MATERIAL, SCM GUTTER
+  (Sebastian 2026-09-02, third M12 checkpoint; the two design forks put
+  through the question tool, all recommendations approved)**: (1) the
+  stock line under the top-located composite bar (`sideBarActivityBar-
+  Top.border`) is REMOVED under the gate — the mockup draws no rail
+  line; the breadcrumbs' top hairline is the seam's only line (also
+  moots the once-observed 1px title-stack offset — nothing left to
+  misalign). (2) Round 11's strip reading is SUPERSEDED: "transparent"
+  meant the SIDEBAR'S MATERIAL — `editorGroupHeader.tabsBackground`
+  joins the 0.30 translucent set (not the alpha-0 set), the editor
+  part's D9 opaque pin moves from the part to the editor BODY (empty
+  groups pinned at their grid box — an inactive empty group dims to
+  opacity 0.5, so an own-fill would leak vibrancy), and INACTIVE TABS
+  paint no fill (mockup: tabs show the strip; only the active tab is
+  solid — `tab.inactiveBackground` + unfocused twin → alpha-0 set).
+  D9's "editor opaque" now formally means the editor BODY + empty
+  groups; the title band is chrome and carries material. Accepted
+  approximations recorded as flags 15/16 (opaque single-tab band, tab
+  fade-gradient flatten). (3) SCM Changes: dead twistie gutters
+  collapse (rows that never render a twistie stop reserving the
+  column; list-mode resources included, tree mode untouched) — the
+  16px row grammar stays; flag 14 holds the files-vs-group-header
+  outdent for his verdict.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:
