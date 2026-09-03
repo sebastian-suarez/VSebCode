@@ -141,9 +141,25 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   All battery-verified live incl. main-process themeSource proof in
   a light OS. **FONT RULED same day (D19 r10): SF PRO at default
   size** — both experiments retired + Geist unvendored as a pure
-  deletion (`e246e6d`, R6 in Tasks § M12). CHECKPOINT PENDING: his
-  light-mode + inset visual pass; 8 parked flags in Tasks § M12;
-  both repo pushes his (session pushes permission-denied).
+  deletion (`e246e6d`, R6 in Tasks § M12). **FIX ROUND 2 same day
+  (second checkpoint verdicts, 4 commits `bdcdd6b`→`b1640cf`, R7–R10
+  in Tasks § M12)**: tab row BACK at the 46pt band — S1 reverted
+  byte-identical, the r4 stock ruling reversed by verdict (D19 r11);
+  the zoom-overflow bug solved the NEW way instead — everything the
+  fixed band shows (pill box/glyph/radius, tab label, tab file icon)
+  now divides by `--zoom-factor`, so band content holds physical size
+  at every zoom (composite-bar stale-width cache found + fixed via a
+  next-frame remeasure); tab strip transparent —
+  `editorGroupHeader.tabsBackground` joins the D14 alpha-0 set, the
+  editor column reads as one surface (inactive-tab fills kept, flagged);
+  his "gitlens" = the built-in SCM/Graph view (no GitLens installed
+  anywhere) and its + explorer's selection-centering complaint
+  root-caused as INK sitting ~1px low in the 22px row (the M2 tab
+  half-leading skew) → −1px lift on the row text container, all
+  sidebar lists. Batteries green at zoom 0 and live-flip 1.728.
+  CHECKPOINT PENDING: his visual pass (his running dev instance needs
+  Cmd+R — out/ is at `b1640cf`); 13 parked flags in Tasks § M12; both
+  repo pushes his (session pushes permission-denied).
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
@@ -730,6 +746,28 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   updateFontFamily (prefer-const fires once the experiment's reassignment
   is gone; first commit ever to stage that file). The committed mockups
   keep Geist embedded as design history — they are not product.
+- **D19 amendment round 11 — TAB ROW BACK AT THE 46pt BAND, CONTENT GOES
+  PHYSICAL (Sebastian 2026-09-02, second M12 checkpoint: "I want the tab to
+  be the same size as the activity bar again, like before … make the
+  activity bar icons and the tab icon + filename change their sizes (like
+  font size) based on the zoom level, since the top bar is fixed … the
+  background of the tab container to be transparent")**: REVERSES round 4's
+  stock-tabs ruling by exercising the veto it left open — stock read wrong
+  live (traffic-lights spacing broken, hairline misaligned against the rail
+  header). The editor tab row returns to the inline-title-bar physical
+  height (M12-S1 reverted byte-identical, `bdcdd6b`, incl. the −1px label
+  lift). The zoom-overflow bug that round 4 traded the band away for is
+  solved head-on instead: everything the fixed band SHOWS — pill box,
+  radius and glyph, tab label text, tab file icon — is sized in physical
+  points too (`calc(X / var(--zoom-factor))`, `1b71790`), so band and
+  content hold constant on-screen size at every zoom; tab boxes/paddings/
+  min-max widths deliberately stay CSS-px (zoom still resizes the layout).
+  Plus: `editorGroupHeader.tabsBackground` joins the D14 alpha-0 force set
+  (`e10d246`) — the strip stops banding `#191A1B` across the editor column
+  and shows the opaque editor `#121314`; inactive-tab fills kept pending
+  his call. The committed mockups keep round 4's 35px tab row as design
+  history — the implementation is the live truth. Amends rounds 4 and the
+  M3-era deferred-overflow record.
 - **D19 amendments round 7 — VIEW 5 (OIL) WITHDRAWN (Sebastian 2026-09-01,
   ruled in the animation session, relayed: "I dont like Oil, remove its
   mockup and anywhere that references it to impolement" [implement])**:

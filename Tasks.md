@@ -1089,7 +1089,7 @@ Sebastian's call and HARD-GATES M17–M19 (the vim extension needs the marketpla
 Dev-loop reminders: this fork's watch never writes `out/` — compile by hand + verify
 markers; launch skill with `TMPDIR=/tmp`.
 
-### M12 — Base-scene parity (all five slices LANDED 2026-09-02; Sebastian's checkpoint pending)
+### M12 — Base-scene parity (five slices + fix rounds 1–2 LANDED 2026-09-02; Sebastian's checkpoint pending)
 
 All slices delegated (opus-coder), diff-reviewed, hooks ON, no AI attribution;
 per-slice `npm run compile` exit 0. Session dev battery run over CDP the same day
@@ -1282,15 +1282,85 @@ the round briefs):
   permission — terminal captures come back black), CDP screenshot delivered.
   Leaked agent-probe instances found + killed at cleanup (R2/R3-era offscreen
   Electron trees) — sweep `ps aux | grep "Code - OSS"` at every session end.
-- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `cdb8f188ab4`; launch
-  `./scripts/code.sh` and judge: light-mode look with the OS in light mode
-  (the real vibrancy read), pane-body insets + full-width headers, search
-  insets, the baked defaults feel, and the FONT CALL via
-  `vsebcode.uiFontExperiment` (see R4 HOW TO USE). Pushes are his (session
-  pushes permission-denied): `cd vscode && git push origin vsebcode` then
-  umbrella `git push`.
-- [ ] **Parked flags for verdicts** (updated after the fix round; old flag 1
-  RESOLVED by R3, old flag on S4 padding superseded by R2):
+**FIX ROUND 2 2026-09-02 — Sebastian's second checkpoint verdicts, four slices
+landed same day** (one opus-coder run, four commits, each diff-reviewed; hooks
+ON, no AI attribution; `npm run compile` exit 0 after every commit). His
+"gitlens" READ AS the built-in Source Control view + its Graph pane — no
+GitLens exists anywhere on this machine (`~/.vscode-oss{,-dev}/extensions`
+hold only vscode-icons; no `gitlens.*` settings keys) and the Graph pane is
+the GitLens-look-alike; its pane-body insets measured CORRECT (rows x16,
+symmetric), so the real shared defect was the row-label seat — R10:
+
+- [x] **R7 landed** (`bdcdd6bbb92`) — "I want the tab to be the same size as
+  the activity bar again, like before": S1's stock-tabs commit REVERTED — the
+  gated physical `tabHeight` branch, zoom/inline-titlebar listeners and the
+  −1px label lift are back; PROOF: both files byte-identical to the pre-S1
+  state (`git diff 4129e69754f bdcdd6bbb92 -- <2 files>` empty). This
+  exercises the veto D19 r4 left open (stock read wrong live: lights spacing
+  + hairline misalignment) → D19 amendment round 11 on the board. Mockups
+  stay at 35px tabs as the historical r4 record — implementation is the
+  live truth.
+- [x] **R8 landed** (`1b717905346`) — "make the activity bar icons and the
+  tab icon + filename change their sizes based on the zoom level": every
+  size the fixed 46pt band shows is now PHYSICAL — pill box 34×28, radius 6,
+  glyph 20, tab label (reads the patch's `--vscode-workbench-tabs-font-size`,
+  so per-surface config still wins) and tab file icon 16 all divide by
+  `--zoom-factor`. Tab BOXES/paddings/min-max widths deliberately stay
+  CSS-px (zooming resizes layout; only the shown content pins). This kills
+  the M3-deferred zoom-overflow bug WITHOUT giving up the band — battery at
+  factor 1.728: band+tabs 26.62px, label 7.52, icon 9.26, glyph 11.57, pills
+  inside the header. FOUND+FIXED en route: the composite bar caches item
+  widths from one DOM measure, so a LIVE zoom flip decided overflow against
+  the dead layout (A/B: live flip 4 pills + chevron vs cold boot 5 + none at
+  the same width) — new thin `recomputeSizes()` pass-throughs
+  (PaneCompositeBar → AbstractPaneCompositePart) called from SidebarPart's
+  zoom handler on the NEXT ANIMATION FRAME, because SidebarPart is
+  constructed before `InlineTitleBarLayout` registers and so hears zoom
+  changes before `--zoom-factor` is rewritten. Vendored patch files
+  untouched; no `!important` (13–14 classes out-specify the vendored
+  cascade).
+- [x] **R9 landed** (`e10d246fefc`) — "background of the tab container
+  transparent": `editorGroupHeader.tabsBackground` joins
+  `MAC_TRANSPARENT_SURFACES` (the D14 alpha-0 force set) — the strip stops
+  painting its own `#191A1B` band and shows the editor part's opaque
+  `#121314`, so the editor column reads as one surface top to bottom.
+  Consumers audited: group view title paint goes transparent (intended); the
+  tabs control `.flatten()`s the color against editor background for the tab
+  fade gradients → they now fade to the color that actually shows. Inactive
+  tabs deliberately KEEP their `#191A1B` fills (flag below). node suite
+  identical before/after (7215 pass, same 5 pre-existing failures,
+  stash-verified baseline).
+- [x] **R10 landed** (`b1640cfb612`) — the explorer/"gitlens" selection
+  centering: the label BOX measures dead-center in the 22px row (3.5px each
+  side) but the INK reads ~1px low — the same ascent>descent half-leading
+  skew the M2 tab nudge documents. Fix: `top: -1px` on
+  `.monaco-list-row .monaco-icon-label-container` (text container ONLY — the
+  ::before file icon is separately centered, same rationale as tabs), all
+  sidebar lists (explorer, SCM, Graph, outline, sticky rows). Probed: text
+  container −1px in all three views; row, icon-label and icon ::before boxes
+  unmoved; lift lands nowhere else (breadcrumbs/pane headers/statusbar
+  clean).
+- [x] Session battery round 2 (2026-09-02, dev instance over CDP after
+  reload): gate ON, tab band 46+26=72 with strip inline
+  `rgba(25,26,27,0)` over editor `#121314`, pills 34×28@20 r6, row lift −1
+  exact; LIVE zoom→3 flip: band+tabs 26.62 both columns, label 7.52, icon
+  9.26, glyph 11.57, radius 3.47, pills inside header, remeasure fires;
+  restore to 0 exact. Paint-stack probe confirmed the transparent-root/0.3
+  coat design intact (CDP captures composite it over white — the recorded
+  vibrancy-blindness, NOT a regression). Session instances killed + runDirs
+  removed; Sebastian's own hand-launched dev instance (relative-path
+  `./scripts/code.sh` tree) left RUNNING — it renders pre-round code until
+  a Cmd+R.
+- [ ] **Checkpoint (Sebastian)** — out/ is compiled at `b1640cfb612`; your
+  running dev instance needs Cmd+R (all four fixes are renderer-side).
+  Judge: the 46pt tab band next to the rail header (lights spacing +
+  hairline), zoom through +1/+2/+3 (band and its content should hold
+  physical size, nothing overflows), the tab strip showing plain editor
+  color, and selected rows in explorer + Source Control Graph reading
+  centered. Pushes are yours (session pushes permission-denied):
+  `cd vscode && git push origin vsebcode` then umbrella `git push`.
+- [ ] **Parked flags for verdicts** (updated after fix round 2; old flag 1
+  RESOLVED by R3, old S4-padding flag superseded by R2):
   (1) S3 caption-row drag strip slightly smaller (no-drag actions box spans
   its rail: ~+8px at 300px) — acceptable, or move no-drag onto the action
   items? (2) diff editors inherit relative line numbers — keep or pin `'on'`?
@@ -1304,13 +1374,32 @@ the round briefs):
   could outrank them (moot-ish: `workbench.enableExperiments: false` is
   itself baked) — set the flag anyway? (8) NEW from R3: baked
   `security.workspace.trust.untrustedFiles: "open"` — his value, noted
-  because it is security-relevant.
-- [ ] Close: packaged verification — bundle markers now REFLECT R6: NO woff2
-  anywhere (Geist unvendored), no `vsebcode.uiFont*` strings, workbench
-  falls back to `--monaco-font`; plus the standing slice markers (stock
-  tabs, pane-body insets, defaults blob, systemColorTheme dark). Font
-  ruling DONE (R6); experiments deleted. Board/Tasks close-out. Pin bumps
-  recorded 2026-09-02 at each landing.
+  because it is security-relevant. (9) NEW from R9: inactive tabs still
+  paint their own `#191A1B` fills on the now-editor-colored strip — keep
+  (tabs read as tabs) or force flat too? (10) NEW from R8: the pill count
+  badge is pinned `top: calc(50% - 13px)` for the 28px pill — at zoom 3 it
+  rides ~5px above the shrunken pill; rule wanted? (11) NEW from R8, gaps
+  accepted by scope: glyph-FONT icon themes in tabs still scale with zoom
+  (our SVG set is pinned; only bites if a font icon theme is ever
+  installed); toggling the inline title bar itself, or zooming while the
+  sidebar is hidden, can leave the pill-width cache stale until the next
+  item change (same pre-existing cache shape). (12) OBSERVED, pre-existing
+  stock behavior, untouched: the Source Control Graph pane HEADER's action
+  toolbar (repo picker + branch picker + 5 actions) is ~279px wide and
+  clips at a 300px rail — its last icons cut at the edge, title crushed to
+  "G…"; stock has no max-width plumbing for pane-header toolbars. Fix
+  wanted? (13) NEW from R9, cosmetic: getting-started walkthrough SVGs fill
+  their mock title bars with the now-transparent variable and draw those
+  rects clear.
+- [ ] Close: packaged verification — bundle markers now REFLECT R6 + fix
+  round 2: NO woff2 anywhere (Geist unvendored), no `vsebcode.uiFont*`
+  strings, workbench falls back to `--monaco-font`; 46pt tab band restored
+  (inlineTitleBar import back in the tabs control), `/ var(--zoom-factor`
+  calcs in sidebarpart + multieditortabscontrol CSS, tabsBackground in the
+  transparent set, row-label lift rule; plus the standing slice markers
+  (pane-body insets, defaults blob, systemColorTheme dark). Font ruling
+  DONE (R6); experiments deleted. Board/Tasks close-out. Pin bumps recorded
+  2026-09-02 at each landing.
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 
