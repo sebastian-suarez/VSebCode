@@ -1847,6 +1847,29 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   kept faithful (eslint 2.25:1 = D22 precedent; lift-rule wording clarified:
   applies to ink that MEETS THE BACKDROP — errata candidate). Pilot commit +
   guide errata fold wait on the verdicts.
+- [x] **GATE RULED 2026-09-03: 22/24 APPROVED as built.** Ratified with them:
+  open-folder construction + shade formula (flag 1), color source-of-truth
+  tiebreak (flag 2: brand-colors.json wins the primary hex, the artwork's own
+  fills win secondary layers), dotenv ".E" (flag 3), lift = backdrop-meeting
+  ink only (flag 4), yaml faithful lockup (flag 5), vue dark half at 2.01:1
+  (flag 8), folder-test check (flag 9), folder-docker whale-only face
+  (flag 10). Ratified errata FOLDED into the guide same day (§5 lift/color
+  tiebreak, §5 open-folder construction, L5 gestalt erratum). REJECTED:
+  docker + editorconfig ("definitely NOT the docker or editorconfig logo") —
+  D22's per-icon fidelity verdicts AMENDED for the two carried subjects:
+  docker's 3+1 deck lost the loaded-cargo pyramid; editorconfig's solid
+  silhouette destroyed the drawn mascot (the official mark is line art).
+- [ ] Fix round (delegated, running): editorconfig re-derived as a
+  prettier-rider reduction of the drawn mascot (light face + dark features
+  ≥1.2px at official proportions; brand vector checked first per L2); docker
+  deck densified at official box geometry (3+2 / 4+2 candidates measured at
+  the 1.2px floor, comparison PNG saved regardless; agent stops on a tie);
+  folder-docker + the other 22 icons byte-frozen (asserted); carry-identity
+  gate reworked to 10 identical + 2 pilot-superseded; full gate re-run;
+  sheet regenerated with a fix-round strip (v1 → rejected pilot → fixed,
+  official source beside) and RULED markers on flags 1–5/8–10. Then:
+  session review → republish same artifact URL → Sebastian re-look at the
+  two fixed icons → pilot commit (tools/ + sources-svg/ + pilot/).
 - [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
   review-gated on its 16/22px contact sheet; letter audit (L3 table by measurement)
   where the style has letters
@@ -1857,8 +1880,10 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
   folder differentiation at tree size)
 
-Resume cold: read the style guide (§5 = the law); the pilot is BUILT and untracked in
-`m20-icons-v2/pilot/` (sheet.png = the full review page; verify with
-`cd m20-icons-v2 && node tools/gates.mjs`). If the pilot gate is unruled, re-present
-the pilot sheet artifact and ask; on the verdicts: commit tools/ + sources-svg/ +
-pilot/ (+ fold any ruled errata into the guide), then start production slices.
+Resume cold: read the style guide (§5 = the law, pilot errata folded); the pilot is
+BUILT and untracked in `m20-icons-v2/pilot/` (sheet.png = the full review page;
+verify with `cd m20-icons-v2 && node tools/gates.mjs`). Gate state: 22/24 ruled
+APPROVED 2026-09-03; docker + editorconfig rejected → fix round. If the fix round is
+unreviewed: review it, republish `pilot/sheet.html` to the SAME artifact URL
+(a6ff6bf2…), present the two fixed icons; on his confirm: commit tools/ +
+sources-svg/ + pilot/, then brief production slices.

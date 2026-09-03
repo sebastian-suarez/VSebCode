@@ -133,6 +133,13 @@ Material keylines, VS Code codicons) is **design AT the target grid, work ZOOMED
   comfortable margin; the style's palette bands (§3) are chosen so this holds by
   construction. Light-theme variants are a later, optional pass (the theme format
   supports them); dark is the design target.
+- *Erratum (pilot gate, ruled 2026-09-03): a simplification that is legal by the
+  numbers but loses the mark's GESTALT is still a fidelity failure — docker's deck
+  thinned to 3+1 boxes stopped reading as the loaded-cargo whale, and editorconfig's
+  solid-silhouette flattening destroyed a mark that is really a line drawing (both
+  D22-carried, both REJECTED at the pilot gate). A reduction must keep what makes the
+  mark THAT mark; when official detail cannot hold the floor, thicken/redistribute it
+  prettier-style before deleting it.*
 
 ### L6 · Palette law
 One palette REGIME for the whole set — never two. Per style (§3), but always: hues may
@@ -359,7 +366,11 @@ the round-2 constants as sampled and ruled.
   compact ≈ 11.4–13 across. One mass system; judge against the sampled twelve.
 - Colorless official marks stay monochrome; black lifts to the light ink (~L 88,
   markdown-class) for the dark backdrop. Achromatic exemption: S < 12 inks are never
-  saturation-clamped.
+  saturation-clamped. *Erratum (pilot, ruled 2026-09-03): the lift applies to ink that
+  MEETS THE BACKDROP — ink printing on the mark's own field is never lifted (dotenv's
+  black on its yellow field). Color source-of-truth on a conflict between
+  `brand-colors.json` and the brand's own file: brand-colors wins the PRIMARY hex, the
+  artwork's own fills win secondary layers (npm/git/go precedent, approved as built).*
 - Mark-less concepts (json, log, lock, …): the shared neutral glyph vocabulary in one
   gray ink (`#A6AEB6`-class). TYPESET LETTERS DO NOT EXIST in R1 — letterforms appear
   only as source geometry (TS's lozenge letters etc.); the L3 table stays dormant.
@@ -375,6 +386,12 @@ the round-2 constants as sampled and ruled.
   ≥ 8 px largest ink dimension, centered on the face. Mark-less folders: sand body
   (`#BF9354` v1 base) + white neutral glyph — never gray-on-sand. Closed/open = one
   construction, same mark, flap state only.
+- Open state (ruled at the pilot gate, 2026-09-03): v1's two-panel open silhouette
+  verbatim (back sheet + tipped pocket); the second tone derives by formula
+  `shade(body) = hsl(h, s, max(18, l − 15))` — hue/saturation untouched, floored so a
+  dark body cannot collapse into the backdrop (reproduces v1's hand-picked sand pair
+  within two units per channel). The face mark is byte-identical in both states and
+  crosses the panel seam — approved as built.
 
 **Gates per slice (production)**
 - check.mjs format law (L8; 2 KB advisory / 4 KB fail) + derivation assert (icon path

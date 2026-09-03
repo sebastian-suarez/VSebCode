@@ -261,12 +261,20 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   16px proofs 19+5 marginal, twin audit 0 twins (4 blues clear),
   0 typeset letters. Pilot sheet →
   https://claude.ai/code/artifact/a6ff6bf2-1af0-4877-b5b4-f059239ec0d7
-  — 13 flags await verdicts, key: open-folder NEW construction
-  (shade formula, mark crosses the seam), color source-of-truth
-  rule unratified (brand-colors.json vs brand files), dotenv ".E",
-  yaml 16px readability, vue dark half faithful at 2.01:1 (eslint
-  D22 precedent). Details + resume in Tasks § M20. Pilot commit +
-  slices wait on the gate.
+  — 13 flags presented. **GATE RULED same day: 22/24 APPROVED as
+  built** — ratified: open-folder construction (shade formula, mark
+  crosses the seam), color source-of-truth tiebreak (brand-colors
+  wins primary, artwork wins secondary), dotenv ".E", yaml faithful,
+  vue dark half, folder rulings; errata folded into the guide (§5 ×2
+  + L5 gestalt). REJECTED: docker + editorconfig ("definitely NOT
+  the docker or editorconfig logo") — D22 fidelity AMENDED for the
+  two: the 3+1 deck lost the cargo pyramid, the silhouetted mascot
+  lost the drawing. Fix round delegated + running (mascot rebuilt as
+  drawn-feature rider reduction; deck densified at official box
+  geometry, candidates measured, agent stops on a tie; other 22
+  byte-frozen, asserted). Then: session review → republish same URL
+  → his re-look at the two → pilot commit → slices. Details + resume
+  in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
