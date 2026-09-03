@@ -1733,30 +1733,43 @@ cleanest).
 - [x] **Checkpoint (Sebastian) — APPROVED 2026-09-03 ("Approved, commit it")**:
   corner + seam pass on the dev instance; pin bump committed on the verdict.
   Flag verdicts ruled in-session, recorded below.
-- [ ] **Flags for verdicts** (all implemented-as-described; none block the judge):
-  (1) VERTICAL panel (left/right) falls back to the stock full-width statusbar
-  — session call consistent with the ratified sidebar-right fallback (no
-  editor/panel branch exists to become the column); ratify or re-rule.
-  (2) `isPanelMaximized()`/`panelOpensMaximized()` still read the RAW
-  alignment: under the gate with a stored non-center alignment the grid is
-  center-shaped but panel-maximize commands report unavailable — clamp them
-  too? (two-line follow-up).
-  (3) The new `.part.sidebar.left:focus` corner-radius rule is INERT today
-  (the sidebar part box never takes DOM focus; only the statusbar sets
-  tabIndex) — kept as the future-proof mirror of the statusbar rule; drop if
-  you prefer honest absence.
-  (4) With the AUX BAR VISIBLE the statusbar keeps its bottom-RIGHT focus
-  radius while the aux bar actually owns that corner — conditional rule
-  (`.noauxiliarybar`) available if it ever reads wrong.
-  (5) The rail's newly exposed bottom strip (former statusbar territory) has
-  NO drag surface — rail content, by design; judge at the pass.
-  (6) `getNeighborPart` grid-geometric focus nav changes meaning benignly
-  under the gate (Down from sidebar = nothing; Down from editor = the column
-  rows); the part-cycling ring is untouched.
-  (7) TOOLING, pre-existing: `launch-vm.sh -- <extra args>` forwarding is
-  broken (its `shquote` emits invalid quoting for values containing quotes —
-  any extra arg trips it); suggested one-line fix = `printf '%q'`; delegate on
-  approval.
+- [x] **Flags RULED 2026-09-03 (all six in-session, question round)**:
+  (1) VERTICAL panel fallback RATIFIED as built — **with an ANNOTATION:
+  re-evaluate after the MVP** (his wording: keep it for now, he feels stuck
+  at this step — bias to momentum; a future round may design the full-height
+  rail for side-docked panels).
+  (2) Maximize predicates: FIX RULED — `isPanelMaximized()`/
+  `panelOpensMaximized()` read the effective (wants-clamped) alignment;
+  delegated as the post-checkpoint fix round.
+  (3) Inert `.part.sidebar.left:focus` radius rule: KEEP (future-proof
+  mirror of the statusbar rule).
+  (4) Statusbar bottom-RIGHT focus radius: MAKE CONDITIONAL — drops when
+  the visible aux bar owns that corner (`noauxiliarybar` gate); aux gets
+  the inert mirror rule (same family as flag 3). Delegated, same round.
+  (5) Rail bottom strip stays NON-draggable — ruled fine (rail content;
+  statusbar + top rows still drag).
+  (6) `getNeighborPart` semantic shift under the gate: accepted as the
+  honest reading of the new geometry (informational; no change).
+  (7) `launch-vm.sh` shquote bug: FIX RULED (`printf '%q'`-class one-liner,
+  round-trip-proven); delegated, same round, tooling commit.
+- [x] **Flag fix round LANDED 2026-09-03** (delegated; diffs reviewed; hooks ON;
+  2 commits): `c54bc6fb45e` — new `getEffectivePanelAlignment()` (wants-clamped)
+  feeds `isPanelMaximized`/`panelOpensMaximized` (flag 2); statusbar
+  bottom-RIGHT focus radius drops when a visible aux bar owns the corner
+  (`:not(.noauxiliarybar)` on the column class — the two classes verified
+  never to collide with aux-MAXIMIZED, where the column class is off) + the
+  aux bar gets the inert mirror radius rule (flag 4). The other two clamp
+  sites keep their parameterized reads by design (different signatures — a
+  no-arg helper doesn't fit them; noted, no behavior gap). `258e36f6337` —
+  launch-vm `shquote` → `printf '%q'`, both quoting layers round-trip-proven
+  on 6 extra-arg cases + the env-prefix site (old failed ALL extra-arg
+  cases, incl. plain paths). LATENT, recorded not fixed: `capture-vm.sh`
+  carries a byte-identical copy of the old shquote — can never fire today
+  (its only arg is a generated quote-free path); same one-liner if it ever
+  gains call sites. Verification: compile 0, eslint 0, hygiene 0, suites
+  43/195 at baseline, `bash -n` clean. These two ride the NEXT battery/
+  packaged pass for live proof (focus-state cosmetics + a predicate read —
+  suite-covered; not worth a dedicated VM round).
 - [ ] Close: packaged verification rides the next packaged pass together with
   M12's (M2→M3 precedent). M13 markers for that grep: `getViewLocation` public
   in grid.js; `statusbar-in-editor-column` in workbench js + css;
