@@ -2,7 +2,26 @@
 // audit.mjs — the twin audit (L9 gate 4), thresholds ported from the m11
 // production tooling so a v2 verdict is comparable with every v1 verdict.
 //
-//   node tools/audit.mjs [--json]
+//   node tools/audit.mjs [A01] [--json]
+//
+// With a slice id the audit is CROSS-SET: the pilot's twenty subjects and every
+// subject the slice has built are scored in one pool, because a slice icon that
+// collides with a pilot icon is exactly as bad as one that collides inside its own
+// slice. THREE lanes are exempt from R8 and REPORTED instead of failed, because in
+// all three the identity is declared and deliberate:
+//   FAMILY   working rule 1 — a variant that ships its family's base mark under its
+//            own id (python-misc). Byte-identity is the rule doing its job.
+//   NEUTRAL  working rule 2 — concepts that share a CATEGORY glyph (awk/bat on the
+//   COLLAPSE terminal, the three bench ids on the stopwatch). Byte-identity is the
+//            collapse doing its job.
+//   LOOK-    NEW WITH THE A01 FIX ROUND (2026-09-03), chartered by the ruling that
+//   ALIKE    reinstated antlr. Two brands whose REAL marks genuinely resemble each
+//            other may both keep them: the pair is DECLARED in the registry
+//            (LOOKALIKE, in the tranche that owns the mark), named with the ruling
+//            that opened it, reported with its live scores on every run, and never
+//            failed. This is a lane and not a mute button — it prints exactly what
+//            it is exempting, and an UNDECLARED pair scoring the same still fails.
+// None of the three is silently dropped: all print with their scores.
 //
 // R7  two icons are twins iff dhue < 12 AND dL < 12 AND dS < 25 on their dominant
 //     fills. Chroma (HSL S) < 25 is the neutral lane and is exempt.
@@ -22,16 +41,19 @@
 // higher IOU_COLLIDE_PLATE bar. The plate flag is a property of the artwork,
 // declared in sources.mjs, not a judgement made here.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FILES, FOLDERS, spec } from './sources.mjs';
 import { toHsl } from './color.mjs';
+import { resolveTarget } from './targets.mjs';
 import { rasterFills } from '/Users/sebastian.suarez/Projects/VSebCode/m11-icons/production/tools/raster.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = join(HERE, '..', 'pilot');
 const asJson = process.argv.includes('--json');
+const target = await resolveTarget();
+const slice = target.kind === 'slice' ? target.registry : null;
 
 // thresholds — m11 production/tools/audit.mjs, unchanged
 const D_HUE = 12, D_LIGHT = 12, D_SAT = 25, NEUTRAL_S = 25;
@@ -41,16 +63,53 @@ const IOU_COLLIDE_PLATE = 0.92;   // m11's IOU_COLLIDE_BADGE — every plate sil
                                   // GLYPH inside one may reach the bar
 
 const entries = [
-	...FILES.map(id => ({ kind: 'file', id, path: join(OUT, 'icons', `${id}.svg`) })),
-	...FOLDERS.map(id => ({ kind: 'folder', id, path: join(OUT, 'icons', `${id}.svg`) }))
+	...FILES.map(id => ({ set: 'pilot', kind: 'file', id, path: join(OUT, 'icons', `${id}.svg`) })),
+	...FOLDERS.map(id => ({ set: 'pilot', kind: 'folder', id, path: join(OUT, 'icons', `${id}.svg`) })),
+	...(slice ? slice.FILES.map(id => ({ set: slice.id, kind: 'file', id,
+		path: join(target.dir, 'icons', `${id}.svg`) })) : []),
+	...(slice ? slice.FOLDERS.map(id => ({ set: slice.id, kind: 'folder', id,
+		path: join(target.dir, 'icons', `${id}.svg`) })) : [])
 ];
-const raster = await rasterFills(entries);
+
+// declared identities (see the header): which family / which shared category glyph /
+// which declared look-alike pair
+const familyOf = {}, collapseOf = {};
+const lookalikeOf = new Map();       // "a|b" (sorted) -> the declaration
+if (slice) {
+	for (const [name, f] of Object.entries(slice.FAMILIES || {})) {
+		for (const id of [f.base, ...(f.members || [])]) { familyOf[id] = name; }
+	}
+	for (const [glyph, ids] of Object.entries((slice.NEUTRAL_COLLAPSE || {}).category_glyphs || {})) {
+		for (const id of ids) { collapseOf[id] = glyph; }
+	}
+	// a look-alike declaration names exactly two ids and the ruling that opened it;
+	// anything short of that is not a declaration and the pair keeps failing
+	for (const l of slice.LOOKALIKE || []) {
+		if (!Array.isArray(l.pair) || l.pair.length !== 2 || !l.ruling) {
+			throw new Error(`LOOKALIKE entry must name two ids and a ruling: ${JSON.stringify(l)}`);
+		}
+		lookalikeOf.set([...l.pair].sort().join('|'), l);
+	}
+}
+const declared = (A, B) => {
+	if (familyOf[A.id] && familyOf[A.id] === familyOf[B.id]) { return { lane: 'family', name: familyOf[A.id] }; }
+	if (collapseOf[A.id] && collapseOf[A.id] === collapseOf[B.id]) { return { lane: 'collapse', name: collapseOf[A.id] }; }
+	const L = lookalikeOf.get([A.id, B.id].sort().join('|'));
+	if (L) { return { lane: 'lookalike', name: L.pair.join(' / '), decl: L }; }
+	return null;
+};
+
+// the raster is keyed per SET as well as per kind: two sets may one day carry the
+// same concept id, and a silent key collision there would score an icon against
+// itself instead of against its twin
+const raster = await rasterFills(entries.map(e => ({ kind: `${e.set}/${e.kind}`, id: e.id, path: e.path })));
+const specOf = (e) => (e.set === 'pilot' ? spec(e.id) : slice.spec(e.id));
 
 const icons = entries.map(e => {
-	const r = raster.get(`${e.kind}/${e.id}`);
+	const r = raster.get(`${e.set}/${e.kind}/${e.id}`);
 	const dominant = r.dominant;
 	const [h, s, l] = toHsl(dominant);
-	const plate = !!spec(e.id).plate;
+	const plate = !!specOf(e).plate;
 	// a folder's silhouette is set law; its FACE MARK is what distinguishes it.
 	// same for a plate mark: the field is a rectangle, the glyph is the concept.
 	const form = (e.kind === 'folder' || plate) ? r.mark : r.ink;
@@ -132,6 +191,7 @@ const dHue = (a, b) => { const d = Math.abs(a - b) % 360; return d > 180 ? 360 -
 
 // ---- R7 + R8 -------------------------------------------------------------------
 const twins = [], separated = [], nearTwins = [], forms = [], nearForms = [], neutralPairs = [];
+const familyLane = [], collapseLane = [], lookalikeLane = [];
 for (const kind of ['file', 'folder']) {
 	const pool = icons.filter(i => i.kind === kind);
 	for (let i = 0; i < pool.length; i++) {
@@ -139,7 +199,25 @@ for (const kind of ['file', 'folder']) {
 			const A = pool[i], B = pool[j];
 			const dh = dHue(A.hsl.h, B.hsl.h);
 			const dl = Math.abs(A.hsl.l - B.hsl.l), ds = Math.abs(A.hsl.s - B.hsl.s);
-			const rec = { kind, a: A.id, b: B.id, dh: +dh.toFixed(1), dl: +dl.toFixed(1), ds: +ds.toFixed(1) };
+			const rec = { kind, a: A.id, b: B.id, ...(slice ? { sets: `${A.set}/${B.set}` } : {}),
+				dh: +dh.toFixed(1), dl: +dl.toFixed(1), ds: +ds.toFixed(1) };
+
+			// DECLARED IDENTITY — reported in its own lane and scored, never failed
+			// and never dropped (working rules 1 and 2)
+			const d = declared(A, B);
+			if (d) {
+				const rec2 = { ...rec, declared: d.name, ...round3(formSim(A, B, 0)),
+					identical: A.ink === B.ink };
+				if (d.lane === 'lookalike') {
+					// the whole point of this lane is that the numbers stay visible, so the
+					// bar it WOULD have been judged against is recorded next to the score
+					lookalikeLane.push({ ...rec2, bar: lane(A, B).bar, scored: lane(A, B).why,
+						ruling: d.decl.ruling, why: d.decl.why });
+				} else {
+					(d.lane === 'family' ? familyLane : collapseLane).push(rec2);
+				}
+				continue;
+			}
 
 			// R8 first — form collisions are unscoped by colour
 			const L = lane(A, B);
@@ -171,21 +249,33 @@ function round3(f) { return { area: +f.area.toFixed(3), edge: +f.edge.toFixed(3)
 
 // ---- report ---------------------------------------------------------------------
 const result = {
+	scope: slice ? `pilot + ${slice.id}` : 'pilot',
 	thresholds: { D_HUE, D_LIGHT, D_SAT, NEUTRAL_S, IOU_COLLIDE, IOU_NEAR, FORM_SEP },
 	palette: icons.map(i => ({ id: i.id, kind: i.kind, dominant: i.dominant,
 		h: +i.hsl.h.toFixed(1), s: +i.hsl.s.toFixed(1), l: +i.hsl.l.toFixed(1) })),
-	twins, separated, nearTwins, neutralPairs, forms, nearForms
+	twins, separated, nearTwins, neutralPairs, forms, nearForms,
+	familyLane, collapseLane, lookalikeLane
 };
-if (asJson) { console.log(JSON.stringify(result, null, '\t')); process.exit(twins.length + forms.length ? 1 : 0); }
+// writeSync, not console.log: process.exit() abandons whatever is still queued on
+// stdout, and a write to a PIPE is asynchronous past the 64 KB pipe buffer. The
+// pilot's report fitted under it; a slice's does not (A01 with two tranches is
+// ~72 KB), so gates.mjs was receiving truncated JSON and failing to parse it.
+// Same output, same exit codes, flushed before the exit.
+if (asJson) {
+	writeSync(1, JSON.stringify(result, null, '\t') + '\n');
+	process.exit(twins.length + forms.length ? 1 : 0);
+}
 
 const row = (p) => `  ${p.a.padEnd(14)} ${p.b.padEnd(14)} dh ${String(p.dh).padStart(5)}  `
 	+ `dL ${String(p.dl).padStart(5)}  dS ${String(p.ds).padStart(5)}  form ${p.sim.toFixed(3)}`
 	+ (p.scored ? `  (${p.scored}${p.bar ? ', bar ' + p.bar : ''})` : '');
 
+console.log(`scope: ${result.scope} — ${icons.length} icons in one pool`);
 console.log(`R7 thresholds: dhue<${D_HUE} dL<${D_LIGHT} dS<${D_SAT}, neutral lane S<${NEUTRAL_S}`);
 console.log(`R7 form qualifier: a colour hit whose form score is < ${FORM_SEP} is separated by form`);
 console.log(`R8 threshold: form score >= ${IOU_COLLIDE}; near-miss watch from ${IOU_NEAR}`);
-console.log('lanes: 16 file icons scored on their silhouette, 4 folders on the white face mark\n');
+console.log(`lanes: ${icons.filter(i => i.kind === 'file').length} file icons scored on their `
+	+ `silhouette, ${icons.filter(i => i.kind === 'folder').length} folders on the white face mark\n`);
 
 console.log('dominant fills\n');
 for (const p of result.palette) {
@@ -223,6 +313,37 @@ for (let i = 0; i < plates.length; i++) {
 		console.log(`  ${A.id.padEnd(14)} ${B.id.padEnd(14)} silhouette ${sil.toFixed(3)} `
 			+ `(both are the official rectangle)   glyph ${glyph.toFixed(3)}`);
 	}
+}
+
+// the two DECLARED lanes: exempt from R8 by rule, printed so the exemption is
+// visible rather than assumed
+if (slice) {
+	console.log(`\n== FAMILY lane (working rule 1 — a variant shipping its family's base mark): `
+		+ `${familyLane.length} ==`);
+	for (const p of familyLane) {
+		console.log(`  ${p.a.padEnd(14)} ${p.b.padEnd(14)} family ${p.declared}  form ${p.sim.toFixed(3)}`
+			+ `  ${p.identical ? 'BYTE-IDENTICAL (expected)' : 'distinct geometry'}`);
+	}
+	if (!familyLane.length) { console.log('  none'); }
+
+	console.log(`\n== NEUTRAL COLLAPSE lane (working rule 2 — concepts sharing a category glyph): `
+		+ `${collapseLane.length} ==`);
+	for (const p of collapseLane) {
+		console.log(`  ${p.a.padEnd(14)} ${p.b.padEnd(14)} glyph ${p.declared.padEnd(16)} `
+			+ `form ${p.sim.toFixed(3)}  ${p.identical ? 'BYTE-IDENTICAL (expected)' : 'distinct geometry'}`);
+	}
+	if (!collapseLane.length) { console.log('  none'); }
+
+	console.log(`\n== LOOK-ALIKE lane (DECLARED pairs — two real marks that resemble each other): `
+		+ `${lookalikeLane.length} ==`);
+	for (const p of lookalikeLane) {
+		console.log(`  ${p.a.padEnd(14)} ${p.b.padEnd(14)} form ${p.sim.toFixed(3)} `
+			+ `(area ${p.area.toFixed(3)}, edge ${p.edge.toFixed(3)}) vs bar ${p.bar} on ${p.scored}`);
+		console.log(`  ${''.padEnd(14)} ${''.padEnd(14)} dh ${p.dh}  dL ${p.dl}  dS ${p.ds}`
+			+ `   ${p.sim >= p.bar ? 'WOULD FAIL R8 — exempt by declaration' : 'under the bar anyway'}`);
+		console.log(`  ${''.padEnd(14)} ruling: ${p.ruling.split('.')[0]}.`);
+	}
+	if (!lookalikeLane.length) { console.log('  none declared'); }
 }
 
 console.log(`\n== R8 form collisions (>= ${IOU_COLLIDE}): ${forms.length} ==`);

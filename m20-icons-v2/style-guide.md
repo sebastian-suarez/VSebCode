@@ -82,6 +82,17 @@ Generic metaphors only for concepts with no mark (`log`, `lock`, `zip`, …), fr
 shared glyph vocabulary. `m11-icons/inventory/brand-colors.json` (193 verified hexes)
 is the color source of truth; extend it the same careful way.
 
+*Erratum (A01 gate, D22 AMENDMENT ruled 2026-09-03): license and trademark status DO
+NOT GATE sourcing — this is a personal, non-distributed build (Sebastian: "the
+license don't apply here because this is a personal project and will not be
+distributed"). The preference chain above orders by FIDELITY alone (the brand's own
+artwork stays first because it is the most faithful, not the best-licensed); repo
+logos, favicon vectors, product icons and faithful third-party traces (devicon,
+gilbarbara/logos) are all legitimate sources. License facts are still recorded
+VERBATIM in provenance — documented, never enforced. Ruled with it (flag 38): a
+format created and owned by a company may wear that company's mark (safetensors →
+the Hugging Face face, bolt → the Firebase flame).*
+
 ### L3 · Letter law
 Where the chosen style TYPESETS letters (§3 defines it per style — A's monograms, D's
 re-set logotypes), letters are a SYSTEM, never a judgment call. *Erratum (samples,
@@ -371,6 +382,12 @@ the round-2 constants as sampled and ruled.
   black on its yellow field). Color source-of-truth on a conflict between
   `brand-colors.json` and the brand's own file: brand-colors wins the PRIMARY hex, the
   artwork's own fills win secondary layers (npm/git/go precedent, approved as built).*
+  *Erratum 2 (A01 gate, ruled 2026-09-03): the lift TRIGGER is re-derived from
+  lightness to contrast — backdrop-meeting ink under 3.0:1 against `#121314`
+  (WCAG 1.4.11) lifts to L 88, hue/saturation intact. The old "below L 22" wording
+  fired only under ~1.6:1 and missed real failures (AutoHotkey `#334455` at 1.86:1,
+  bashly `#434343` at 1.88:1). Opt-in per subject as before; the pilot's 44 files
+  are byte-identical under either wording (proven at the fix round).*
 - Mark-less concepts (json, log, lock, …): the shared neutral glyph vocabulary in one
   gray ink (`#A6AEB6`-class). TYPESET LETTERS DO NOT EXIST in R1 — letterforms appear
   only as source geometry (TS's lozenge letters etc.); the L3 table stays dormant.
@@ -392,6 +409,28 @@ the round-2 constants as sampled and ruled.
   dark body cannot collapse into the backdrop (reproduces v1's hand-picked sand pair
   within two units per channel). The face mark is byte-identical in both states and
   crosses the panel seam — approved as built.
+
+**Families, collapse and look-alikes** *(working rules opened with slice A01,
+RATIFIED at its gate 2026-09-03)*
+- VARIANT FAMILIES: a concept that is a variant of a branded family ships, in
+  preference order: **(a)** the source themes' established NON-LETTER variant glyph,
+  adapted per L2 in the family's official colors; **(b)** where variants differ only
+  by letters or no distinct glyph exists, the family BASE mark byte-identical under
+  its own id (angular ×7, python-misc, adobe-swc, al-dal, asp/aspx,
+  azurestreamanalytics); **(recolour)** where the BRAND itself draws the variants as
+  recolors, its own per-variant fills verbatim (advpl ×4, TOTVS's files). Family
+  pairs are declared and the twin audit reports them in their own lane — never
+  silently exempted.
+- NEUTRAL COLLAPSE: after a genuine hunt proves no usable mark, a concept takes a
+  shared-vocabulary glyph in the one gray — the object it names where there is one
+  (disc, lib, abc's note, bench's stopwatch, bat/awk's terminal), else its CATEGORY
+  glyph — byte-shared across every concept that falls there, each recorded in the
+  slice manifest. Letters never substitute (v1's disease).
+- LOOK-ALIKE LANE: two brands whose real marks genuinely resemble each other may
+  BOTH ship under an explicit declared pairing naming both ids and the ruling
+  (antlr ↔ chrome: form 0.798 on the 0.72 bar, ruled apart by color at the A01
+  gate); the audit prints the pair's live scores every run and still fails any
+  undeclared pair.
 
 **Gates per slice (production)**
 - check.mjs format law (L8; 2 KB advisory / 4 KB fail) + derivation assert (icon path

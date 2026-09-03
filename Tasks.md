@@ -1904,17 +1904,88 @@ cleanest).
 
 ### M15 — Neo-tree explorer keyboard UX
 
-- [ ] Letter keymap under `FilesExplorerFocusCondition` (+ explorer weight
-  bonus): j/k → list.focusDown/Up · h/l → collapse/expand · a → explorer.newFile
-  (unbound today) · r → renameFile · d → moveFileToTrash · / → list.find
-  (explorer find provider already filters); type-ahead disable decision at the
-  brief (800ms-session edge case)
-- [ ] Hint footer via the Part footer area (exists; needs a footerHeight callback
-  in the fork's headerHeight idiom): five hints right-aligned 16px off the rail
-  edge per r9 — `j/k move · h/l fold · a add · r rename · / filter`; noted
-  collision: activityBar.location "bottom" also claims the footer
-- [ ] Cursor-row styling layered on the M3 inset-row grammar; git letter badge →
-  right-aligned column (today a ::after floating after the label)
+- [x] **Brief flag round RULED (Sebastian 2026-09-03, both as recommended)**:
+  (1) TYPE-AHEAD — disabled for the explorer tree (`typeNavigationEnabled:
+  false`, option verified live at `listWidget.ts:483/1068`); `/` = list.find
+  owns the filtering job; every other tree keeps stock type-ahead. (2)
+  SHIFT+A — `explorer.newFolder` joins the map as `a`'s neo-tree companion
+  (a = add file, A = add directory; beyond the ruled six by verdict; the
+  hint footer stays at the five r9 hints — A undisplayed like d).
+- [x] **All three commits LANDED 2026-09-03** (delegated; diffs reviewed; hooks
+  ON, no attribution; NOT pushed, pin bump waits on the checkpoint):
+  `61a9afb5f56` letter keymap — one `isMacintosh && isNative` block in
+  fileActions.contribution.ts, nine `registerKeybindingRule` calls at the
+  neighbors' exact weight (WorkbenchContrib + explorerCommandsWeightBonus 10)
+  under `FilesExplorerFocusCondition`: j/k→list.focusDown/Up,
+  h/l→list.collapse/expand (each carrying its stock rule's own can-collapse/
+  can-expand terms), a→explorer.newFile, shift+a→explorer.newFolder (ruled),
+  r→renameFile (!root ∧ writable), d→moveFileToTrash
+  (ExplorerResourceMoveableToTrash — INERT on non-trashable resources where
+  stock Delete falls back to permanent deleteFile; left inert by design, flag
+  if it ever bites), /→list.find; the letters keep typing in every input box
+  (`!inputFocus` term proven — rename/new-file/find are real `<input>`s);
+  explorer tree gets `typeNavigationEnabled: !(isMacintosh && isNative)` —
+  the ruled type-ahead disable, this tree only. `48cf2894047` hint footer —
+  `IPartOptions.footerHeight` callback in the headerHeight idiom; SidebarPart
+  installs a 22px footer (= statusbar height, one band across the seam) under
+  `isInlineTitleBar && sidebar LEFT`, re-evaluated on inline-titlebar flips +
+  updateStyles (side switches); five r9 hints right-aligned, `padding-right:
+  16px`, 10.5px fixed (band is fixed-height; deliberate vs the sidebar-font-
+  scaled git letter), tones = descriptionForeground @ .72/.34 via color-mix
+  (mockup gives keys and words ONE tone — the mockup is the law), hairline
+  rgba(204,204,204,0.13), footer paints nothing (single-painter);
+  activityBar.location "bottom" collision settled in getCompositeBarPosition
+  (hints keep the one footer, switcher answers TOP under the gate — but see
+  the battery note: stock auto-migration makes the default-config path moot).
+  `f9604dacaf7` cursor + git column — style.css M3-block additions:
+  `outline: none` on focused sidebar rows (the wash IS the cursor —
+  list.focusBackground resolves to the mockup's exact #3994BC26; ring kept in
+  HC where it is the indication; removal deliberately SIDEBAR-WIDE, every
+  list draws the same pill); git letter `::after` → explicit right column
+  (`margin: 0 6px 0 auto`, flex-shrink 0, row-centered, full strength, 11px
+  = sidebar-font × 0.846154), explorer-folders-view only. Verification
+  (agent, session-reviewed): compile 0 ×3, eslint 0, hooks passed, targeted
+  suites 103/0 (explorer 67, part+viewlet 7, list/tree 29), zero
+  `!important`/hex-literal greps clean, registrations proven in out/.
+- [x] **Session VM battery (D23) ALL-GREEN 2026-09-03** (virgin guest UDD,
+  /tmp/m15-demo repo): footer 22px flex right-aligned rightInset exactly 16,
+  five hints + aria-hidden dots at .72/.34 tones, band EXACTLY on the
+  statusbar's row (both top 846 h 22; content bottom = footer top — layout
+  math holds; rail owns the corner); keymap end-to-end — j/k walk, l/h
+  expand/collapse (aria-proven), type-ahead OFF proven (x then j moves
+  instantly), / focuses the tree find box and letters type into it ("app"),
+  a / shift+a / r all open their input boxes (letters land, ESC cancels),
+  d moved lib to the guest Trash with NO dialog — CORRECT: the M12 bake
+  ships his `explorer.confirmDelete: false`; cursor row = rgba(57,148,188,
+  0.15) wash, outline none, 7px pill; git letters "M"/"U" in ONE column
+  (all labels end at the same right edge), 11px, full-strength theme tints
+  (M #e5ba7d, U #73c991 exact); footer leaves and returns LIVE on sidebar
+  right/left flips. activityBar "bottom" under DEFAULT config: stock
+  layout.ts:427 auto-writes customTitleBarVisibility "auto" (any move to
+  top/bottom while "never") → the GATE drops and the whole fork geometry
+  falls back stock — the collision branch only governs layered-config
+  corners (e.g. workspace "never" + user "bottom"); recorded, nothing to
+  fix. Battery ledger adds: (1) trusting a restricted window LIVE leaves
+  extension-contributed color vars unemitted (git tints paint gray) until
+  reload — stock-shaped, virgin trusted boots fine; (2) rapid settings.json
+  printf-rewrites over ssh can KILL the guest window's config watcher
+  (changes stop arriving, workbench state freezes vs file) — pace writes or
+  relaunch instead of live-flipping; (3) Cmd+W with no editors closes the
+  window; (4) a file with problems shows the error tint + combined "N, U"
+  badge over the git color (stock decoration precedence). M14 cross-check
+  live in the same scene: bare branch, diff `~2` only on the dirty file,
+  problems `⊗3`, scroll 33% = floor(1·100/3), hidden set honored.
+- [x] **Checkpoint flag round RULED (Sebastian 2026-09-03, both as
+  recommended)**: (1) FOOTER SCOPE — always shown (window anatomy, one
+  constant band; inert hints on non-files views accepted); (2) IDLE CURSOR —
+  stock (no `list.inactiveFocusBackground` theme add; wash returns with
+  focus; revisit if daily use disorients). Screenshots delivered (window,
+  tree, seam band).
+- [ ] **CHECKPOINT (Sebastian)**: quit + relaunch `./scripts/code.sh` (out/
+  current at `f9604dacaf7` — renderer-side only); sight-judge: hint line
+  tone/size vs the mockup, the 6px git-letter inset, the missing focus ring
+  across sidebar lists, cursor wash on j/k. Pin bump + doc fold on the
+  verdict.
 
 ### M16 — Telescope quick input (one widget = every picker; restyle is global)
 
@@ -2147,10 +2218,50 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   `slices/A01/manifest.json`. Sheet →
   https://claude.ai/code/artifact/8a69846a-43c3-4479-a078-c52b901e9cd1
   (`slices/A01/sheet.html`, same path = same URL). NOTHING committed:
-  slice outputs + tranche modules + 25 new sources-svg files untracked, 6
+  slice outputs + tranche modules + new sources-svg files untracked,
   tool files modified unstaged — commit rides the gate verdict (pilot
   precedent). `.playwright-cli/` at repo root = disposable headless-shell
   cache from the shot tooling, not a deliverable.
+- [ ] **GATE ROUND 1 RULED + FIX ROUND LANDED 2026-09-03 — RE-LOOK
+  PENDING.** Sebastian's ruling = **D22 AMENDMENT: license/trademark
+  non-binding** (personal, non-distributed build; real icons preferred;
+  L2 orders by fidelity alone; license facts still recorded verbatim) —
+  binds A02+ too. Fix round (delegated; session re-ran gates + reviewed):
+  **brackets 40 → 20**, branded 37 → 54. Shipped: vsix (VS Code ribbon),
+  safetensors (HF face — meaning question flagged 38), actionscript +
+  adobe-swc (Adobe A, 1b family), apex (Salesforce cloud), applescript
+  (Apple logo lifted), al + al-dal (Microsoft's own AL mark from the
+  ms-dynamics-smb.al extension, 1b), azure + azurestreamanalytics (1b),
+  bolt (Firebase flame), bashly-hook ($ chevron, marginal), riders
+  appscript / aspx+asp (one .NET ".N" family, dotenv-pattern) / blade
+  (filled contour); antlr REINSTATED (new declared LOOK-ALIKE audit lane
+  vs chrome — reported every run, never fails, single-membered).
+  Stayed gray with receipts: jar (Java cup = 8 tapering brushstrokes,
+  physics not license — flag 39), rider dead-ends ada · agda ·
+  autohotkey+ahk2 · behat (flag 42/46), empty re-hunts biml · axure ·
+  blink · blitzbasic · beancount. Vocabulary opened: stopwatch (bench
+  ×3, marginal — per-language precedent flag 48), terminal (bat + awk).
+  Engine: lift trigger L<22 → **contrast<3.0:1** (WCAG 1.4.11; opt-in
+  per subject; pilot 44/44 byte-identical proven; §5 guide erratum OWED
+  at commit), look-alike lane in audit.mjs, fix-round strip §0 +
+  supersession banners on the sheet. Gates green both modes (0 fail, 6
+  advisories — debian/python-misc/safetensors ×2 >2KB; 16px 74+10
+  marginal; twins 0/0 with 33 family + 194 collapse + 1 look-alike
+  declared; letters 0). 15 flags superseded in place (2,3,4,7,12,13,14,
+  18,20,21,23,24,26,27,34), new 36–50; sheet republished same URL.
+  **RE-LOOK asks**: antlr strip (41), safetensors/bolt company-mark
+  reading (38), asp/aspx one payload (44), bashly-hook (47), stopwatch
+  (48), lift-constant ratification (50/0).
+- [x] **APPROVED (Sebastian 2026-09-03) — SLICE A01 CLOSED.** Approval
+  covers the presented state; all six re-look asks rule as built
+  (antlr↔chrome pair stands, company-mark-on-format ratified, asp/aspx
+  one family, bashly-hook `$`, stopwatch precedent, lift trigger
+  contrast<3.0:1). Errata folded into the guide (L2 D22 license
+  amendment + company-mark rider; §5 lift erratum 2; §5
+  families/collapse/look-alike laws). Slice committed on the verdict:
+  docs + guide + tools + tools/slices/ + slices/A01/ + sources-svg
+  add-by-path, umbrella only, no pin (`vscode` pointer = live peer
+  state, excluded; `.playwright-cli/` cache excluded).
 - [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
   associations untouched, iconPaths only
 - [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
@@ -2158,19 +2269,22 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
   folder differentiation at tree size)
 
-Resume cold: read the style guide (§5 + the pilot errata = the law) and the
-SLICE A01 item above. STATE 2026-09-03: A01 built, gates green, GATE PENDING —
-Sebastian rules the sheet's 35 flags (headliners: the 40-way collapse, angular ×7,
-antlr-vs-chrome, the corporate-mark line incl. flag 26's Azure-via-MIT question,
-bench-* precedent). Sheet artifact 8a69846a… (republish = same
-`slices/A01/sheet.html` path from its session, or pass the URL). Re-run gates:
-`cd m20-icons-v2 && node tools/gates.mjs A01` (pilot mode = no arg; both must stay
-green). ON APPROVAL: commit add-by-path (modified tools + tools/slices/ +
-slices/A01/ + new sources-svg/*, umbrella only, no pin) with ruled flags folded
-into the style guide as errata (working rules 1+2 become law; per-flag rulings
-recorded like the pilot's), rejected subjects get a fix round first (pilot
-precedent). THEN next slice session = A02 (`m11-icons/production/
-longtail-worklist.json` slices[1]): write `tools/slices/A02.t*.mjs` per the A01
-contract (A01.t1.mjs is the pattern), gate via `node tools/gates.mjs A02`, new
-sheet artifact per slice. Ruled A01 flags bind A02+ (esp. the collapse ruling,
-family modes, corporate line, dotnet-CC0 note for csharp/fsharp/vb).
+Resume cold: read the style guide (§5 incl. the A01-ratified laws = THE LAW) and
+the slice A01 arc above. STATE 2026-09-03: **SLICE A01 CLOSED** — approved +
+committed (84/84: 54 branded / 30 neutral incl. 20 generic-code); sheet artifact
+8a69846a… (republish = same `slices/A01/sheet.html` path from its session, or
+pass the URL). Ruled law now in the guide, binding A02+: D22 license amendment
+(fidelity-only sourcing; provenance still records license verbatim),
+company-mark-on-format rider, families (a/b/recolour modes), neutral collapse,
+look-alike lane, lift trigger contrast<3.0:1, dotnet-CC0 note for
+csharp/fsharp/vb. NEXT SESSION = slice A02
+(`m11-icons/production/longtail-worklist.json` slices[1], 84 file concepts):
+write `tools/slices/A02.t*.mjs` per the A01 contract (top of
+`tools/slices/A01.mjs`; A01.t1.mjs is the spec pattern), tranche it like A01
+(~3 delegated batches), gate via `cd m20-icons-v2 && node tools/gates.mjs A02`
+(pilot mode = no arg; both must stay green; A01 outputs now join the frozen
+cross-assert side), NEW sheet artifact for A02 (one URL per slice), Sebastian
+gate, commit on verdict. Slices A03–A12 + F01–F06 + a core-batch slice follow
+the same rhythm; then assembly (cross-set audits, reconciliation, theme build) →
+the single integration swap commit in `extensions/theme-vsebcode-icons` + pin
+bump (M11 runbook acceptance).

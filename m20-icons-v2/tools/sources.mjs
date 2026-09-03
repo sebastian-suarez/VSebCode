@@ -17,112 +17,20 @@
 // The first twelve specs are the round-2 masters, ported VERBATIM: check.mjs
 // asserts their fitted geometry still reproduces samples/masters/ byte for byte,
 // so "carried, frozen" is a measurement and not a promise.
+//
+// The reader helpers, the envelope table and the fit machinery moved into
+// spec-engine.mjs when production slices started, so the slice registries fit
+// their subjects through the identical code path. This file is now just the
+// PILOT'S registry plus the exports the pilot's tools already import.
 
-import { readFileSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import * as si from 'simple-icons';
 import svgpath from 'svgpath';
-import { subpaths, unionBBox, bbox, fit, round, ellipse, roundRect, xform } from './pathkit.mjs';
+import { subpaths, unionBBox, bbox, round, ellipse, roundRect, xform } from './pathkit.mjs';
 import { brace, chevron, hexagon, check } from './geom.mjs';
 import { NEUTRAL, WHITE, lift } from './color.mjs';
+import { officialPaths, officialLayers, officialClassPaths, officialSvg, icon, ENV, makeMaster }
+	from './spec-engine.mjs';
 
-const HERE = dirname(fileURLToPath(import.meta.url));
-const SRCDIR = join(HERE, '..', 'sources-svg');
-
-const officialPaths = (file) => {
-	const raw = readFileSync(join(SRCDIR, file), 'utf8');
-	return [...raw.matchAll(/<path[^>]*\sd="([^"]+)"[^>]*>/g)].map(m => ({
-		d: m[1],
-		fill: (m[0].match(/fill="(#[0-9a-fA-F]{3,8})"/) || [])[1] || null
-	}));
-};
-
-/**
- * Same job, but for source files that park the fill on a wrapping <g> or hang a
- * transform off the path (git ships its diamond as one rotated square, Go puts
- * the wordmark in a translated group). The transform is baked into the data so
- * everything downstream sees plain path coordinates.
- */
-const officialLayers = (file) => {
-	const raw = readFileSync(join(SRCDIR, file), 'utf8');
-	const out = [];
-	const stack = [];
-	const tag = /<(\/?)(g|path|svg)\b([^>]*)>/g;
-	for (const m of raw.matchAll(tag)) {
-		const [, closing, name, attrs] = m;
-		if (name === 'svg') { continue; }
-		if (closing) { if (name === 'g') { stack.pop(); } continue; }
-		const fill = (attrs.match(/\sfill="([^"]+)"/) || [])[1] || null;
-		const tf = (attrs.match(/\stransform="([^"]+)"/) || [])[1] || null;
-		if (name === 'g') { stack.push({ fill, tf }); continue; }
-		const d = (attrs.match(/\sd="([^"]+)"/) || [])[1];
-		if (!d) { continue; }
-		const chain = [...stack, { fill, tf }];
-		let p = svgpath(d);
-		for (let i = chain.length - 1; i >= 0; i--) { if (chain[i].tf) { p = p.transform(chain[i].tf); } }
-		const inherited = chain.map(c => c.fill).filter(Boolean).pop() || null;
-		out.push({ d: p.abs().toString(), fill: inherited });
-	}
-	return out;
-};
-
-/**
- * Third shape of source file: a CorelDRAW export that parks its fills in a
- * `<style>` block and hangs a class off every path (EditorConfig's own logo).
- * The class table is resolved so callers see plain `{ d, fill }` again.
- */
-const officialClassPaths = (file) => {
-	const raw = readFileSync(join(SRCDIR, file), 'utf8');
-	const table = Object.fromEntries([...raw.matchAll(/\.(fil\d+)\s*\{\s*fill:\s*(#[0-9a-fA-F]{3,8})\s*\}/g)]
-		.map(m => [m[1], m[2].toUpperCase()]));
-	return [...raw.matchAll(/<path[^>]*\sclass="([^"]+)"[^>]*\sd="([^"]+)"[^>]*\/>/g)]
-		.map(m => ({ d: m[2], fill: table[m[1]] || null, cls: m[1] }));
-};
-
-/**
- * The same file, sanitised for DISPLAY (the fidelity strip and the sheet both
- * show what the brand ships, and both pages must stay free of external
- * references, `<style>` blocks and xlink — check.mjs asserts that).
- */
-export function officialSvg(file) {
-	const raw = readFileSync(join(SRCDIR, file), 'utf8');
-	const table = Object.fromEntries([...raw.matchAll(/\.(fil\d+)\s*\{\s*fill:\s*(#[0-9a-fA-F]{3,8})\s*\}/g)]
-		.map(m => [m[1], m[2].toUpperCase()]));
-	return raw
-		.replace(/<\?xml[^>]*\?>/g, '').replace(/<!DOCTYPE[^>]*>/g, '')
-		.replace(/<!--[\s\S]*?-->/g, '').replace(/<defs>[\s\S]*?<\/defs>/g, '')
-		.replace(/<metadata[^>]*\/>/g, '')
-		.replace(/class="(fil\d+)"/g, (_m, c) => `fill="${table[c] || '#000000'}"`)
-		.replace(/\sxmlns:xlink="[^"]*"/g, '').replace(/\sxmlns="[^"]*"/g, '')
-		.replace(/\sxml:space="[^"]*"/g, '')
-		.replace(/\sstyle="[^"]*"/g, ' style="fill-rule:evenodd"')
-		.replace(/\s(?:width|height)="[^"]*"/g, '')
-		.trim();
-}
-
-const icon = (slug) => si['si' + slug[0].toUpperCase() + slug.slice(1)];
-
-// ---- the optical envelope system (guide §5, one shared mass) -----------------
-// wide 13.8x10.2 = 141 px², compact 12.8x12.8 = 164 px², tall 11.2x13.2 = 148 px².
-// A subject may widen its envelope only where L5 forces it (docker, markdown,
-// git, yaml): each is logged with the feature that forced it.
-export const ENV = {
-	wide: { w: 13.8, h: 10.2 },
-	compact: { w: 12.8, h: 12.8 },
-	tall: { w: 11.2, h: 13.2 },
-	flat: { w: 15.2, h: 9.6 },
-	open: { w: 13.6, h: 13.6 },                  // marks whose corners are empty (react, git, yaml)
-	face: { w: 10.2, h: 8.2, cx: 8, cy: 8.35 }   // the folder face (L7)
-};
-
-/** One affine for every part of a subject. */
-function place(parts, env) {
-	const out = fit(parts.map(p => p.d), {
-		w: env.w, h: env.h, cx: env.cx ?? 8, cy: env.cy ?? 8
-	});
-	return parts.map((p, i) => ({ ...p, d: out[i] }));
-}
+export { officialSvg, ENV };
 
 // =============================================================================
 // the subjects
@@ -808,20 +716,14 @@ export const NEW = SUBJECTS.filter(id => !CARRIED.includes(id));
  * the identical geometry as one flat path (what a folder face knocks out white),
  * and the provenance.
  */
-export function master(id, envOverride = null) {
-	const s = S[id];
-	if (!s) { throw new Error(`unknown subject ${id}`); }
-	const parts = place(s.parts(), envOverride || s.env);
-	// merge runs of the same fill into one <path> — geometry untouched
-	const layers = [];
-	for (const p of parts) {
-		const last = layers[layers.length - 1];
-		if (last && last.fill === p.fill) { last.d += p.d; } else { layers.push({ fill: p.fill, d: p.d }); }
-	}
-	const mono = parts.map(p => p.d).join('');
-	const ink = unionBBox(parts.map(p => p.d));
-	return { id, ...s, layers, mono, parts, ink };
-}
+export const master = makeMaster(S);
 
 export const spec = (id) => S[id];
-void bbox;
+
+/** The pilot registry, in the shape every slice registry also answers in. */
+export const REGISTRY = {
+	id: 'pilot', kind: 'pilot', specs: S,
+	FILES, FOLDERS, SUBJECTS, master, spec
+};
+
+void bbox; void unionBBox;

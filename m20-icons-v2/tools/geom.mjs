@@ -4,6 +4,8 @@
 // coordinates and emit 2-decimal path data. No function ever scales a finished
 // drawing — a smaller variant is a smaller set of arguments, so stems stay put.
 
+import { ellipse, roundRect } from './pathkit.mjs';
+
 export const n = (v) => {
 	let s = (+v).toFixed(2);
 	if (s.includes('.')) { s = s.replace(/0+$/, '').replace(/\.$/, ''); }
@@ -245,6 +247,135 @@ export const FOLDER_OPEN_FRONT = 'M2.42 6.5h11.62c.78 0 1.35.73 1.17 1.49l-.98 3
 /** Its monoline twin, inset by half a stroke. */
 export const FOLDER_LINE = 'M2.25 12.65V4.35c0-.5.4-.9.9-.9h2.65c.25 0 .5.1.67.29l.85.91h5.53'
 	+ 'c.5 0 .9.4.9.9v7.1c0 .5-.4.9-.9.9H3.15c-.5 0-.9-.4-.9-.9z';
+
+// =============================================================================
+// THE NEUTRAL GLYPH VOCABULARY (working rule 2, opened with slice A01)
+// =============================================================================
+//
+// R1 gives mark-less concepts "the shared neutral glyph vocabulary in one gray"
+// (guide §5). The pilot opened it with four glyphs — brace, chevron, hexagon,
+// check — and production needs it to carry the long tail, so the rules are:
+//
+//   · max 2 sub-shapes, authored ON the 16-grid, one gray, no scenes;
+//   · a concept with a natural OBJECT metaphor gets that object (disc, book);
+//   · a concept without one takes its CATEGORY glyph, and category glyphs are
+//     SHARED byte for byte across every concept that falls back to them — that
+//     sharing is declared in the slice manifest's `neutral_collapse` record and
+//     reported in the twin audit's own lane, never hidden;
+//   · every new glyph is checked against the ones already in the vocabulary for
+//     R8 form collisions before it ships.
+//
+// Sizes below are the AUTHORED ink; each spec picks an envelope that fits them
+// at (or very near) 1:1, so the stems here are the stems that ship.
+
+/**
+ * Optical disc — the object glyph for disc images (dmg / iso / vmdk).
+ * One sub-shape: a ring, spindle hole punched out under nonzero winding.
+ * Authored ink 13.2 x 13.2; ring wall 4.6, hole 2.0 radius.
+ */
+export function opticalDisc(cx = 8, cy = 8, r = 6.6, hole = 2) {
+	return ellipse(cx, cy, r, r, true) + ellipse(cx, cy, hole, hole, false);
+}
+
+/**
+ * A bound volume — the object glyph for static libraries (.a / .lib).
+ * Two sub-shapes: the two page panels of an OPEN book, splayed from a 1.6 gutter.
+ * (A spine-plus-cover construction was drawn and measured first and rejected at
+ * 16 px — two upright bars read as a split panel, not as a book.)
+ * Authored ink 13.0 x 10.4.
+ */
+export function bookGlyph() {
+	return [
+		roundPoly([[1.5, 4.3], [7.2, 3.1], [7.2, 12.5], [1.5, 13.5]], 0.5),
+		roundPoly([[8.8, 3.1], [14.5, 4.3], [14.5, 13.5], [8.8, 12.5]], 0.5)
+	];
+}
+
+/**
+ * A musical note — the object glyph for music-notation sources (.abc).
+ * Two sub-shapes: a tilted notehead (a rounded rhombus, which is what an oval
+ * head becomes on the 16-grid) and the stem WITH its flag as one contour, so the
+ * pair fuses into a single silhouette the way the drawn glyph does.
+ * Authored ink 9.9 x 12.0; stem 1.7, flag reach 3.7.
+ */
+export function noteGlyph() {
+	return [
+		roundPoly([[2.6, 12.4], [6.4, 10.4], [8.7, 12.2], [4.9, 14.2]], 1.3),
+		roundPoly([
+			[7, 12.6], [7, 2.2], [8.7, 2.2], [12.5, 4.9], [11.5, 8.8], [8.7, 6.4], [8.7, 12.6]
+		], [0.4, 0.5, 0.5, 1.4, 1.1, 0.6, 0.4])
+	];
+}
+
+/**
+ * CATEGORY GLYPH · generic-archive — a lidded box. Two sub-shapes (lid, body)
+ * plus the body's latch as a counter; the 1.5 gap under the lid is what keeps
+ * the silhouette from collapsing into one rectangle.
+ * Authored ink 13.0 x 11.1.
+ */
+export function genericArchive() {
+	return [
+		roundRect(1.5, 2.7, 13, 3, 0.65),                                   // lid
+		roundRect(2.4, 7.2, 11.2, 6.6, 0.75) + roundRect(6.7, 8.9, 2.6, 2.4, 0.45, false)
+	];
+}
+
+/**
+ * CATEGORY GLYPH · generic-binary — a punched byte block: one plate with a 2x2
+ * grid of square counters. One sub-shape, so it never fuses; the counters are
+ * what separate it from a plate mark's solid field.
+ * Authored ink 11.4 x 11.4; walls 1.8, counters 3.0.
+ */
+export function genericBinary() {
+	let d = roundRect(2.3, 2.3, 11.4, 11.4, 1.1);
+	for (const y of [4.1, 8.9]) {
+		for (const x of [4.1, 8.9]) { d += roundRect(x, y, 3, 3, 0.5, false); }
+	}
+	return d;
+}
+
+/**
+ * CATEGORY GLYPH · generic-code — the angle-bracket pair, at file scale. It is
+ * deliberately the same construction as the src/ folder's face mark (L7 asks the
+ * pair to rhyme), one size up.
+ * Authored ink 13.2 x 9.8.
+ */
+export function genericCode() {
+	return [
+		chevron(2.4, 8, 3.9, 4.9, 1.9, 1),
+		chevron(13.6, 8, 3.9, 4.9, 1.9, -1)
+	];
+}
+
+/**
+ * OBJECT GLYPH · terminal — the shell window a script is run in: one plate with
+ * the prompt chevron and the cursor bar punched out of it as counters, so the
+ * whole glyph is ONE sub-shape that cannot fuse. Opened by the fix round for
+ * `bat` and `awk`; drawn and measured first as tranche 3's deferred candidate
+ * (proofs/object-glyph-study.png), and shipped unchanged from that drawing.
+ * Authored ink 12.8 x 10.4; plate walls 1.6, chevron stroke 1.4, cursor 1.4.
+ */
+export function terminalGlyph() {
+	return [
+		roundRect(1.6, 2.8, 12.8, 10.4, 1.2)
+		+ roundPoly([[3.2, 7], [4.9, 8], [3.2, 9], [4.2, 10], [7, 8], [4.2, 6]], 0.4)
+		+ roundRect(8.2, 9.2, 4.2, 1.4, 0.5, false)
+	];
+}
+
+/**
+ * OBJECT GLYPH · stopwatch — the object a benchmark reads: a ring with its dial
+ * punched out and the crown bar seated on top. Two sub-shapes. Opened by the fix
+ * round for the bench-* family; drawn and measured first as tranche 3's declined
+ * candidate (proofs/bench-family-study.png) and shipped unchanged from it.
+ * Authored ink 11.2 x 13.2; ring wall 2.2, dial 6.8 across, crown 2.8 x 1.8.
+ */
+export function stopwatchGlyph() {
+	return [
+		ellipse(8, 9.2, 5.6, 5.6, true) + ellipse(8, 9.2, 3.4, 3.4, false),
+		roundPoly([[6.6, 1.6], [9.4, 1.6], [9.4, 3.4], [6.6, 3.4]], 0.6)
+	];
+}
 
 export const circle = (c, fill) => `<circle cx="${n(c.cx)}" cy="${n(c.cy)}" r="${n(c.r)}" fill="${fill}"/>`;
 export const path = (d, fill, extra = '') => `<path${extra} fill="${fill}" d="${d}"/>`;

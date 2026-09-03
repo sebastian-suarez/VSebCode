@@ -28,13 +28,38 @@ export function toHsl(hexStr) {
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
 /**
- * The one documented visibility lift (L2): a mark whose official hex is too
- * dark to clear the `#121314` backdrop is raised to L 88 with its hue and
- * saturation intact. Only markdown's `#000000` trips it in this set.
+ * The one documented visibility lift (L2): a mark whose official ink is too dark to
+ * clear the `#121314` backdrop is raised to L 88 with its hue and saturation intact.
+ *
+ * RE-DERIVED AT THE A01 FIX ROUND (2026-09-03). The trigger used to be `L < 22`,
+ * which was calibrated on the only case the pilot had — markdown's pure black — and
+ * measures the wrong thing. L5's contrast duty is about CONTRAST against the
+ * backdrop, so that is what the trigger tests now:
+ *
+ *   · #334455 (AutoHotkey) is L 26.7 and measures 1.86:1 — the old rule did not
+ *     reach it, and tranche 2 recorded that as "no lift rule reaches it";
+ *   · #434343 (bashly) is L 26.3 and measures 1.88:1 — same case, same gap;
+ *   · L 22 achromatic is #383838, which measures 1.59:1, so the old rule fired
+ *     only below about 1.6:1. That is not "a comfortable margin" by any reading.
+ *
+ * The bar is 3.0:1 — WCAG 2.1's non-text-contrast minimum, and a line the set's own
+ * evidence supports from both sides: the dimmest branded PRIMARY it has ever shipped
+ * is autoit's #5D83AC at 4.70:1, and the dimmest field it REJECTED is bicep's
+ * #1D4A79 at 2.04:1. Nothing in the set sits between 2.4 and 4.7.
+ *
+ * The lift is still OPT-IN per subject — a spec calls it where its ink meets the
+ * backdrop, and never for ink that prints on the mark's own field (the pilot's
+ * dotenv erratum). Widening the trigger therefore cannot move an icon that does not
+ * ask for it, and the three callers in the set are markdown (#000000, 1.13:1),
+ * applescript (#000000) and bashly-hook (#434343, 1.88:1). The pilot's folder bodies
+ * pass through it too and are all far clear: node #5FA04E, docker #2496ED, sand
+ * #BF9354.
  */
+export const LIFT_MIN_CONTRAST = 3.0;
+export const LIFT_TARGET_L = 88;
 export function lift(hexStr) {
-	const [h, s, l] = toHsl(hexStr);
-	return l < 22 ? hsl(h, s, 88) : hexStr;
+	const [h, s] = toHsl(hexStr);
+	return contrast(hexStr, BACKDROP) < LIFT_MIN_CONTRAST ? hsl(h, s, LIFT_TARGET_L) : hexStr;
 }
 
 /**

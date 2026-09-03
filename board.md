@@ -264,6 +264,38 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   bump committed on the verdict (docs carry the peer M20 A01 gate-pending
   records — shared-tree precedent); pushes his; packaged markers ride the
   next packaged pass with M12's.
+- **M15 — Neo-tree explorer BUILT + battery-green 2026-09-03 — SEBASTIAN
+  CHECKPOINT PENDING (opened same day in the M14 session on his
+  "continue")**: the letter keymap is in source — j/k walk · h/l fold ·
+  a add / shift+A folder (ruled) · r rename · d trash · / find, nine
+  additive keybinding rules at the explorer's own weight under
+  `FilesExplorerFocusCondition`, each carrying its stock counterpart's
+  guards, mac-native; explorer type-ahead OFF by ruling (`/` owns
+  filtering, every other tree stock). Sidebar rail gets the 22px
+  keyboard-hint FOOTER (new `footerHeight` Part-option callback in the
+  fork idiom; statusbar-height band across the seam, five r9 hints
+  right-aligned 16px, single-painter, hairline only), installed under
+  inline-titlebar + sidebar-left and re-evaluated live. Cursor = the
+  bare `list.focusBackground` wash rounded into the M3 pill (mockup's
+  exact #3994BC26) with the focus RING removed sidebar-wide (HC keeps
+  it); git letters stand in an explicit right column (auto-margin,
+  row-centered, full-strength theme tints, 11px). Three delegated
+  commits (`61a9afb5f56` keymap → `48cf2894047` footer → `f9604dacaf7`
+  cursor+column), diff-reviewed, hooks ON, NOT pushed; suites 103/0.
+  VM battery (D23) all-green: keymap end-to-end incl. type-ahead-off
+  proof and letters-still-type-in-inputs, footer geometry exact
+  (band on the statusbar row, rail owns the corner), tints exact,
+  footer leaves/returns on sidebar side flips; d goes STRAIGHT to
+  Trash — the M12 bake ships his `explorer.confirmDelete: false`, by
+  design. Ruled in-session: brief round (type-ahead off, shift+A) +
+  checkpoint round (footer ALWAYS shown; idle cursor stays stock).
+  Found + recorded: stock auto-migration (layout.ts:427) flips
+  customTitleBarVisibility to "auto" whenever the activity bar moves
+  top/bottom under "never" — the gate drops to stock by config, our
+  footer/switcher collision branch governs only layered corners.
+  Screenshots delivered. His part: relaunch `./scripts/code.sh`
+  (out/ current) and sight-judge; pin bump + doc fold on the verdict.
+  Records + battery ledger in Tasks § M15.
 - **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
@@ -352,9 +384,40 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   dotnet-CC0 correction, bench-* per-language precedent. 35 flags on
   the sheet →
   https://claude.ai/code/artifact/8a69846a-43c3-4479-a078-c52b901e9cd1
-  (`slices/A01/sheet.html`). Nothing committed until the verdict
-  (pilot precedent). Then: A02+ slices → assembly → the single
-  integration swap commit. Details + resume in Tasks § M20.
+  (`slices/A01/sheet.html`). **GATE ROUND 1 RULED same day — D22
+  AMENDED: LICENSE/TRADEMARK NON-BINDING** (Sebastian: real icons
+  preferred; "the license don't apply here because this is a personal
+  project and will not be distributed") — the L2 source chain orders
+  by FIDELITY alone from here on, license facts still recorded
+  verbatim in provenance; binds every later slice. **FIX ROUND
+  LANDED same day** (delegated; session re-ran gates + reviewed
+  proofs/studies): brackets 40 → 20 of 84, branded 37 → 54 — 15
+  license-freed rebuilds ship (VS Code ribbon vsix, HF-face
+  safetensors, Adobe ×2, Salesforce apex, Apple-logo applescript,
+  Microsoft's own AL mark ×2, Azure ×2, Firebase bolt, bashly `$`),
+  4 second-attempt riders ship (appscript, aspx + asp as one .NET
+  family, blade), 4 measured rider dead-ends stay gray (ada, agda,
+  autohotkey+ahk2, behat), 5 re-hunts empty (biml, axure, blink,
+  blitzbasic, beancount), jar stays gray (Java cup physics, not
+  license), stopwatch + terminal object glyphs open (bench ×3,
+  bat + awk), antlr REINSTATED under a new declared look-alike lane
+  vs chrome. Lift-rule trigger re-derived L<22 → contrast<3.0:1
+  (set constant; guide erratum owed at commit). Gates green (0 fail,
+  6 advisories, 16px 74+10 marginal, twins 0/0, letters 0; pilot
+  byte-frozen proven). 15 flags superseded in place, new flags
+  36–50; sheet republished, same URL. **APPROVED (Sebastian,
+  2026-09-03) — SLICE A01 CLOSED**: approval covers the presented
+  state, so the re-look calls rule with it — antlr↔chrome look-alike
+  pair stands (41), company-mark-on-format ratified (38:
+  safetensors/bolt keep HF/Firebase), asp/aspx one .NET family (44),
+  bashly-hook keeps its `$` (47), stopwatch precedent + lift trigger
+  contrast<3.0:1 ratified (48, 50/0). Ruled errata FOLDED into the
+  guide (L2 license amendment + company-mark rider, §5 lift
+  erratum 2, §5 families/collapse/look-alike laws); slice committed
+  on the verdict (umbrella only, no pin). NEXT SESSION: slice A02
+  (worklist slices[1]) through the same contract — then A03+ →
+  assembly → the single integration swap commit. Details + resume
+  in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
