@@ -102,11 +102,17 @@ Rules & known limits:
 - Screen-capture TCC: base image pre-grants the pre-Tahoe ssh identity only; macOS 26
   asks under `com.apple.sshd-session`. Fixed by a manual row insert (Sebastian ran it,
   2026-09-02). If capture ever prompts again, re-check that row.
-- **Display stuck at 1024×768@2x** (captures are 2048×1536): `tart set --display
-  1512x982` is stored (visible in `tart get`) but the guest keeps its remembered mode
-  even after clearing `com.apple.windowserver.displays.plist`. Open item — candidate
-  fixes: `displayplacer` binary in the guest, or a one-time `tart run` WITH graphics to
-  let the display refit. Current size is fine for band/vibrancy/type checks.
+- **Display: RESOLVED 2026-09-03** — VZ config is `3024x1964` (`tart set`; the earlier
+  1512x982 try would have been 1x — always think in PIXELS, logical×2 for Retina), and
+  the guest advertises the right mode list but re-picks remembered 1024×768@2x at EVERY
+  boot. Fix = re-apply per boot, idempotent + instant: `displayplacer` v1.4.0 (in guest
+  `/usr/local/bin`, prebuilt arm64 from GitHub releases) — parse "Persistent screen id"
+  from `displayplacer list` (stable so far: `9A0911C6-7B3D-4140-93FB-DE91CCE602DB`), then
+  `displayplacer "id:<ID> res:1512x982 hz:60 color_depth:7 scaling:on origin:(0,0)
+  degree:0"` → captures 3024×1964 (14″ MBP logical size @2x). The launch skill's VM mode
+  applies this automatically before launching. Related boot gotcha: `screencapture`
+  right after VM boot fails with "could not create image from display" until the GUI
+  session is up — retry-loop it.
 - The launch skill (`vscode/.claude/skills/launch/scripts/launch.sh`) is NOT yet adapted
   to the guest (no authed profile there; smoke test used raw `code.sh` + virgin UDD).
   Adapting it (or a guest-side variant) is pending Sebastian's call.
