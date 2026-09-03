@@ -1663,20 +1663,120 @@ can express:
 
 ### M13 — Grid surgery (full-height rail + editor-column statusbar)
 
-- [ ] S0 — fix the pre-existing stale-GridLocation bug (adjustPartPositions
-  `[2,…]` literals → getViewLocation-derived; reachable today via activity bar
-  `default` + sidebar-position toggle)
-- [ ] S1 — grid descriptor + arrangement: statusbar + banner leaves move into the
-  right column; LEFT-sidebar gate with sane sidebar-right fallback; pin
-  panelAlignment `center` under the gate (B2); accept the one-time 22px
-  restored-panel-height cosmetic
-- [ ] S2 — lockstep copies + seams: splash prepaint (separate bundle), statusbar
-  focus corner-radius bottom-left → sidebar.left, border-top hairline restyle,
-  notification bottom offsets, part cycling / getVisibleNeighborPart
-- [ ] Acceptance: CDP geometry battery (rail full height owns the corner,
-  statusbar left edge = editor column, banner above statusbar in-column), gate
-  flips, splash-vs-settled frame, panel/aux interplay, Sebastian's corner+seam
-  pass
+Four delegated commits LANDED 2026-09-03 (one session; diffs reviewed, hooks ON,
+no attribution, nothing pushed). out/ compiled at `d4cf18c60ac` — Sebastian's
+judge needs only quit + `./scripts/code.sh` (renderer-side; a plain relaunch is
+cleanest).
+
+- [x] **S0 landed** (`d8621e132ab`): `Grid.getViewLocation` made public (was
+  private, house-style doc); `adjustPartPositions` derives the middle-section
+  root index from the editor's location — the four stale `[2,…]` literals gone
+  (they addressed the BANNER leaf under our banner-last root). Suites 43/195
+  green. Live repro at the battery: activity bar `default` + double
+  sidebar-position toggle = clean; the old banner-split is dead.
+- [x] **S1 landed** (`be2c00b549c`): the surgery. Under the gate — inline
+  titlebar + sidebar LEFT + HORIZONTAL panel — root = [titlebar, main row];
+  main row = [activitybar, sidebar (full height), column, auxiliarybar]; column
+  = [editor, panel, banner, statusbar] (statusbar bottom-most, panel top or
+  bottom). Ungated = stock, proven BYTE-EQUIVALENT across all 16,384
+  arrangement combinations (agent harness). Alignment read as `center` under
+  the gate at the two arrangement-math sites (B2; stored setting untouched).
+  Runtime flips via idempotent `updateBannerAndStatusBarPlacement()` —
+  inline-titlebar event + setSideBarPosition + BOTH sides of setPanelPosition
+  (rows evacuate BEFORE a vertical-panel move unmakes the column; ordering
+  proven by counter-example on a real grid, 8-case choreography test). Full
+  moveView audit table in the agent report.
+- [x] **S2 landed** (`2d527dd1521`): the lockstep copies. New root class
+  `statusbar-in-editor-column` (LayoutClasses; boot via getLayoutClasses +
+  every runtime placement change — grid DOM is flat siblings, CSS can't see
+  the tree). Splash: `IPartsSplash.layoutInfo.statusBarInEditorColumn`
+  (optional → old stored splashes paint one stock first frame, self-heal),
+  writer restates the predicate over public state (comment ties it to
+  layout.ts), painter: all three side strips full height + statusDiv
+  left/width = the column. Statusbar focus radius: bottom-left → 0 under the
+  class; `.part.sidebar.left:focus` gains 10/16px (Tahoe) in sidebarpart.css.
+  Audited no-change: status-border-top hairline (part-relative), all four
+  `--banner-height` toast/center offsets, part-cycling ring, M1 statusbar
+  drag.
+- [x] **S3 landed** (`d4cf18c60ac`, from the battery's live find): with the aux
+  bar MAXIMIZED (editor+panel hidden) the column's only visible child was the
+  fixed-height statusbar → the grid pinned it to the WINDOW TOP (gridview
+  maximumSize clamps the whole middle section to 22px). Fix = predicate split:
+  `wantsFullHeightSideBar` (shape: gate+LEFT+horizontal) feeds the alignment
+  clamps; `hasFullHeightSideBar` = wants ∧ (editor visible ∨ panel visible)
+  feeds descriptor/class/placement/splash — rows EVACUATE to stock root while
+  the column has no flexible child, rejoin when one returns. Triggers:
+  setEditorHidden/setPanelHidden straddle the grid flip (out before the last
+  flexible row goes, in after one is back — wrong order collapses the middle
+  section to 0, proven). The split also fixes boot-into-persisted-aux-max with
+  non-center alignment (refined clamp would have nested the sidebar into the
+  column). Panel-maximized untouched (panel = flexible child, correct since
+  S1). Bonus: splash aux-max width marker made the first-frame statusbar
+  vanish — now paints stock full-width there.
+- [x] **Session battery (Tart VM per D23, virgin profile + /tmp demo repo)
+  all-green 2026-09-03**: boot geometry exact at 1200×800 (rail 0,0→300,800
+  owns the corner; statusbar 300→1200 at y778; editor left = statusbar left);
+  Restricted-Mode banner lives IN-COLUMN (300→1200 × 752..778, dismiss returns
+  the 26px to the editor); editor→panel→statusbar stacking exact (512/266/22);
+  empty-window boot = full-width statusbar (hidden sidebar collapses the
+  column — honest); sidebar right ⇒ stock + class off, left ⇒ column back;
+  panel right ⇒ stock (vertical fallback, evacuation clean), bottom ⇒ column;
+  gate off (`customTitleBarVisibility: auto`) ⇒ stock incl. 32px title row,
+  never ⇒ column, both LIVE; zoom +2/reset tracks; aux visible ⇒ statusbar
+  stops at the aux edge (aux full height); aux MAXIMIZED ⇒ statusbar to root
+  bottom full-width + class off, un-maximize ⇒ rejoin (S3 verified); S0 repro
+  clean; stored splash `{statusBarInEditorColumn: true, titleBarHeight: 0}`
+  on a clean session; splash-frame capture agrees with the settled frame
+  (full-height strip, column statusbar, before the workbench loads).
+  Screenshots delivered in-chat (banner scene, SCM one-column scene on the
+  full-height rail, stacked panel scene, splash frame).
+- [ ] **Checkpoint (Sebastian) — the judge**: the corner (rail owns bottom-left,
+  sections reach the bottom), the seam (statusbar starts at the editor
+  column's left edge; top hairline spans only the column), banner-in-column
+  (open any untrusted folder), panel/aux interplay if you care. Quit + relaunch
+  `./scripts/code.sh` — out/ is current.
+- [ ] **Flags for verdicts** (all implemented-as-described; none block the judge):
+  (1) VERTICAL panel (left/right) falls back to the stock full-width statusbar
+  — session call consistent with the ratified sidebar-right fallback (no
+  editor/panel branch exists to become the column); ratify or re-rule.
+  (2) `isPanelMaximized()`/`panelOpensMaximized()` still read the RAW
+  alignment: under the gate with a stored non-center alignment the grid is
+  center-shaped but panel-maximize commands report unavailable — clamp them
+  too? (two-line follow-up).
+  (3) The new `.part.sidebar.left:focus` corner-radius rule is INERT today
+  (the sidebar part box never takes DOM focus; only the statusbar sets
+  tabIndex) — kept as the future-proof mirror of the statusbar rule; drop if
+  you prefer honest absence.
+  (4) With the AUX BAR VISIBLE the statusbar keeps its bottom-RIGHT focus
+  radius while the aux bar actually owns that corner — conditional rule
+  (`.noauxiliarybar`) available if it ever reads wrong.
+  (5) The rail's newly exposed bottom strip (former statusbar territory) has
+  NO drag surface — rail content, by design; judge at the pass.
+  (6) `getNeighborPart` grid-geometric focus nav changes meaning benignly
+  under the gate (Down from sidebar = nothing; Down from editor = the column
+  rows); the part-cycling ring is untouched.
+  (7) TOOLING, pre-existing: `launch-vm.sh -- <extra args>` forwarding is
+  broken (its `shquote` emits invalid quoting for values containing quotes —
+  any extra arg trips it); suggested one-line fix = `printf '%q'`; delegate on
+  approval.
+- [ ] Close: packaged verification rides the next packaged pass together with
+  M12's (M2→M3 precedent). M13 markers for that grep: `getViewLocation` public
+  in grid.js; `statusbar-in-editor-column` in workbench js + css;
+  `wantsFullHeightSideBar`/`hasFullHeightSideBar` + the descriptor
+  `bottomSection` in layout js; `statusBarInEditorColumn` in themeService +
+  partsSplash + the splash painter (electron-browser workbench.ts);
+  `.part.sidebar.left:focus` radius in sidebarpart.css; statusbar
+  bottom-left-radius 0 rule in statusbarpart.css.
+- [ ] Battery ledger (VM notes, carry forward): `security.workspace.trust.enabled`
+  needs a FULL app restart (window reload is not enough — the restricted
+  banner can survive a reload as stale UI; seed it before first boot, or
+  kill -9 + manual relaunch with the folder arg, the pattern that worked);
+  partsSplash stops saving layoutInfo for the session after a
+  titlebar-affecting settings flip (`_didChangeTitleBarStyle` latch) — a
+  mid-battery gate flip freezes the stored splash, harmless in real use;
+  the single-instance relaunch hazard needs `pkill -9` + pgrep-gone before
+  relaunching a reused UDD (SIGTERM leaves a crash-restore dialog that
+  forwards new launches).
 
 ### M14 — Lualine statusbar (approved bar: NORMAL │ branch · +n ~n −n · ⚠n … Ln,Col · % · UTF-8 · LF · lang; NO mode block until M17)
 
@@ -1881,12 +1981,24 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   simple-icons CC0 same-construction, but 4475B = over the 4KB cap, would
   need further reduction). Minor: 6-box variants (3+3 / 3+2+1) are a
   one-line swap if 7 feels crowded.
-- [ ] Sebastian re-look at the two fixed icons (+ flag 14 license ruling) →
-  then pilot commit (tools/ + sources-svg/ + pilot/; add-by-path only — the
-  vscode submodule pointer is mid-flight in the peer M12 session).
-- [ ] Production slices (file + folder, sized like v1's A01–A12 / F01–F06), each
-  review-gated on its 16/22px contact sheet; letter audit (L3 table by measurement)
-  where the style has letters
+- [x] **APPROVED (Sebastian 2026-09-03) — PILOT PHASE CLOSED.** Both fixes
+  pass as built; approval covers the presented state, so flag 14 rules WITH
+  it: editorconfig keeps the brand's own vector as source, the repo's missing
+  license recorded verbatim in provenance (CC0 simple-icons same-construction
+  documented as the escape hatch — needs a byte reduction if ever swapped);
+  the 7-box deck stands. Pilot committed `0007b9b` (84 files: pilot/ +
+  tools/ + sources-svg/, add-by-path; rejected bytes kept in
+  `pilot/rejected/` as history).
+- [ ] Production slices (NEXT, own sessions — one slice batch per session):
+  file + folder slices sized like v1's A01–A12 / F01–F06, each review-gated on
+  its contact sheet. Worklist = `m11-icons/production/longtail-worklist.json` +
+  set-manifest ids (payload-only swap, associations untouched). Toolchain
+  ready: extend `m20-icons-v2/tools/sources.mjs` per subject (the pilot's 20
+  specs are the pattern — parts in source coords + envelope fit + provenance +
+  logged simplifications), outputs/gates run via `node tools/gates.mjs`; §5 +
+  the pilot-ruled errata are the law (gestalt erratum, color tiebreak,
+  backdrop-lift scope, open-folder shade formula, plate lane in the audit).
+  Letter audit stays dormant in R1 (assert 0 typeset letters per slice)
 - [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
   associations untouched, iconPaths only
 - [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
@@ -1894,10 +2006,10 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   + markers, dev boot, packaged virgin boot, spot checks incl. `.editorconfig` and
   folder differentiation at tree size)
 
-Resume cold: read the style guide (§5 = the law, pilot errata folded); the pilot is
-BUILT and untracked in `m20-icons-v2/pilot/` (sheet.png = the full review page;
-verify with `cd m20-icons-v2 && node tools/gates.mjs`). Gate state: 22/24 ruled
-APPROVED 2026-09-03; docker + editorconfig rejected → fix round. If the fix round is
-unreviewed: review it, republish `pilot/sheet.html` to the SAME artifact URL
-(a6ff6bf2…), present the two fixed icons; on his confirm: commit tools/ +
-sources-svg/ + pilot/, then brief production slices.
+Resume cold: read the style guide (§5 + the pilot errata = the law). PILOT CLOSED
+2026-09-03, approved + committed (`0007b9b`); sheet artifact a6ff6bf2… (republish =
+same `pilot/sheet.html` path from its session, or pass the URL). Next phase =
+production slices (see that item above for worklist/toolchain/laws). Start a slice
+session by picking the first file-slice ids from the m11 worklist, extending
+sources.mjs, and gating on `node tools/gates.mjs`; slice sheets get their own
+artifact URLs, one per slice review.

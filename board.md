@@ -210,7 +210,35 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   verdict (shared-tree state incl. the peer D23 records — all
   post-ruling). M12 remains open only for the packaged-verification
   close-out (markers list in Tasks § M12 Close).
-- **M20 — Icon set v2 — OPENED 2026-09-02, style phase (D22 PENDING)**:
+- **M13 — Grid surgery BUILT + battery-green 2026-09-03 — SEBASTIAN
+  CHECKPOINT PENDING**: the D20-amendment geometry is in source — the
+  sidebar rail runs the FULL window height and owns the bottom-left
+  corner; statusbar + banner live INSIDE the editor column (root =
+  [titlebar, main row]; column = editor → panel → banner → statusbar).
+  Four delegated commits on the fork (`d8621e132ab` S0 grid-location
+  bugfix → `be2c00b549c` S1 surgery → `2d527dd1521` S2 splash/CSS
+  lockstep → `d4cf18c60ac` S3 no-flexible-child fallback), each
+  diff-reviewed, hooks ON, NOT pushed, pin bump waits on the gate.
+  Gate = inline titlebar + sidebar LEFT + horizontal panel + (editor or
+  panel visible); everything else falls back to the stock arrangement —
+  ungated proven byte-equivalent over all 16,384 combinations, flips
+  live both ways (runtime rows-evacuate/rejoin choreography proven by
+  counter-example on a real grid). B2 alignment pinned center via a
+  wants/has predicate split (shape feeds the clamps, shape+visibility
+  feeds placement — the split also fixed boot-into-aux-maximized).
+  Splash first frame agrees with the settled frame (new optional
+  layoutInfo flag; old stored splashes self-heal). VM battery (D23)
+  all-green incl. the in-column Restricted-Mode banner, aux-maximized
+  evacuation (S3's live find: the statusbar used to pin to the WINDOW
+  TOP), S0's banner-split repro dead, stored-splash + splash-frame
+  proofs; screenshots delivered. Awaiting his corner + seam pass;
+  7 flags for verdicts (key: vertical-panel fallback ratification,
+  maximize-predicate clamp, the inert sidebar focus-radius rule,
+  launch-vm arg-forwarding bug found en route). Details + resume in
+  Tasks § M13; packaged markers ride the next packaged pass with
+  M12's.
+- **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
+  2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
   different styles in one set; letter icons share no alignment/size/weight;
   generic drawings where brands own logos (editorconfig shipped as generic
@@ -277,10 +305,13 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   box geometry, 9-candidate study proves the ceiling), editorconfig
   RE-SOURCED to the brand's own vector — the drawn mascot with solid
   spectacles in official colors; only 4 SVGs changed (asserted);
-  sheet republished, same URL. PENDING: his re-look at the two +
-  flag 14 (editorconfig artwork repo has NO license; CC0 fallback
-  exists but needs a byte reduction) → pilot commit → slices.
-  Details + resume in Tasks § M20.
+  sheet republished, same URL. **APPROVED (Sebastian, same day) —
+  PILOT CLOSED, committed `0007b9b`**; flag 14 ruled with it (the
+  brand's own vector stays the source, its repo's missing license
+  recorded in provenance; CC0 fallback documented). NEXT (own
+  sessions, one slice batch each): production slices off the m11
+  worklist through the pilot toolchain — then assembly, then the
+  single integration swap commit. Details + resume in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`
