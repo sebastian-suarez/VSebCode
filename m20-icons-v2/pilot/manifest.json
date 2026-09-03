@@ -1,0 +1,1105 @@
+{
+	"note": "M20 icons v2 — PILOT (24 icons). Style is D22/R1 \"True colour\": the icon IS the official mark, fitted, official colours verbatim. Per L2 every mark's geometry derives from official vector artwork; this file records where each one came from, exactly what L5 forced us to simplify, and every judgement call made along the way.",
+	"generated": "2026-09-03",
+	"roster": {
+		"carried": [
+			"typescript",
+			"editorconfig",
+			"json",
+			"markdown",
+			"docker",
+			"python",
+			"react",
+			"eslint",
+			"prettier",
+			"rust",
+			"folder-src",
+			"folder-node"
+		],
+		"new_files": [
+			"npm",
+			"dotenv",
+			"yaml",
+			"git",
+			"go",
+			"vue"
+		],
+		"new_folders": [
+			"folder-test",
+			"folder-docker"
+		],
+		"count": {
+			"files": 16,
+			"folders": 8,
+			"total": 24
+		}
+	},
+	"fix_round": {
+		"ruling": "2026-09-03",
+		"verdict": "22 of the 24 pilot icons APPROVED as built. TWO REJECTED — \"that is definitely NOT the docker or editorconfig logo\" — and rebuilt in this round. Nothing else was touched: the other 22 shipped icons and every other master are byte-identical to the gated build, folder-docker included.",
+		"rebuilt": [
+			"docker",
+			"editorconfig"
+		],
+		"editorconfig": "the round-2 master flattened a hand-drawn LINE drawing into a white silhouette with two dark slashes. Re-sourced from the brand's own vector (editorconfig/editorconfig, assets/EditorConfig_Logo.svg) and rebuilt as a light face carrying the official DARK features under the prettier rider.",
+		"docker": "the round-2 master reduced the official 5+3+1 container grid to 3+1 — four boxes, the top one alone. The deck is reloaded to 3+3+1 (seven of the official nine) on the three columns the 1.2 px floor allows; the whale is the same official subpath in both rounds.",
+		"deck_study": "pilot/proofs/docker-deck-candidates.png",
+		"carry_gate": "the D22 carry gate now asserts 10/12 carried subjects still byte-identical to samples/masters/ and exactly 2 SUPERSEDED BY PILOT (docker, editorconfig). A superseded subject that quietly refits to its round-2 bytes fails the gate too."
+	},
+	"tooling": {
+		"simple-icons": "16.29.0 (CC0-1.0)",
+		"fetched artwork": "m20-icons-v2/sources-svg/ — brand-published SVGs, downloaded once and kept for the standing fidelity gate"
+	},
+	"set_constants": {
+		"envelopes": {
+			"wide": {
+				"w": 13.8,
+				"h": 10.2
+			},
+			"compact": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"tall": {
+				"w": 11.2,
+				"h": 13.2
+			},
+			"flat": {
+				"w": 15.2,
+				"h": 9.6
+			},
+			"open": {
+				"w": 13.6,
+				"h": 13.6
+			},
+			"face": {
+				"w": 10.2,
+				"h": 8.2,
+				"cx": 8,
+				"cy": 8.35
+			}
+		},
+		"open_folder": {
+			"rule": "NEW WITH THE PILOT. Closed and open are one construction (L7). The open state is v1's proven two-panel silhouette: a back sheet standing behind and a pocket tipped forward. The pocket carries the BODY colour verbatim; the back sheet is that colour at L minus 15 in HSL, hue and saturation untouched, floored at L 18 so a dark brand body cannot collapse into the backdrop. One formula for every folder, sand included.",
+			"formula": "shade(body) = hsl(h, s, max(18, l - 15))",
+			"why_15": "it reproduces v1's own hand-picked sand pair (#BF9354 body -> #8F6D37 back sheet) to within two units per channel",
+			"mark": "the face mark is painted over both panels at the SAME coordinates it holds when the folder is closed — byte-identical path data, asserted by check.mjs. It crosses the panel seam; the two panels differ only in lightness, so the white mark reads continuously (L7: open never hides the glyph).",
+			"back_panel": "M1.5 4.1c0-.66.54-1.2 1.2-1.2h3.12c.34 0 .66.14.89.39l.95 1.01h4.94c.66 0 1.2.54 1.2 1.2v1h-12z",
+			"front_panel": "M2.42 6.5h11.62c.78 0 1.35.73 1.17 1.49l-.98 3.9c-.13.54-.61.91-1.17.91H2.7c-.66 0-1.2-.54-1.2-1.2V7.7c0-.66.42-1.2.92-1.2z"
+		},
+		"visibility_lift": "a mark whose official hex is below L 22 is raised to L 88 with hue and saturation intact (markdown #000000 only). Clarified by the pilot: the lift applies to ink that MEETS THE BACKDROP. Ink printed on the mark's own field (dotenv's black \".E\" on its yellow square, editorconfig's #020202 drawing on its white face) is never lifted — lifting it would invent a colour the brand does not use; on editorconfig lifting it would erase the mascot's glasses.",
+		"achromatic_exemption": "inks below S 12 skip any saturation clamp",
+		"neutral_ink": "#A6AEB6",
+		"folder_sand": "#BF9354",
+		"backdrop": "#121314",
+		"contrast_note": "contrast_on_backdrop is measured for EVERY declared fill, including ink that never meets the backdrop because it prints on the mark's own field (dotenv's #000000 on its yellow square, typescript's white on its blue, editorconfig's #020202 on its white face). Read it only for the fills that touch the ground. One edge case, flagged: editorconfig's ink also forms the drawing's outer contour, so a 0.33 px rim of it does meet the backdrop — it reads as a soft edge on the white face, not as a line.",
+		"typeset_letters": "NONE. R1 has no typeset letters; the L3 table is dormant. Every letterform in this pilot (typescript, npm, dotenv, yaml, go) is faithful source geometry taken from the brand's own artwork."
+	},
+	"subjects": {
+		"typescript": {
+			"title": "TypeScript",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "simple-icons",
+				"slug": "typescript",
+				"license": "CC0-1.0",
+				"url": "https://www.typescriptlang.org/branding",
+				"note": "official square + TS letterforms, single path, 3 subpaths"
+			},
+			"colours": [
+				"#3178C6",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#3178C6": 4.1,
+				"#FFFFFF": 18.6
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.8,
+				"mass": 164
+			},
+			"layers": 2,
+			"simplifications": [],
+			"proof_16px": {
+				"result": "pass",
+				"note": "the TS lockup separates cleanly on the blue field"
+			},
+			"bytes": 1419
+		},
+		"python": {
+			"title": "Python",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "simple-icons",
+				"slug": "python",
+				"license": "CC0-1.0",
+				"url": "https://www.python.org/community/logos/",
+				"note": "two-snake mark; official gradients flattened to #3776AB / #FFD43B"
+			},
+			"colours": [
+				"#3776AB",
+				"#FFD43B"
+			],
+			"contrast_on_backdrop": {
+				"#3776AB": 3.85,
+				"#FFD43B": 13.05
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.74,
+				"mass": 163
+			},
+			"layers": 2,
+			"simplifications": [
+				"official gradients flattened to their dominant flat stops (L2)"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "both snakes hold, and the blue/yellow split survives"
+			},
+			"bytes": 2168
+		},
+		"docker": {
+			"title": "Docker",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "simple-icons",
+				"slug": "docker",
+				"license": "CC0-1.0",
+				"url": "https://www.docker.com/company/newsroom/media-resources",
+				"note": "Moby whale, single path: 9 container squares + body"
+			},
+			"colours": [
+				"#2496ED"
+			],
+			"contrast_on_backdrop": {
+				"#2496ED": 5.9
+			},
+			"envelope": {
+				"w": 15.2,
+				"h": 10.4
+			},
+			"ink": {
+				"w": 14.5,
+				"h": 10.4,
+				"mass": 151
+			},
+			"layers": 1,
+			"simplifications": [
+				"container grid reduced from the official 5+3+1 (nine boxes on five columns, 0.26 px gaps at any allowed fit) to 3+3+1 on three columns — seven boxes. The box is official subpath #7 translated, so its size and corner radius are untouched (1.50 x 1.36 px), and the gaps land at 1.21 px, over L5's official-forced 1.2 px floor",
+				"three columns is the maximum: four official-size boxes need 15.65 u to hold the floor and the whale's deck (x 2.03 .. 16.29, bounded by the tail fin at 17.79) is 14.26 u, so a fourth column either cuts the fin clearance from the official 1.50 u to 0.64 u or shrinks the box to 86% of official at a 1.15 px gap",
+				"the official row pitch is kept, so the 0.46 u vertical gaps stay 0.28 px and the rows fuse into columns exactly as they do in the official mark (L5 erratum)",
+				"adding the third tier makes the mark taller than wide-envelope: the fit becomes height-bound, so the ink is 14.50 x 10.40 (mass 151) instead of round 2's 15.20 x 9.18 (mass 140)"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "FIX ROUND. The whale reads and the deck is loaded: three columns, seven official containers, the stack stepping up to the right. The rejected 3+1 read as three nubs and a floating box"
+			},
+			"bytes": 1592
+		},
+		"markdown": {
+			"title": "Markdown",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "markdown-mark (official repo)",
+				"slug": "markdown",
+				"license": "CC0-1.0",
+				"url": "https://github.com/dcurtis/markdown-mark",
+				"note": "svg/markdown-mark.svg — frame + M + down-arrow"
+			},
+			"colours": [
+				"#E0E0E0"
+			],
+			"contrast_on_backdrop": {
+				"#E0E0E0": 14.09
+			},
+			"envelope": {
+				"w": 15.2,
+				"h": 9.6
+			},
+			"ink": {
+				"w": 15.2,
+				"h": 9.36,
+				"mass": 142
+			},
+			"layers": 1,
+			"simplifications": [
+				"frame stroke widened from the official 10/128 (0.63 px at 16) to 18/128 (1.32 px) using the file's own inset construction — L5 minimum stem",
+				"official black #000000 lifted to L 88 for the #121314 backdrop (the one L2 lift rule)"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "frame, M and arrow all separate"
+			},
+			"bytes": 544
+		},
+		"editorconfig": {
+			"title": "EditorConfig",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "EditorConfig (brand's own SVG)",
+				"slug": "editorconfig",
+				"license": "none declared — editorconfig/editorconfig ships no LICENSE file and the GitHub API reports license: null. Used as the brand's own mark for the brand's own file type. FLAGGED for a ruling: simple-icons carries a CC0 trace of the same drawing with the same subpath structure, and the identical construction on it renders the same icon — but at 4475 B, over L8's 4 KB hard cap, so the CC0 fallback would need a further reduction to ship",
+				"url": "https://github.com/editorconfig/editorconfig/blob/master/assets/EditorConfig_Logo.svg",
+				"note": "the hand-drawn mascot: one #020202 ink path (outer contour + 10 counters) over #FDFDFD face regions, #FDF2F2 / #FEF3F3 ear interiors, #E3E3F8 pupils. Fetched to sources-svg/editorconfig-official.svg. Replaces the round-2 simple-icons silhouette, which the pilot gate rejected"
+			},
+			"colours": [
+				"#020202",
+				"#FDFDFD",
+				"#FEF3F3",
+				"#FDF2F2"
+			],
+			"contrast_on_backdrop": {
+				"#020202": 1.12,
+				"#FDFDFD": 18.29,
+				"#FEF3F3": 17.12,
+				"#FDF2F2": 16.97
+			},
+			"envelope": {
+				"w": 13.2,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 13.2,
+				"h": 12.76,
+				"mass": 168
+			},
+			"layers": 4,
+			"simplifications": [
+				"PRETTIER RIDER. The mark is a line drawing whose lines are unreadable at 16 px: the head contour is 0.33 px and the spectacle rims 0.16-0.21 px at the shipped fit",
+				"the spectacles ship SOLID: the lens interiors (counters 3 and 5) and the pupils (counters 2 and 4) are not painted back, so official rim + lens + pupil merge into one dark lens each — 3.45 x 1.91 px (left) and 3.61 x 1.97 px (right), with the official 0.56 px bridge gap between them. The official rims already join at the bridge, so the merge follows the mark",
+				"the nostril (counter 0) is not painted back either: its official outline is 0.2 px, and filling it solid gives a 1.82 x 0.89 px nose — the minor axis is under the 1.2 px floor, kept because the alternative is a 0.2 px ring",
+				"the pale-lavender pupils #E3E3F8 (0.39 x 0.52 px), the #EFEFEF cheek highlight and the #FAF1F1 nostril fill are dropped — all under half a pixel",
+				"the head contour, ear rims and whisker survive as sub-pixel ink (0.16-0.33 px) and render as antialiasing rather than as line; on the #121314 backdrop the outer contour is dark-on-dark, so the visible silhouette is the white face itself"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "FIX ROUND. Reads as the drawn mascot: the head, both ears, the solid spectacles with the bridge notch still open between the lenses, and a dark nose at the snout. The ear rims and whisker survive as antialiasing, which is what a 0.2 px line does"
+			},
+			"bytes": 2640
+		},
+		"json": {
+			"title": "JSON (neutral glyph)",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "none — neutral glyph vocabulary",
+				"slug": null,
+				"license": null,
+				"url": null,
+				"note": "JSON publishes no mark; braces from the set's own glyph vocabulary (L2)"
+			},
+			"colours": [
+				"#A6AEB6"
+			],
+			"contrast_on_backdrop": {
+				"#A6AEB6": 8.28
+			},
+			"envelope": {
+				"w": 11.4,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 11.4,
+				"h": 13.02,
+				"mass": 148
+			},
+			"layers": 1,
+			"simplifications": [],
+			"proof_16px": {
+				"result": "pass",
+				"note": "braces read as braces"
+			},
+			"bytes": 728
+		},
+		"react": {
+			"title": "React",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "React logo (create-react-app fixture, the canonical file)",
+				"slug": "react",
+				"license": "CC BY 4.0 / MIT (facebook)",
+				"url": "https://github.com/facebook/create-react-app/blob/282c03f9525fdf8061ffa1ec50dce89296d916bd/test/fixtures/relative-paths/src/logo.svg",
+				"note": "circle r 2.05 + 3 ellipses rx 11 ry 4.2 at 0/60/120, stroke 1"
+			},
+			"colours": [
+				"#61DAFB"
+			],
+			"contrast_on_backdrop": {
+				"#61DAFB": 11.45
+			},
+			"envelope": {
+				"w": 13.6,
+				"h": 13.6
+			},
+			"ink": {
+				"w": 13.6,
+				"h": 13.46,
+				"mass": 183
+			},
+			"layers": 1,
+			"simplifications": [
+				"orbit stroke widened from the official 1 unit (0.55 px at 16) to 2.73 units (1.50 px) — L5 minimum stem; radii, aspect and the 60-degree spacing are official"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "three orbits and the nucleus all hold at the 1.5 px stroke"
+			},
+			"bytes": 992
+		},
+		"eslint": {
+			"title": "ESLint",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "ESLint (brand's own SVG)",
+				"slug": "eslint",
+				"license": "MIT (eslint.org)",
+				"url": "https://raw.githubusercontent.com/eslint/eslint.org/main/src/static/icon.svg",
+				"note": "two official layers: #4B32C3 outer ring, #8080F2 inner hexagon"
+			},
+			"colours": [
+				"#4B32C3",
+				"#8080F2"
+			],
+			"contrast_on_backdrop": {
+				"#4B32C3": 2.25,
+				"#8080F2": 5.57
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 11.2,
+				"mass": 143
+			},
+			"layers": 2,
+			"simplifications": [],
+			"proof_16px": {
+				"result": "pass (marginal)",
+				"note": "reads as a purple hexagon with a lighter core; the core's own hexagonal edges are lost"
+			},
+			"bytes": 820
+		},
+		"prettier": {
+			"title": "Prettier",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "prettier-logo (official repo)",
+				"slug": "prettier",
+				"license": "MIT (prettier)",
+				"url": "https://github.com/prettier/prettier-logo/blob/master/images/prettier-icon-clean-centred.svg",
+				"note": "23 rounded bars on an 11-row grid; palette #56B3B4 #EA5E5E #F7BA3E #BF85BF"
+			},
+			"colours": [
+				"#56B3B4",
+				"#F7BA3E",
+				"#EA5E5E",
+				"#BF85BF"
+			],
+			"contrast_on_backdrop": {
+				"#56B3B4": 7.53,
+				"#F7BA3E": 10.67,
+				"#EA5E5E": 5.55,
+				"#BF85BF": 6.49
+			},
+			"envelope": {
+				"w": 11.6,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 11.2,
+				"h": 13.2,
+				"mass": 148
+			},
+			"layers": 7,
+			"simplifications": [
+				"rows reduced from 11 to 4 (official rows 0 / 60 / 120 / 160 kept, re-pitched to 62)",
+				"bar height raised from 10 to 26 source units so a bar is 1.62 px at 16 (L5)",
+				"segment gaps widened from 10 to 22 units, segments rescaled to hold each row's official right edge; shortest bar is 1.54 px"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "four bar rows, colours distinct"
+			},
+			"bytes": 1487
+		},
+		"rust": {
+			"title": "Rust",
+			"kind": "file",
+			"carried": true,
+			"source": {
+				"name": "simple-icons",
+				"slug": "rust",
+				"license": "CC0-1.0",
+				"url": "https://www.rust-lang.org/policies/media-guide",
+				"note": "gear + inner ring + R, single path, 10 subpaths"
+			},
+			"colours": [
+				"#CE422B"
+			],
+			"contrast_on_backdrop": {
+				"#CE422B": 3.93
+			},
+			"envelope": {
+				"w": 13.2,
+				"h": 13.2
+			},
+			"ink": {
+				"w": 13.2,
+				"h": 13.2,
+				"mass": 174
+			},
+			"layers": 1,
+			"simplifications": [
+				"the five 1.5-unit bolt circles (subpaths 1/3/4/8/9) dropped — 0.83 px at 16"
+			],
+			"proof_16px": {
+				"result": "pass (marginal)",
+				"note": "gear silhouette and the R read; the cog teeth become a soft edge and the R's counter nearly closes"
+			},
+			"bytes": 3654
+		},
+		"npm": {
+			"title": "npm",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "npm (brand's own SVG)",
+				"slug": "npm",
+				"license": "npm/logos, brand assets",
+				"url": "https://github.com/npm/logos/blob/master/npm%20square/n.svg",
+				"note": "the official square mark, authored at 16x16: solid field + white \"n\". The file itself ships #C12127; brand-colors.json (L2's colour source of truth) records npm red as #CB3837 and that is what ships"
+			},
+			"colours": [
+				"#CB3837",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#CB3837": 3.68,
+				"#FFFFFF": 18.6
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.8,
+				"mass": 164
+			},
+			"layers": 2,
+			"simplifications": [
+				"lockup choice, not a reduction: npm's wide wordmark (780x250) lands on 0.97 px stems at the grid's widest fit, so the brand's own SQUARE mark is used — its stems are 1.60 px and its geometry is untouched"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "red field, white n, counter open"
+			},
+			"bytes": 171
+		},
+		"dotenv": {
+			"title": "dotenv (.env)",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "dotenv (brand's own SVG)",
+				"slug": "dotenv",
+				"license": "BSD-2-Clause (motdotla/dotenv)",
+				"url": "https://github.com/motdotla/dotenv/blob/master/dotenv.svg",
+				"note": "200x200 #ECD53F square with black \".ENV\" at y 132..178"
+			},
+			"colours": [
+				"#ECD53F",
+				"#000000"
+			],
+			"contrast_on_backdrop": {
+				"#ECD53F": 12.54,
+				"#000000": 1.13
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 12.8,
+				"mass": 164
+			},
+			"layers": 2,
+			"simplifications": [
+				"PRETTIER RIDER. The official \".ENV\" is 0.50 px in the bar at the compact envelope and 0.77 px with the square dropped and the wordmark filling the grid — unreadable at any allowed fit",
+				"letters N and V dropped; the surviving \".E\" is the official dot and the official E letterform, scaled 2.5x as ONE group so the E's bar lands on 1.24 px, and re-centred on the square (the official lockup is a poster lockup, parked in the lower quarter)",
+				"official colours kept verbatim: #ECD53F field, #000000 ink. The black is NOT lifted — it prints on the mark's own field and never meets the backdrop"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "yellow field with a dark dot and E, both separate"
+			},
+			"bytes": 241
+		},
+		"yaml": {
+			"title": "YAML",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "simple-icons",
+				"slug": "yaml",
+				"license": "CC0-1.0",
+				"url": "https://yaml.org",
+				"note": "the yaml.org stacked wordmark, YA over ML, single path, 5 subpaths (Y, A, A-counter, L, M)"
+			},
+			"colours": [
+				"#CB171E"
+			],
+			"contrast_on_backdrop": {
+				"#CB171E": 3.26
+			},
+			"envelope": {
+				"w": 13.6,
+				"h": 13.6
+			},
+			"ink": {
+				"w": 13.6,
+				"h": 12.5,
+				"mass": 170
+			},
+			"layers": 1,
+			"simplifications": [
+				"envelope widened from compact 12.8 to 13.6 (the react envelope): the lockup's thinnest bar is 2.199/24 of the mark and lands on 1.17 px at 12.8, 1.25 px at 13.6 — L5's official-forced 1.2 px floor"
+			],
+			"proof_16px": {
+				"result": "pass (marginal)",
+				"note": "reads as a RED LETTER BLOCK: the 2x2 lockup is there and its bars clear 1.25 px, but the four letters are not individually legible at 16. The mark's own construction, not a fit failure — see the flags"
+			},
+			"bytes": 392
+		},
+		"git": {
+			"title": "Git",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "Git (brand's own SVG)",
+				"slug": "git",
+				"license": "CC BY 3.0 (Jason Long)",
+				"url": "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg",
+				"note": "Git-Icon-1788C.svg — one path, rotate(-45) baked in; the branch is a counter, not a second colour. The file ships #f03c2e; brand-colors.json records Pantone 1788C as #F05032 and that is what ships"
+			},
+			"colours": [
+				"#F05032"
+			],
+			"contrast_on_backdrop": {
+				"#F05032": 5.22
+			},
+			"envelope": {
+				"w": 13.6,
+				"h": 13.6
+			},
+			"ink": {
+				"w": 13.6,
+				"h": 13.6,
+				"mass": 185
+			},
+			"layers": 1,
+			"simplifications": [
+				"envelope widened from compact 12.8 to 13.6: the official branch connector is 7/78.86 of the mark and lands on 1.14 px at 12.8, 1.21 px at 13.6 — L5's official-forced 1.2 px floor. Nothing in the geometry is changed"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "diamond plus knocked-out branch, nodes distinct"
+			},
+			"bytes": 705
+		},
+		"go": {
+			"title": "Go",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "Go (brand's own SVG)",
+				"slug": "go",
+				"license": "CC BY 4.0 (Go Authors)",
+				"url": "https://go.dev/images/go-logo-blue.svg",
+				"note": "three motion lines + G + o; the file ships #00acd7, brand-colors.json records #00ADD8 and that is what ships"
+			},
+			"colours": [
+				"#00ADD8"
+			],
+			"contrast_on_backdrop": {
+				"#00ADD8": 7.06
+			},
+			"envelope": {
+				"w": 15.2,
+				"h": 9.6
+			},
+			"ink": {
+				"w": 15.2,
+				"h": 7.78,
+				"mass": 118
+			},
+			"layers": 1,
+			"simplifications": [
+				"the three motion lines (official paths 0/1/2) dropped — 3.7/78.4 of the mark, 0.37 px at any allowed fit",
+				"the \"o\" keeps its official counter: ring wall 2.09 px, counter 3.97 px at 16"
+			],
+			"proof_16px": {
+				"result": "pass",
+				"note": "the G and the o both read once the motion lines are gone"
+			},
+			"bytes": 1258
+		},
+		"vue": {
+			"title": "Vue.js",
+			"kind": "file",
+			"carried": false,
+			"source": {
+				"name": "Vue.js (brand's own SVG)",
+				"slug": "vuedotjs",
+				"license": "MIT (vuejs/art)",
+				"url": "https://github.com/vuejs/art/blob/master/logo.svg",
+				"note": "two official layers: the outer V and the nested inner V. The file ships #42b883 / #35495e; the pilot uses #41B883 / #35495E (1/255 apart in red)"
+			},
+			"colours": [
+				"#41B883",
+				"#35495E"
+			],
+			"contrast_on_backdrop": {
+				"#41B883": 7.45,
+				"#35495E": 2.01
+			},
+			"envelope": {
+				"w": 12.8,
+				"h": 12.8
+			},
+			"ink": {
+				"w": 12.8,
+				"h": 11.08,
+				"mass": 142
+			},
+			"layers": 2,
+			"simplifications": [],
+			"proof_16px": {
+				"result": "pass (marginal)",
+				"note": "the nested V reads, but the dark half sits at 2.01:1 on the backdrop and its top rim is 0.39 px of green"
+			},
+			"bytes": 231
+		},
+		"folder-src": {
+			"title": "src/ (neutral glyph)",
+			"kind": "folder",
+			"carried": true,
+			"source": {
+				"name": "none — neutral glyph vocabulary",
+				"slug": null,
+				"license": null,
+				"url": null,
+				"note": "no brand owns \"src\"; chevrons from the set's own glyph vocabulary (L2)"
+			},
+			"colours": [
+				"#BF9354",
+				"#906B36",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#BF9354": 6.66,
+				"#906B36": 3.85
+			},
+			"body": "#BF9354",
+			"back_sheet": "#906B36",
+			"envelope": {
+				"w": 10.2,
+				"h": 8.2
+			},
+			"folder_face_ink": {
+				"w": 10.2,
+				"h": 7.78,
+				"largest": 10.2
+			},
+			"simplifications": [],
+			"proof_16px": {
+				"closed": {
+					"result": "pass",
+					"note": "two chevrons, clearly separated"
+				},
+				"open": {
+					"result": "pass",
+					"note": "open state obvious; the chevron tops cross onto the back sheet"
+				}
+			},
+			"bytes": {
+				"closed": 642,
+				"open": 745
+			}
+		},
+		"folder-node": {
+			"title": "node_modules/ (Node.js)",
+			"kind": "folder",
+			"carried": true,
+			"source": {
+				"name": "simple-icons",
+				"slug": "nodedotjs",
+				"license": "CC0-1.0",
+				"url": "https://nodejs.org/en/about/branding",
+				"note": "hexagon outline with JS; outer silhouette taken solid"
+			},
+			"colours": [
+				"#5FA04E",
+				"#406D35",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#5FA04E": 5.87,
+				"#406D35": 3.06
+			},
+			"body": "#5FA04E",
+			"back_sheet": "#406D35",
+			"envelope": {
+				"w": 10.2,
+				"h": 8.2
+			},
+			"folder_face_ink": {
+				"w": 7.44,
+				"h": 8.2,
+				"largest": 8.2
+			},
+			"simplifications": [
+				"hexagon taken as a solid at the official 21.28 x 24.08 aspect: the official ring is 0.70 px and the JS letterforms unreadable at the folder face's 8 px (L5/L7)"
+			],
+			"proof_16px": {
+				"closed": {
+					"result": "pass",
+					"note": "white hexagon fills the face"
+				},
+				"open": {
+					"result": "pass",
+					"note": "hexagon top crosses onto the back sheet, still one white shape"
+				}
+			},
+			"bytes": {
+				"closed": 450,
+				"open": 553
+			}
+		},
+		"folder-test": {
+			"title": "test/ (neutral glyph)",
+			"kind": "folder",
+			"carried": false,
+			"source": {
+				"name": "none — neutral glyph vocabulary",
+				"slug": null,
+				"license": null,
+				"url": null,
+				"note": "no brand owns \"test\"; the check comes from the set's own glyph vocabulary (L2)"
+			},
+			"colours": [
+				"#BF9354",
+				"#906B36",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#BF9354": 6.66,
+				"#906B36": 3.85
+			},
+			"body": "#BF9354",
+			"back_sheet": "#906B36",
+			"envelope": {
+				"w": 10.2,
+				"h": 8.2
+			},
+			"folder_face_ink": {
+				"w": 9.78,
+				"h": 8.21,
+				"largest": 9.78
+			},
+			"simplifications": [],
+			"proof_16px": {
+				"closed": {
+					"result": "pass",
+					"note": "the check is the most legible glyph in the set at 16"
+				},
+				"open": {
+					"result": "pass",
+					"note": "the check's long arm crosses the seam, reads continuously"
+				}
+			},
+			"bytes": {
+				"closed": 446,
+				"open": 549
+			}
+		},
+		"folder-docker": {
+			"title": "docker/ (Docker)",
+			"kind": "folder",
+			"carried": false,
+			"source": {
+				"name": "simple-icons",
+				"slug": "docker",
+				"license": "CC0-1.0",
+				"url": "https://www.docker.com/company/newsroom/media-resources",
+				"note": "Moby whale, single path: 9 container squares + body"
+			},
+			"colours": [
+				"#2496ED",
+				"#0F6DB6",
+				"#FFFFFF"
+			],
+			"contrast_on_backdrop": {
+				"#2496ED": 5.9,
+				"#0F6DB6": 3.44
+			},
+			"body": "#2496ED",
+			"back_sheet": "#0F6DB6",
+			"envelope": {
+				"w": 10.2,
+				"h": 8.2
+			},
+			"folder_face_ink": {
+				"w": 10.2,
+				"h": 5.9,
+				"largest": 10.2
+			},
+			"simplifications": [
+				"the container boxes dropped for the folder face: their gaps are 1.21 px on the file icon but 0.85 px at the face's 10.2 px, under L5's floor. The whale body is official subpath #9, untouched (L7 two-shape budget). APPROVED at the pilot gate 2026-09-03 (flag 10) — the face master and both icons are unchanged by the fix round, byte for byte"
+			],
+			"proof_16px": {
+				"closed": {
+					"result": "pass",
+					"note": "whale silhouette on Docker blue, unmistakable"
+				},
+				"open": {
+					"result": "pass",
+					"note": "whale sits entirely on the pocket; no seam crossing"
+				}
+			},
+			"bytes": {
+				"closed": 809,
+				"open": 912
+			}
+		}
+	},
+	"gates": {
+		"check": {
+			"pass": true,
+			"failures": 0,
+			"advisory_warnings": 6,
+			"covers": "L8 format · D22 carry identity (12 carried subjects vs samples/masters) · R1 derivation identity (icon == master; one mark across face master / closed / open) · L7 folder mass and centring · L2 provenance completeness · L3 letter audit",
+			"carry_identity": {
+				"carried": 12,
+				"byte_identical": 10,
+				"superseded_by_pilot": [
+					"docker",
+					"editorconfig"
+				],
+				"ruling": "2026-09-03",
+				"note": "AMENDED AT THE PILOT GATE. The gate is two-sided: the frozen subjects must still refit to samples/masters/ byte for byte, and the superseded ones must NOT — a rejected subject that quietly came back to its round-2 bytes fails here just as loudly as a frozen one that drifted."
+			},
+			"note": "6 advisory: rust, editorconfig and python are over the 2 KB target and under the 4 KB cap (L8 round-2 erratum). All three are the price of official geometry; editorconfig came down from 3700 B to 2640 B in the fix round."
+		},
+		"proof_16px": {
+			"pass": true,
+			"tally": {
+				"pass": 20,
+				"pass (marginal)": 4
+			},
+			"artifact": "pilot/proofs/proof-16px.png",
+			"note": "every icon at a true 16 px next to a 10x nearest-neighbour blow-up; per-icon verdicts live on each subject as proof_16px"
+		},
+		"fidelity": {
+			"pass": true,
+			"artifacts": [
+				"pilot/proofs/fidelity-new.png",
+				"pilot/proofs/fidelity-all.png",
+				"pilot/proofs/fidelity-fix.png",
+				"pilot/proofs/docker-deck-candidates.png"
+			],
+			"note": "official source vs fitted master vs shipped 16 px, per subject — the standing gate the round-1 rejection created. fidelity-fix.png is the two subjects the pilot gate rejected, rebuilt, with their new simplification logs; docker-deck-candidates.png is the measured study behind the container grid."
+		},
+		"twin_audit": {
+			"pass": true,
+			"thresholds": {
+				"D_HUE": 12,
+				"D_LIGHT": 12,
+				"D_SAT": 25,
+				"NEUTRAL_S": 25,
+				"IOU_COLLIDE": 0.72,
+				"IOU_NEAR": 0.6,
+				"FORM_SEP": 0.55
+			},
+			"twins": 0,
+			"form_collisions": 0,
+			"colour_hits_separated_by_form": [
+				{
+					"kind": "file",
+					"a": "typescript",
+					"b": "docker",
+					"dh": 5.4,
+					"dl": 5.1,
+					"ds": 24.5,
+					"scored": "silhouette",
+					"area": 0.427,
+					"edge": 0.039,
+					"sim": 0.039
+				},
+				{
+					"kind": "file",
+					"a": "python",
+					"b": "dotenv",
+					"dh": 5.2,
+					"dl": 2.9,
+					"ds": 18,
+					"scored": "silhouette",
+					"area": 0.603,
+					"edge": 0.124,
+					"sim": 0.124
+				},
+				{
+					"kind": "file",
+					"a": "rust",
+					"b": "npm",
+					"dh": 8.1,
+					"dl": 1.8,
+					"ds": 6.7,
+					"scored": "silhouette",
+					"area": 0.565,
+					"edge": 0.1,
+					"sim": 0.1
+				},
+				{
+					"kind": "file",
+					"a": "rust",
+					"b": "yaml",
+					"dh": 10.8,
+					"dl": 4.5,
+					"ds": 14.2,
+					"scored": "silhouette",
+					"area": 0.321,
+					"edge": 0.348,
+					"sim": 0.321
+				},
+				{
+					"kind": "file",
+					"a": "rust",
+					"b": "git",
+					"dh": 1,
+					"dl": 8,
+					"ds": 20.9,
+					"scored": "silhouette",
+					"area": 0.498,
+					"edge": 0.298,
+					"sim": 0.298
+				},
+				{
+					"kind": "file",
+					"a": "npm",
+					"b": "yaml",
+					"dh": 2.7,
+					"dl": 6.3,
+					"ds": 20.9,
+					"scored": "silhouette",
+					"area": 0.391,
+					"edge": 0.078,
+					"sim": 0.078
+				},
+				{
+					"kind": "folder",
+					"a": "folder-src",
+					"b": "folder-test",
+					"dh": 0,
+					"dl": 0,
+					"ds": 0,
+					"scored": "face mark",
+					"area": 0.218,
+					"edge": 0.212,
+					"sim": 0.212
+				}
+			],
+			"near_twins": [
+				{
+					"kind": "file",
+					"a": "docker",
+					"b": "react",
+					"dh": 13.1,
+					"dl": 14.7,
+					"ds": 10.3,
+					"scored": "silhouette",
+					"area": 0.45,
+					"edge": 0.269,
+					"sim": 0.269
+				},
+				{
+					"kind": "file",
+					"a": "docker",
+					"b": "go",
+					"dh": 14,
+					"dl": 11.2,
+					"ds": 15.2,
+					"scored": "silhouette",
+					"area": 0.417,
+					"edge": 0.244,
+					"sim": 0.244
+				},
+				{
+					"kind": "file",
+					"a": "npm",
+					"b": "git",
+					"dh": 9.1,
+					"dl": 6.3,
+					"ds": 27.6,
+					"scored": "silhouette",
+					"area": 0.494,
+					"edge": 0.081,
+					"sim": 0.081
+				},
+				{
+					"kind": "file",
+					"a": "yaml",
+					"b": "git",
+					"dh": 11.8,
+					"dl": 12.5,
+					"ds": 6.7,
+					"scored": "silhouette",
+					"area": 0.343,
+					"edge": 0.25,
+					"sim": 0.25
+				}
+			],
+			"neutral_lane": [
+				{
+					"kind": "file",
+					"a": "markdown",
+					"b": "editorconfig",
+					"dh": 0,
+					"dl": 11.4,
+					"ds": 0,
+					"scored": "silhouette",
+					"area": 0.314,
+					"edge": 0.131,
+					"sim": 0.131
+				}
+			],
+			"note": "R1 abolished archetypes, so m11's SILHOUETTE-lane reading applies to the whole set; PLATE marks (an official field carrying a glyph) are scored glyph-to-glyph against m11's BADGE bar of 0.92"
+		},
+		"letter_audit": {
+			"pass": true,
+			"typeset_letters": 0,
+			"note": "R1 has NO typeset letters. Every letterform in the pilot (typescript, npm, dotenv, yaml, go) is faithful source geometry from the brand's own artwork, so the L3 table stays dormant — nothing to measure baselines against."
+		}
+	}
+}
