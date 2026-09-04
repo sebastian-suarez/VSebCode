@@ -2189,6 +2189,97 @@ GATE PENDING — flag list below.**
   the 405/859 share to the pixel (`min(405, round(600×405/859)) = 283`,
   `round((600−283)×0.64) = 203`). Screenshot delivered (1-result split:
   pinned panel, glass above the pill, full-height pane).
+- [x] **S11 liquid glass** (`22d851b738f`, ruled: "add blur to the background
+  ... exactly as the material in the sidebar"): `quickInput.background`
+  MOVES into `MAC_TRANSLUCENT_SURFACES` (the sidebar's own 0.30 tier) and
+  the S2 overlay tier (0.9) RETIRES whole (set + helper + getColor branch
+  deleted — clean partial revert, two sets remain, disjointness re-proven);
+  the widget gains `backdrop-filter: blur(52px) saturate(1.9)` — the
+  D19-approved CSS approximation of the vibrancy material (the rail's own
+  figures), needed because the panel floats over the OPAQUE editor which
+  window-vibrancy can't reach. Pane color-mix 90%→30% (one sheet). Motion
+  verdict: Chromium 148 composits backdrop-filter with group opacity — the
+  blur fades, no pop (verified reasoning, confirmed live). Resolution
+  proofs: quickInput rgba(32,33,34,0.3), sideBar 0.3 unchanged, title
+  alpha-0 unchanged, peekViewEditor untouched.
+- [x] **S12 sticky pill single-coat** (`7636f83f511`): S11's letter put the
+  sticky glass on the CONTAINER; measured at 0.3 that reads as a two-tone
+  band (abstractTree generates the tint for container AND row; the pill's
+  8px inset shows the container coat in the gutters: 0.51/0.657 steps).
+  Ruled to the fork's own laws: container starved (`background-color:
+  transparent`, (0,5,0) over generated (0,4,0)), the pinned ROW carries
+  `backdrop-filter: blur(12px)` over its generated 0.30 tint (tie-break to
+  the generated rule by document order — recorded). One coat everywhere,
+  one glass pill pinned; geometry safety verified (rows share the pill's
+  column, overflow hidden).
+- [x] **S13 comment truth** (`14b79f37f2e`): the S11 sticky-feed comment's
+  two stale clauses rewritten (container paints nothing; blur is on the
+  row); comment-only.
+- [x] **S16 OPAQUE PANEL** (`79ed5ab228b`, ruled: "It looks terrible just
+  use an opaque background then" — supersedes BOTH the mockup's 0.90 and
+  the glass ruling; verdict chain in the commit body): the material
+  stack S11–S15 unwound to plain opaque theme colors (+54/−181) —
+  `quickInputBackground` leaves the translucent set (joins NOTHING;
+  resolves stock `#202122`), the inline paint returns byte-stock, both
+  `::before` underlays deleted, zero `backdrop-filter` anywhere, pane =
+  plain opaque `peekViewEditor.background` (`#191A1B` — its tone
+  differentiation RETURNS, resolving R9), sticky pill = opaque cover by
+  itself (S12 container starve kept as single-painter hygiene), title
+  strip alpha-0 kept, comment sweep to the opaque story (incl. two
+  theme.ts paragraphs the change falsified). Geometry/order/cosmetics/
+  motion/preview structure untouched. Resolution proofs green;
+  Theme|Color 113/0. **Resolves by dissolution: R9 (differentiation
+  back), R10 (walkthrough SVGs opaque again), R11 (no glass, no
+  readback question), R12 (nothing to pop).**
+- [x] **S17 rename** (`ff89606852b`): `glassPanel` → `telescopePanel` in
+  quickInputService.ts (3 lines) — the flag named for the panel, not
+  its material; matches its three siblings verbatim.
+- [x] **VM battery round 7 (opaque) 45/0** — widget inline `#202122`
+  opaque, zero filters (widget + pseudo probes), single painter =
+  the widget itself, pane `#191A1B`; all geometry/order/motion probes
+  green unchanged. Screenshot delivered (solid panel over the deep
+  tree — nothing shows through).
+- [x] **S14 blur edge falloff fix** (`c8c447b7282`, ruled: "the filter is
+  not being applied to the entire container, just to the center and dims
+  outwards" — the classic backdrop-filter falloff: the readback is
+  clipped to the filtered element's box, the kernel starves at the rim):
+  both filters move onto OVERSIZED `::before` underlays clipped by the
+  existing overflow — widget `inset:-104px` (2×52), sticky pill
+  `inset:-24px` (2×12), both `z-index:-1` inside verified stacking
+  contexts (abs pseudo ≠ grid item; underlay above the coat, below all
+  content; pill's pseudo lands in the sticky container's context BELOW
+  the generated tint — deliberate divergence from the brief's letter,
+  since a one-row tint inside a 12px kernel would never reach full
+  strength; ruled to the S13-documented layering).
+- [x] **S15 coat onto the underlay** (`32dee8d9aa8`, closes S14 review
+  risk 1 — GEOMETRIC certainty, not a maybe: with the coat inside the
+  box and the readback 104px past it, the rim tint would halve —
+  "dims outward" returning as coat feathering): the widget paints NO
+  inline background under `telescopePanel`; the underlay carries
+  `background: var(--vscode-quickInput-background)` — an element's
+  background composites OVER its own backdrop-filter output, so the
+  visible result is a uniform 0.30 coat over full-strength blur at
+  every pixel. Comment-truth ride-alongs on two neighbouring
+  paragraphs the change falsified.
+- [x] **VM battery round 6 (underlay expectations) 45/0** + targeted
+  experiments: corner + center glass crops = full-strength fog TO THE
+  RIM incl. the rounded corner (falloff PROVEN FIXED; just-outside
+  sidebar ink bleeds softly in — correct glass-edge optics); coat
+  uniform (no rim feathering). **Instrument lesson (ops): CDP
+  `Page.captureScreenshot` CANNOT observe compositor-driven
+  opacity/transform animations — it reads the main-thread tree
+  (frames showed opacity≈0 while the screen faded); animation claims
+  need guest `screencapture` timing.** Mid-fade blur contribution
+  under the underlay structure could not be conclusively measured
+  even with a slowed fade → recorded as R12 (live-look item).
+  Deep-tree recheck: R11 (sidebar-strip crisp pass-through)
+  structurally unchanged under the underlay, as predicted.
+- [x] **VM battery round 5 (glass expectations) 45/0** — coat rgba(32,33,
+  34,0.3) + backdropFilter blur(52px) saturate(1.9) on the widget; single
+  painter at 0.3; pane [25,26,27,0.3]; all geometry/order/motion probes
+  green unchanged. **Glass verified over the editor by controlled pixel
+  experiment**: filter-on = full fog, filter-off = legible bleed-through
+  (CDP clip diff, crops kept in session scratch).
 - [x] **VM battery round 4 (post S10, share-aware expectations) 45/0** —
   every probe recomputed from the shares and green at 1440×868: width
   1152, split height 564, prompt line at bottom 195 (invariant 672==672
@@ -2232,10 +2323,13 @@ GATE PENDING — flag list below.**
     none; a platform-gated test would be a new precedent — want one?).
   - **F13** palette with empty history reads pure-alphabetical reversed (A at
     the bottom); with usage the recently-used group sits at the bottom.
-- [ ] **Sebastian final gate** — F1/F3 BUILT (S6/S7); the re-look sizing
-  ruling BUILT (S8 percentage share + S9 whole-row snap, battery round 3
-  proven); F6/F7/F8 ruled standing; the un-objected round-1 flags (F2,
-  F4, F5, F9–F13) stand as presented. Round-2 sight-flags:
+- [x] **Sebastian final gate — APPROVED 2026-09-04 ("Approved, commit")**.
+  Approval covers the presented state (A01 precedent): the standing
+  flags R1–R8 below stand as built; F1/F3 were BUILT (S6/S7), the
+  sizing ruling BUILT (S8+S9), telescope-large BUILT (S10), the
+  material arc closed OPAQUE (S16/S17); F6/F7/F8 ruled standing;
+  un-objected round-1 flags (F2, F4, F5, F9–F13) stand as presented.
+  Flag record kept below for history:
   - **R1** rangeless file picks preview from the TOP of the file (symbol
     picks center their line); the mockup's lines 90–107 were scene
     dressing.
@@ -2260,8 +2354,31 @@ GATE PENDING — flag list below.**
     query nudges the panel's TOP edge by ≤21px (whole-row snap slack);
     the prompt line never moves — the intended reading of the invariant,
     just more visible at 23 rows than 16.
-- [ ] On approval: push fork, pin bump + doc fold (this section + board),
-  packaged markers ride the next packaged pass with M12's.
+  - **R9 RESOLVED by S16** (opaque pane restores the full tone
+    differentiation).
+  - **R10 RESOLVED by S16** (the SVG token resolves opaque again).
+  - **R12 MOOT by S16** (no filter, nothing to pop).
+  - **R11 MOOT by S16** (no glass; the investigation ledger + the ops
+    lesson about CDP-vs-compositor stay recorded below for any future
+    translucent surface). Original record: (post-S11, INVESTIGATED IN
+    FULL — evidence crops in session
+    scratch): where the panel overlaps the SIDEBAR (~150px strip), the
+    sidebar's own ink (deep tree labels, file icons reaching past CSS
+    144) shows through the glass CRISP instead of fogged, on the real
+    screen. Root cause: content in the window's TRANSLUCENT/vibrancy
+    region never joins Chromium's backdrop-filter readback in the live
+    window compositing (transparent-window limitation, electron#20357
+    family); the opaque editor fogs perfectly. Exhausted on a live
+    reproducing scene: mask removal, layer promotion (translateZ/
+    will-change), epsilon-alpha root background, clip-path replacement —
+    none reach the on-screen path. NOT fixable CSS-side. The 0.3 coat
+    still dims the ink; shallow trees only edge-bleed (which is correct
+    glass optics — the 52px blur smearing just-outside labels into the
+    first ~50px). ACCEPT as a material limitation, or rule a mitigation
+    (denser coat = diverges from the sidebar-exact ruling).
+- [x] On approval (done 2026-09-04): fork pushed, pin bump + doc fold
+  committed on the verdict. Packaged markers still ride the next
+  packaged pass with M12's (M12 § Close carries the list).
 
 M16 session notes (ops + follow-up candidates, no verdict needed):
 - `dom.EventType.ANIMATION_END` is DEAD under Electron (UA says AppleWebKit →
@@ -2276,6 +2393,13 @@ M16 session notes (ops + follow-up candidates, no verdict needed):
   with NO args LAUNCHES a new instance (it is not a status command), and a
   second instance steals focus which auto-closes the first window's quick
   input mid-capture.
+- **Glass verification ops (M16 S11 lesson): CDP captures LIE about
+  backdrop-filter over the translucent chrome** — `Page.captureScreenshot`
+  renders offscreen and applies the blur to the sidebar subtree; the real
+  window compositor does not (R11). Any glass-over-vibrancy claim must be
+  judged on compositor captures (`capture-vm.sh`/`screencapture`), never CDP
+  crops. Conversely CDP crops are the right instrument for glass-over-editor
+  (opaque) proofs, incl. filter-on/off pixel diffs.
 
 ### M17–M19 — vim tail (GATED on M4; vehicle RULED: VSCodeVim — D21 amendment 2026-09-02)
 
@@ -2626,6 +2750,98 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   restore (procedure applied every time this session; A02's own
   manifest committed with generated 2026-09-04, its fix-round build
   date — the ruling date 2026-09-03 is what its sheet §0 prints).
+- [ ] **SLICE A03 BUILT 2026-09-04 (own session: 3 delegated tranches t1
+  fastlane→gcode / t2 gdscript→haxedevelop / t3 hcl→jest-snapshot, 28 each;
+  gates session-re-run + proofs/sheet/studies reviewed per round; earlier
+  tranches sha256-proven untouched at every round + build determinism proven
+  across independent runs) — SEBASTIAN GATE PENDING.** All 84 worklist
+  concepts (slices[2], all category code): **57 branded / 27 neutral**
+  (t1 22/6 · t2 19/9 · t3 16/12). Registry `tools/slices/A03.mjs` copied
+  from A02's shape (PREAMBLE null until a gate rules); no engine/tool file
+  touched — tranche-local helpers only (t1's `sourceShapes` superset reader
+  incl. rect/polygon/ellipse + style-class gradients, copied per tranche by
+  design). FAMILIES (5): `firebase` base A01 bolt (firestore +
+  firebasestorage; Google's own per-product logomarks fetched + DECLINED on
+  measurement — badge 6.35px/0.63px strokes, 1.9× rescue fails gestalt;
+  firebase-product-study), `gamemaker` ×3 in-slice (brand's own mask-icon
+  #71B417; 8.1's retired gear declined on L5), `godot` ×5 in-slice
+  (gdscript/gduid/godot-assets/godotshader byte-ride the brand's head;
+  greaticons recolour ×5 / Material redraw / vsicons globe all measured off
+  — godot-family-study), `hashicorp` (hcl on t2's H — FIRST cross-tranche
+  family; parts re-derived from the same artwork, gate proves output
+  byte-identity; per-product marks Terraform/Vault/etc. declined as
+  inapplicable to the language), `ruby` base A02 erb (jbuilder — FIRST
+  family on an approved slice's kin). FRAMED ×2 (erratum-3 2nd + 3rd
+  applications): fla = Adobe Animate (field 1.02:1, dimmest yet), flash =
+  Flash Player (1.11:1); constants reproduced from A02 verbatim, Animate's
+  own rect rx 42.5/240 corroborates Adobe's radius three ways. DARK-SCHEME
+  WHITE ×2: grit + hashicorp ship the ink their own SVGs declare under
+  `@media (prefers-color-scheme: dark)` (first stylesheet-declared colors;
+  gamemaker's mask-icon link was the markup precedent; grit's lift
+  alternative measured + named). LIFT ×1: fauna #3A1AB6 1.77:1 → #D3C9F7
+  (the mark's only ink meets the backdrop; deep indigo becomes lavender —
+  headline ask). RIDERS: flatbuffers 17-bubble exhaust dropped, gulp straw
+  dropped + TWO-CUT MIX (geometry from the white cut, hex from the 8KB
+  color cut), handlebars 3-of-6 layers to the byte cap (faintest icon in
+  the set — ask), groovy script-off-the-star (A02's extraction ×3).
+  COLLAPSES 27, each with receipts; headline declines: idris trio — own
+  frond vectored by the project at 0.00/0.14/0.56 px / 6.2% coverage,
+  worse at the quartile than fossil + harbour, vsicons' per-variant badges
+  fail with it; DEPARTS from the expected family, overturn path + family
+  declaration ready in flag 38 — grunt (4 vectors: 19,955B/47 layers …
+  simple-icons 0.16/0.38/0.44 — byte cap AND L5), harbour (real 1,258B
+  vector at 0.09/0.34/0.50), haml, graphviz (87-layer scene), and the
+  consistent WORDMARK line: glsl=OpenGL (t2) → hlsl=DirectX 3.03:1,
+  hip=AMD 4.19:1, informix=IBM 2.49:1 (t3, all via the company-mark
+  rider, all measured in A03-t3-declines); icl (vsicons cropped a company
+  AVATAR — koala), ink (INKY's rendered app icon, not ink's raster-only
+  logotype). IDENTIFICATIONS: `.hypr` = KIBO COMMERCE not Hyprland —
+  upstream PR's own words + Kibo's raster's 3 hexes match vsicons' trace
+  to the digit (flag 39; Hyprland's blades fetched + set aside for any
+  future hyprland concept); fbx = the only vector anywhere, authorship
+  uncorroborated (weakest ID, flag 3); hy = Cuddles the cuddlefish
+  (hylang's own header/favicon; the "(hy)" logotype 0.31px declined).
+  PLATES: fortran 2.91:1 + gatsby 2.21:1 (t1) + infopath 2.15:1 +
+  innosetup 1.43:1 (t3) all ship faithful-dark UNLIFTED (field = mark
+  -interior ink; no brand frame exists) — ONE ruling asked for all four;
+  innosetup's navy is the ratified offset-1 chrome on a 10-stop ramp, the
+  #66C1F0 alternative rendered beside it (flag 42). KIN-WITHOUT-BASE
+  ledger with named arrival points: flutter-package (flutter → A09 +
+  folder F03), fsproj (fsharp → core-tier.json, rank 61, claims .fsproj
+  itself), graphqls (graphql → core tier rank 68), jest-snapshot (jest →
+  core tier); jbuilder resolved into the ruby family instead. RECORD-FIX
+  round pre-gate (session-directed; A02 sheet-defect precedent): t1's
+  flag + prose and t2's graphqls flag corrected from the false "in no
+  slice's roster" claim to the verified arrival facts; 168 icon+master
+  SVGs proven byte-identical through the fix (aggregate 2860b754…),
+  three-state reach proof (t1 comment edit reaches zero outputs; t2 flag
+  reaches manifest/sheet only). LOOK-ALIKE +2: gatsby↔duckdb 0.986 +
+  glimmer↔duckdb 0.986 (duck head's 3rd + 4th pairings; why only
+  non-plates pair with it documented in-module); ionic 0.461 max +
+  innosetup glyph-scored 0.085–0.149 needed NO declaration (measured).
+  GATES GREEN both my re-runs and every agent run: check 0 fail / 26
+  advisory (13 subjects >2KB, all D22-priced, cap-legal), roster 84/84
+  modules 3/3, pilot+A01+A02 FROZEN pass, 16px 63 pass + 21 marginal
+  (every marginal carries an honest note), twins 0/0 with 66 family +
+  2217 collapse + 5 look-alike declared, letters 0. 50 flags, 6 studies
+  (A03-t1-study, firebase-product-study, A03-t2-study,
+  godot-family-study, A03-t3-declines, A03-t3-choices). Sheet →
+  https://claude.ai/code/artifact/e27e42f2-e104-4b13-a62e-87546a188ee4
+  (`slices/A03/sheet.html`, own URL per slice; republish = same path from
+  this session or pass the URL). NOTHING COMMITTED: slice outputs +
+  3 tranche modules + registry + ~47 new sources-svg files untracked;
+  commit rides the gate verdict (add-by-path, umbrella only, no pin;
+  peer-session root files `implemented*.md` + `.playwright-cli/` + the
+  live `vscode` pointer excluded — M16 peer session live this whole
+  session, its board/Tasks § M16 records ride the shared tree per
+  precedent). GATE ASKS (chat summary of 2026-09-04): (1) four dim plate
+  fields, one ruling; (2) fauna's lavender lift; (3) fastlane +
+  handlebars ship-marginal-vs-collapse; (4) idris trio collapse vs
+  family; (5) hypr=Kibo confirm; (6) innosetup navy vs bright; rest
+  as built (framed pair, white pair, gulp mix, family duplicates
+  .hcl/.sentinel + .jbuilder/.erb, fritzing stroke-decline rule, fbx,
+  flash .swc overlap with A01's frozen adobe-swc — flags 1–50 on the
+  sheet).
 - [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
   associations untouched, iconPaths only
 - [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
@@ -2649,17 +2865,35 @@ tool follow-ups, the sheet URL — artifact 4460a259…, republish = same
 law now in the guide, binding A03+: §5 erratum 3 framed-plate
 construction (frame carries the silhouette; interior field never
 lifted; brand's framed cut > sibling-corroborated ratios; thickening
-inside the brand's spec form). NEXT SESSION = slice A03
-(worklist slices[2]) through the same contract: registry
-`tools/slices/A03.mjs` (copy A02.mjs's shape), ~3 tranches, gate via
-`cd m20-icons-v2 && node tools/gates.mjs A03` (pilot + A01 + A02 then all
-frozen), NEW sheet artifact per slice, Sebastian gate, commit on verdict.
-Tranche-brief gotchas that BIND future tranches/slices: FAMILIES same-name
-clobber (later module unions earlier members), studies.mjs one-path-per-part
-winding, pathkit bbox control-point hull (probe fits before trusting),
-future families owed when the base concept arrives (ruby→erb, elixir→eex,
-css→cssmap, cypress→cypress-spec, dart→dartlang-generated, latex is open
-at doctex/A02). Slices A03–A12 + F01–F06 + a core-batch slice follow the
-same rhythm; then assembly (cross-set audits, reconciliation, theme build) →
-the single integration swap commit in `extensions/theme-vsebcode-icons` + pin
-bump (M11 runbook acceptance).
+inside the brand's spec form). STATE NOW: **SLICE A03 BUILT 2026-09-04 —
+SEBASTIAN GATE PENDING** (the A03 item above carries the full arc:
+outcomes, families, declines, identifications, the record-fix round, the
+gate asks; sheet artifact e27e42f2… — republish = same
+`slices/A03/sheet.html` path from its session, or pass the URL; gates
+green 84/84, nothing committed). ON THE VERDICT: fold ruled errata into
+the guide if any; append 'A03' to `tools/targets.mjs` APPROVED (one line,
+order-bearing); commit add-by-path — board.md Tasks.md style-guide.md(if
+errata) tools/slices/A03*.mjs slices/A03/ sources-svg/(new files) —
+umbrella only, no pin; EXCLUDE the live `vscode` pointer, peer root files
+`implemented*.md`, `.playwright-cli/` (M16 peer session's board/Tasks
+§ M16 records ride the doc fold per shared-tree precedent). NEXT SESSION
+after that = slice A04 (worklist slices[3]) through the same contract:
+registry `tools/slices/A04.mjs` (copy A03.mjs's shape — its PREAMBLE-null
+comment is the pre-ruling template), ~3 tranches, gate via
+`cd m20-icons-v2 && node tools/gates.mjs A04` (pilot + A01 + A02 + A03
+then all frozen), NEW sheet artifact per slice, Sebastian gate, commit on
+verdict. Tranche-brief gotchas that BIND future tranches/slices: FAMILIES
+same-name clobber (later module unions earlier members), studies.mjs
+one-path-per-part winding, pathkit bbox control-point hull (probe fits
+before trusting; A02.t3 de-Casteljau precedent), gates.mjs sheet-crash
+gap (verify sheet mtime after every run), future families owed when the
+base concept arrives (ruby→erb+jbuilder [family OPEN at erb/A02 since
+A03], elixir→eex, css→cssmap, cypress→cypress-spec,
+dart→dartlang-generated, latex open at doctex/A02, flutter→
+flutter-package at A09+F03, and at the CORE build: fsharp→fsproj,
+graphql→graphqls, jest→jest-snapshot — core-tier.json carries
+fsharp(61)/graphql(68)/jest/ruby; a future hyprland concept takes the
+blades, NOT hypr's Kibo mark). Slices A04–A12 + F01–F06 + a core-batch
+slice follow the same rhythm; then assembly (cross-set audits,
+reconciliation, theme build) → the single integration swap commit in
+`extensions/theme-vsebcode-icons` + pin bump (M11 runbook acceptance).

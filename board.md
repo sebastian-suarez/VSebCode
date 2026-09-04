@@ -304,8 +304,12 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   on the verdict; pushes his (fork ahead 7 with M14's trio); packaged
   markers ride the next packaged pass with M12's. Records + battery
   ledger in Tasks § M15.
-- **M16 — Telescope quick input BUILT + battery-green 2026-09-03 (own
-  session) — SEBASTIAN GATE PENDING (13 flags in Tasks § M16)**: every
+- **M16 — Telescope quick input APPROVED 2026-09-04 ("Approved,
+  commit") — CLOSED; pin bump + doc fold committed on the verdict,
+  both pushes done; standing flags R1–R8 stand as built (approval
+  covers the presented state); packaged markers ride the next
+  packaged pass with M12's. Arc below.** BUILT + battery-green
+  2026-09-03 (own session): every
   picker is the approved telescope panel — 920×405 border-box,
   window-centered, held by its bottom edge on the mockup's 36/64 line,
   prompt at the BOTTOM (26px monospace input in a 39px strip behind a
@@ -371,11 +375,51 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   column fixed 400, the pane absorbs all growth (at his 1512×982:
   1210×638, 26 rows, 807px pane). **Battery round 4 (share-aware):
   45/0** — 1152×564/195 at the VM window, palette 23 rows @559,
-  prompt-line invariant 672==672; screenshot delivered. Fork now 10
-  M16 commits `a584dccfd3a`→`51f75e45d86`, NOT pushed. **FINAL GATE
-  PENDING** — sight-flags R1–R8 in Tasks § M16. Pin bump + doc fold
-  on the verdict; packaged markers ride the next packaged pass with
-  M12's.
+  prompt-line invariant 672==672; screenshot delivered. **"Liquid
+  glass" RULED same day** ("blur the file list's background — exactly
+  the sidebar material"): S11 (`22d851b738f`) moves
+  `quickInput.background` into the sidebar's own 0.30 tier (the S2
+  0.9 overlay tier retires whole) + `backdrop-filter: blur(52px)
+  saturate(1.9)` on the widget — the D19 rail approximation, CSS-side
+  because the opaque editor is beyond window-vibrancy's reach; pane
+  follows to 30%; Chromium-148 fade verdict clean. S12
+  (`7636f83f511`) makes the pinned separator a single-coat glass PILL
+  (container starved — the two-generated-rules trap measured as a
+  0.51/0.657 band); S13 (`14b79f37f2e`) comment truth. **Battery
+  round 5 (glass): 45/0** + controlled pixel proof (filter-on fog vs
+  filter-off bleed over the editor). One MATERIAL LIMITATION
+  investigated to the floor and flagged (R11): ink in the window's
+  translucent chrome (deep sidebar labels under the panel's ~150px
+  overlap strip) never joins the live compositor's backdrop readback
+  (transparent-window Chromium limitation; mask/promotion/epsilon/
+  clip-path all exhausted on a reproducing scene; CDP captures
+  falsely show it fogged — ops note recorded); editor-side glass is
+  exact. **Falloff round RULED same day** ("the filter is not applied
+  to the entire container, just to the center and dims outwards"):
+  S14 (`c8c447b7282`) moves both filters onto oversized `::before`
+  underlays (widget −104px, pill −24px; clipped by the existing
+  overflow — the visible area sits in the kernel's fully-sampled
+  interior); S15 (`32dee8d9aa8`) closes the review-found geometric
+  consequence — the coat rides the underlay itself (background
+  composites OVER own backdrop-filter output), else the rim tint
+  would halve. **Battery round 6: 45/0** + corner/center crops
+  proving full-strength fog to the rounded rim; coat uniform. New
+  live-look note R12 (mid-fade blur contribution unmeasurable by any
+  instrument at 180ms — judge the entrance live); R11 unchanged
+  under the underlay. **MATERIAL RULED FINAL same day: OPAQUE ("It
+  looks terrible just use an opaque background then")** — S16
+  (`79ed5ab228b`, +54/−181) unwinds the whole S11–S15 glass stack to
+  plain opaque theme colors: `quickInput.background` in NO mac set
+  (stock `#202122`), zero backdrop-filters, pane opaque `#191A1B`
+  (its tone differentiation returns), sticky pill an opaque cover;
+  supersedes both the mockup's 0.90 and the glass ruling (verdict
+  chain in the commit body); S17 (`ff89606852b`) renames the last
+  glass-era const. Flags R9–R12 resolve/dissolve with the glass; the
+  R11 investigation + the CDP-vs-compositor ops lessons stay
+  recorded for any future translucent surface. **Battery round 7
+  (opaque): 45/0**; screenshot delivered — solid panel, nothing
+  shows through. 17 fork commits `a584dccfd3a`→`ff89606852b`,
+  PUSHED on the verdict; records + flag history in Tasks § M16.
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
   different styles in one set; letter icons share no alignment/size/weight;
@@ -539,9 +583,50 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   RECORDED as A03+ follow-ups in Tasks § M20 (engine fix would
   refit approved sets — needs its own ruled round). **SLICE A02
   CLOSED — committed on the verdict** (umbrella only, no pin;
-  peer-session root files + `.playwright-cli/` excluded). NEXT
-  SESSION: slice A03 (worklist slices[2]) through the same
-  contract — then A04+ → assembly → the single integration swap
+  peer-session root files + `.playwright-cli/` excluded). **SLICE
+  A03 BUILT 2026-09-04 (own session: 3 delegated tranches t1
+  fastlane→gcode / t2 gdscript→haxedevelop / t3 hcl→jest-snapshot,
+  28 each; gates session-re-run + proofs/sheet reviewed per round;
+  earlier tranches hash-proven untouched at every round) —
+  SEBASTIAN GATE PENDING (asks in Tasks § M20).** All 84 worklist
+  concepts: 57 branded / 27 neutral (t1 22/6, t2 19/9, t3 16/12).
+  FIVE families: firebase (firestore+firebasestorage ride A01's
+  bolt; Google's own per-product logomarks fetched + DECLINED on
+  measurement, study), gamemaker ×3 (brand's own mask-icon green),
+  godot ×5 (gdscript/gduid/assets/shader on the brand's head;
+  variant-glyph alternatives measured off in a study), hashicorp
+  (hcl on t2's white H — first cross-tranche family), ruby
+  (jbuilder on A02's erb gem — first family based on an approved
+  slice's kin). Adobe framed construction ×2 more (fla=Animate,
+  flash=Flash Player; fields 1.02/1.11:1; Animate's own rx
+  corroborates the erratum-3 radius); 2 brands ship their own
+  declared DARK-SCHEME white (grit, hashicorp — first
+  stylesheet-declared inks); 1 lift fired (fauna 1.77:1 → L88
+  lavender, flagged); riders: flatbuffers exhaust, gulp straw +
+  geometry-from-one-cut/color-from-the-other, handlebars 3-of-6
+  layers, groovy script-off. 27 collapses all with receipts —
+  headline declines: idris trio (own frond 0.00/0.14/0.56 px —
+  DEPARTS from the expected family, overturn path in flag 38),
+  grunt (4 vectors, byte-cap AND L5), harbour 0.09 px, glsl→hlsl
+  consistent wordmark declines (OpenGL/DirectX, + AMD hip, IBM
+  informix via the rider). Identification: `.hypr` = KIBO COMMERCE
+  not Hyprland (upstream PR + 3-hex byte match). Kin-without-base
+  ledger now names arrival points (flutter→A09+F03; fsharp, ruby,
+  jest, graphql → m11 core tier) — a pre-gate RECORD-FIX round
+  (A02 sheet-defect precedent) corrected t1's/t2's false "in no
+  roster" claims to the verified facts, 168 SVGs proven
+  byte-identical. 2 new look-alike pairs (gatsby↔duckdb 0.986,
+  glimmer↔duckdb 0.986 — duck head's 3rd + 4th). Gates green
+  (check 0 fail / 26 advisory >2KB-priced; roster 84/84 modules
+  3/3; pilot+A01+A02 frozen; 16px 63+21 marginal; twins 0/0 —
+  66 family + 2217 collapse + 5 look-alike declared; letters 0;
+  determinism proven across independent runs). 50 flags, 6
+  studies. Sheet →
+  https://claude.ai/code/artifact/e27e42f2-e104-4b13-a62e-87546a188ee4
+  (`slices/A03/sheet.html`, own URL per slice). NOTHING committed —
+  outputs + modules + sources-svg untracked; commit rides the gate
+  verdict (add-by-path, umbrella only, no pin; peer files
+  excluded). Then A04+ → assembly → the single integration swap
   commit. Details + resume in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
