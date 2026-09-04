@@ -13,7 +13,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { CARRIED, SUPERSEDED, SUPERSEDED_RULING } from './sources.mjs';
-import { sliceArg, resolveTarget } from './targets.mjs';
+import { sliceArg, resolveTarget, priorSlices } from './targets.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = join(HERE, '..', 'pilot');
@@ -141,12 +141,18 @@ process.exit(check.ok && manifest.gates.twin_audit.pass ? 0 : 1);
 
 // =============================================================================
 // the slice path — the same gates, adapted, plus the two the slices added: the
-// roster, and the cross-set twin audit over the pilot AND the slice
+// roster, and the cross-set twin audit over the pilot, every APPROVED earlier
+// slice and this one. Those approved slices are also frozen: they were ruled and
+// committed, so from here on they are asserted byte for byte exactly like the
+// pilot. tools/targets.mjs keeps the list; every sentence below is built from it
+// rather than typed, so the records say what the run actually covered.
 // =============================================================================
 async function runSlice(id) {
 	const target = await resolveTarget(id);
 	const R = target.registry;
 	const dir = target.dir;
+	const priors = priorSlices(id);
+	const frozenSets = ['pilot', ...priors];
 
 	console.log(`· build (slice ${id})`);
 	const build = run('build-slice.mjs', [id]);
@@ -162,11 +168,12 @@ async function runSlice(id) {
 	console.log('· sheet');
 	process.stdout.write(run('build-slice-sheet.mjs', [id]).out);
 
-	console.log('· check (format, derivation, roster, rules 1 and 2, provenance, letters, pilot-frozen)');
+	console.log('· check (format, derivation, roster, rules 1 and 2, provenance, letters, '
+		+ `${frozenSets.join('+')}-frozen)`);
 	const check = run('check-slice.mjs', [id]);
 	process.stdout.write(check.out);
 
-	console.log('· twin audit (R7 / R8, cross-set: pilot + slice)');
+	console.log(`· twin audit (R7 / R8, cross-set: ${[...frozenSets, id].join(' + ')})`);
 	const audit = run('audit.mjs', [id, '--json']);
 	let twin;
 	try { twin = JSON.parse(audit.out); }
@@ -190,7 +197,7 @@ async function runSlice(id) {
 				+ 'variant is byte-identical to its base) · working rule 2 (a declared category '
 				+ 'glyph is byte-identical across the concepts that share it, and every neutral '
 				+ 'subject is recorded) · L2 provenance completeness including the fetched artwork '
-				+ 'files · L3 letter audit · PILOT FROZEN'
+				+ `files · L3 letter audit · ${frozenSets.map(s => s.toUpperCase()).join(' + ')} FROZEN`
 		},
 		roster: {
 			pass: !manifest.roster.not_in_roster.length
@@ -198,11 +205,20 @@ async function runSlice(id) {
 			...manifest.roster.count,
 			modules: R.MODULES
 		},
+		// The key keeps its pilot-era name on purpose: renaming it would rewrite the
+		// APPROVED A01 manifest, which is committed and has to stay byte-identical on
+		// a rebuild. What the gate actually asserted is in `covers`, which names every
+		// frozen set by path — for A01 that is the pilot alone, and the string is the
+		// one it was approved with.
 		pilot_frozen: {
 			pass: /unchanged against HEAD/.test(check.out),
-			covers: 'm20-icons-v2/pilot/icons, /masters and sheet.html compared to git HEAD',
+			covers: 'm20-icons-v2/pilot/icons, /masters and sheet.html'
+				+ priors.map(p => ` + m20-icons-v2/slices/${p}/icons, /masters and sheet.html`).join('')
+				+ ' compared to git HEAD',
 			note: 'the slice fits its subjects through the pilot\'s own engine (tools/spec-engine.mjs), '
 				+ 'so an engine change that moved a pilot byte has to fail here and not months later'
+				+ (priors.length ? `; an approved slice joins the same assertion the day it is ruled `
+					+ `(${priors.join(', ')})` : '')
 		},
 		proof_16px: {
 			pass: !Object.keys(tally).some(k => k.startsWith('fail')),
@@ -230,7 +246,10 @@ async function runSlice(id) {
 			family_lane: twin.familyLane,
 			neutral_collapse_lane: twin.collapseLane,
 			lookalike_lane: twin.lookalikeLane || [],
-			note: 'CROSS-SET: the pilot\'s 20 subjects and every subject this slice built are '
+			note: 'CROSS-SET: the pilot\'s 20 subjects'
+				+ (priors.length ? `, every subject the approved slice${priors.length > 1 ? 's' : ''} `
+					+ `${priors.join(' + ')} shipped,` : '')
+				+ ' and every subject this slice built are '
 				+ 'scored in one pool. THREE lanes are exempt from R8 and reported rather than '
 				+ 'failed, because in all three the identity is declared and deliberate — FAMILY '
 				+ '(working rule 1), NEUTRAL COLLAPSE (working rule 2) and LOOK-ALIKE (opened by '
@@ -257,7 +276,8 @@ async function runSlice(id) {
 	console.log(`  roster         ${manifest.gates.roster.pass ? 'PASS' : 'FAIL'} `
 		+ `(${manifest.roster.count.built} built, ${manifest.roster.count.pending} pending of `
 		+ `${manifest.roster.count.roster}; modules ${R.MODULES.present.length}/${R.MODULES.expected.length})`);
-	console.log(`  pilot frozen   ${manifest.gates.pilot_frozen.pass ? 'PASS' : 'FAIL'}`);
+	console.log(`  ${`${frozenSets.join('+')} frozen`.padEnd(14)} `
+		+ `${manifest.gates.pilot_frozen.pass ? 'PASS' : 'FAIL'}`);
 	console.log(`  16 px proofs   ${JSON.stringify(tally)}`);
 	console.log(`  fidelity       ${manifest.gates.fidelity.pass ? 'PASS' : 'FAIL'}`);
 	console.log(`  twin audit     ${manifest.gates.twin_audit.pass ? 'PASS' : 'FAIL'} `

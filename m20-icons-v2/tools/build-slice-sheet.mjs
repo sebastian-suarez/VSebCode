@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { chromium } from '/Users/sebastian.suarez/Projects/VSebCode/m11-icons/production/tools/chromium.mjs';
-import { resolveTarget, ROOT } from './targets.mjs';
+import { resolveTarget, setDir } from './targets.mjs';
 import { roster } from './roster.mjs';
 import { contrast, BACKDROP } from './color.mjs';
 
@@ -28,7 +28,6 @@ const target = await resolveTarget();
 if (target.kind !== 'slice') { throw new Error('build-slice-sheet.mjs needs a slice id, e.g. A01'); }
 const R = target.registry;
 const OUT = target.dir;
-const PILOT = join(ROOT, 'pilot');
 
 const manifest = JSON.parse(readFileSync(join(OUT, 'manifest.json'), 'utf8'));
 const rost = roster(R.id);
@@ -36,8 +35,12 @@ const rost = roster(R.id);
 const clean = (s) => s.trim()
 	.replace(' xmlns="http://www.w3.org/2000/svg"', '')
 	.replace(/\s(?:width|height)="[^"]*"(?=[^>]*viewBox)/g, '');
-const icon = (id) => clean(readFileSync(join(OUT, 'icons', `${id}.svg`), 'utf8'));
-const pilotIcon = (id) => clean(readFileSync(join(PILOT, 'icons', `${id}.svg`), 'utf8'));
+// the page shows icons from more than one set — this slice's, the pilot's in the
+// tree, and an APPROVED earlier slice's wherever a family base lives there — so
+// every read goes through one helper that is told WHICH set it is reading
+const setIcon = (set, id) => clean(readFileSync(join(setDir(set), 'icons', `${id}.svg`), 'utf8'));
+const icon = (id) => setIcon(R.id, id);
+const pilotIcon = (id) => setIcon('pilot', id);
 const at = (src, px) => src.replace('<svg', `<svg width="${px}" height="${px}"`);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 // a URL is shown as TEXT, never as a reference: the zero-width breaks also stop the
@@ -117,8 +120,16 @@ const provenance = () => R.SUBJECTS.map(id => {
 }).join('');
 
 // ---- section 4: the two working rules, as built ------------------------------------
+/**
+ * The base pane of a family row. A base lives wherever rule 1 lets it live — in the
+ * pilot, in an APPROVED earlier slice, or in this slice — and check-slice.mjs
+ * resolves it the same three ways. `SVG` only holds THIS slice's subjects, so a base
+ * in another set has to be read from that set's own icons (A02's al, sap and adobe
+ * families all base on A01 masters); reaching into SVG for it hands back undefined.
+ */
+const baseIcon = (f) => (!f.base_set || f.base_set === R.id ? SVG[f.base] : setIcon(f.base_set, f.base));
 const familyRows = () => Object.entries(manifest.families.declared).map(([name, f]) => `<div class="rr">
-	<div class="rr-pair">${at(f.base_set === 'pilot' ? pilotIcon(f.base) : SVG[f.base], 38)}
+	<div class="rr-pair">${at(baseIcon(f), 38)}
 		<span class="rr-eq">=</span>${f.members.map(id => at(SVG[id], 38)).join('')}</div>
 	<div class="rr-txt"><b>${esc(name)}</b> &middot; base <code>${esc(f.base)}</code>
 		(${esc(f.base_set)}) &rarr; ${f.members.map(m => `<code>${esc(m)}</code>`).join(', ')}
@@ -167,6 +178,17 @@ const ASKS_FOR_A_RULING = /\boverturn|ruling requested|your options|say the word
 const wantsRuling = (f) => (typeof f.ruling === 'boolean' ? f.ruling : ASKS_FOR_A_RULING.test(f.text));
 const rulingFlags = R.FLAGS.map((f, i) => ({ n: i + 1, f })).filter(x => wantsRuling(x.f));
 
+/**
+ * The numbering a fix round has to respect, read off the registry once and used by
+ * BOTH §0 and §5. The gate's own flags are the ones without `fix_round`; they keep
+ * the numbers 1..gateFlags for ever, and the round's continue from the next one.
+ * §0 used to state A01's "1-35" and "36" as literals, which was true for exactly
+ * one slice — A02's gate was decided on 1-51 and its round's flags are 52 onward.
+ */
+const gateFlags = R.FLAGS.filter(f => !f.fix_round).length;
+const fixFlagFirst = (R.FLAGS.findIndex(f => f.fix_round) + 1) || gateFlags + 1;
+const superseded = R.FLAGS.filter(f => f.superseded).length;
+
 // ---- section 0: the fix round, before and after ----------------------------------------
 // The pilot's fix round put its two rebuilt subjects side by side with what they
 // replaced; a slice fix round has twenty-two, so the strip is a grid and the "was"
@@ -174,11 +196,27 @@ const rulingFlags = R.FLAGS.map((f, i) => ({ n: i + 1, f })).filter(x => wantsRu
 // Everything here is data: R.FIX_ROUND names the subjects, the manifest supplies the
 // rest, and the strip disappears entirely on a slice that has not had a fix round.
 const FIX = R.FIX_ROUND;
+/**
+ * What the subject carried BEFORE the round, taken from the record rather than from
+ * a second copy of the icons. Two ways, in that order:
+ *
+ *   · the round SAYS so — a tranche's `FIX_ROUND.was[id] = { set, id }` names the
+ *     icon the subject used to ship. This is the only way to know when the before
+ *     state was a real MARK rather than a glyph, and when it lived in another set:
+ *     A02's cf / cfc / cfm shipped A01's actionscript (Adobe's red A) under rule
+ *     1(b), and no amount of reading this slice's own output recovers that.
+ *   · otherwise A01's reading, unchanged: everything it rebuilt came off a CATEGORY
+ *     GLYPH, and which one is the roster's own declared fallback for that concept,
+ *     resolved to a concept that still carries it so the pane cannot go stale.
+ *
+ * `was` is optional, so a round that declares nothing renders exactly as before.
+ */
 const wasGlyph = (id) => {
-	// what the subject carried BEFORE the round, taken from the record rather than from
-	// a second copy of the icons: everything rebuilt here came off a category glyph, and
-	// which one is the roster's own declared fallback for that concept. Resolved to a
-	// concept that still carries it, so the pane cannot go stale.
+	const declared = (FIX.was || {})[id];
+	if (declared) {
+		return !declared.set || declared.set === R.id
+			? SVG[declared.id] : setIcon(declared.set, declared.id);
+	}
 	const cats = manifest.neutral_collapse.category_glyphs || {};
 	const member = (cats[manifest.subjects[id].roster_fallback] || [])[0];
 	return member ? SVG[member] : null;
@@ -408,8 +446,8 @@ ${FIX ? `<section>
 below were gated on ${manifest.generated === FIX.ruling ? 'an earlier build' : 'the build of ' + esc(FIX.ruling)},
 one ruling came back, and this section is that ruling and everything it moved. Every subject the
 round did NOT touch is byte-identical to the gated build; the flags the gate was decided on keep
-their numbers 1&ndash;35, each overturned one marked in place, and the round's own flags run from
-36.</p>
+their numbers 1&ndash;${gateFlags}, each overturned one marked in place, and the round's own flags run from
+${fixFlagFirst}.</p>
 <div class="ruling">
 <h3>The ruling &mdash; ${esc(FIX.ruling)}</h3>
 <p class="q">${esc(FIX.verdict.replace(/^[^:]*:\s*/, ''))}</p>
@@ -472,11 +510,11 @@ ${collapseRows()}
 <h2>5 &middot; Flags &mdash; every judgement call, numbered</h2>
 <p class="desc">Nothing here was decided quietly. Each item is a call that wants a verdict, or a
 number you should see before giving one. ${FIX
-			? `Flags 1&ndash;${R.FLAGS.filter(f => !f.fix_round).length} are the ones the gate was
-	decided on and they keep their numbers; ${R.FLAGS.filter(f => f.superseded).length} of them are
+			? `Flags 1&ndash;${gateFlags} are the ones the gate was
+	decided on and they keep their numbers; ${superseded} of them ${superseded === 1 ? 'is' : 'are'}
 	marked SUPERSEDED in place, with a pointer to what replaced them, because deleting a flag would
 	delete the reasoning that produced the ruling. The fix round's own flags run from
-	${R.FLAGS.findIndex(f => f.fix_round) + 1}. ` : ''}${rulingFlags.length
+	${fixFlagFirst}. ` : ''}${rulingFlags.length
 			? `Flag${rulingFlags.length === 1 ? '' : 's'}&nbsp;${oxford(rulingFlags.map(x => String(x.n)))}
 	${rulingFlags.length === 1 ? 'asks' : 'ask'} outright for a ruling &mdash; ${rulingFlags.length === 1
 				? 'that is the one' : 'those are the ones'} to argue with; the rest are numbers to have

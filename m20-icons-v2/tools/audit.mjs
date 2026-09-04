@@ -4,10 +4,14 @@
 //
 //   node tools/audit.mjs [A01] [--json]
 //
-// With a slice id the audit is CROSS-SET: the pilot's twenty subjects and every
-// subject the slice has built are scored in one pool, because a slice icon that
-// collides with a pilot icon is exactly as bad as one that collides inside its own
-// slice. THREE lanes are exempt from R8 and REPORTED instead of failed, because in
+// With a slice id the audit is CROSS-SET: the pilot's twenty subjects, every
+// subject each APPROVED earlier slice shipped (tools/targets.mjs holds that list),
+// and every subject this slice has built are scored in one pool, because a slice
+// icon that collides with a pilot or an approved icon is exactly as bad as one that
+// collides inside its own slice. An approved slice brings its DECLARATIONS with it
+// as well — its families, its collapses, its look-alike pairs — because a pair a
+// gate already ruled on cannot start failing just because a later slice ran.
+// THREE lanes are exempt from R8 and REPORTED instead of failed, because in
 // all three the identity is declared and deliberate:
 //   FAMILY   working rule 1 — a variant that ships its family's base mark under its
 //            own id (python-misc). Byte-identity is the rule doing its job.
@@ -46,7 +50,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { FILES, FOLDERS, spec } from './sources.mjs';
 import { toHsl } from './color.mjs';
-import { resolveTarget } from './targets.mjs';
+import { resolveTarget, priorSlices } from './targets.mjs';
 import { rasterFills } from '/Users/sebastian.suarez/Projects/VSebCode/m11-icons/production/tools/raster.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -54,6 +58,12 @@ const OUT = join(HERE, '..', 'pilot');
 const asJson = process.argv.includes('--json');
 const target = await resolveTarget();
 const slice = target.kind === 'slice' ? target.registry : null;
+// the approved slices this one stands on, resolved to their registries and their
+// output directories, then the slice itself: that array IS the pool beyond the
+// pilot, and every set-aware step below reads it instead of assuming two sets
+const POOL = slice
+	? [...await Promise.all(priorSlices(slice.id).map(id => resolveTarget(id))), target]
+	: [];
 
 // thresholds — m11 production/tools/audit.mjs, unchanged
 const D_HUE = 12, D_LIGHT = 12, D_SAT = 25, NEUTRAL_S = 25;
@@ -65,26 +75,32 @@ const IOU_COLLIDE_PLATE = 0.92;   // m11's IOU_COLLIDE_BADGE — every plate sil
 const entries = [
 	...FILES.map(id => ({ set: 'pilot', kind: 'file', id, path: join(OUT, 'icons', `${id}.svg`) })),
 	...FOLDERS.map(id => ({ set: 'pilot', kind: 'folder', id, path: join(OUT, 'icons', `${id}.svg`) })),
-	...(slice ? slice.FILES.map(id => ({ set: slice.id, kind: 'file', id,
-		path: join(target.dir, 'icons', `${id}.svg`) })) : []),
-	...(slice ? slice.FOLDERS.map(id => ({ set: slice.id, kind: 'folder', id,
-		path: join(target.dir, 'icons', `${id}.svg`) })) : [])
+	...POOL.flatMap(t => [
+		...t.registry.FILES.map(id => ({ set: t.id, kind: 'file', id,
+			path: join(t.dir, 'icons', `${id}.svg`) })),
+		...t.registry.FOLDERS.map(id => ({ set: t.id, kind: 'folder', id,
+			path: join(t.dir, 'icons', `${id}.svg`) }))
+	])
 ];
 
 // declared identities (see the header): which family / which shared category glyph /
-// which declared look-alike pair
+// which declared look-alike pair. Merged across the WHOLE pool, keyed by name and not
+// by set, because that is what makes a declaration cross the slice boundary: A02's
+// `dal` names family `al` whose base lives in A01, and both ends have to land in the
+// same lane or the audit would fail an identity that rule 1 requires.
 const familyOf = {}, collapseOf = {};
 const lookalikeOf = new Map();       // "a|b" (sorted) -> the declaration
-if (slice) {
-	for (const [name, f] of Object.entries(slice.FAMILIES || {})) {
+for (const t of POOL) {
+	const reg = t.registry;
+	for (const [name, f] of Object.entries(reg.FAMILIES || {})) {
 		for (const id of [f.base, ...(f.members || [])]) { familyOf[id] = name; }
 	}
-	for (const [glyph, ids] of Object.entries((slice.NEUTRAL_COLLAPSE || {}).category_glyphs || {})) {
+	for (const [glyph, ids] of Object.entries((reg.NEUTRAL_COLLAPSE || {}).category_glyphs || {})) {
 		for (const id of ids) { collapseOf[id] = glyph; }
 	}
 	// a look-alike declaration names exactly two ids and the ruling that opened it;
 	// anything short of that is not a declaration and the pair keeps failing
-	for (const l of slice.LOOKALIKE || []) {
+	for (const l of reg.LOOKALIKE || []) {
 		if (!Array.isArray(l.pair) || l.pair.length !== 2 || !l.ruling) {
 			throw new Error(`LOOKALIKE entry must name two ids and a ruling: ${JSON.stringify(l)}`);
 		}
@@ -103,7 +119,10 @@ const declared = (A, B) => {
 // same concept id, and a silent key collision there would score an icon against
 // itself instead of against its twin
 const raster = await rasterFills(entries.map(e => ({ kind: `${e.set}/${e.kind}`, id: e.id, path: e.path })));
-const specOf = (e) => (e.set === 'pilot' ? spec(e.id) : slice.spec(e.id));
+// every set answers for its own subjects: `plate` is a property of that set's
+// artwork, declared in the registry that built it
+const specOfSet = new Map([['pilot', spec], ...POOL.map(t => [t.id, t.registry.spec])]);
+const specOf = (e) => specOfSet.get(e.set)(e.id);
 
 const icons = entries.map(e => {
 	const r = raster.get(`${e.set}/${e.kind}/${e.id}`);
@@ -249,7 +268,7 @@ function round3(f) { return { area: +f.area.toFixed(3), edge: +f.edge.toFixed(3)
 
 // ---- report ---------------------------------------------------------------------
 const result = {
-	scope: slice ? `pilot + ${slice.id}` : 'pilot',
+	scope: ['pilot', ...POOL.map(t => t.id)].join(' + '),
 	thresholds: { D_HUE, D_LIGHT, D_SAT, NEUTRAL_S, IOU_COLLIDE, IOU_NEAR, FORM_SEP },
 	palette: icons.map(i => ({ id: i.id, kind: i.kind, dominant: i.dominant,
 		h: +i.hsl.h.toFixed(1), s: +i.hsl.s.toFixed(1), l: +i.hsl.l.toFixed(1) })),

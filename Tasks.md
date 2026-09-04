@@ -2009,20 +2009,273 @@ cleanest).
 
 ### M16 — Telescope quick input (one widget = every picker; restyle is global)
 
-- [ ] Geometry: 920px window-centered, prompt at BOTTOM (anchor by `bottom`),
-  descending data order at the `_setElementsToTree` choke point + negated
-  comparator + activation-default flips (trySelectFirst/ItemActivation/
-  First-Last); reconsider the 0.62 golden-cut clamp; neutralize drag/viewState
-  persistence
-- [ ] Coat: quickInput.background @ 0.90 via the theme-resolution mechanism (new
-  constant — 0.30 is a shared absolute) + alpha-0 on the list/sticky second
-  coat (single painter); `overflow: hidden` for the 12px radius; fix the stale
-  5px titlebar-corner rule (bottom corners now)
-- [ ] Rows: M3 inset cosmetics (22px, 7px radius), mono query vs UI rows, match
-  highlighting per approved tokens; previews absolute line numbers
-- [ ] Motion (r8 PRODUCT): 180ms fade+scale 0.97→1 ease-out-strong entrance,
-  120ms dismiss, reduced-motion opacity-only; INSERT-handoff hook left clean
-  for M17 (onShow/onHide + inQuickOpen, command-center precedent)
+**BUILT + battery-green 2026-09-03 (own session; five delegated commits, each
+diff-reviewed; hooks ON; NOT pushed — pin bump waits on the gate). SEBASTIAN
+GATE PENDING — flag list below.**
+
+- [x] **S1 geometry + order** (`a584dccfd3a`): width `min(920, W−32)` (0.62
+  golden cut ruled out — it would cap the panel at 794 in the mockup's own
+  window); bottom-anchored at `(H−405)×0.64` (mockup's 36/64 split), top/left
+  viewState IGNORED — persistence dead both directions, drag off (stock
+  `no-drag` mechanism); visual flip = `column-reverse` (DOM untouched → focus +
+  SR order stock); descending order at `_setElementsToTree` (top level + each
+  separator's children; arrays stay provider-order so every stored index holds)
+  + the tree sorter negated (the query path the array can't decide); activation
+  flips via `firstItemFocus`/`secondItemFocus`/`lastItemFocus` consts + new
+  `QuickPickFocus.SecondLast` (appended, no renumber); list Go-to-First/Last
+  keybindings keep meaning top/bottom. 2 scroll tests made platform-neutral
+  (measure resting scrollTop instead of assuming 0). Stock path proven: all
+  guards forced off → suites byte-green.
+- [x] **S2 coat** (`6b20ad4eb02`): new 0.90 tier in theme.ts —
+  `MAC_OVERLAY_SURFACE_ALPHA`/`MAC_OVERLAY_SURFACES` (exactly
+  quickInput.background) + `overlaySurfaceOnMac`, third branch at the D10
+  `getColor` site; sets proven disjoint; resolution proof rgba(32,33,34,0.9)
+  under 2026 Dark with the 0.3 tier undisturbed. quickInputTitle.background →
+  MAC_TRANSPARENT_SURFACES (sole consumer = the strip; audit in report).
+  List's second coat dropped at the feed (`listBackground: undefined` under
+  `glassPanel`); sticky separator KEEPS `treeStickyScrollBackground:
+  quickInputBackground` — alpha-0 letter of the plan deviated BY MEASUREMENT:
+  the fallback is sideBar.background @0.3 (wrong hue + rows ghost through);
+  strip paints ≈0.99 effective, flagged (F6). `overflow: hidden` clips the
+  stock 12px xLarge radius; stale 5px titlebar corners zeroed. Var audit:
+  walkthrough SVGs ~2/255 shift (benign), boot initial-colors carry the glass.
+- [x] **S3 rows + prompt** (`1c13e8d54bf`): 16-row cap (CSS `calc(16*22px)` +
+  6px pads = column 364; controller governor hands `undefined` while the
+  window holds the panel — an inline max-height would beat the CSS — and
+  shrinks only under 437px window with 16px margins); rows = M3 pills (8px
+  insets, 7px radius, entry `0 6px 0 4px`), sticky + separator-as-item
+  aligned; match highlights un-bolded (colors = stock tokens = the approved
+  ones); focus ring starved (`--vscode-list-focusOutline: transparent` on the
+  widget — the stock rule carries `!important`; HC excluded, keeps its ring);
+  meta/description 12px; prompt strip 39 = 1px `pickerGroup.border` hairline +
+  6px pads + 26px input; query monospace 13px (input element only). All
+  beaten stock rules listed with specificity pairs in the session record.
+- [x] **S4 motion + truing** (`633656f9a3e`): entrance 180ms fade + scale
+  0.97→1 `cubic-bezier(0.23,1,0.32,1)` from own center; dismiss 120ms — the
+  mockup's PRODUCT block adds scale 0.985 (plan said plain fade; mockup wins,
+  F8); reduced-motion keeps timing, drops scale (mockup spec — not instant).
+  Hide defers only the PICTURE: `is-hiding` + `pointer-events: none` +
+  `animationend` (literal — `dom.EventType.ANIMATION_END` resolves to the
+  never-firing webkit-prefixed name under Electron's UA, see notes) + 160ms
+  disposable fallback in one store; `display:none` at settle; teardown-path
+  guard (store disposed → instant hide). `hide()` changed by ONE statement —
+  onHide/`inQuickOpen`/focus-restore order byte-identical (trace in record);
+  `isVisible()` = class read (6 callers audited; `focus()` was the one that
+  would have stolen focus back mid-fade). Entrance replays from hidden or
+  mid-fade; wizard step-to-step does NOT pulse (deliberate, F9). Truing:
+  progress strip `:not(.active)` → height 0 (idle panel exactly 405; loading
+  +2px at the division line); row ink to mockup x6 icon / x27 name (both icon
+  paths + tree); S3's toggle-centering concern MEASURED FALSE — struck.
+- [x] **S5 border-box** (`374d13d0572`): battery found the panel rendering 922
+  — the 1px theme border sat outside the 920. `box-sizing: border-box` per
+  the mockup's explicit "920×405 border-box (918×403 inner)". DnD reads dead
+  under the flag; anchored branch dormant in-tree (no callers, verified).
+- [x] **S6 preview pane** (`79941f61cc5`, ruled in by F1 "Yes, add it"): the
+  panel splits 400 | 1px `pickerGroup.border` | 517 when a picker's item SET
+  contains file-backed items (duck-type `resource: URI` +
+  `canHandleResource`; Cmd+P + workspace symbols split; palette + goto-line
+  never do; goto-symbol-in-file carries `uri` not `resource` — stays
+  full-width, see notes). Layer-clean: platform knows only a 5-method
+  `IQuickInputPreview` contract on `IQuickInputOptions` (attach/setItems→
+  split?/setFocus/layout/hide) + a left-column host created ONLY under the
+  flag (non-mac DOM byte-identical) + new `QuickInputList.onDidSetItems`;
+  the workbench side (`quickInputPreview.ts`, injected at the workbench
+  service's existing `createController` options) owns the embedded
+  `CodeEditorWidget` (`isSimpleWidget`, `contributions: []`, readOnly,
+  minimap/folding/sticky off, 6px scrollbar) + `ITextModelService`
+  references (released on every path), 100ms settle debounce +
+  cancellation, aux-window rebuild by `vscodeWindowId`. Pane =
+  `peekViewEditor.background` at 0.90 via LOCAL `color-mix` (NOT added to
+  the overlay set — real peek views untouched); editor's two own paints
+  starved by var-redefinition inside the pane only; 25px crumb title
+  (`descriptionForeground`, chevron codicons, filename never shrinks);
+  ABSOLUTE line numbers set explicitly — the D19 "previews keep absolute
+  line numbers" ruling lands here against the M12 relative default; file's
+  own effective editor font settings passed through (a hand-built widget
+  ignores user settings — would have rendered Menlo 12); rangeless items
+  reveal top, symbol picks center their range; non-interactive v1
+  (pointer-events none, tabIndex −1, aria-hidden — the list row already
+  announces the file); widget grid single-column default (byte-same look)
+  → `has-preview` 400/1/minmax(0,1fr); pane released at dismiss-SETTLE,
+  never mid-fade. valid-layers-check green.
+- [x] **S7 alignment commands hidden** (`7c3dc725530`, ruled by F3 "Hide
+  them"): the two `alignQuickInput*` Action2s not registered + Customize
+  Layout rows AND their "Quick Input Position" section header gone under
+  the same `telescopePanel` const; the picker's Reset button's unawaited
+  `executeCommand('...alignQuickInputTop')` ALSO gated — against an
+  unregistered command it rejects unhandled on every Reset press (forced
+  by the ruling, judged in-flight). Platform `setAlignment` API + context
+  key untouched; full reference sweep table in the session record; no
+  test asserts the ids; non-mac byte-stock.
+- [x] **S8 pinned split height** (`f253ecc1d2d`, ruled at the re-look:
+  "set a semi-fixed size... scales down with the editor, either by
+  percentage or breakpoints" — PERCENTAGE chosen, a threshold jump is
+  visible): one derived figure `pinned = max(75, min(405, round(H ×
+  405/859), H−32))` (405/859 = the mockup's own panel-to-window share;
+  new `TELESCOPE_HEIGHT_SHARE`); split state pins `style.height` to it
+  (short lists leave glass ABOVE the rows — column-reverse main-start is
+  the bottom); unsplit stays content-driven; the bottom anchor derives
+  from the same figure in BOTH states so the prompt line is the window's
+  answer alone (byte-identical to round 1 at H≥859: 405/296 at 868); the
+  shrink governor unified on it (`pinned − 53` below 405). Write-path
+  trace closed every stale-height route (show() clears the class via
+  `setElements([])` before the entrance's own updateLayout). Arithmetic
+  table in the session record; at 868/859/1200 all values byte-equal
+  round 1.
+- [x] **S9 whole-row snap** (`3965f303548`, from the S8 review): the stock
+  inline-cap snap `floor(h/44)*44+6` could EXCEED the handed budget by up
+  to 5px (top row shaved under `overflow:hidden`) and lands fractional
+  22px rows at shrink windows (600px → 10.27 rows). Under the flags the
+  snap is `floor(h/22)*22` — whole telescope rows, never over budget —
+  in `quickInputList.layout` AND the tree controller twin (which got its
+  own `telescopePanel` const + platform import, sibling-idiom); stock
+  formula byte-kept flag-off; the M16 style.css governor comment
+  rewritten to the S8 truth (comment-only). Spot-table: budgets
+  277/230/183/153/88 → 264/220/176/132/88, all ≤ budget, all mod-22
+  zero (old overshot 88→94). Also recorded, not acted: anchored pickers
+  + `has-preview` is a latent S6 edge (anchor-blind class toggle; zero
+  in-tree anchored callers — dormant).
+- [x] **VM battery (D23) 30/0** — fresh instance, fork repo as workspace:
+  gate class; entrance/dismiss animation names + mid-fade cancel + no ghost;
+  920 border-box exact; centered; bottom offset 296 = (868−405)×0.64 exact;
+  list-above-prompt; coat rgba(32,33,34,0.9); 12px/hidden/column-reverse;
+  single painter (elementsFromPoint: exactly one paint in the widget stack);
+  16 rows, focused = bottom row, gap-to-prompt 6; height 405 at cap; input
+  26px mono 13; header 6px + 1px hairline; progress idle 0; highlight weight
+  400; pill r7/ml8/w=list−16; ink x6/x27; outline none/transparent; fill
+  rgb(41,122,160); ArrowUp = exactly one 22px row; ENTER on bottom row opened
+  titlebarPart.ts (accept = best match, end-to-end); dismiss lingers with
+  focus already out; settle to display:none; reduced-motion both names; the
+  palette same geometry + sticky bg 0.9. Screenshots delivered (find-files
+  over titlebarPart.ts + palette).
+- [x] **VM battery round 2 (post S6/S7) 41/0** — all 30 round-1 probes green
+  unchanged, plus: split engages on Cmd+P (left column 400 exact, pane 517,
+  grid `400px 1px 517px`); crumbs follow focus (crumb tail == focused row
+  label, incl. after an 8-step arrow sprint with input keeping focus); pane
+  material `color(srgb …/0.9)` == rgba(25,26,27,0.9) exact with the editor's
+  own paint transparent; ABSOLUTE numbers proven (1,2,3 in the pane while
+  the build's default is relative); font parity pane==main 14px/21px; height
+  405 with the split on; dismiss fades the WHOLE picture (crumbs still
+  present mid-fade) then releases at settle (crumb count 0, display none);
+  palette stays no-split full-width; "move quick input" palette query
+  returns ZERO alignment commands (S7 proven live). Two battery-probe
+  artifacts fixed en route (grid reads flexDirection `row` legitimately;
+  color-mix serializes as `color(srgb)`). Screenshot delivered (split
+  find-files: pane showing titlebarPart.ts, crumbs + absolute gutter).
+- [x] **S10 telescope-large size** (`51f75e45d86`, ruled via question round:
+  offered mockup-proportions-uncapped / taller-only / telescope-large —
+  **Sebastian picked TELESCOPE LARGE**): the panel is now SHARES of the
+  window with nothing capping from above — `TELESCOPE_WIDTH_SHARE = 0.8`,
+  `TELESCOPE_HEIGHT_SHARE = 0.65` (bottom share 0.64, floor 75, `−32`
+  guards unchanged); the mockup's 920×405 is SUPERSEDED by verdict (r4
+  precedent). The governor is now the ONLY list-height authority — hands
+  `panelHeight − 53` (whole-row-snapped) in EVERY window and both states;
+  the CSS 16-row cap deleted (padding kept; stock's 20-row rule never
+  binds — inline wins, written before first paint). Results column stays
+  fixed 400 — the pane absorbs ALL width growth. At his 1512×982:
+  1210×638, 26 rows, pane 807. Identity recorded: unsplit ≤ split by
+  0–21px (snap slack), prompt line unaffected. Comment sweep: zero stale
+  920/405/sixteen-row claims outside the superseded-figures note.
+  Side effects recorded (flags R6/R7): sub-504px-wide windows overflow
+  the 400 results column into the clip (threshold was ~434 pre-S10;
+  degenerate); dormant anchored pickers lost the removed CSS ceiling
+  (zero in-tree callers).
+- [x] **VM battery round 3 (post S8/S9) 45/0** — all round-2 probes green
+  unchanged, plus the sizing ruling proven live: 1-result split query →
+  panel STILL 405 (pane 403 full height, 331px glass above the row);
+  1-row filtered palette → 75px content-driven; **prompt line invariant
+  split vs unsplit: 571 == 571** (the shared-figure anchor's whole
+  point); CDP device-metrics 600px window → panel 283, prompt line 203 —
+  the 405/859 share to the pixel (`min(405, round(600×405/859)) = 283`,
+  `round((600−283)×0.64) = 203`). Screenshot delivered (1-result split:
+  pinned panel, glass above the pill, full-height pane).
+- [x] **VM battery round 4 (post S10, share-aware expectations) 45/0** —
+  every probe recomputed from the shares and green at 1440×868: width
+  1152, split height 564, prompt line at bottom 195 (invariant 672==672
+  split vs unsplit), pane 749, palette 23 rows @ 559 content-driven,
+  1-result split holds 564 with 490px glass, emulated 600px window →
+  390/134 exact. Screenshot delivered (telescope-large split over the
+  editor).
+- [ ] **Sebastian gate — flag verdicts** (round 1 RULED 2026-09-03: F1 "Yes,
+  add it" → preview pane BUILDS as S6; F3 "Hide them" → S7; F6+F7 "Its ok" —
+  sticky strip + shadow stand as built; F8 "Its ok" — dismiss scale stands.
+  Remaining flags were presented as stand-unless-objected; final gate ruling
+  comes with the S6/S7 re-look):
+  - **F1** mockup's right-hand 400px preview pane is NOT in the ratified plan
+    scope — panel ships full-width results; the editor behind stays the
+    preview surface. **RULED: ADD IT → S6** (400 | 1px pickerGroup sep |
+    rest; pane = peekViewEditor.background at the panel's 0.90 LOCAL alpha;
+    25px crumb title; embedded read-only editor, ABSOLUTE line numbers —
+    lands the D19 "previews keep absolute line numbers" note; split engages
+    only for file-backed item sets, palette stays full-width).
+  - **F2** no in-input match counter ("184/8196") — not scoped.
+  - **F3** "Move Quick Input to Top/Center" commands are visually inert now
+    (position baked). **RULED: HIDE THEM → S7.**
+  - **F4** validation message rests on the panel's bottom edge (below input).
+  - **F5** multi-step titlebar sits at the panel's FOOT, transparent; loading
+    pickers draw the 2px progress bar at the division line (+2px while
+    loading).
+  - **F6** pinned separator strip paints the coat twice (≈0.99, near-solid) —
+    the plan's alpha-0 deviated by measurement (fallback = sideBar 0.3 + rows
+    ghosting). ~1% focused-row cast possible beneath it. **RULED: STANDS.**
+  - **F7** sticky-scroll shadow (shared `scrollbarShadow`) still smudges under
+    a pinned separator over the glass; clearing it needs a TS feed override
+    (no dedicated color id). **RULED: STANDS (shadow stays).**
+  - **F8** dismiss ships the mockup's 0.985 scale + fade (plan text said
+    plain fade); reduced-motion keeps 180/120 timing, opacity-only.
+    **RULED: STANDS.**
+  - **F9** wizard/multi-step pickers do not replay the entrance per step.
+  - **F10** panel height is a constant until the window can't hold it
+    (<437px → shrink, 16px margins) — mirrors the width rule.
+  - **F11** input placeholder renders monospace too.
+  - **F12** no unit test asserts the mac surface sets (D10 precedent had
+    none; a platform-gated test would be a new precedent — want one?).
+  - **F13** palette with empty history reads pure-alphabetical reversed (A at
+    the bottom); with usage the recently-used group sits at the bottom.
+- [ ] **Sebastian final gate** — F1/F3 BUILT (S6/S7); the re-look sizing
+  ruling BUILT (S8 percentage share + S9 whole-row snap, battery round 3
+  proven); F6/F7/F8 ruled standing; the un-objected round-1 flags (F2,
+  F4, F5, F9–F13) stand as presented. Round-2 sight-flags:
+  - **R1** rangeless file picks preview from the TOP of the file (symbol
+    picks center their line); the mockup's lines 90–107 were scene
+    dressing.
+  - **R2** pane is non-interactive v1 — no click/scroll in the preview,
+    keyboard never leaves the prompt. Interaction = later candidate.
+  - **R3** gutter is monaco-true: ~37px at 3-digit files, grows a digit at
+    a time (mockup drew a flat 40).
+  - **R4** goto-symbol-in-file (Cmd+Shift+O) stays full-width — its items
+    point into the file already open behind the panel (and carry `uri`,
+    not `resource`). Follow-up candidate if the pane is wanted there.
+  - **R5** Customize Layout's Reset no longer sends the alignment command
+    on mac (it would reject unhandled against the unregistered id; the
+    position is baked regardless).
+  - **R6** (post-S10) below ~504px window width the fixed 400px results
+    column + hairline outgrow the 80% panel and clip at the sheet edge —
+    degenerate windows only (pre-S10 threshold was ~434; a split-suppress
+    width gate is the fix if ever wanted).
+  - **R7** (post-S10) dormant anchored pickers lost the removed CSS row
+    ceiling (can reach stock-like heights again; zero in-tree callers —
+    the branch is dead code today).
+  - **R8** (post-S10) switching between a splitting and a non-splitting
+    query nudges the panel's TOP edge by ≤21px (whole-row snap slack);
+    the prompt line never moves — the intended reading of the invariant,
+    just more visible at 23 rows than 16.
+- [ ] On approval: push fork, pin bump + doc fold (this section + board),
+  packaged markers ride the next packaged pass with M12's.
+
+M16 session notes (ops + follow-up candidates, no verdict needed):
+- `dom.EventType.ANIMATION_END` is DEAD under Electron (UA says AppleWebKit →
+  resolves to `webkitAnimationEnd`, which Chromium never fires; zero in-repo
+  users today). Candidate one-line cleanup some hygiene round.
+- Hidden-input pickers keep stock 4px list margins (header rule scoped to
+  `:not(.hidden-input)`).
+- VM ops (bit us this session): after a HOST recompile, the guest's VirtioFS
+  view of `out/` can go stale/ENOENT — a `Page.reload` mid-rebuild wedges the
+  window (dev workbench can't recover from a bare navigate; main process owns
+  its window config). Remedy: `--stop-vm` + fresh launch. Also: `launch-vm.sh`
+  with NO args LAUNCHES a new instance (it is not a status command), and a
+  second instance steals focus which auto-closes the first window's quick
+  input mid-capture.
 
 ### M17–M19 — vim tail (GATED on M4; vehicle RULED: VSCodeVim — D21 amendment 2026-09-02)
 
@@ -2282,6 +2535,97 @@ chromium+raster / contact / audit), brand-colors.json (193 verified hexes).
   docs + guide + tools + tools/slices/ + slices/A01/ + sources-svg
   add-by-path, umbrella only, no pin (`vscode` pointer = live peer
   state, excluded; `.playwright-cli/` cache excluded).
+- [x] **SLICE A02 BUILT 2026-09-03 (own session: toolchain prep + 3 delegated
+  tranches t1 bosque→circom / t2 clojurescript→dinophp / t3 dlang→falcon, 28
+  each; gates re-run + proofs/sheet session-reviewed per round; t1/t2 outputs
+  hash-proven untouched by later tranches) — GATE RULED + FIX ROUND FOLDED
+  same day; APPROVED, SLICE CLOSED.**
+  All 84 worklist concepts (slices[1], all category code). TOOLCHAIN EXTENSION
+  (prep round): prior APPROVED slices join the gate — `targets.mjs` `APPROVED`
+  list (order-bearing; append 'A02' there at ITS approval, one line per
+  verdict) feeds check-slice's FROZEN gate (pilot + priors vs HEAD), the twin
+  pool (audit.mjs pools pilot + priors + slice, priors' family/collapse/
+  look-alike declarations ride into the lanes), cross-slice family bases
+  (`base_set: 'A01'`), cross-slice category-glyph byte-identity, and
+  `A02.mjs` registry (null FIX_ROUND until a gate rules; `pilot_frozen`
+  manifest KEY kept to keep A01's committed manifest byte-stable — honest
+  covers text instead). Sheet-builder fix mid-slice: cross-slice family base
+  panes (setIcon/setDir unification). OUTCOMES: 61 branded / 23 neutral
+  (20 generic-code byte-equal to A01's, chess ROOK + email ENVELOPE new
+  object glyphs in geom.mjs — both measured against alternatives in studies —
+  + command on A01's terminal); families al (c-al t1 + dal t2, UNION
+  declared in t2 — registry Object.assign clobbers same-name FAMILIES,
+  later tranche must carry earlier members; recorded gotcha), dotnet
+  (csproj→aspx), sap (cds→abap), adobe (cf/cfc/cfm→actionscript, Adobe's
+  own Cf plate measured 1.21:1 and declined), chef (+cookbook), latex
+  OPENED in-slice (doctex base + dtx + doctex-installer, the Project's
+  kingfisher reduced 6984B→1739B per the prettier rider); kin-without-base
+  shipped under variant ids + flagged for future families (erb=Ruby gem,
+  eex=Elixir drop, cssmap=official CSS logo small cut, cypress-spec,
+  dartlang-generated); 2 new look-alike pairs PROPOSED (duckdb↔emacs 0.940,
+  duckdb↔ember 0.986 — ember has an official rounded-square overturn);
+  5 lifts (largest group yet — crystal #000 per brand-colors, cue, dhall,
+  coconut two-ink first, +1), 4 dark tones deliberately unlifted; declines
+  with receipts: drools (0.55px median), dinophp (6461B > 4KB cap + L5),
+  buckbuild ships Buck 1's readable antler over Buck 2's 0.22/0.38px deer
+  (ruling asked), doxyfile/capnp wordmark-raster dead-ends, edge's only
+  SVG is a potraced solid square. Gates green both modes (A02: check 0
+  fail / 20 advisories all >2KB-priced; roster 84/84 modules 3/3;
+  pilot+A01 frozen; 16px 58+26 marginal; twins 0/0 — 54 family + 786
+  collapse + 3 look-alike declared; letters 0 · pilot + A01 reruns green,
+  committed tree byte-clean). 51 flags, 6 studies. Sheet →
+  https://claude.ai/code/artifact/4460a259-137b-409c-a99e-6742df4357a0
+  (`slices/A02/sheet.html`, own URL per slice; same path = same URL to
+  republish). **GATE RULED same day (Sebastian, itemized on the 7 chat
+  asks)**: 2 c-al/dal on AL · 3 buckbuild antler · 4 cuda NVIDIA · 6
+  duckdb look-alike pairs · 7 dune/ejs/eex/erb/elm — all "Ok" as built;
+  5 LaTeX kingfisher explained (question tool), CONFIRMED as built; 1
+  ColdFusion OVERTURNED with a directive — "In those cases you can use
+  a background in a frame with their corners rounded (like in previous
+  iterations)", clarified pick: ADOBE'S OWN FRAMED ICON; overall
+  "Approved". **FIX ROUND folded same day** (delegated; session
+  reviewed + re-gated): cf/cfc/cfm re-ship Adobe's REAL framed
+  ColdFusion icon — hunt found the framed cut on adobe.com's own
+  product-icons tree (internal id `cf_builder_2016_appicon`; fetched
+  via the aem.live mirror, byte-confirmed; + framed FrameMaker/RoboHelp
+  corroborating the w/24 inset and framed Photoshop-iPad supplying the
+  one missing ratio, inner r = 0.8541 × outer); frame built as an L8
+  filled ring (counter-wound inner rect, no stroke), thickened INSIDE
+  Adobe's spec form w/24 → w/10 = 1.28px (w/11 measured 1.16 = under
+  the floor first — smallest legal departure); #7BADFF frame+letters /
+  #002258 field verbatim UNLIFTED (mark-interior ink per the erratum);
+  16px verdict pass (marginal) — letters 0.97/1.06/1.19px are Adobe's
+  own drawing. Trio leaves the red-A adobe family → own `coldfusion`
+  family (base cf, A02); flag 1 SUPERSEDED in place → fix flags 52
+  (ruling) + 53 (build); A02.mjs PREAMBLE filled (the designed edit);
+  frame study added (shipped w/10 · Adobe w/24 · rejected w/11 · bare
+  plate); new local `rectShapes()` reader in t1 (spec-engine's
+  officialShapes skips <rect> — recorded). Surgical proof: exactly
+  6/168 outputs changed (cf/cfc/cfm ×2 dirs, hash-asserted). Plate
+  lane clean: cf's max vs any non-family plate 0.162 on the 0.92 bar;
+  one informational near-twin (trio ↔ dartlang-generated, form 0.102).
+  RULED LAW folded as guide §5 ERRATUM 3 (framed-plate construction:
+  frame carries the silhouette, field = interior ink never lifted,
+  brand's own framed cut > sibling-corroborated ratios, thickening
+  inside the brand's spec form). `targets.mjs` APPROVED = ['A01','A02'].
+  Sheet-record defects found by the round FIXED tool-side pre-republish
+  (section-0 flag numbers derived not hardcoded; fix-strip "was" panes
+  resolve a declared FIX_ROUND.was map — optional field added to the
+  tranche contract, A01 semantics untouched; pluralization; stale
+  APPROVED comment reworded). TOOL FOLLOW-UPS for a later round,
+  RECORDED NOT DONE: (a) gates.mjs does not FAIL when build-slice-sheet
+  throws — check-slice gates the sheet already on disk, a crash + stale
+  sheet passes silently (t3 hit it, caught by grep); (b) pathkit `bbox`
+  measures the control-point hull, not true curve extents — ejs mis-fit
+  at 53% caught + fixed locally via de-Casteljau split in the t3
+  module; an ENGINE fix would refit approved sets and break
+  byte-freezes, so it needs its own ruled round. KNOWN CHURN: any
+  pilot/A01/A02 regate on a later UTC date rewrites committed
+  manifest/sheet `generated` date lines (+ the sheets' fix-round
+  ternary sentences) — diff, verify date-only, `git checkout --`
+  restore (procedure applied every time this session; A02's own
+  manifest committed with generated 2026-09-04, its fix-round build
+  date — the ruling date 2026-09-03 is what its sheet §0 prints).
 - [ ] Assembly: cross-set twin audit (R7/R8 thresholds), reconciliation, theme build —
   associations untouched, iconPaths only
 - [ ] Integration (the ONLY fork touch): one packaging commit swapping the SVG trees
@@ -2297,14 +2641,25 @@ pass the URL). Ruled law now in the guide, binding A02+: D22 license amendment
 (fidelity-only sourcing; provenance still records license verbatim),
 company-mark-on-format rider, families (a/b/recolour modes), neutral collapse,
 look-alike lane, lift trigger contrast<3.0:1, dotnet-CC0 note for
-csharp/fsharp/vb. NEXT SESSION = slice A02
-(`m11-icons/production/longtail-worklist.json` slices[1], 84 file concepts):
-write `tools/slices/A02.t*.mjs` per the A01 contract (top of
-`tools/slices/A01.mjs`; A01.t1.mjs is the spec pattern), tranche it like A01
-(~3 delegated batches), gate via `cd m20-icons-v2 && node tools/gates.mjs A02`
-(pilot mode = no arg; both must stay green; A01 outputs now join the frozen
-cross-assert side), NEW sheet artifact for A02 (one URL per slice), Sebastian
-gate, commit on verdict. Slices A03–A12 + F01–F06 + a core-batch slice follow
-the same rhythm; then assembly (cross-set audits, reconciliation, theme build) →
+csharp/fsharp/vb. STATE NOW: **SLICE A02 CLOSED** — approved + committed
+(84/84: 61 branded incl. the framed-ColdFusion fix round / 23 neutral;
+the A02 item above carries the full arc: outcomes, verdict, fix round,
+tool follow-ups, the sheet URL — artifact 4460a259…, republish = same
+`slices/A02/sheet.html` path from its session, or pass the URL). Ruled
+law now in the guide, binding A03+: §5 erratum 3 framed-plate
+construction (frame carries the silhouette; interior field never
+lifted; brand's framed cut > sibling-corroborated ratios; thickening
+inside the brand's spec form). NEXT SESSION = slice A03
+(worklist slices[2]) through the same contract: registry
+`tools/slices/A03.mjs` (copy A02.mjs's shape), ~3 tranches, gate via
+`cd m20-icons-v2 && node tools/gates.mjs A03` (pilot + A01 + A02 then all
+frozen), NEW sheet artifact per slice, Sebastian gate, commit on verdict.
+Tranche-brief gotchas that BIND future tranches/slices: FAMILIES same-name
+clobber (later module unions earlier members), studies.mjs one-path-per-part
+winding, pathkit bbox control-point hull (probe fits before trusting),
+future families owed when the base concept arrives (ruby→erb, elixir→eex,
+css→cssmap, cypress→cypress-spec, dart→dartlang-generated, latex is open
+at doctex/A02). Slices A03–A12 + F01–F06 + a core-batch slice follow the
+same rhythm; then assembly (cross-set audits, reconciliation, theme build) →
 the single integration swap commit in `extensions/theme-vsebcode-icons` + pin
 bump (M11 runbook acceptance).

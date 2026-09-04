@@ -11,27 +11,34 @@
 //   ROSTER  every built subject is in the slice's worklist entry, and every roster
 //           id that is not built yet is reported. Short is only FATAL once all
 //           three tranche modules are present.
-//   RULE 1  a declared family variant really is byte-identical to its base.
-//   RULE 2  a declared category-glyph collapse really is byte-identical.
+//   RULE 1  a declared family variant really is byte-identical to its base — which
+//           may live in the pilot, in an APPROVED earlier slice, or in this one.
+//   RULE 2  a declared category-glyph collapse really is byte-identical, inside
+//           this slice AND against every approved slice that declared the same
+//           glyph: one payload per glyph for the whole production line.
 //   L2      provenance completeness — source, licence, simplifications, and the
 //           fetched artwork file actually on disk for anything that reads one.
 //   L3      letter audit: R1 has no typeset letters at all.
-//   PILOT   the 24 pilot icons are still byte-identical to git HEAD. This slice
-//   FROZEN  shares the pilot's engine, so a refactor that moved a pilot byte has
-//           to fail HERE, loudly, and not months later.
+//   FROZEN  the pilot's 24 icons and every APPROVED slice's icons are still
+//           byte-identical to git HEAD (tools/targets.mjs holds the approved list).
+//           This slice shares their engine, so a refactor that moved one of their
+//           bytes has to fail HERE, loudly, and not months later.
 //   16 PX   every subject carries an eyeballed verdict, and none of them says
 //           "unrated".
 
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { resolveTarget, ROOT } from './targets.mjs';
+import { resolveTarget, priorSlices, setDir, ROOT } from './targets.mjs';
 import { roster } from './roster.mjs';
 
 const target = await resolveTarget();
 if (target.kind !== 'slice') { throw new Error('check-slice.mjs needs a slice id, e.g. A01'); }
 const R = target.registry;
 const OUT = target.dir;
+// the approved slices this one stands on: frozen below, legal family bases in rule
+// 1, and the sets rule 2's category glyphs have to agree with byte for byte
+const PRIORS = priorSlices(R.id);
 const DIRS = ['masters', 'icons'];
 const BANNED = [/gradient/i, /<filter/i, /<mask/i, /clip-path/i, /<image/i, /<use/i,
 	/<style/i, /<script/i, /\sopacity\s*=/i, /url\(/i, /xlink/i, /<text/i, /stroke\s*=/i];
@@ -58,7 +65,9 @@ for (const d of DIRS) {
 			if (m[1].length > 2) { bad(`${d}/${f}`, `>2 decimals (${m[0]})`); break; }
 		}
 	}
-	console.log(`  ${d.padEnd(8)} ${String(files).padStart(2)} files, mean ${Math.round(sum / files)} B, max ${max} B`);
+	// a slice whose tranche modules have not landed yet has nothing to average
+	console.log(`  ${d.padEnd(8)} ${String(files).padStart(2)} files, `
+		+ `mean ${files ? Math.round(sum / files) : 0} B, max ${max} B`);
 	for (const [id, b] of over2k) { soft(`${d}/${id}`, `${b} B over the 2 KB target (advisory, L8 erratum)`); }
 }
 
@@ -92,11 +101,29 @@ if (pending.length) {
 
 // --- WORKING RULE 1: declared families really are identical ---------------------------
 console.log('\nworking rule 1 · declared family variants\n');
-const pilotDir = join(ROOT, 'pilot', 'masters');
+/**
+ * Where a family's base master lives. `base_set` may name the pilot, THIS slice, or
+ * any APPROVED earlier slice — A02's dal is kin of A01's al, and csproj of A01's
+ * asp/aspx, so a family base legitimately crosses the slice boundary. What it may
+ * NOT name is a slice that has not been ruled on yet: those bytes are still moving,
+ * and a family declared against them would be declared against nothing.
+ */
+const baseSetOf = (f) => f.base_set || R.id;
+const baseMasterFile = (f) => {
+	const set = baseSetOf(f);
+	if (set === R.id) { return join(OUT, 'masters', `${f.base}.svg`); }
+	if (set === 'pilot' || PRIORS.includes(set)) { return join(setDir(set), 'masters', `${f.base}.svg`); }
+	return null;
+};
 let fams = 0;
 for (const [name, f] of Object.entries(R.FAMILIES || {})) {
-	const baseFile = f.base_set === 'pilot'
-		? join(pilotDir, `${f.base}.svg`) : join(OUT, 'masters', `${f.base}.svg`);
+	const set = baseSetOf(f);
+	const baseFile = baseMasterFile(f);
+	if (!baseFile) {
+		bad(`family/${name}`, `base_set ${set} is neither the pilot, ${R.id} itself, nor an `
+			+ `approved prior slice (${PRIORS.join(', ') || 'none'})`);
+		continue;
+	}
 	if (!existsSync(baseFile)) { bad(`family/${name}`, `base master ${f.base} not found at ${baseFile}`); continue; }
 	const base = readFileSync(baseFile, 'utf8');
 	for (const id of f.members) {
@@ -106,7 +133,7 @@ for (const [name, f] of Object.entries(R.FAMILIES || {})) {
 		} else {
 			fams++;
 			console.log(`  ${id.padEnd(14)} family ${name} — byte-identical to `
-				+ `${f.base_set === 'pilot' ? 'pilot/' : ''}masters/${f.base}.svg, as declared`);
+				+ `${set === R.id ? '' : set + '/'}masters/${f.base}.svg, as declared`);
 		}
 	}
 }
@@ -120,6 +147,34 @@ for (const [glyph, ids] of Object.entries(cats)) {
 	const same = payloads.every(p => p === payloads[0]);
 	if (!same) { bad(`collapse/${glyph}`, `${ids.join(', ')} share a category glyph but differ`); }
 	else { console.log(`  ${glyph.padEnd(16)} ${ids.join(', ')} — byte-identical, as declared`); }
+}
+// CROSS-SLICE IDENTITY. A category glyph belongs to the production line, not to a
+// slice: generic-code is ONE payload, and the twin audit pools A01's collapsed ids
+// with this slice's in a single lane. So where an approved slice declared the same
+// glyph NAME, one member from each side has to be the same bytes — otherwise the
+// brackets drift a hairline per slice and the lane quietly exempts two marks that
+// are no longer the same mark. One member each is enough: the loop above has
+// already proved every member inside a slice identical to its siblings.
+// Object glyphs are NOT checked here. The single-subject ones (disc, lib, abc) are
+// keyed by a roster id that belongs to exactly one slice, so there is nothing on
+// the other side to compare with; the shared ones (terminal, stopwatch) are also
+// declared as category glyphs, where the comparison above catches them.
+for (const priorId of PRIORS) {
+	const prior = await resolveTarget(priorId);
+	const theirCats = (prior.registry.NEUTRAL_COLLAPSE || {}).category_glyphs || {};
+	for (const [glyph, ids] of Object.entries(cats)) {
+		const theirs = theirCats[glyph];
+		if (!ids.length || !theirs || !theirs.length) { continue; }
+		const mine = readFileSync(join(OUT, 'icons', `${ids[0]}.svg`), 'utf8');
+		const other = readFileSync(join(prior.dir, 'icons', `${theirs[0]}.svg`), 'utf8');
+		if (mine !== other) {
+			bad(`collapse/${glyph}`, `${ids[0]} and ${priorId}'s ${theirs[0]} share the `
+				+ `${glyph} glyph across slices but the payloads differ`);
+		} else {
+			console.log(`  ${glyph.padEnd(16)} ${ids[0]} == ${priorId}/${theirs[0]} — the same `
+				+ `payload as approved slice ${priorId}, as required`);
+		}
+	}
 }
 const objs = Object.keys((R.NEUTRAL_COLLAPSE || {}).object_glyphs || {});
 console.log(`  ${objs.length} object glyph(s): ${objs.join(', ') || 'none'}`);
@@ -167,26 +222,35 @@ for (const d of DIRS) {
 }
 console.log(`  ${typeset} typeset letters in ${R.SUBJECTS.length} subjects — the L3 table stays dormant`);
 
-// --- PILOT FROZEN -------------------------------------------------------------------------
-// The slice fits its subjects through the pilot's engine. If a change to that engine
-// moved a pilot byte, this is where it has to surface.
-console.log('\nPILOT FROZEN · the 24 approved pilot icons vs git HEAD\n');
-const PILOT_PATHS = ['m20-icons-v2/pilot/icons', 'm20-icons-v2/pilot/masters', 'm20-icons-v2/pilot/sheet.html'];
+// --- FROZEN ---------------------------------------------------------------------------------
+// The slice fits its subjects through the pilot's engine, and every approved slice was
+// fitted through the same one. If a change to it moved a byte in an APPROVED set — the
+// pilot or any slice already ruled and committed — this is where it has to surface. An
+// approved slice joins this side the day its verdict lands (tools/targets.mjs, APPROVED).
+const FROZEN = ['pilot', ...PRIORS];
+/** A set's outputs as git names them, from the repo root. */
+const gitPath = (set) => (set === 'pilot' ? 'm20-icons-v2/pilot' : `m20-icons-v2/slices/${set}`);
+const FROZEN_PATHS = FROZEN.flatMap(s => [`${gitPath(s)}/icons`, `${gitPath(s)}/masters`,
+	`${gitPath(s)}/sheet.html`]);
+console.log(`\nFROZEN · the approved sets (${FROZEN.join(' + ')}) vs git HEAD\n`);
 try {
 	const repo = join(ROOT, '..');
-	const dirty = execFileSync('git', ['-C', repo, 'diff', '--name-only', 'HEAD', '--', ...PILOT_PATHS],
+	const dirty = execFileSync('git', ['-C', repo, 'diff', '--name-only', 'HEAD', '--', ...FROZEN_PATHS],
 		{ encoding: 'utf8' }).trim();
-	const untracked = execFileSync('git', ['-C', repo, 'ls-files', '--others', '--exclude-standard', '--', ...PILOT_PATHS],
+	const untracked = execFileSync('git', ['-C', repo, 'ls-files', '--others', '--exclude-standard', '--', ...FROZEN_PATHS],
 		{ encoding: 'utf8' }).trim();
 	const changed = [dirty, untracked].filter(Boolean).join('\n').split('\n').filter(Boolean);
-	const icons = readdirSync(join(ROOT, 'pilot', 'icons')).filter(f => f.endsWith('.svg')).length;
+	const counts = FROZEN.map(s =>
+		`${s} (${readdirSync(join(setDir(s), 'icons')).filter(f => f.endsWith('.svg')).length} icons)`);
 	if (changed.length) {
-		for (const f of changed) { bad('pilot-frozen', `${f} differs from git HEAD`); }
+		for (const f of changed) { bad('frozen', `${f} differs from git HEAD`); }
 	} else {
-		console.log(`  ${icons} icons + their masters + sheet.html unchanged against HEAD`);
+		// one line, and it says which sets it covered: gates.mjs reads this sentence for
+		// the manifest record, so a set that was never asked about must not look asserted
+		console.log(`  ${counts.join(', ')} — icons, masters and sheet.html unchanged against HEAD`);
 	}
 } catch (e) {
-	soft('pilot-frozen', `could not ask git (${e.message.split('\n')[0]})`);
+	soft('frozen', `could not ask git (${e.message.split('\n')[0]})`);
 }
 
 // --- 16 px verdicts -----------------------------------------------------------------------

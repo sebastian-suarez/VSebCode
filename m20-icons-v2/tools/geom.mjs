@@ -377,6 +377,50 @@ export function stopwatchGlyph() {
 	];
 }
 
+/**
+ * OBJECT GLYPH · chess rook — the object a .pgn / .fen file records a game of.
+ * Two sub-shapes: the castellated tower (battlements, waist and flared body as
+ * ONE contour, the way a turned piece is one silhouette) and the base plate,
+ * held apart by a 1.5 gap so the piece reads as a piece and not as a column.
+ * Opened by slice A02 for `chess`; a pawn, a king and a knight were drawn and
+ * measured against it first (proofs/chess-piece-study.png) — the rook is the one
+ * whose distinguishing feature, the battlements, is made of 1.75 px notches that
+ * survive 16 px, where the knight's muzzle and the king's cross do not.
+ * Authored ink 11.6 x 13.4; teeth 2.5, notches 1.75, waist 7.4, base 1.9 tall.
+ */
+export function chessRook() {
+	return [
+		roundPoly([
+			[2.5, 1.6], [5, 1.6], [5, 3.9], [6.75, 3.9], [6.75, 1.6], [9.25, 1.6],
+			[9.25, 3.9], [11, 3.9], [11, 1.6], [13.5, 1.6],
+			[13.5, 6.3], [11.7, 7.8], [12.5, 11.6], [3.5, 11.6], [4.3, 7.8], [2.5, 6.3]
+		], 0.45),
+		roundRect(2.2, 13.1, 11.6, 1.9, 0.5)
+	];
+}
+
+/**
+ * OBJECT GLYPH · envelope — the object an .eml / .msg / .mbox / .ics file IS.
+ * ONE sub-shape: the body, with the flap's V punched out of it as a counter, so
+ * the glyph cannot fuse and its silhouette is the envelope rather than a plate.
+ * Opened by slice A02 for `email`; a filled body and a hollow frame were drawn
+ * and measured against each other, and against the terminal glyph already in the
+ * vocabulary, before this one shipped (proofs/email-glyph-study.png).
+ * Authored ink 13.0 x 9.2; band above the flap 2.0, flap stroke 1.5, and the V
+ * spans 9.8 of the body's 13.0 so the glyph reads as a letter and not as a box
+ * with a chevron in it.
+ */
+export function envelopeGlyph() {
+	const t = 1.5, xL = 3.1, xR = 12.9, yTop = 5.4, yBot = 9.8;
+	const W = (xR - xL) / 2, H = yBot - yTop, L = Math.hypot(W, H);
+	const dy = t * L / W, ix = dy * W / H;          // the V's own inner offsets
+	const flap = roundPoly([
+		[xL, yTop], [8, yBot], [xR, yTop],
+		[xR - ix, yTop], [8, yBot - dy], [xL + ix, yTop]
+	], [0.3, 0.55, 0.3, 0.3, 0.5, 0.3]);
+	return [roundRect(1.5, 3.4, 13, 9.2, 1.3) + flap];
+}
+
 export const circle = (c, fill) => `<circle cx="${n(c.cx)}" cy="${n(c.cy)}" r="${n(c.r)}" fill="${fill}"/>`;
 export const path = (d, fill, extra = '') => `<path${extra} fill="${fill}" d="${d}"/>`;
 export const svg = (body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">${body}</svg>`;

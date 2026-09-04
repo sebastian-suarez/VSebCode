@@ -304,7 +304,78 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   on the verdict; pushes his (fork ahead 7 with M14's trio); packaged
   markers ride the next packaged pass with M12's. Records + battery
   ledger in Tasks § M15.
-- **M20 — Icon set v2 — OPENED 2026-09-02; D22 RULED + PILOT CLOSED
+- **M16 — Telescope quick input BUILT + battery-green 2026-09-03 (own
+  session) — SEBASTIAN GATE PENDING (13 flags in Tasks § M16)**: every
+  picker is the approved telescope panel — 920×405 border-box,
+  window-centered, held by its bottom edge on the mockup's 36/64 line,
+  prompt at the BOTTOM (26px monospace input in a 39px strip behind a
+  pickerGroup hairline), results DESCENDING with the best match against
+  the prompt; one 0.90 glass coat (`quickInput.background` through a new
+  third theme-resolution tier beside D10's 0.3/alpha-0 — sets disjoint,
+  proof rgba(32,33,34,0.9)), single painter (list feed dropped, title
+  strip transparent, container clips its own 12px corners); rows are M3
+  pills (8px inset, 7px radius, ink x6/x27, un-bolded theme-token match
+  highlights, focus ring starved non-HC); D19-r8 motion (180ms in /
+  120ms out on the strong ease-out, mockup PRODUCT values incl. the
+  0.985 dismiss scale; reduced-motion keeps timing, drops scale) with
+  the dismiss deferring only the PICTURE — `hide()` changed by one
+  statement, onHide/`inQuickOpen`/focus-restore order byte-identical,
+  the M17 INSERT-handoff hook clean by construction. Five delegated
+  commits `a584dccfd3a`→`374d13d0572` (geometry+order / coat / rows /
+  motion+truing / border-box), each diff-reviewed, hooks ON, NOT
+  pushed; suites green incl. stock-path proof (guards forced off) and a
+  battery-found 922px fix (border outside the 920 — mockup says
+  border-box). VM battery (D23) 30/0 — geometry to the pixel (bottom
+  offset 296 = (868−405)×0.64), single-painter stack probe, ENTER on
+  the bottom row opened titlebarPart.ts (accept = best match),
+  mid-fade cancel, reduced-motion both directions; screenshots
+  delivered. Plan deviations all measured + flagged: sticky strip keeps
+  a paint (alpha-0 fallback = sideBar 0.3 + ghosting), viewState/drag
+  dead, move-to-top/center commands inert. **GATE ROUND 1 RULED same
+  day**: F1 preview pane "Yes, add it" → BUILT as S6 (`79941f61cc5`,
+  ruled-in scope): the panel splits 400 | hairline | 517 for file-backed
+  item sets — layer-clean 5-method platform contract, workbench-owned
+  embedded read-only editor (model refs + cancellation disciplined),
+  `peekViewEditor.background` @ LOCAL 0.90 color-mix, 25px crumb title,
+  ABSOLUTE line numbers explicitly (the D19 preview-numbers ruling
+  lands), the file's own effective font settings passed through
+  (hand-built widgets ignore settings — would have drawn Menlo 12);
+  palette/goto-line stay full-width, pane non-interactive v1. F3 "Hide
+  them" → S7 (`7c3dc725530`): alignment commands unregistered + picker
+  rows + section header gone + the Reset button's unawaited call gated
+  (would reject unhandled against the unregistered id). F6/F7/F8 "Its
+  ok" — stand. **Battery round 2: 41/0** (split geometry exact, crumbs
+  follow focus through an arrow sprint, absolute-numbers proof against
+  the relative default, font parity 14/21, dismiss fades the whole
+  picture then releases at settle, palette no-split, zero alignment
+  commands live); split screenshot delivered. **Re-look sizing ruling
+  BUILT same day** ("set a semi-fixed size... scales down with the
+  editor, either by percentage or breakpoints" → percentage): S8
+  (`f253ecc1d2d`) pins the SPLIT panel to one derived figure —
+  `min(405, round(H × 405/859), H−32)`, the mockup's own
+  panel-to-window share — so short result lists keep the full panel
+  (glass above the rows); unsplit pickers stay content-driven; the
+  prompt line derives from the same figure in both states (byte-equal
+  to round 1 at H≥859). S9 (`3965f303548`, from the S8 review): the
+  stock 44px inline-cap snap (could exceed budget by 5px + landed
+  fractional rows) → whole 22px telescope rows in list + tree twin.
+  **Battery round 3: 45/0** — 1-result split query holds 405 with
+  331px glass above the pill; prompt line invariant 571==571 split vs
+  unsplit; emulated 600px window lands 283/203, the share to the
+  pixel; screenshot delivered. **"Make it bigger" RULED via question
+  round → TELESCOPE LARGE (S10 `51f75e45d86`)**: the panel is pure
+  window shares — 0.8 wide × 0.65 tall, nothing capping from above;
+  the mockup's 920×405 SUPERSEDED by verdict (r4 precedent); the
+  governor is the only list-height authority in every window (CSS
+  16-row cap deleted; whole-row snap bounds both states); results
+  column fixed 400, the pane absorbs all growth (at his 1512×982:
+  1210×638, 26 rows, 807px pane). **Battery round 4 (share-aware):
+  45/0** — 1152×564/195 at the VM window, palette 23 rows @559,
+  prompt-line invariant 672==672; screenshot delivered. Fork now 10
+  M16 commits `a584dccfd3a`→`51f75e45d86`, NOT pushed. **FINAL GATE
+  PENDING** — sight-flags R1–R8 in Tasks § M16. Pin bump + doc fold
+  on the verdict; packaged markers ride the next packaged pass with
+  M12's.
   2026-09-03, production slices next**:
   Sebastian's verdict on the shipped M11 set: NOT consistent — reads as
   different styles in one set; letter icons share no alignment/size/weight;
@@ -422,10 +493,56 @@ Sebastian by hand (including the watch). Umbrella HEAD always records the exact
   contrast<3.0:1 ratified (48, 50/0). Ruled errata FOLDED into the
   guide (L2 license amendment + company-mark rider, §5 lift
   erratum 2, §5 families/collapse/look-alike laws); slice committed
-  on the verdict (umbrella only, no pin). NEXT SESSION: slice A02
-  (worklist slices[1]) through the same contract — then A03+ →
-  assembly → the single integration swap commit. Details + resume
-  in Tasks § M20.
+  on the verdict (umbrella only, no pin). **SLICE A02 BUILT
+  2026-09-03 (own session: toolchain prep + 3 delegated tranches,
+  gates re-run + proofs/sheet session-reviewed per round) — GATE
+  RULED + FIX ROUND FOLDED same day, APPROVED, CLOSED**: all 84
+  worklist concepts
+  (bosque→falcon); toolchain now pools PRIOR APPROVED slices —
+  A01 joins the pilot on the frozen cross-assert side and in the
+  twin pool with its declared lanes (targets.mjs APPROVED list;
+  A03 appends 'A02' at ITS approval), cross-slice family bases
+  legal (`base_set: 'A01'`), category glyphs byte-asserted across
+  slices, sheet-builder cross-slice base fix. 61/84 branded
+  (A01: 54) — the D22 license amendment holding; 20 collapse onto
+  the gray brackets (byte-equal to A01's), 3 object glyphs (new
+  rook + envelope, A01's terminal reused); families: ColdFusion
+  trio + csproj + dal + cds + c-al ride A01 bases, LaTeX kingfisher
+  family OPENED (doctex base, dtx + installer in); 2 new declared
+  look-alike pairs (duckdb↔emacs 0.940, duckdb↔ember 0.986);
+  kin-without-base precedent (erb=Ruby gem, eex=Elixir drop —
+  future families when ruby/elixir arrive). Gates green (check 0
+  fail / 20 advisories >2KB priced; 16px 58+26 marginal; twins 0/0
+  with 54 family + 786 collapse + 3 look-alike declared; letters 0;
+  pilot+A01 frozen). 51 flags on the sheet →
+  https://claude.ai/code/artifact/4460a259-137b-409c-a99e-6742df4357a0
+  (`slices/A02/sheet.html`, own URL per slice). **GATE RULED
+  2026-09-03 (Sebastian, itemized)**: asks 2/3/4/6/7 Ok as built;
+  ask 5 explained then CONFIRMED (LaTeX kingfisher stays); ask 1
+  OVERTURNED with a directive — "use a background in a frame with
+  their corners rounded (like in previous iterations)", clarified
+  pick: ADOBE'S OWN FRAMED ICON; "Approved". **FIX ROUND folded
+  same day** (delegated; session reviewed + re-gated): cf/cfc/cfm
+  re-ship Adobe's real framed ColdFusion icon — the framed cut
+  found on adobe.com's own product-icons tree (`cf_builder_2016`),
+  frame as an L8 filled ring, thickened inside Adobe's own spec
+  form (w/24 → w/10 = 1.28px; w/11 measured under the floor),
+  #7BADFF frame+letters / #002258 field unlifted (interior ink);
+  trio leaves the red-A family for its own `coldfusion` family;
+  flag 1 superseded → flags 52/53 + frame study; surgical proof 6
+  of 168 files changed; plate lane max 0.162 vs the 0.92 bar.
+  Ruled law folded as §5 ERRATUM 3 (framed-plate construction).
+  `targets.mjs` APPROVED += 'A02'. Sheet-record defects found by
+  the round (section-0 hardcoded A01 numbers, fix-strip "was"
+  panes, pluralization) fixed tool-side before the republish;
+  pathkit-bbox curve-extent defect + gates sheet-crash gap stay
+  RECORDED as A03+ follow-ups in Tasks § M20 (engine fix would
+  refit approved sets — needs its own ruled round). **SLICE A02
+  CLOSED — committed on the verdict** (umbrella only, no pin;
+  peer-session root files + `.playwright-cli/` excluded). NEXT
+  SESSION: slice A03 (worklist slices[2]) through the same
+  contract — then A04+ → assembly → the single integration swap
+  commit. Details + resume in Tasks § M20.
 - **M4 — Branding & marketplace**: full VSebCode rebrand (D2) + VS Code
   Marketplace (D3). Theme rider resolved: Dark 2026 became the product default
   via D15. Known inputs from earlier milestones: `!!APP_NAME!!`/`!!ORG_NAME!!`

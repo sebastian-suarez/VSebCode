@@ -388,6 +388,22 @@ the round-2 constants as sampled and ruled.
   fired only under ~1.6:1 and missed real failures (AutoHotkey `#334455` at 1.86:1,
   bashly `#434343` at 1.88:1). Opt-in per subject as before; the pilot's 44 files
   are byte-identical under either wording (proven at the fix round).*
+  *Erratum 3 (A02 gate, ruled 2026-09-03): a plate whose own FIELD cannot clear the
+  backdrop ships the brand's own FRAMED construction rather than being declined or
+  field-lifted — Sebastian: "In those cases you can use a background in a frame with
+  their corners rounded (like in previous iterations)"; his pick at the clarifying
+  question: Adobe's own framed icon. The rounded-corner frame carries the silhouette
+  against the backdrop; the field inside it becomes mark-interior ink under erratum 1
+  and is never lifted. Sourcing follows L2: the brand's own framed cut where one is
+  published (ColdFusion: Adobe's `cf_builder_2016_appicon` framed icon, adobe.com's
+  own product-icons tree), missing numbers corroborated across the brand's framed
+  siblings (one ratio borrowed: the inner radius 36.3/42.5 from Adobe's framed
+  Photoshop cut; the frame inset w/24 corroborated on FrameMaker and RoboHelp). A
+  frame under L5's floor thickens INSIDE the brand's own specification form — Adobe's
+  width/24 → width/10 = 1.28 px, with width/11 built and measured under the floor
+  first, so the shipped weight is the smallest legal departure, not a chosen one.
+  Precedent: the ColdFusion trio (flag 1 superseded → flags 52/53), its own
+  `coldfusion` family replacing its seat in the Adobe red-A family.*
 - Mark-less concepts (json, log, lock, …): the shared neutral glyph vocabulary in one
   gray ink (`#A6AEB6`-class). TYPESET LETTERS DO NOT EXIST in R1 — letterforms appear
   only as source geometry (TS's lozenge letters etc.); the L3 table stays dormant.
