@@ -162,7 +162,6 @@ import '../workbench/contrib/extensions/electron-browser/extensions.contribution
 import '../workbench/contrib/issue/electron-browser/issue.contribution.js';
 
 // Surveys
-import '../workbench/contrib/surveys/browser/survey.contribution.js';
 
 // Process Explorer
 import '../workbench/contrib/processExplorer/electron-browser/processExplorer.contribution.js';
