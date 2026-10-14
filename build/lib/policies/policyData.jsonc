@@ -39,7 +39,7 @@
             "localization": {
                 "description": {
                     "key": "extensions.allowed.policy",
-                    "value": "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions. More information: https://aka.ms/vscode/enterprise/extensions/allowed"
+                    "value": "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions."
                 }
             },
             "type": "object",
@@ -147,45 +147,6 @@
             },
             "type": "boolean",
             "default": true,
-            "included": true
-        },
-        {
-            "key": "update.mode",
-            "name": "UpdateMode",
-            "category": "Update",
-            "minimumVersion": "1.67",
-            "localization": {
-                "description": {
-                    "key": "updateMode",
-                    "value": "Configure whether you receive automatic updates."
-                },
-                "enumDescriptions": [
-                    {
-                        "key": "none",
-                        "value": "Disable updates."
-                    },
-                    {
-                        "key": "manual",
-                        "value": "Disable automatic background update checks. Updates will be available if you manually check for updates."
-                    },
-                    {
-                        "key": "start",
-                        "value": "Check for updates only on startup. Disable automatic background update checks."
-                    },
-                    {
-                        "key": "default",
-                        "value": "Enable automatic update checks. Code will check for updates automatically and periodically."
-                    }
-                ]
-            },
-            "type": "string",
-            "default": "default",
-            "enum": [
-                "none",
-                "manual",
-                "start",
-                "default"
-            ],
             "included": true
         }
     ]
