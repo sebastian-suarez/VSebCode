@@ -35,6 +35,15 @@
 	"nodejsArtifactFeed": "",
 	"electronArtifactFeed": "",
 	"urlProtocol": "code-oss",
+	"extensionsGallery": {
+		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+		"itemUrl": "https://marketplace.visualstudio.com/items",
+		"publisherUrl": "https://marketplace.visualstudio.com/publishers",
+		"controlUrl": "https://main.vscode-cdn.net/extensions/marketplace.json",
+		"extensionUrlTemplate": "https://www.vscode-unpkg.net/_gallery/{publisher}/{name}/latest",
+		"resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
+		"nlsBaseUrl": "https://www.vscode-unpkg.net/_lp/"
+	},
 	"builtInExtensions": [
 		{
 			"name": "ms-vscode.js-debug-companion",
