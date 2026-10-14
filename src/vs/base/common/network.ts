@@ -126,11 +126,6 @@ export namespace Schemas {
 	export const commentsInput = 'comment';
 
 	/**
-	 * Scheme used for special rendering of settings in the release notes
-	 */
-	export const codeSetting = 'code-setting';
-
-	/**
 	 * Scheme used for output panel resources
 	 */
 	export const outputChannel = 'output';

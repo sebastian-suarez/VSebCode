@@ -802,9 +802,6 @@ src/vs/workbench/contrib/files/test/browser/editorAutoSave.test.ts:
 src/vs/workbench/contrib/files/test/browser/explorerView.test.ts:
   94: 			// eslint-disable-next-line local/code-no-any-casts
 
-src/vs/workbench/contrib/markdown/test/browser/markdownSettingRenderer.test.ts:
-  72: 		// eslint-disable-next-line local/code-no-any-casts
-
 src/vs/workbench/contrib/markers/test/browser/markersModel.test.ts:
   145: 		// eslint-disable-next-line local/code-no-any-casts
 
