@@ -129,16 +129,6 @@
 	"git.worktreeSymlinkFolders": [
 		"node_modules/"
 	],
-	// --- GitHub ---
-	"githubPullRequests.experimental.createView": true,
-	"githubPullRequests.assignCreated": "${user}",
-	"githubPullRequests.defaultMergeMethod": "squash",
-	"githubPullRequests.ignoredPullRequestBranches": [
-		"main"
-	],
-	"githubPullRequests.codingAgent.enabled": true,
-	"githubPullRequests.codingAgent.uiIntegration": true,
-	"githubPullRequests.enableAttestationCommits": true,
 	// --- Testing & Debugging ---
 	"testing.autoRun.mode": "rerun",
 	"debug.javascript.terminalOptions": {
