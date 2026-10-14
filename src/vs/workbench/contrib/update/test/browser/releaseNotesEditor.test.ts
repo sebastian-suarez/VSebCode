@@ -132,7 +132,7 @@ suite('Release notes editor Try This integration', () => {
 		instantiationService.stub(IAccessibilityService, new TestAccessibilityService());
 		instantiationService.stub(IKeybindingService, new MockKeybindingService());
 		instantiationService.stub(IConfigurationService, new TestConfigurationService({ update: { showReleaseNotes: true } }));
-		instantiationService.stub(IProductService, { quality: 'stable', enableTelemetry: false });
+		instantiationService.stub(IProductService, { quality: 'stable' });
 		instantiationService.stub(IEnvironmentService, { isBuilt: false });
 		instantiationService.stub(IExtensionService, { whenInstalledExtensionsRegistered: () => whenExtensionsRegistered() });
 		instantiationService.stub(ILanguageService, store.add(new LanguageService()));

@@ -142,7 +142,6 @@ ${importMapJson}
 			productConfiguration: {
 				nameShort: 'Sessions (Web)',
 				nameLong: 'Sessions (Web)',
-				enableTelemetry: false,
 			},
 			${additionalBuiltinExtensions}
 			workspaceProvider: {

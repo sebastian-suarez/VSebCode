@@ -193,18 +193,7 @@ export interface IProductConfiguration {
 
 	readonly commandPaletteSuggestedCommandIds?: string[];
 
-	readonly crashReporter?: {
-		readonly companyName: string;
-		readonly productName: string;
-	};
-
-	readonly removeTelemetryMachineId?: boolean;
-	readonly enabledTelemetryLevels?: { error: boolean; usage: boolean };
-	readonly enableTelemetry?: boolean;
 	readonly openToWelcomeMainPage?: boolean;
-	readonly aiConfig?: {
-		readonly ariaKey: string;
-	};
 
 	readonly documentationUrl?: string;
 	readonly serverDocumentationUrl?: string;
@@ -222,7 +211,6 @@ export interface IProductConfiguration {
 	readonly licenseUrl?: string;
 	readonly serverLicenseUrl?: string;
 	readonly privacyStatementUrl?: string;
-	readonly showTelemetryOptOut?: boolean;
 
 	readonly serverGreeting?: string[];
 	readonly serverLicense?: string[];
@@ -239,7 +227,6 @@ export interface IProductConfiguration {
 	readonly checksums?: { [path: string]: string };
 	readonly checksumFailMoreInfoUrl?: string;
 
-	readonly appCenter?: IAppCenterConfiguration;
 
 	readonly portable?: string;
 
@@ -258,7 +245,6 @@ export interface IProductConfiguration {
 	readonly builtInExtensionsEnabledWithAutoUpdates: readonly string[];
 	readonly sessionsWindowAllowedExtensions?: readonly string[];
 
-	readonly msftInternalDomains?: string[];
 	readonly linkProtectionTrustedDomains?: readonly string[];
 
 	readonly authClientIdMetadataUrl?: string;
@@ -353,14 +339,6 @@ export interface IFilePathCondition extends IExtensionRecommendationCondition {
 
 export type IFileContentCondition = (IFileLanguageCondition | IFilePathCondition) & { readonly contentPattern: string };
 
-export interface IAppCenterConfiguration {
-	readonly 'win32-x64': string;
-	readonly 'win32-arm64': string;
-	readonly 'linux-x64': string;
-	readonly 'darwin': string;
-	readonly 'darwin-universal': string;
-	readonly 'darwin-arm64': string;
-}
 
 export interface IConfigBasedExtensionTip {
 	configPath: string;
