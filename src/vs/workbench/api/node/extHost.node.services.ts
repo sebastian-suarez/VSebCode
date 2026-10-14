@@ -27,8 +27,7 @@ import { SyncDescriptor } from '../../../platform/instantiation/common/descripto
 import { ISignService } from '../../../platform/sign/common/sign.js';
 import { SignService } from '../../../platform/sign/node/signService.js';
 import { ExtHostTelemetry, IExtHostTelemetry } from '../common/extHostTelemetry.js';
-import { IExtHostAuthentication } from '../common/extHostAuthentication.js';
-import { NodeExtHostAuthentication } from './extHostAuthentication.js';
+import { ExtHostAuthentication, IExtHostAuthentication } from '../common/extHostAuthentication.js';
 import { IExtHostBrowserTunnelProxy } from '../common/extHostBrowserTunnelProxy.js';
 import { NodeExtHostBrowserTunnelProxy } from './extHostBrowserTunnelProxy.js';
 
@@ -45,7 +44,7 @@ registerSingleton(ISignService, SignService, InstantiationType.Delayed);
 registerSingleton(IExtensionStoragePaths, ExtensionStoragePaths, InstantiationType.Eager);
 registerSingleton(IExtHostTelemetry, new SyncDescriptor(ExtHostTelemetry, [false], true));
 
-registerSingleton(IExtHostAuthentication, NodeExtHostAuthentication, InstantiationType.Eager);
+registerSingleton(IExtHostAuthentication, ExtHostAuthentication, InstantiationType.Eager);
 registerSingleton(IExtHostDebugService, ExtHostDebugService, InstantiationType.Eager);
 registerSingleton(IExtHostSearch, NativeExtHostSearch, InstantiationType.Eager);
 registerSingleton(IExtHostTask, ExtHostTask, InstantiationType.Eager);
