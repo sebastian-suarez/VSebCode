@@ -1,14 +1,7 @@
-<!-- BEGIN MICROSOFT SECURITY.MD V1.0.0 BLOCK -->
+# Security
 
-## Security
+Do not report security vulnerabilities through public GitHub issues.
 
-Microsoft takes the security of our software products and services seriously, which
-includes all source code repositories in our GitHub organizations.
+Report them privately through GitHub's [private vulnerability reporting](https://github.com/sebastian-suarez/VSebCode/security/advisories/new) on the fork repository. Include the VSebCode version or commit, the steps that reproduce the problem, and its impact.
 
-**Please do not report security vulnerabilities through public GitHub issues.**
-
-For security reporting information, locations, contact information, and policies,
-please review the latest guidance for Microsoft repositories at
-[https://aka.ms/SECURITY.md](https://aka.ms/SECURITY.md).
-
-<!-- END MICROSOFT SECURITY.MD BLOCK -->
+If the vulnerability is in code that VSebCode shares with upstream Code - OSS, also report it to the [upstream project](https://github.com/microsoft/vscode/security).

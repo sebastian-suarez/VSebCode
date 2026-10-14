@@ -1,65 +1,87 @@
-# Visual Studio Code - Open Source ("Code - OSS")
-[![Feature Requests](https://img.shields.io/github/issues/microsoft/vscode/feature-request.svg)](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-[![Bugs](https://img.shields.io/github/issues/microsoft/vscode/bug.svg)](https://github.com/microsoft/vscode/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Abug)
+# VSebCode
 
-## The Repository
+VSebCode is a fork of Code - OSS, the open-source repository (`microsoft/vscode` on GitHub) that Visual Studio Code is built from. The goal is the editor without telemetry, without Microsoft's online services and accounts, and without built-in AI. The fork deletes that code instead of hiding it behind settings. The one Microsoft service it keeps is the extension Marketplace. It follows upstream by merging upstream release tags.
 
-This repository ("`Code - OSS`") is where we (Microsoft) develop the [Visual Studio Code](https://code.visualstudio.com) product together with the community. Not only do we work on code and issues here, but we also publish our [roadmap](https://github.com/microsoft/vscode/wiki/Roadmap), [monthly iteration plans](https://github.com/microsoft/vscode/wiki/Iteration-Plans), and our [endgame plans](https://github.com/microsoft/vscode/wiki/Running-the-Endgame). This source code is available to everyone under the standard [MIT license](https://github.com/microsoft/vscode/blob/main/LICENSE.txt).
+## What was removed
 
-## Visual Studio Code
+- The built-in AI features: the Copilot Chat extension, chat, inline chat, agents, MCP support, AI search and speech, together with the `vscode.chat` and `vscode.lm` extension APIs. Extensions that need these APIs do not work.
+- Telemetry, experiments and surveys. Telemetry is always off, and no setting turns it on.
+- Self-update. VSebCode does not check for or install updates.
+- Settings Sync and Cloud Changes.
+- Remote Tunnels and the Rust CLI, with its `tunnel` and `serve-web` commands.
+- The Microsoft and GitHub account providers and the built-in `github` extension.
+- Microsoft's repository tooling: the GitHub workflows and the Azure Pipelines and 1ES build configuration.
 
-<p align="center">
-  <img alt="VS Code in action" src="https://github.com/user-attachments/assets/56af271c-949d-454c-a3ea-16188c063414">
-</p>
+## What stays
 
-[Visual Studio Code](https://code.visualstudio.com) is a distribution of the `Code - OSS` repository with Microsoft-specific customizations released under a traditional [Microsoft product license](https://code.visualstudio.com/License/).
+- The editor and the workbench, with the stable extension API apart from `vscode.chat` and `vscode.lm`.
+- The built-in extensions, including `git` and the JavaScript debugger.
+- The authentication API, so extensions can still provide accounts.
+- The inline completion API, so extensions can still show inline suggestions.
+- The Integrated Browser.
+- The remote server and the web build.
 
-[Visual Studio Code](https://code.visualstudio.com) combines the simplicity of a code editor with what developers need for their core edit-build-debug cycle. It provides comprehensive code editing, navigation, and understanding support along with lightweight debugging, a rich extensibility model, and lightweight integration with existing tools.
+Help links in the user interface still open the upstream documentation, which describes the features VSebCode keeps.
 
-Visual Studio Code is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on the [Visual Studio Code website](https://code.visualstudio.com/Download). To get the latest releases every day, install the [Insiders build](https://code.visualstudio.com/insiders).
+## Build from source
+
+You need Git, Node.js with the major version given in `.nvmrc`, Python, and a C/C++ compiler toolchain for the native modules. Then run:
+
+```sh
+npm install
+npm run compile-client
+./scripts/code.sh
+```
+
+`npm install` also installs the dependencies of `build/`, `remote/` and the built-in extensions. `npm run compile-client` compiles the editor and the built-in extensions. `./scripts/code.sh` starts VSebCode from the sources; it downloads Electron and the built-in extensions listed in `product.json` when they are missing. Run the unit tests with `./scripts/test.sh`. On Windows, use `scripts\code.bat` and `scripts\test.bat`.
+
+To build a packaged application, run the packaging task for your platform, for example `npm run gulp vscode-darwin-arm64` or `npm run gulp vscode-linux-x64`.
+
+The developer documentation is [CLAUDE.md](CLAUDE.md), which covers the commands, the architecture and the state of the removal, and the guides in [docs/guidelines](docs/guidelines).
+
+## Command line
+
+The shell command is `vsc`. On macOS, add it to your `PATH` with **Shell Command: Install 'vsc' command in PATH** from the Command Palette. The Linux packages put it on the `PATH`. The Windows installer adds it only when its **Add to PATH** task stays selected.
+
+```sh
+vsc .                         # open the current folder
+vsc --diff old.txt new.txt    # compare two files
+vsc --help                    # list all options
+```
+
+Links with the `vsebcode://` protocol open in VSebCode, for example `vsebcode://file/path/to/file.txt:10`. Extensions that hard-code `vscode://` links do not reach VSebCode.
+
+## Data folders and migrating from Code - OSS
+
+VSebCode keeps its user data (settings, keybindings, snippets, profiles and state) and its extensions in these folders:
+
+| Data | VSebCode | Code - OSS |
+|---|---|---|
+| User data on macOS | `~/Library/Application Support/VSebCode` | `~/Library/Application Support/Code - OSS` |
+| User data on Linux | `~/.config/VSebCode` | `~/.config/Code - OSS` |
+| User data on Windows | `%APPDATA%\VSebCode` | `%APPDATA%\Code - OSS` |
+| Extensions | `~/.vsebcode/extensions` | `~/.vscode-oss/extensions` |
+
+On Linux, `$XDG_CONFIG_HOME` replaces `~/.config` when it is set. On Windows, `~` is your user profile folder (`%USERPROFILE%`).
+
+Nothing migrates the Code - OSS folders. To keep your setup, quit both editors and copy each Code - OSS folder to the matching VSebCode path. If VSebCode has already created its folders, copy the contents of the old folders into them. Sign-ins that extensions kept in the system keychain may not carry over, so sign in again where an extension asks.
+
+A build started from the sources with `./scripts/code.sh` uses separate development folders (a user data folder named `vsebcode-dev` and `~/.vsebcode-dev/extensions`), so it does not touch the data of a packaged build.
+
+## Extension gallery
+
+VSebCode uses the Microsoft Marketplace as its extension gallery. The endpoints are set in the `extensionsGallery` block of `product.json`. The Marketplace terms of use limit it to Microsoft products, so decide for yourself whether you use it. To use another gallery, such as Open VSX, change `extensionsGallery` before you build.
+
+VSebCode does not verify extension signatures. The verifier module, `@vscode/vsce-sign`, ships closed-source binaries and is licensed for use with Microsoft products only, so VSebCode does not include it.
+
+## Icons
+
+The application and file icons are still upstream's Code - OSS artwork. New VSebCode icons are in progress and will replace them.
 
 ## Contributing
 
-There are many ways in which you can participate in this project, for example:
-
-* [Submit bugs and feature requests](https://github.com/microsoft/vscode/issues), and help us verify them as they are checked in
-* Review [source code changes](https://github.com/microsoft/vscode/pulls)
-* Review the [documentation](https://github.com/microsoft/vscode-docs) and make pull requests for anything from typos to new content.
-
-If you are interested in fixing issues and contributing directly to the codebase, please see the document [How to Contribute](https://github.com/microsoft/vscode/wiki/How-to-Contribute), which covers the following:
-
-* [How to build and run from source](https://github.com/microsoft/vscode/wiki/How-to-Contribute)
-* [The development workflow, including debugging and running tests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#debugging)
-* [Coding guidelines](https://github.com/microsoft/vscode/wiki/Coding-Guidelines)
-* [Submitting pull requests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#pull-requests)
-* [Finding an issue to work on](https://github.com/microsoft/vscode/wiki/How-to-Contribute#where-to-contribute)
-* [Contributing to translations](https://aka.ms/vscodeloc)
-
-## Feedback
-
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/vscode)
-* [Request a new feature](CONTRIBUTING.md)
-* Upvote [popular feature requests](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-* [File an issue](https://github.com/microsoft/vscode/issues)
-* Connect with the extension author community on [GitHub Discussions](https://github.com/microsoft/vscode-discussions/discussions) or [Slack](https://aka.ms/vscode-dev-community)
-* Follow [@code](https://x.com/code) and let us know what you think!
-
-See our [wiki](https://github.com/microsoft/vscode/wiki/Feedback-Channels) for a description of each of these channels and information on some other available community-driven channels.
-
-## Related Projects
-
-Many of the core components and extensions to VS Code live in their own repositories on GitHub. For example, the [node debug adapter](https://github.com/microsoft/vscode-node-debug) and the [mono debug adapter](https://github.com/microsoft/vscode-mono-debug) repositories are separate from each other. For a complete list, please visit the [Related Projects](https://github.com/microsoft/vscode/wiki/Related-Projects) page on our [wiki](https://github.com/microsoft/vscode/wiki).
-
-## Bundled Extensions
-
-VS Code includes a set of built-in extensions located in the [extensions](extensions) folder, including grammars and snippets for many languages. Extensions that provide rich language support (inline suggestions, Go to Definition) for a language have the suffix `language-features`. For example, the `json` extension provides coloring for `JSON` and the `json-language-features` extension provides rich language support for `JSON`.
-
-## Code of Conduct
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Issues and pull requests are welcome on the [fork repository](https://github.com/sebastian-suarez/VSebCode). Read [CONTRIBUTING.md](CONTRIBUTING.md) first, and report security vulnerabilities as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-Copyright (c) Microsoft Corporation. All rights reserved.
-
-Licensed under the [MIT](LICENSE.txt) license.
+VSebCode is released under the [MIT license](LICENSE.txt). The upstream code is copyright Microsoft Corporation, and the fork's changes are copyright Sebastian Suarez. Third-party components and their licenses are listed in [ThirdPartyNotices.txt](ThirdPartyNotices.txt).
