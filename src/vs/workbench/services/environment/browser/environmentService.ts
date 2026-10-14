@@ -11,6 +11,7 @@ import { IPath } from '../../../../platform/window/common/window.js';
 import { IWorkbenchEnvironmentService } from '../common/environmentService.js';
 import { IWorkbenchConstructionOptions } from '../../../browser/web.api.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
+import { mainWindow } from '../../../../base/browser/window.js';
 import { memoize } from '../../../../base/common/decorators.js';
 import { onUnexpectedError } from '../../../../base/common/errors.js';
 import { parseLineAndColumnAware } from '../../../../base/common/extpath.js';
@@ -226,14 +227,18 @@ export class BrowserWorkbenchEnvironmentService implements IBrowserWorkbenchEnvi
 
 	@memoize
 	get webviewExternalEndpoint(): string {
-		const endpoint = this.options.webviewEndpoint
-			|| this.productService.webviewContentExternalBaseUrlTemplate
-			|| 'https://{{uuid}}.vscode-cdn.net/{{quality}}/{{commit}}/out/vs/workbench/contrib/webview/browser/pre/';
+		const endpoint = this.options.webviewEndpoint || this.productService.webviewContentExternalBaseUrlTemplate;
+		if (!endpoint) {
+			return '';
+		}
 
 		const webviewExternalEndpointCommit = this.payload?.get('webviewExternalEndpointCommit');
-		return endpoint
+		const resolvedEndpoint = endpoint
 			.replace('{{commit}}', webviewExternalEndpointCommit ?? this.productService.commit ?? 'ef65ac1ba57f57f2a3961bfe94aa20481caca4c6')
 			.replace('{{quality}}', (webviewExternalEndpointCommit ? 'insider' : this.productService.quality) ?? 'insider');
+
+		// A path-only endpoint is served by the same origin as the workbench
+		return resolvedEndpoint.startsWith('/') ? `${mainWindow.location.origin}${resolvedEndpoint}` : resolvedEndpoint;
 	}
 
 	@memoize
