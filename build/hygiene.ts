@@ -15,6 +15,7 @@ import vfs from 'vinyl-fs';
 import { all, copyrightFilter, eslintFilter, indentationFilter, stylelintFilter, tsFormattingFilter, unicodeFilter } from './filters.ts';
 import eslint from './gulp-eslint.ts';
 import { copyrightHeaders } from './lib/forkHeader.ts';
+import { checkRemovedSurfaces } from './lib/removedSurfaces.ts';
 import * as formatter from './lib/formatter.ts';
 import gulpstylelint from './stylelint.ts';
 
@@ -296,6 +297,11 @@ if (import.meta.main) {
 	});
 
 	if (process.argv.length > 2) {
+		const removedSurfacesError = checkRemovedSurfaces(process.cwd(), process.argv.slice(2));
+		if (removedSurfacesError) {
+			console.error(removedSurfacesError);
+			process.exit(1);
+		}
 		hygiene(process.argv.slice(2)).on('error', (err: Error) => {
 			console.error();
 			console.error(err);
@@ -322,6 +328,13 @@ if (import.meta.main) {
 							console.error(jsAllowlistError);
 							process.exit(1);
 						}
+					}
+
+					// Check that no removed surface comes back
+					const removedSurfacesError = checkRemovedSurfaces(process.cwd(), some);
+					if (removedSurfacesError) {
+						console.error(removedSurfacesError);
+						process.exit(1);
 					}
 
 					console.log(`Reading ${some.length} git index version${some.length === 1 ? '' : 's'}...`);

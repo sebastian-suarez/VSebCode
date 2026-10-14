@@ -9,6 +9,7 @@ import path from 'path';
 import fs from 'fs';
 import * as task from './lib/gulp/task.ts';
 import { checkNoNewJavaScriptFiles, hygiene } from './hygiene.ts';
+import { checkRemovedSurfaces } from './lib/removedSurfaces.ts';
 
 const dirName = path.dirname(new URL(import.meta.url).pathname);
 
@@ -47,6 +48,11 @@ const checkPackageJSONTask = task.define('check-package-json', () => {
 			const jsAllowlistError = checkNoNewJavaScriptFiles(repoRoot);
 			if (jsAllowlistError) {
 				this.emit('error', jsAllowlistError);
+			}
+
+			const removedSurfacesError = checkRemovedSurfaces(repoRoot);
+			if (removedSurfacesError) {
+				this.emit('error', removedSurfacesError);
 			}
 		})
 	);
