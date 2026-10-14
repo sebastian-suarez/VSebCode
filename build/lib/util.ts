@@ -278,20 +278,6 @@ export function appendOwnPathSourceURL(): NodeJS.ReadWriteStream {
 	return es.duplex(input, output);
 }
 
-export function rewriteSourceMappingURL(sourceMappingURLBase: string): NodeJS.ReadWriteStream {
-	const input = es.through();
-
-	const output = input
-		.pipe(es.mapSync<VinylFile, VinylFile>(f => {
-			const contents = (f.contents as Buffer).toString('utf8');
-			const str = `//# sourceMappingURL=${sourceMappingURLBase}/${path.dirname(f.relative).replace(/\\/g, '/')}/$1`;
-			f.contents = Buffer.from(contents.replace(/\n\/\/# sourceMappingURL=(.*)$/gm, str));
-			return f;
-		}));
-
-	return es.duplex(input, output);
-}
-
 export function rimraf(dir: string): () => Promise<void> {
 	const result = () => new Promise<void>((c, e) => {
 		let retries = 0;

@@ -10,7 +10,7 @@ import * as path from 'path';
 import { rewriteSourceMappingURL } from '../source-map-url.ts';
 
 suite('rewriteSourceMappingURL', () => {
-	const sourceMapBaseUrl = 'https://main.vscode-cdn.net/sourcemaps/commit/core';
+	const sourceMapBaseUrl = 'https://example.test/sourcemaps/commit/core';
 	const content = {
 		js: 'console.log("test");\n//# sourceMappingURL=main.js.map\n',
 		css: 'body { color: red; }\n/*# sourceMappingURL=main.css.map */\n',
