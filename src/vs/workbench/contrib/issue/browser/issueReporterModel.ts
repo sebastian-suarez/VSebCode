@@ -7,6 +7,7 @@ import { addDisposableListener } from '../../../../base/browser/dom.js';
 import { Disposable } from '../../../../base/common/lifecycle.js';
 import { mainWindow } from '../../../../base/browser/window.js';
 import { isRemoteDiagnosticError, SystemInfo } from '../../../../platform/diagnostics/common/diagnostics.js';
+import product from '../../../../platform/product/common/product.js';
 import { ISettingSearchResult, IssueReporterExtensionData, IssueSource, IssueType } from '../common/issue.js';
 
 interface VersionInfo {
@@ -96,7 +97,7 @@ Type: <b>${this.getIssueTypeTitle()}</b>
 
 ${this._data.issueDescription}
 ${this.getExtensionVersion()}
-VS Code version: ${this._data.versionInfo && this._data.versionInfo.vscodeVersion}
+${product.nameShort} version: ${this._data.versionInfo && this._data.versionInfo.vscodeVersion}
 OS version: ${this._data.versionInfo && this._data.versionInfo.os}
 Modes:${modes.length ? ' ' + modes.join(', ') : ''}
 ${this.getRemoteOSes()}

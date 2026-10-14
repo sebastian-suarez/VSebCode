@@ -19,7 +19,6 @@ import { INativeHostService } from '../../../../platform/native/common/native.js
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IProcessService } from '../../../../platform/process/common/process.js';
 import { IThemeService } from '../../../../platform/theme/common/themeService.js';
-import { IUpdateService, StateType } from '../../../../platform/update/common/update.js';
 import { IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { applyZoom } from '../../../../platform/window/electron-browser/window.js';
 import { IAuthenticationService } from '../../../services/authentication/common/authentication.js';
@@ -54,7 +53,6 @@ export class IssueReporter extends BaseIssueReporterService {
 		@IThemeService themeService: IThemeService,
 		@IFileService fileService: IFileService,
 		@IFileDialogService fileDialogService: IFileDialogService,
-		@IUpdateService private readonly updateService: IUpdateService,
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IContextMenuService contextMenuService: IContextMenuService,
 		@IAuthenticationService authenticationService: IAuthenticationService,
@@ -76,27 +74,10 @@ export class IssueReporter extends BaseIssueReporterService {
 			});
 		}
 
-		this.checkForUpdates();
 		this.setEventHandlers();
 		applyZoom(this.data.zoomLevel, this.window);
 		this.updateRestrictedMode(this.data.restrictedMode);
 		this.updateInstallationPureMode(this.data.isInstallationPure);
-	}
-
-	private async checkForUpdates(): Promise<void> {
-		const updateState = this.updateService.state;
-		if (updateState.type === StateType.Ready || updateState.type === StateType.Downloaded) {
-			this.needsUpdate = true;
-			// eslint-disable-next-line no-restricted-syntax
-			const includeAcknowledgement = this.getElementById('version-acknowledgements');
-			// eslint-disable-next-line no-restricted-syntax
-			const updateBanner = this.getElementById('update-banner');
-			if (updateBanner && includeAcknowledgement) {
-				includeAcknowledgement.classList.remove('hidden');
-				updateBanner.classList.remove('hidden');
-				updateBanner.textContent = localize('updateAvailable', "A new version of {0} is available.", this.product.nameLong);
-			}
-		}
 	}
 
 	public override setEventHandlers(): void {

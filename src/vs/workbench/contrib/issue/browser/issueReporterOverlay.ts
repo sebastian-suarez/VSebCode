@@ -76,7 +76,6 @@ export class IssueReporterOverlay {
 	readonly onDidChangeAttachments: Event<void> = this._onDidChangeAttachments.event;
 
 	private wizardPanel!: HTMLElement;
-	private updateBanner!: HTMLElement;
 	private stepContainer!: HTMLElement;
 	private readonly stepPages: HTMLElement[] = [];
 
@@ -121,7 +120,6 @@ export class IssueReporterOverlay {
 	private reviewThumbCards: HTMLElement[] = [];
 	private readonly reviewRenderDisposables = new DisposableStore();
 	private readonly similarIssuesDisposables = new DisposableStore();
-	private readonly descriptionGuidanceDisposables = new DisposableStore();
 	private uploading = false;
 	private includeSystemInfo = true;
 	private includeProcessInfo = true;
@@ -162,7 +160,6 @@ export class IssueReporterOverlay {
 		initialHideToolbar: boolean = true,
 		private readonly resolveExtensionIssueData?: (extensionId: string) => Promise<IssueReporterData | undefined>,
 		private readonly openExternalLink?: (url: string) => Promise<void>,
-		private showUpdateBanner = false,
 		private readonly refreshPerformanceInfo?: () => Promise<void>,
 		/** Returns the user's currently-bound keybinding for the given command id, or undefined when unbound. */
 		private readonly resolveKeybinding?: (commandId: string) => ResolvedKeybinding | undefined,
@@ -223,12 +220,6 @@ export class IssueReporterOverlay {
 		this.nextButton.element.classList.add('wizard-next');
 		this.nextButton.element.title = localize('next', "Next");
 
-		this.updateBanner = append(this.wizardPanel, $('div.wizard-update-banner'));
-		this.updateBanner.setAttribute('role', 'status');
-		this.updateBanner.setAttribute('aria-live', 'polite');
-		this.updateBanner.textContent = localize('updateAvailable', "A new version of {0} is available.", product.nameLong);
-		this.setUpdateAvailable(this.showUpdateBanner);
-
 		// Step content area
 		this.stepContainer = append(this.wizardPanel, $('div.wizard-step-container'));
 		this.createStep0Attachments();
@@ -251,7 +242,7 @@ export class IssueReporterOverlay {
 		heading.textContent = localize('screenshotsHeading', "Add attachments for better context");
 
 		const subtitle = append(page, $('p.wizard-subtitle'));
-		subtitle.textContent = localize('screenshotsSubtitle', "You can add up to {0} screenshots or videos. Navigate VS Code and choose when to capture.", MAX_ATTACHMENTS);
+		subtitle.textContent = localize('screenshotsSubtitle', "You can add up to {0} screenshots or videos. Navigate {1} and choose when to capture.", MAX_ATTACHMENTS, product.nameShort);
 
 		const captureShortcut = this.resolveKeybinding?.('workbench.action.issueReporter.captureScreenshot');
 		const recordShortcut = this.recordingSupported ? this.resolveKeybinding?.('workbench.action.issueReporter.toggleRecording') : undefined;
@@ -519,25 +510,9 @@ export class IssueReporterOverlay {
 		const heading = append(page, $('h2.wizard-heading'));
 		heading.textContent = localize('describeHeading', "Describe your feedback");
 
-		// Issue guidance link — keep the same wording as the classic reporter.
-		if (this.markdownRendererService) {
-			const guidanceContainer = append(page, $('div.wizard-issue-guidance'));
-			const guidanceMd = new MarkdownString(localize(
-				{
-					key: 'reviewGuidanceLabelWizard',
-					comment: ['{Locked="https://github.com/microsoft/vscode/wiki/Submitting-Bugs-and-Suggestions"}']
-				},
-				'Before you report an issue here please [review the guidance we provide](https://github.com/microsoft/vscode/wiki/Submitting-Bugs-and-Suggestions). Please complete the form in English.'
-			), { isTrusted: true });
-			const rendered = this.markdownRendererService.render(guidanceMd, {
-				actionHandler: async (link: string) => {
-					await this.openExternalLink?.(link);
-					return true;
-				},
-			});
-			guidanceContainer.appendChild(rendered.element);
-			this.disposables.add(rendered);
-		}
+		// Issue guidance
+		const guidanceContainer = append(page, $('div.wizard-issue-guidance'));
+		guidanceContainer.textContent = localize('reviewGuidanceLabelWizard', "Please complete the form in English.");
 
 		// Issue source selection + extension dropdown share a row when both are visible
 		const targetRow = append(page, $('div.wizard-target-row'));
@@ -723,8 +698,8 @@ export class IssueReporterOverlay {
 
 	private getAllSourceOptions(): { label: string; value: IssueSource }[] {
 		return [
-			{ label: product.nameLong || localize('vscode', "Visual Studio Code"), value: IssueSource.VSCode },
-			{ label: localize('extensionSource', "A VS Code extension"), value: IssueSource.Extension },
+			{ label: product.nameLong, value: IssueSource.VSCode },
+			{ label: localize('extensionSource', "A {0} extension", product.nameShort), value: IssueSource.Extension },
 			{ label: localize('marketplace', "Extensions Marketplace"), value: IssueSource.Marketplace },
 		];
 	}
@@ -1025,9 +1000,9 @@ export class IssueReporterOverlay {
 	private getIssueSourceLabel(): string {
 		switch (this.selectedIssueSource) {
 			case IssueSource.VSCode:
-				return product.nameLong || localize('vscode', "Visual Studio Code");
+				return product.nameLong;
 			case IssueSource.Extension:
-				return this.selectedExtension?.displayName || this.selectedExtension?.name || localize('extensionSource', "A VS Code extension");
+				return this.selectedExtension?.displayName || this.selectedExtension?.name || localize('extensionSource', "A {0} extension", product.nameShort);
 			case IssueSource.Marketplace:
 				return localize('marketplace', "Extensions Marketplace");
 			case IssueSource.Unknown:
@@ -1166,12 +1141,9 @@ export class IssueReporterOverlay {
 	/** Update the guidance text above the description based on selected category */
 	private updateDescriptionGuidance(): void {
 		const markdownHint = localize('markdownSupported', "Markdown formatting is supported.");
-		const perfWikiUrl = 'https://github.com/microsoft/vscode/wiki/Performance-Issues';
 
 		// Reset before updating
-		this.descriptionGuidanceDisposables.clear();
 		this.descriptionGuidance.textContent = '';
-		this.descriptionGuidance.classList.remove('wizard-description-guidance-with-link');
 
 		const appendText = (text: string) => {
 			const targetDocument = getWindow(this.container).document;
@@ -1185,20 +1157,9 @@ export class IssueReporterOverlay {
 			case IssueType.FeatureRequest:
 				appendText(`${localize('featureGuidance', "Describe the feature you'd like to see, what problem it would solve, and any alternatives you've considered.")}\n${markdownHint}`);
 				break;
-			case IssueType.PerformanceIssue: {
-				appendText(`${localize('perfGuidance', "Describe what is slow, when it happens, whether it's consistent or intermittent, and any patterns you've noticed.")} `);
-				const link = $('a.wizard-description-guidance-link') as HTMLAnchorElement;
-				link.href = perfWikiUrl;
-				link.textContent = localize('perfWikiLink', "See the performance issue reporting guide.");
-				this.descriptionGuidanceDisposables.add(addDisposableListener(link, EventType.CLICK, e => {
-					e.preventDefault();
-					this.openExternalLink?.(perfWikiUrl);
-				}));
-				this.descriptionGuidance.appendChild(link);
-				appendText(`\n${markdownHint}`);
-				this.descriptionGuidance.classList.add('wizard-description-guidance-with-link');
+			case IssueType.PerformanceIssue:
+				appendText(`${localize('perfGuidance', "Describe what is slow, when it happens, whether it's consistent or intermittent, and any patterns you've noticed.")}\n${markdownHint}`);
 				break;
-			}
 			default:
 				appendText(`${localize('defaultGuidance', "Select a category above, then describe your feedback in detail.")}\n${markdownHint}`);
 				break;
@@ -1505,7 +1466,7 @@ export class IssueReporterOverlay {
 				renderContent: (container) => {
 					const sysTable = append(container, $('table.review-diag-table'));
 					if (modelData.versionInfo) {
-						this.addDiagRow(sysTable, 'VS Code', modelData.versionInfo.vscodeVersion);
+						this.addDiagRow(sysTable, product.nameShort, modelData.versionInfo.vscodeVersion);
 						this.addDiagRow(sysTable, 'OS', modelData.versionInfo.os);
 					}
 					if (modelData.systemInfo) {
@@ -2141,7 +2102,7 @@ export class IssueReporterOverlay {
 		const rows: [string, string | undefined][] = [
 			['Issue Category', this.getIssueTypeTitle(this.selectedIssueType ?? IssueType.Bug)],
 			['Target', this.getIssueSourceLabel()],
-			['VS Code Version', modelData.versionInfo?.vscodeVersion ?? product.version],
+			[`${product.nameShort} Version`, modelData.versionInfo?.vscodeVersion ?? product.version],
 			['OS Version', modelData.versionInfo?.os ?? modelData.systemInfo?.os],
 		];
 
@@ -2162,7 +2123,7 @@ export class IssueReporterOverlay {
 
 		if (modelData.versionInfo) {
 			rows.push(
-				['VS Code Version', modelData.versionInfo.vscodeVersion],
+				[`${product.nameShort} Version`, modelData.versionInfo.vscodeVersion],
 				['OS Version', modelData.versionInfo.os],
 			);
 		}
@@ -2272,11 +2233,6 @@ ${rows.map(row => row.map(value => this.escapeMarkdownTableCell(value ?? '')).jo
 
 	private escapeMarkdownTableCell(value: string): string {
 		return value.replace(/\r?\n/g, '<br>').replace(/\|/g, '\\|');
-	}
-
-	setUpdateAvailable(showUpdateBanner: boolean): void {
-		this.showUpdateBanner = showUpdateBanner;
-		this.updateBanner.style.display = showUpdateBanner ? '' : 'none';
 	}
 
 	focus(): void {
@@ -2524,7 +2480,6 @@ ${rows.map(row => row.map(value => this.escapeMarkdownTableCell(value ?? '')).jo
 		this.similarIssuesRequest++;
 		this.reviewRenderDisposables.dispose();
 		this.similarIssuesDisposables.dispose();
-		this.descriptionGuidanceDisposables.dispose();
 		this.disposables.dispose();
 		this._onDidClose.dispose();
 		this._onDidSubmit.dispose();

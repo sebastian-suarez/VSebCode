@@ -64,8 +64,6 @@ export class BaseIssueReporterService extends Disposable {
 	public publicGithubButton!: Button | ButtonWithDropdown;
 	public internalGithubButton!: Button | ButtonWithDropdown;
 	public nonGitHubIssueUrl = false;
-	public needsUpdate = false;
-	public acknowledged = false;
 	private createAction: Action;
 	private previewAction: Action;
 	private privateAction: Action;
@@ -301,11 +299,7 @@ export class BaseIssueReporterService extends Disposable {
 		}
 
 		// setup button + dropdown if applicable
-		if (!this.acknowledged && this.needsUpdate) { // * old version and hasn't ack'd
-			this.publicGithubButton = this._register(new Button(container, unthemedButtonStyles));
-			this.publicGithubButton.label = localize('acknowledge', "Confirm Version Acknowledgement");
-			this.publicGithubButton.enabled = false;
-		} else if (this.data.githubAccessToken && this.isPreviewEnabled()) { // * has access token, create by default, preview dropdown
+		if (this.data.githubAccessToken && this.isPreviewEnabled()) { // * has access token, create by default, preview dropdown
 			this.publicGithubButton = this._register(new ButtonWithDropdown(container, {
 				contextMenuProvider: this.contextMenuService,
 				actions: [this.previewAction],
@@ -604,26 +598,12 @@ export class BaseIssueReporterService extends Disposable {
 		}
 	}
 
-	private updateAcknowledgementState() {
-		// eslint-disable-next-line no-restricted-syntax
-		const acknowledgementCheckbox = this.getElementById<HTMLInputElement>('includeAcknowledgement');
-		if (acknowledgementCheckbox) {
-			this.acknowledged = acknowledgementCheckbox.checked;
-			this.updateButtonStates();
-		}
-	}
-
 	public setEventHandlers(): void {
 		(['includeSystemInfo', 'includeProcessInfo', 'includeWorkspaceInfo', 'includeExtensions', 'includeExtensionData'] as const).forEach(elementId => {
 			this.addEventListener(elementId, 'click', (event: Event) => {
 				event.stopPropagation();
 				this.issueReporterModel.update({ [elementId]: !this.issueReporterModel.getData()[elementId] });
 			});
-		});
-
-		this.addEventListener('includeAcknowledgement', 'click', (event: Event) => {
-			event.stopPropagation();
-			this.updateAcknowledgementState();
 		});
 
 		// eslint-disable-next-line no-restricted-syntax
@@ -784,14 +764,6 @@ export class BaseIssueReporterService extends Disposable {
 				}
 			}
 		};
-
-		// Handle the guidance link specifically to use openerService
-		this.addEventListener('review-guidance-help-text', 'click', (e: Event) => {
-			const target = e.target as HTMLElement;
-			if (target.tagName === 'A' && target.getAttribute('target') === '_blank') {
-				this.openLink(<MouseEvent>e);
-			}
-		});
 	}
 
 	public updatePerformanceInfo(info: Partial<IssueReporterData>) {
@@ -1027,8 +999,8 @@ export class BaseIssueReporterService extends Disposable {
 
 		sourceSelect.innerText = '';
 		sourceSelect.append(this.makeOption('', localize('selectSource', "Select source"), true));
-		sourceSelect.append(this.makeOption(IssueSource.VSCode, localize('vscode', "Visual Studio Code"), false));
-		sourceSelect.append(this.makeOption(IssueSource.Extension, localize('extension', "A VS Code extension"), false));
+		sourceSelect.append(this.makeOption(IssueSource.VSCode, this.product.nameLong, false));
+		sourceSelect.append(this.makeOption(IssueSource.Extension, localize('extension', "A {0} extension", this.product.nameShort), false));
 		if (this.product.reportMarketplaceIssueUrl) {
 			sourceSelect.append(this.makeOption(IssueSource.Marketplace, localize('marketplace', "Extensions Marketplace"), false));
 		}
@@ -1128,7 +1100,7 @@ export class BaseIssueReporterService extends Disposable {
 		if (selectedExtension && this.nonGitHubIssueUrl) {
 			hide(titleTextArea);
 			hide(descriptionTextArea);
-			reset(descriptionTitle, localize('handlesIssuesElsewhere', "This extension handles issues outside of VS Code"));
+			reset(descriptionTitle, localize('handlesIssuesElsewhere', "This extension handles issues outside of {0}", this.product.nameShort));
 			reset(descriptionSubtitle, localize('elsewhereDescription', "The '{0}' extension prefers to use an external issue reporter. To be taken to that issue reporting experience, click the button below.", selectedExtension.displayName));
 			this.publicGithubButton.label = localize('openIssueReporter', "Open External Issue Reporter");
 			return;

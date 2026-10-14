@@ -27,14 +27,6 @@
 	-webkit-app-region: no-drag;
 }
 
-.issue-reporter-wizard .wizard-update-banner {
-	padding: 8px 16px;
-	text-align: center;
-	color: var(--vscode-button-foreground);
-	background: var(--vscode-button-background);
-	flex-shrink: 0;
-}
-
 .issue-reporter-wizard .wizard-step-container {
 	flex: 1;
 	overflow: auto;
@@ -1754,21 +1746,6 @@ extension field is hidden (no fixed-width placeholder needed). */
 	border-left: 3px solid var(--vscode-focusBorder, #007acc);
 	font-size: 13px;
 	color: var(--vscode-descriptionForeground, #ccc);
-}
-.issue-reporter-wizard .wizard-issue-guidance a,
-.issue-reporter-wizard .wizard-issue-guidance a:focus,
-.issue-reporter-wizard .wizard-issue-guidance a:hover {
-	color: var(--vscode-textLink-foreground, #3794ff);
-	text-decoration: underline;
-}
-
-.issue-reporter-wizard .wizard-description-guidance.wizard-description-guidance-with-link {
-	white-space: normal;
-}
-.issue-reporter-wizard .wizard-description-guidance-link {
-	color: var(--vscode-textLink-foreground, #3794ff);
-	text-decoration: underline;
-	cursor: pointer;
 }
 
 .issue-reporter-wizard .review-diag-heading {

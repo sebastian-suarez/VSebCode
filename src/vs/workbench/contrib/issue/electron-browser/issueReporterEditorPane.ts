@@ -35,7 +35,6 @@ import { IContextMenuService, IContextViewService } from '../../../../platform/c
 import { IMarkdownRendererService } from '../../../../platform/markdown/browser/markdownRenderer.js';
 import { INotificationService, Severity } from '../../../../platform/notification/common/notification.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
-import { IUpdateService, StateType } from '../../../../platform/update/common/update.js';
 import { RawContextKey } from '../../../../platform/contextkey/common/contextkey.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { isMacintosh } from '../../../../base/common/platform.js';
@@ -89,7 +88,6 @@ export class IssueReporterEditorPane extends EditorPane {
 		@IMarkdownRendererService private readonly markdownRendererService: IMarkdownRendererService,
 		@INotificationService private readonly notificationService: INotificationService,
 		@IOpenerService private readonly openerService: IOpenerService,
-		@IUpdateService private readonly updateService: IUpdateService,
 		@IKeybindingService private readonly keybindingService: IKeybindingService,
 		@IEditorGroupsService private readonly editorGroupsService: IEditorGroupsService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
@@ -122,12 +120,6 @@ export class IssueReporterEditorPane extends EditorPane {
 		this.container.style.overflow = 'auto';
 	}
 
-	private shouldShowUpdateBanner(): boolean {
-		return this.updateService.state.type === StateType.AvailableForDownload
-			|| this.updateService.state.type === StateType.Ready
-			|| this.updateService.state.type === StateType.Downloaded;
-	}
-
 	override async setInput(
 		input: IssueReporterEditorInput,
 		options: IEditorOptions | undefined,
@@ -146,7 +138,6 @@ export class IssueReporterEditorPane extends EditorPane {
 		if (this.wizard && this.container.contains(this.wizard.getPanel())) {
 			this.wizard.reparentFloatingBar();
 			this.wizard.showFloatingBar();
-			this.wizard.setUpdateAvailable(this.shouldShowUpdateBanner());
 			// Restore attachments captured before the editor was moved back into
 			// this pane from a modal editor part. The input is the source of truth;
 			// the existing onDidChangeAttachments subscription keeps it in sync.
@@ -176,12 +167,10 @@ export class IssueReporterEditorPane extends EditorPane {
 			true,
 			extensionId => this.issueFormService.sendReporterMenu(extensionId),
 			async url => { await this.openerService.open(URI.parse(url), { openExternal: true }); },
-			this.shouldShowUpdateBanner(),
 			() => this.refreshPerformanceInfo(),
 			commandId => this.keybindingService.lookupKeybinding(commandId),
 		);
 		this.inputDisposables.add(this.wizard);
-		this.inputDisposables.add(this.updateService.onStateChange(() => this.wizard?.setUpdateAvailable(this.shouldShowUpdateBanner())));
 
 		// Let the input check wizard state for close confirmation
 		input.hasUserInputFn = () => this.wizard?.hasUnsavedChanges() ?? false;

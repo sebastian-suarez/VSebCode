@@ -25,8 +25,6 @@ import { Registry } from '../../../../platform/registry/common/platform.js';
 import { Extensions, IWorkbenchContributionsRegistry } from '../../../common/contributions.js';
 import { LifecyclePhase } from '../../../services/lifecycle/common/lifecycle.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
-import { IOpenerService } from '../../../../platform/opener/common/opener.js';
-import { URI } from '../../../../base/common/uri.js';
 import { RemoteNameContext } from '../../../common/contextkeys.js';
 import { IsWebContext } from '../../../../platform/contextkey/common/contextkeys.js';
 
@@ -94,7 +92,6 @@ class TroubleshootIssueService extends Disposable implements ITroubleshootIssueS
 		@IProductService private readonly productService: IProductService,
 		@IHostService private readonly hostService: IHostService,
 		@IStorageService private readonly storageService: IStorageService,
-		@IOpenerService private readonly openerService: IOpenerService,
 	) {
 		super();
 	}
@@ -225,74 +222,9 @@ class TroubleshootIssueService extends Disposable implements ITroubleshootIssueS
 	}
 
 	private async askToReportIssue(message: string): Promise<void> {
-		let isCheckedInInsiders = false;
-		if (this.productService.quality === 'stable') {
-			const res = await this.askToReproduceIssueWithInsiders();
-			if (res === 'good') {
-				await this.dialogService.prompt({
-					type: Severity.Info,
-					message: localize('troubleshoot issue', "Troubleshoot Issue"),
-					detail: localize('use insiders', "This likely means that the issue has been addressed already and will be available in an upcoming release. You can safely use {0} insiders until the new stable version is available.", this.productService.nameLong),
-					custom: true
-				});
-				return;
-			}
-			if (res === 'stop') {
-				await this.stop();
-				return;
-			}
-			if (res === 'bad') {
-				isCheckedInInsiders = true;
-			}
-		}
-
 		await this.issueService.openReporter({
-			issueBody: `> ${message} ${isCheckedInInsiders ? `It is confirmed that the issue exists in ${this.productService.nameLong} Insiders` : ''}`,
+			issueBody: `> ${message}`,
 		});
-	}
-
-	private async askToReproduceIssueWithInsiders(): Promise<TroubleShootResult | undefined> {
-		const confirmRes = await this.dialogService.confirm({
-			type: 'info',
-			message: localize('troubleshoot issue', "Troubleshoot Issue"),
-			primaryButton: localize('download insiders', "Download {0} Insiders", this.productService.nameLong),
-			cancelButton: localize('report anyway', "Report Issue Anyway"),
-			detail: localize('ask to download insiders', "Please try to download and reproduce the issue in {0} insiders.", this.productService.nameLong),
-			custom: {
-				disableCloseAction: true,
-			}
-		});
-
-		if (!confirmRes.confirmed) {
-			return undefined;
-		}
-
-		const opened = await this.openerService.open(URI.parse('https://aka.ms/vscode-insiders'));
-		if (!opened) {
-			return undefined;
-		}
-
-		const res = await this.dialogService.prompt<TroubleShootResult>({
-			type: 'info',
-			message: localize('troubleshoot issue', "Troubleshoot Issue"),
-			buttons: [{
-				label: localize('good', "I can't reproduce"),
-				run: () => 'good'
-			}, {
-				label: localize('bad', "I can reproduce"),
-				run: () => 'bad'
-			}],
-			cancelButton: {
-				label: localize('stop', "Stop"),
-				run: () => 'stop'
-			},
-			detail: localize('ask to reproduce issue', "Please try to reproduce the issue in {0} insiders and confirm if the issue exists there.", this.productService.nameLong),
-			custom: {
-				disableCloseAction: true,
-			}
-		});
-
-		return res.result;
 	}
 
 	private _state: TroubleShootState | undefined | null;

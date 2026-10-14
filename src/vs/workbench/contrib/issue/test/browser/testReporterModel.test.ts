@@ -5,6 +5,7 @@
 
 import assert from 'assert';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
+import product from '../../../../../platform/product/common/product.js';
 import { IssueReporterModel } from '../../browser/issueReporterModel.js';
 import { IssueType } from '../../common/issue.js';
 import { normalizeGitHubUrl } from '../../common/issueReporterUtil.js';
@@ -32,7 +33,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes:
 
@@ -63,7 +64,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes:
 
@@ -109,7 +110,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes:
 
@@ -166,7 +167,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes:
 Remote OS version: Linux x64 4.18.0
@@ -215,7 +216,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes:
 
@@ -246,7 +247,7 @@ Type: <b>Bug</b>
 
 undefined
 
-VS Code version: undefined
+${product.nameShort} version: undefined
 OS version: undefined
 Modes: Restricted, Unsupported
 

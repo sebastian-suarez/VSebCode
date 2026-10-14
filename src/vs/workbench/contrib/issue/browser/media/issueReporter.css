@@ -545,17 +545,6 @@ body.issue-reporter-body  {
 	background-color: var(--vscode-scrollbarSlider-hoverBackground)
 }
 
-.issue-reporter-update-banner {
-	color: var(--vscode-textLink-foreground);
-	color: var(--vscode-button-foreground);
-	background-color: var(--vscode-button-background);
-	padding: 10px;
-	text-align: center;
-	position: sticky;
-	top: 0;
-	z-index: 1000;
-}
-
 /* Public elements section styling */
 .issue-reporter-body .public-elements {
 	display: flex;
