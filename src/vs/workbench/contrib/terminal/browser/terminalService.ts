@@ -1114,7 +1114,7 @@ export class TerminalService extends Disposable implements ITerminalService {
 	async createDetachedTerminal(options: IDetachedXTermOptions): Promise<IDetachedTerminalInstance> {
 		const ctor = await TerminalInstance.getXtermConstructor(this._keybindingService, this._contextKeyService);
 		const capabilities = options.capabilities ?? new TerminalCapabilityStore();
-		const xterm = this._instantiationService.createInstance(XtermTerminal, undefined, ctor, {
+		const xterm = this._instantiationService.createInstance(XtermTerminal, ctor, {
 			cols: options.cols,
 			rows: options.rows,
 			xtermColorProvider: options.colorProvider,
@@ -1277,10 +1277,6 @@ export class TerminalService extends Disposable implements ITerminalService {
 	}
 
 	private _evaluateLocalCwd(shellLaunchConfig: IShellLaunchConfig) {
-		if (this._environmentService.isSessionsWindow) {
-			return;
-		}
-
 		// Add welcome message and title annotation for local terminals launched within remote or
 		// virtual workspaces
 		if (!isString(shellLaunchConfig.cwd) && shellLaunchConfig.cwd?.scheme === Schemas.file) {

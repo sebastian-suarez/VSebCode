@@ -15,7 +15,6 @@ import { FileOperationError, FileOperationResult, IFileService, IFileStatWithPar
 import { TestInstantiationService } from '../../../../../platform/instantiation/test/common/instantiationServiceMock.js';
 import { IOpener, IOpenerService } from '../../../../../platform/opener/common/opener.js';
 import { IWorkspaceContextService } from '../../../../../platform/workspace/common/workspace.js';
-import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
 import { REVEAL_IN_EXPLORER_COMMAND_ID } from '../../../files/browser/fileConstants.js';
 import { WorkbenchOpenerContribution } from '../../browser/opener.contribution.js';
 
@@ -23,7 +22,7 @@ suite('WorkbenchOpenerContribution', () => {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
 	const root = URI.file('/workspace/project');
 
-	function createOpener(options: { sessions?: boolean; roots?: URI[]; isDirectory?: boolean; statError?: Error; externalResult?: boolean } = {}) {
+	function createOpener(options: { roots?: URI[]; isDirectory?: boolean; statError?: Error } = {}) {
 		const instantiation = store.add(new TestInstantiationService());
 		const calls: object[] = [];
 		let registered: IOpener | undefined;
@@ -35,13 +34,12 @@ suite('WorkbenchOpenerContribution', () => {
 			open: async (uri, openOptions) => {
 				calls.push({ external: uri.toString(), options: openOptions });
 				assert.strictEqual(await registered!.open(uri, openOptions), false);
-				return options.externalResult ?? true;
+				return true;
 			},
 		}));
 		instantiation.stub(ICommandService, upcastPartial<ICommandService>({
 			executeCommand: async (id, uri: URI) => { calls.push({ command: id, uri: uri.toString() }); },
 		}));
-		instantiation.stub(IWorkbenchEnvironmentService, upcastPartial<IWorkbenchEnvironmentService>({ isSessionsWindow: options.sessions ?? true }));
 		instantiation.stub(IWorkspaceContextService, upcastPartial<IWorkspaceContextService>({
 			isInsideWorkspace: uri => (options.roots ?? [root]).some(folder => extUri.isEqualOrParent(uri, folder)),
 		}));
@@ -59,21 +57,20 @@ suite('WorkbenchOpenerContribution', () => {
 		return { opener, calls, get registered() { return registered; } };
 	}
 
-	for (const sessions of [false, true]) {
-		for (const uri of [root, URI.file('/workspace/project/nested/'), URI.from({ scheme: Schemas.vscodeRemote, authority: 'ssh-remote+host', path: '/project/src' })]) {
-			test(`reveals workspace folders through the existing command (sessions: ${sessions}, ${uri.toString()})`, async () => {
-				const { opener, calls } = createOpener({ sessions, roots: [root, uri.with({ path: '/project' })] });
-				assert.deepStrictEqual({ handled: await opener.open(uri), calls }, {
-					handled: true,
-					calls: [{ stat: uri.toString() }, { command: REVEAL_IN_EXPLORER_COMMAND_ID, uri: uri.toString() }],
-				});
+	for (const uri of [root, URI.file('/workspace/project/nested/'), URI.from({ scheme: Schemas.vscodeRemote, authority: 'ssh-remote+host', path: '/project/src' })]) {
+		test(`reveals workspace folders through the existing command (${uri.toString()})`, async () => {
+			const { opener, calls } = createOpener({ roots: [root, uri.with({ path: '/project' })] });
+			assert.deepStrictEqual({ handled: await opener.open(uri), calls }, {
+				handled: true,
+				calls: [{ stat: uri.toString() }, { command: REVEAL_IN_EXPLORER_COMMAND_ID, uri: uri.toString() }],
 			});
-		}
-		test(`preserves file opening (sessions: ${sessions})`, async () => {
-			const { opener, calls } = createOpener({ sessions, isDirectory: false });
-			assert.deepStrictEqual({ handled: await opener.open(root), calls }, { handled: false, calls: [{ stat: root.toString() }] });
 		});
 	}
+
+	test('preserves file opening', async () => {
+		const { opener, calls } = createOpener({ isDirectory: false });
+		assert.deepStrictEqual({ handled: await opener.open(root), calls }, { handled: false, calls: [{ stat: root.toString() }] });
+	});
 
 	test('normalizes paths and strips line selections before checking folders', async () => {
 		const { opener, calls } = createOpener();
@@ -87,16 +84,9 @@ suite('WorkbenchOpenerContribution', () => {
 		{ uri: URI.file('/workspace/project-other'), roots: [root] },
 		{ uri: root, roots: [] },
 	]) {
-		test(`opens external local folders only in Sessions (${uri.toString()}, roots: ${roots.length})`, async () => {
-			const results = [];
-			for (const sessions of [false, true]) {
-				const { opener, calls } = createOpener({ sessions, roots });
-				results.push({ handled: await opener.open(uri, { fromUserGesture: true }), calls });
-			}
-			assert.deepStrictEqual(results, [
-				{ handled: false, calls: [] },
-				{ handled: true, calls: [{ stat: uri.toString() }, { external: uri.toString(), options: { openExternal: true, fromUserGesture: true } }] },
-			]);
+		test(`leaves local folders outside the workspace to the default opener (${uri.toString()}, roots: ${roots.length})`, async () => {
+			const { opener, calls } = createOpener({ roots });
+			assert.deepStrictEqual({ handled: await opener.open(uri, { fromUserGesture: true }), calls }, { handled: false, calls: [] });
 		});
 	}
 
@@ -121,11 +111,6 @@ suite('WorkbenchOpenerContribution', () => {
 		const error = new FileOperationError('Permission denied', FileOperationResult.FILE_PERMISSION_DENIED);
 		const { opener } = createOpener({ statError: error });
 		await assert.rejects(opener.open(root), error);
-	});
-
-	test('reports external opening failures', async () => {
-		const { opener } = createOpener({ roots: [], externalResult: false });
-		await assert.rejects(opener.open(root), /Unable to open the folder/);
 	});
 
 	test('unregisters on disposal', () => {

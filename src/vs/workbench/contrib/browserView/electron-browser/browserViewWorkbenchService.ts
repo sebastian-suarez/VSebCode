@@ -3,9 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { BrowserViewChangeEvent, BrowserViewEventData, BrowserViewCommandId, BrowserViewPresentation, BrowserViewStorageScope, IBrowserViewEditorOpenOptions, IBrowserViewInfo, IBrowserViewOwner, IBrowserViewService, IBrowserViewTheme, ipcBrowserViewChannelName, reviveBrowserViewInfo } from '../../../../platform/browserView/common/browserView.js';
-import { matchesBrowserViewSandboxSession } from '../../../../platform/browserView/common/browserViewGroup.js';
-import { BrowserViewEventEmitters, createBrowserViewEventEmitters, BrowserViewSharingState, IBrowserViewWorkbenchService, IBrowserViewModel, BrowserViewModel, IBrowserViewContextualFilter, IBrowserViewFilterContext, IBrowserViewOpenHandler, IBrowserViewWorkbenchCreateOptions } from '../common/browserView.js';
+import { BrowserViewChangeEvent, BrowserViewEventData, BrowserViewCommandId, BrowserViewPresentation, BrowserViewStorageScope, IBrowserViewEditorOpenOptions, IBrowserViewInfo, IBrowserViewService, ipcBrowserViewChannelName, reviveBrowserViewInfo } from '../../../../platform/browserView/common/browserView.js';
+import { BrowserViewEventEmitters, createBrowserViewEventEmitters, IBrowserViewWorkbenchService, IBrowserViewModel, BrowserViewModel, IBrowserViewWorkbenchCreateOptions } from '../common/browserView.js';
 import { IMainProcessService } from '../../../../platform/ipc/common/mainProcessService.js';
 import { ProxyChannel } from '../../../../base/parts/ipc/common/ipc.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
@@ -14,7 +13,6 @@ import { Emitter, Event } from '../../../../base/common/event.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { Disposable, DisposableMap, DisposableStore, IDisposable, toDisposable } from '../../../../base/common/lifecycle.js';
 import { CancellationError } from '../../../../base/common/errors.js';
-import { process } from '../../../../base/parts/sandbox/electron-browser/globals.js';
 import { ACTIVE_GROUP, AUX_WINDOW_GROUP, IEditorService, PreferredGroup, SIDE_GROUP, USE_MODAL_EDITOR_SETTING, UseModalEditorMode } from '../../../services/editor/common/editorService.js';
 import { mainWindow } from '../../../../base/browser/window.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
@@ -22,31 +20,13 @@ import { IWorkspaceTrustEnablementService, IWorkspaceTrustManagementService } fr
 import { BrowserEditorInput, IBrowserEditorInputData } from '../common/browserEditorInput.js';
 import { IEditorGroup, IEditorGroupsService, preferredSideBySideGroupDirection } from '../../../services/editor/common/editorGroupsService.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { ContextKeyExpr, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
-import { ChatContextKeys } from '../../chat/common/actions/chatContextKeys.js';
-import { IsSessionsWindowContext } from '../../../common/contextkeys.js';
-import { ChatConfiguration } from '../../chat/common/constants.js';
-import { IThemeService } from '../../../../platform/theme/common/themeService.js';
-import { contrastBorder, descriptionForeground, focusBorder } from '../../../../platform/theme/common/colors/baseColors.js';
-import { buttonForeground, buttonBackground, inputPlaceholderForeground } from '../../../../platform/theme/common/colors/inputColors.js';
-import { editorWidgetBackground, editorWidgetBorder, editorWidgetForeground, toolbarHoverBackground, widgetShadow } from '../../../../platform/theme/common/colors/editorColors.js';
-import { DEFAULT_FONT_FAMILY } from '../../../../base/browser/fonts.js';
 import { findGroup } from '../../../services/editor/common/editorGroupFinder.js';
-import { ChatEditorInput } from '../../chat/browser/widgetHosts/editor/chatEditorInput.js';
-import { IChatWidgetService } from '../../chat/browser/chat.js';
-import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
 import { URI } from '../../../../base/common/uri.js';
-import { isEqual } from '../../../../base/common/resources.js';
 import { Schemas } from '../../../../base/common/network.js';
-import { getCopilotRootPaths } from '../../../../platform/environment/common/copilotHome.js';
-import { localChatSessionType } from '../../chat/common/chatSessionsService.js';
 import { INativeWorkbenchEnvironmentService } from '../../../services/environment/electron-browser/environmentService.js';
 import { ITunnelProxyInfo } from '../../../../platform/tunnel/common/tunnelProxy.js';
 import { generateUuid } from '../../../../base/common/uuid.js';
 import { DeferredPromise, raceTimeout } from '../../../../base/common/async.js';
-import { AgentNetworkDomainSettingId } from '../../../../platform/networkFilter/common/settings.js';
-import { INotificationService } from '../../../../platform/notification/common/notification.js';
-import { localize } from '../../../../nls.js';
 
 export const BrowserMaxHistoryEntriesSettingId = 'workbench.browser.maxHistoryEntries';
 export const BrowserRemoteProxyEnabledSettingId = 'workbench.browser.enableRemoteProxy';
@@ -77,8 +57,6 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 	private readonly _browserViewService: IBrowserViewService;
 	private readonly _known = new Map<string, BrowserEditorInput>();
 	private readonly _remoteEvents = this._register(new DisposableMap<string, IDisposable & { emitters: BrowserViewEventEmitters }>());
-	private readonly _contextualFilters = new Set<IBrowserViewContextualFilter>();
-	private readonly _openHandlers = new Set<IBrowserViewOpenHandler>();
 	private readonly _mainWindowId: number;
 	private readonly _browserViewsReady = new DeferredPromise<void>();
 
@@ -96,29 +74,6 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 	private readonly _onDidChangeBrowserViews = this._register(new Emitter<void>());
 	readonly onDidChangeBrowserViews: Event<void> = this._onDidChangeBrowserViews.event;
 
-	private static readonly _sharingAvailableContext = ContextKeyExpr.and(
-		ChatContextKeys.enabled,
-		ContextKeyExpr.has(`config.${ChatConfiguration.AgentEnabled}`),
-		ContextKeyExpr.has(`config.workbench.browser.enableChatTools`),
-		// If we're in Sessions Window, we require some additional conditions.
-		ContextKeyExpr.or(
-			IsSessionsWindowContext.negate(),
-			ContextKeyExpr.or(
-				ContextKeyExpr.equals('sessionType', localChatSessionType),
-				ContextKeyExpr.equals('sessions.isAgentHostSession', true),
-			),
-		),
-	)!;
-
-	private _isSharingAvailable: boolean = false;
-
-	private readonly _onDidChangeSharingAvailable = this._register(new Emitter<boolean>());
-	readonly onDidChangeSharingAvailable: Event<boolean> = this._onDidChangeSharingAvailable.event;
-
-	get isSharingAvailable(): boolean {
-		return this._isSharingAvailable;
-	}
-
 	constructor(
 		@IMainProcessService mainProcessService: IMainProcessService,
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
@@ -130,12 +85,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		@IWorkspaceTrustManagementService private readonly workspaceTrustManagementService: IWorkspaceTrustManagementService,
 		@IWorkspaceTrustEnablementService private readonly workspaceTrustEnablementService: IWorkspaceTrustEnablementService,
 		@ILogService private readonly logService: ILogService,
-		@IContextKeyService private readonly contextKeyService: IContextKeyService,
 		@INativeWorkbenchEnvironmentService private readonly environmentService: INativeWorkbenchEnvironmentService,
-		@IThemeService private readonly themeService: IThemeService,
-		@IChatWidgetService private readonly chatWidgetService: IChatWidgetService,
-		@IAccessibilityService private readonly accessibilityService: IAccessibilityService,
-		@INotificationService private readonly notificationService: INotificationService,
 	) {
 		super();
 		const channel = mainProcessService.getChannel(ipcBrowserViewChannelName);
@@ -145,41 +95,13 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		// Send the full per-window configuration as a single unit, and resend it
 		// whenever any of its inputs change.
 		this._updateWindowConfiguration();
-		const chatEnabledKeys = new Set(ChatContextKeys.enabled.keys());
 		this._register(this.keybindingService.onDidUpdateKeybindings(() => this._updateWindowConfiguration()));
-		this._register(this.themeService.onDidColorThemeChange(() => this._updateWindowConfiguration()));
-		this._register(this.accessibilityService.onDidChangeReducedMotion(() => this._updateWindowConfiguration()));
 		this._register(this.workspaceTrustManagementService.onDidChangeTrustedFolders(() => this._updateWindowConfiguration()));
 		this._register(this.workspaceTrustManagementService.onDidChangeTrust(() => this._updateWindowConfiguration()));
 		this._register(this.workspaceContextService.onDidChangeWorkspaceFolders(() => this._updateWindowConfiguration()));
-		this._register(this.contextKeyService.onDidChangeContext(e => {
-			if (e.affectsSome(chatEnabledKeys)) {
-				this._updateWindowConfiguration();
-			}
-		}));
 		this._register(this.configurationService.onDidChangeConfiguration(e => {
-			if (
-				e.affectsConfiguration(AgentNetworkDomainSettingId.NetworkFilter)
-				&& this.configurationService.getValue<boolean>(AgentNetworkDomainSettingId.NetworkFilter)
-				&& [...this._known.values()].some(input => input.model?.sharingState === BrowserViewSharingState.Shared && !input.model.isDirectlyShareable)
-			) {
-				this.notificationService.info(localize('browser.networkFilteringEnabled', "Agent access to browser tabs was revoked because network filtering was enabled."));
-			}
 			if (e.affectsConfiguration(BrowserMaxHistoryEntriesSettingId) || e.affectsConfiguration(BrowserRemoteProxyEnabledSettingId)) {
 				this._updateWindowConfiguration();
-			}
-		}));
-
-		// Track sharing availability from context keys
-		this._isSharingAvailable = this.contextKeyService.contextMatchesRules(BrowserViewWorkbenchService._sharingAvailableContext);
-		const sharingKeys = new Set(BrowserViewWorkbenchService._sharingAvailableContext.keys());
-		this._register(this.contextKeyService.onDidChangeContext(e => {
-			if (e.affectsSome(sharingKeys)) {
-				const was = this._isSharingAvailable;
-				this._isSharingAvailable = this.contextKeyService.contextMatchesRules(BrowserViewWorkbenchService._sharingAvailableContext);
-				if (was !== this._isSharingAvailable) {
-					this._onDidChangeSharingAvailable.fire(this._isSharingAvailable);
-				}
 			}
 		}));
 
@@ -205,7 +127,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 				this._createModel(reviveBrowserViewInfo(e.info, screenshots[0]), e.initialUrl ?? this._known.get(e.info.id)?.url);
 				const editor = this._known.get(e.info.id);
 				if (editor && e.editorOpenRequest) {
-					void this._openEditorForCreatedView(editor, e.info.owner, e.editorOpenRequest).catch(error => {
+					void this._openEditorForCreatedView(editor, e.editorOpenRequest).catch(error => {
 						this.logService.error('[BrowserViewWorkbenchService] Failed to open editor for created browser view.', error);
 					});
 				}
@@ -235,34 +157,6 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 
 	getKnownBrowserViews(): Map<string, BrowserEditorInput> {
 		return this._known;
-	}
-
-	registerContextualFilter(filter: IBrowserViewContextualFilter): IDisposable {
-		this._contextualFilters.add(filter);
-		const changeListener = filter.onDidChange?.(() => this._onDidChangeBrowserViews.fire());
-		this._onDidChangeBrowserViews.fire();
-		return toDisposable(() => {
-			this._contextualFilters.delete(filter);
-			changeListener?.dispose();
-			this._onDidChangeBrowserViews.fire();
-		});
-	}
-
-	getContextualBrowserViews(context?: IBrowserViewFilterContext): Map<string, BrowserEditorInput> {
-		if (this._contextualFilters.size === 0 && context?.sandboxSessionId === undefined) {
-			return this._known;
-		}
-		const filters = [...this._contextualFilters];
-		const result = new Map<string, BrowserEditorInput>();
-		for (const [id, input] of this._known) {
-			if (!matchesBrowserViewSandboxSession(input.model?.owner, input.model?.sandboxSessionId, context?.sandboxSessionId)) {
-				continue;
-			}
-			if (filters.every(filter => filter.include(input, { ...context }))) {
-				result.set(id, input);
-			}
-		}
-		return result;
 	}
 
 	async getPreferredGroup(preferredGroup?: PreferredGroup): Promise<PreferredGroup | undefined> {
@@ -350,13 +244,6 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		return undefined;
 	}
 
-	registerOpenHandler(handler: IBrowserViewOpenHandler): IDisposable {
-		this._openHandlers.add(handler);
-		return toDisposable(() => {
-			this._openHandlers.delete(handler);
-		});
-	}
-
 	async createBrowserView(options: IBrowserViewWorkbenchCreateOptions, editorOpenOptions?: IBrowserViewEditorOpenOptions): Promise<BrowserEditorInput> {
 		const input = this._getOrCreateLazy({
 			id: generateUuid(),
@@ -365,7 +252,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		}, undefined, { ...options, initialUrl: undefined });
 		const model = await input.resolve();
 		if (editorOpenOptions) {
-			void this._openEditorForCreatedView(input, options.owner, editorOpenOptions).catch(error => {
+			void this._openEditorForCreatedView(input, editorOpenOptions).catch(error => {
 				this.logService.error('[BrowserViewWorkbenchService] Failed to open editor for created browser view.', error);
 			});
 		}
@@ -390,10 +277,8 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		}
 		const info = await this._browserViewService.getOrCreateBrowserView(generateUuid(), {
 			host: { windowId: this._mainWindowId },
-			owner: { type: 'user' },
 			presentation: BrowserViewPresentation.Unlisted,
 			session: { scope: BrowserViewStorageScope.Ephemeral },
-			initialAudiences: [],
 			openSource,
 		});
 		if (this._store.isDisposed) {
@@ -425,11 +310,8 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 						host: {
 							windowId: this._mainWindowId
 						},
-						owner: createOptions?.owner ?? { type: 'user' },
 						associatedResource,
 						session: createOptions?.session ?? { scope: await this._resolveStorageScope() },
-						initialAudiences: createOptions?.initialAudiences,
-						sandboxNetworkRestrictions: createOptions?.sandboxNetworkRestrictions,
 						initialUrl: createOptions ? createOptions.initialUrl : data.url,
 						openSource: createOptions?.openSource
 					}
@@ -512,7 +394,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		this._remoteEvents.set(info.id, eventLifetime);
 		let model: BrowserViewModel;
 		try {
-			model = this.instantiationService.createInstance(BrowserViewModel, info.id, info.host, info.owner, associatedResource, state, this._browserViewService, emitters);
+			model = this.instantiationService.createInstance(BrowserViewModel, info.id, info.host, associatedResource, state, this._browserViewService, emitters);
 		} catch (error) {
 			this._remoteEvents.deleteAndDispose(info.id);
 			throw error;
@@ -536,14 +418,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 	/**
 	 * Open an editor tab for a newly created browser view.
 	 */
-	private async _openEditorForCreatedView(view: BrowserEditorInput, owner: IBrowserViewOwner, options: IBrowserViewEditorOpenOptions): Promise<void> {
-		// Give registered handlers a chance to prevent the editor from opening.
-		for (const handler of this._openHandlers) {
-			if (!handler.shouldOpenEditor(view, owner, options)) {
-				return;
-			}
-		}
-
+	private async _openEditorForCreatedView(view: BrowserEditorInput, options: IBrowserViewEditorOpenOptions): Promise<void> {
 		// Resolve target group: auxiliary window, parent's group, or default
 		let targetGroup: PreferredGroup | undefined;
 		if (options.auxiliaryWindow) {
@@ -568,21 +443,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 				: undefined,
 		};
 
-		// If the browser is opened by a chat session,
-		// only open in the foreground if the session's widget is currently visible
-		// and not the active editor in the target group.
 		const [group] = await this.instantiationService.invokeFunction(findGroup, { editor: view, options: editorOptions }, targetGroup);
-		if (owner.type === 'agent') {
-			const sessionResource = URI.parse(owner.sessionId);
-			const widget = this.chatWidgetService.getWidgetBySessionResource(sessionResource);
-			const isWidgetVisible = !!widget && widget.domNode.offsetParent !== null;
-			const activeIsSameSession = group.activeEditor instanceof ChatEditorInput
-				&& isEqual(group.activeEditor.sessionResource, sessionResource);
-			if (!isWidgetVisible || activeIsSameSession) {
-				editorOptions.inactive = true;
-			}
-		}
-
 		void this.editorService.openEditor(view, editorOptions, group);
 	}
 
@@ -603,9 +464,7 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 
 	private _updateWindowConfiguration(): void {
 		void this._browserViewService.updateWindowConfiguration(this._mainWindowId, {
-			theme: this._getTheme(),
 			keybindings: this._getKeybindings(),
-			aiFeaturesDisabled: !this.contextKeyService.contextMatchesRules(ChatContextKeys.enabled),
 			maxHistoryEntries: this.configurationService.getValue<number>(BrowserMaxHistoryEntriesSettingId),
 			proxyInfo: this._remoteProxyInfo,
 			trustedFileRoots: this._getTrustedFileRoots(),
@@ -625,28 +484,8 @@ export class BrowserViewWorkbenchService extends Disposable implements IBrowserV
 		return keybindings;
 	}
 
-	private _getTheme(): IBrowserViewTheme {
-		const theme = this.themeService.getColorTheme();
-		return {
-			focusBorder: theme.getColor(focusBorder)?.toString(),
-			buttonBackground: theme.getColor(buttonBackground)?.toString(),
-			buttonForeground: theme.getColor(buttonForeground)?.toString(),
-			widgetBackground: theme.getColor(editorWidgetBackground)?.toString(),
-			widgetForeground: theme.getColor(editorWidgetForeground)?.toString(),
-			widgetBorder: theme.getColor(editorWidgetBorder)?.toString(),
-			widgetShadow: theme.getColor(widgetShadow)?.toString(),
-			contrastBorder: theme.getColor(contrastBorder)?.toString(),
-			descriptionForeground: theme.getColor(descriptionForeground)?.toString(),
-			inputPlaceholderForeground: theme.getColor(inputPlaceholderForeground)?.toString(),
-			toolbarHoverBackground: theme.getColor(toolbarHoverBackground)?.toString(),
-			font: DEFAULT_FONT_FAMILY,
-			reducedMotion: this.accessibilityService.isMotionReduced(),
-		};
-	}
-
 	private _getTrustedFileRoots(): string[] {
-		// Trust Copilot roots so agents can create HTML files and open them in the browser.
-		const roots = new Set(getCopilotRootPaths(this.environmentService.userHome.fsPath, process.env));
+		const roots = new Set<string>();
 		if (this.workspaceTrustManagementService.isWorkspaceTrusted()) {
 			for (const folder of this.workspaceContextService.getWorkspace().folders) {
 				if (folder.uri.scheme === Schemas.file) {

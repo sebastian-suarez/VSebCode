@@ -349,7 +349,6 @@ class ShowBrowserHistoryAction extends Action2 {
 		const when = ContextKeyExpr.and(
 			BROWSER_EDITOR_ACTIVE,
 			ContextKeyExpr.equals(CONTEXT_BROWSER_STORAGE_SCOPE.key, BrowserViewStorageScope.Ephemeral).negate(),
-			ContextKeyExpr.equals(CONTEXT_BROWSER_STORAGE_SCOPE.key, BrowserViewStorageScope.Agent).negate(),
 		);
 		super({
 			id: ShowBrowserHistoryAction.ID,

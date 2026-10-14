@@ -61,7 +61,7 @@ export class IssueReporter extends BaseIssueReporterService {
 		@IOpenerService openerService: IOpenerService,
 		@ILogService logService: ILogService,
 	) {
-		super(disableExtensions, data, os, product, window, false, undefined, issueFormService, themeService, fileService, fileDialogService, contextMenuService, authenticationService, openerService, logService);
+		super(disableExtensions, data, os, product, window, false, issueFormService, themeService, fileService, fileDialogService, contextMenuService, authenticationService, openerService, logService);
 		this.processService = processService;
 		this.processService.getSystemInfo().then(info => {
 			this.issueReporterModel.update({ systemInfo: info });

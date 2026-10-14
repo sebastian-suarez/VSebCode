@@ -12,7 +12,6 @@ import { INativeHostService } from '../../../../platform/native/common/native.js
 import { isHighContrast } from '../../../../platform/theme/common/theme.js';
 import { IThemeService } from '../../../../platform/theme/common/themeService.js';
 import { IWorkbenchContribution, registerWorkbenchContribution2, WorkbenchPhase } from '../../../common/contributions.js';
-import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
 import { IWorkbenchLayoutService, LayoutSettings, ModernUIFrostedGlassOpacity } from '../../../services/layout/browser/layoutService.js';
 import '../browser/media/frostedGlass.css';
 
@@ -34,7 +33,6 @@ export class FrostedGlassContribution extends Disposable implements IWorkbenchCo
 		@IThemeService private readonly themeService: IThemeService,
 		@INativeHostService private readonly nativeHostService: INativeHostService,
 		@ILogService private readonly logService: ILogService,
-		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
 	) {
 		super();
 
@@ -79,7 +77,7 @@ export class FrostedGlassContribution extends Disposable implements IWorkbenchCo
 
 	private update(): void {
 		this.opacity = this.getOpacity();
-		this.requested = (this.environmentService.isSessionsWindow || this.configurationService.getValue<boolean>(LayoutSettings.MODERN_UI) === true)
+		this.requested = this.configurationService.getValue<boolean>(LayoutSettings.MODERN_UI) === true
 			&& this.configurationService.getValue<boolean>(LayoutSettings.MODERN_UI_FROSTED_GLASS) === true
 			&& !this.accessibilityService.isTransparencyReduced()
 			&& !isHighContrast(this.themeService.getColorTheme().type);

@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { registerSingleton, InstantiationType } from '../../../../platform/instantiation/common/extensions.js';
-import { IBrowserViewWorkbenchService, IBrowserViewCDPService, IBrowserViewModel, IBrowserViewContextualFilter, IBrowserViewOpenHandler, IBrowserViewWorkbenchCreateOptions } from '../common/browserView.js';
+import { IBrowserViewWorkbenchService, IBrowserViewCDPService, IBrowserViewModel, IBrowserViewWorkbenchCreateOptions } from '../common/browserView.js';
 import type { PreferredGroup } from '../../../services/editor/common/editorService.js';
 import { Event } from '../../../../base/common/event.js';
-import { Disposable, IDisposable } from '../../../../base/common/lifecycle.js';
 import { IBrowserViewEditorOpenOptions } from '../../../../platform/browserView/common/browserView.js';
 import { CDPEvent, CDPRequest, CDPResponse } from '../../../../platform/browserView/common/cdp/types.js';
 import { ITunnelProxyInfo } from '../../../../platform/tunnel/common/tunnelProxy.js';
@@ -23,8 +22,6 @@ class WebBrowserViewWorkbenchService implements IBrowserViewWorkbenchService {
 	setRemoteProxyInfo(_info: ITunnelProxyInfo | undefined): void { }
 
 	readonly onDidChangeBrowserViews = Event.None;
-	readonly onDidChangeSharingAvailable = Event.None;
-	readonly isSharingAvailable = false;
 
 	private readonly _known = new Map<string, BrowserEditorInput>();
 
@@ -32,20 +29,8 @@ class WebBrowserViewWorkbenchService implements IBrowserViewWorkbenchService {
 		return this._known;
 	}
 
-	registerContextualFilter(_filter: IBrowserViewContextualFilter): IDisposable {
-		return Disposable.None;
-	}
-
-	getContextualBrowserViews(): Map<string, BrowserEditorInput> {
-		return this._known;
-	}
-
 	async getPreferredGroup(preferredGroup?: PreferredGroup): Promise<PreferredGroup | undefined> {
 		return preferredGroup;
-	}
-
-	registerOpenHandler(_handler: IBrowserViewOpenHandler): IDisposable {
-		return Disposable.None;
 	}
 
 	async createBrowserView(_options: IBrowserViewWorkbenchCreateOptions, _editorOpenOptions?: IBrowserViewEditorOpenOptions): Promise<BrowserEditorInput> {

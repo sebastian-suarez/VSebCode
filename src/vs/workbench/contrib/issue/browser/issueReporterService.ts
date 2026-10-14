@@ -37,7 +37,7 @@ export class IssueWebReporter extends BaseIssueReporterService {
 		@IOpenerService openerService: IOpenerService,
 		@ILogService logService: ILogService,
 	) {
-		super(disableExtensions, data, os, product, window, true, undefined, issueFormService, themeService, fileService, fileDialogService, contextMenuService, authenticationService, openerService, logService);
+		super(disableExtensions, data, os, product, window, true, issueFormService, themeService, fileService, fileDialogService, contextMenuService, authenticationService, openerService, logService);
 
 		// eslint-disable-next-line no-restricted-syntax
 		const target = this.window.document.querySelector<HTMLElement>('.block-system .block-info');

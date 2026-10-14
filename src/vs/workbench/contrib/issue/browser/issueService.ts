@@ -20,7 +20,6 @@ import { SIDE_BAR_BACKGROUND } from '../../../common/theme.js';
 import { IIssueFormService, IssueReporterData, IssueReporterExtensionData, IssueReporterStyles, IWorkbenchIssueService } from '../common/issue.js';
 import { IAuthenticationService } from '../../../services/authentication/common/authentication.js';
 import { IWorkbenchExtensionEnablementService } from '../../../services/extensionManagement/common/extensionManagement.js';
-import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { IIntegrityService } from '../../../services/integrity/common/integrity.js';
 
@@ -40,7 +39,6 @@ export class BrowserIssueService implements IWorkbenchIssueService {
 		@IAuthenticationService private readonly authenticationService: IAuthenticationService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IOpenerService private readonly openerService: IOpenerService,
-		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService
 	) { }
 
 	async openReporter(options: Partial<IssueReporterData>): Promise<void> {
@@ -132,7 +130,6 @@ export class BrowserIssueService implements IWorkbenchIssueService {
 				enabledExtensions: extensionData,
 				restrictedMode: !this.workspaceTrustManagementService.isWorkspaceTrusted(),
 				isInstallationPure,
-				isSessionsWindow: this.environmentService.isSessionsWindow,
 				githubAccessToken
 			}, options);
 

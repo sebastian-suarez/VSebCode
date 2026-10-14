@@ -459,7 +459,7 @@ export class NotebookCompatibleFileMatch extends FileMatchImpl implements INoteb
 				this.rawMatch.results
 					.filter(resultIsMatch)
 					.forEach(rawMatch => {
-						textSearchResultToMatches(rawMatch, this, false)
+						textSearchResultToMatches(rawMatch, this)
 							.forEach(m => this.add(m));
 					});
 			}

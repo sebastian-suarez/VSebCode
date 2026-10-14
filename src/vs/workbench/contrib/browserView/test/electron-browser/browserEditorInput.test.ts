@@ -5,7 +5,7 @@
 
 import assert from 'assert';
 import { Emitter, Event } from '../../../../../base/common/event.js';
-import { Disposable, DisposableStore, IDisposable } from '../../../../../base/common/lifecycle.js';
+import { DisposableStore } from '../../../../../base/common/lifecycle.js';
 import { Schemas } from '../../../../../base/common/network.js';
 import { hasKey } from '../../../../../base/common/types.js';
 import { URI } from '../../../../../base/common/uri.js';
@@ -16,20 +16,17 @@ import { BrowserViewUri } from '../../../../../platform/browserView/common/brows
 import { IContextKeyService, RawContextKey } from '../../../../../platform/contextkey/common/contextkey.js';
 import { ITunnelProxyInfo } from '../../../../../platform/tunnel/common/tunnelProxy.js';
 import { BrowserEditorInput, BrowserEditorSerializer, IBrowserEditorInputData } from '../../common/browserEditorInput.js';
-import { BrowserViewSharingState, IBrowserViewContextualFilter, IBrowserViewFilterContext, IBrowserViewModel, IBrowserViewOpenHandler, IBrowserViewWorkbenchCreateOptions, IBrowserViewWorkbenchService } from '../../common/browserView.js';
+import { IBrowserViewModel, IBrowserViewWorkbenchCreateOptions, IBrowserViewWorkbenchService } from '../../common/browserView.js';
 import { IUntypedEditorInput, Verbosity } from '../../../../common/editor.js';
 import { applyAvailableEditorIds } from '../../../../common/contextkeys.js';
 import { IEditorResolverService, RegisteredEditorPriority } from '../../../../services/editor/common/editorResolverService.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
-import { IEditorService, type PreferredGroup } from '../../../../services/editor/common/editorService.js';
-import { formatBrowserEditorList, getBrowserPageResourceNavigationError } from '../../electron-browser/tools/browserToolHelpers.js';
+import { type PreferredGroup } from '../../../../services/editor/common/editorService.js';
 
 class TestBrowserViewWorkbenchService implements IBrowserViewWorkbenchService {
 	declare readonly _serviceBrand: undefined;
 
 	readonly onDidChangeBrowserViews = Event.None;
-	readonly onDidChangeSharingAvailable = Event.None;
-	readonly isSharingAvailable = false;
 	readonly known = new Map<string, BrowserEditorInput>();
 	input: BrowserEditorInput | undefined;
 	lastCreate: { id: string; url: string | undefined; associatedResource: string | undefined } | undefined;
@@ -44,20 +41,8 @@ class TestBrowserViewWorkbenchService implements IBrowserViewWorkbenchService {
 		return this.known;
 	}
 
-	registerContextualFilter(_filter: IBrowserViewContextualFilter): IDisposable {
-		return Disposable.None;
-	}
-
-	getContextualBrowserViews(_context?: IBrowserViewFilterContext): Map<string, BrowserEditorInput> {
-		return this.known;
-	}
-
 	async getPreferredGroup(preferredGroup?: PreferredGroup): Promise<PreferredGroup | undefined> {
 		return preferredGroup;
-	}
-
-	registerOpenHandler(_handler: IBrowserViewOpenHandler): IDisposable {
-		return Disposable.None;
 	}
 
 	async createBrowserView(_options: IBrowserViewWorkbenchCreateOptions, _editorOpenOptions?: IBrowserViewEditorOpenOptions): Promise<BrowserEditorInput> {
@@ -123,34 +108,6 @@ suite('BrowserEditorInput', () => {
 			resourceScheme: Schemas.vscodeBrowser,
 			untypedResource: input.resource.toString(),
 			override: BrowserEditorInput.EDITOR_ID
-		});
-
-		test('reports sharing availability from the model state', () => {
-			const input = createInput({ id: 'sharing-state-browser' });
-			let sharingState = BrowserViewSharingState.BlockedByNetworkPolicy;
-			input.model = new class extends mock<IBrowserViewModel>() {
-				override get sharingState(): BrowserViewSharingState { return sharingState; }
-				override readonly onWillDispose = Event.None;
-				override readonly onDidClose = Event.None;
-				override readonly onDidChangeTitle = Event.None;
-				override readonly onDidChangeFavicon = Event.None;
-				override readonly onDidChangeLoadingState = Event.None;
-			}();
-
-			const blocked = input.isSharingAvailable;
-			sharingState = BrowserViewSharingState.Available;
-			const notShared = input.isSharingAvailable;
-			sharingState = BrowserViewSharingState.Shared;
-			const shared = input.isSharingAvailable;
-			sharingState = BrowserViewSharingState.Unavailable;
-			const unavailable = input.isSharingAvailable;
-
-			assert.deepStrictEqual({ blocked, notShared, shared, unavailable }, {
-				blocked: false,
-				notShared: true,
-				shared: true,
-				unavailable: false,
-			});
 		});
 	});
 
@@ -244,7 +201,6 @@ suite('BrowserEditorInput', () => {
 		let title = '';
 		const onDidNavigate = disposables.add(new Emitter<IBrowserViewNavigationEvent>());
 		const model = new class extends mock<IBrowserViewModel>() {
-			override readonly owner = { type: 'user' as const };
 			override get url(): string { return url; }
 			override get title(): string { return title; }
 			override get favicon(): string | undefined { return undefined; }
@@ -298,31 +254,6 @@ suite('BrowserEditorInput', () => {
 				title: undefined,
 				favicon: undefined
 			}
-		});
-	});
-
-	test('describes and restricts resource-backed pages for browser tools', () => {
-		const associatedResource = URI.file('/workspace/index.html');
-		const input = createInput({
-			id: 'resource-browser',
-			associatedResource,
-			url: associatedResource.toString(),
-			title: 'Resource editor'
-		});
-		const regularInput = createInput({ id: 'regular-browser' });
-
-		assert.deepStrictEqual({
-			context: formatBrowserEditorList(instantiationService.get(IEditorService), [input]),
-			query: getBrowserPageResourceNavigationError(input, associatedResource.with({ query: 'view=preview' }).toString()),
-			fragment: getBrowserPageResourceNavigationError(input, associatedResource.with({ fragment: 'content' }).toString()),
-			otherResource: getBrowserPageResourceNavigationError(input, URI.file('/workspace/other.html').toString()),
-			regularPage: getBrowserPageResourceNavigationError(regularInput, 'https://example.com')
-		}, {
-			context: '- [resource-browser] Resource editor (file:///workspace/index.html) (resource-backed; navigation is limited to this resource) (not visible)',
-			query: undefined,
-			fragment: undefined,
-			otherResource: 'This browser page is associated with a resource and cannot be navigated to a different resource. Only query and fragment changes are allowed. Use a different page or open a new one with the open_browser_page tool.',
-			regularPage: undefined
 		});
 	});
 

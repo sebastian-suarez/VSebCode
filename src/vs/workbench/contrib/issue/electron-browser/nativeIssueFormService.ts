@@ -8,12 +8,12 @@ import { IClipboardService } from '../../../../platform/clipboard/common/clipboa
 import { IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IFileService } from '../../../../platform/files/common/files.js';
-import { IGitHubService } from '../../../../platform/github/common/githubService.js';
 import { IEnvironmentService } from '../../../../platform/environment/common/environment.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { INativeHostService } from '../../../../platform/native/common/native.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
+import { IRequestService } from '../../../../platform/request/common/request.js';
 import product from '../../../../platform/product/common/product.js';
 import { MutableDisposable } from '../../../../base/common/lifecycle.js';
 import { IAuxiliaryWindowService } from '../../../services/auxiliaryWindow/browser/auxiliaryWindowService.js';
@@ -23,7 +23,6 @@ import { IGitHubUploadService } from '../browser/githubUploadService.js';
 import { IssueReporterEditorInput } from '../browser/issueReporterEditorInput.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { IEditorService } from '../../../services/editor/common/editorService.js';
-import { IEditorGroupsService } from '../../../services/editor/common/editorGroupsService.js';
 import { IIssueFormService, IssueReporterData } from '../common/issue.js';
 import { IssueReporter } from './issueReporterService.js';
 
@@ -52,10 +51,9 @@ export class NativeIssueFormService extends IssueFormService implements IIssueFo
 		@IEditorService editorService: IEditorService,
 		@IClipboardService clipboardService: IClipboardService,
 		@INativeHostService private readonly nativeHostService: INativeHostService,
-		@IEditorGroupsService private readonly editorGroupService: IEditorGroupsService,
-		@IGitHubService gitHubService: IGitHubService,
+		@IRequestService requestService: IRequestService,
 	) {
-		super(instantiationService, auxiliaryWindowService, menuService, contextKeyService, logService, dialogService, hostService, openerService, fileService, githubUploadService, editorService, clipboardService, gitHubService);
+		super(instantiationService, auxiliaryWindowService, menuService, contextKeyService, logService, dialogService, hostService, openerService, fileService, githubUploadService, editorService, clipboardService, requestService);
 	}
 
 	override async openReporter(data: IssueReporterData): Promise<void> {
@@ -77,13 +75,7 @@ export class NativeIssueFormService extends IssueFormService implements IIssueFo
 		// the editor pane, so it does not depend on arch/release/type here.
 		const input = this.instantiationService.createInstance(IssueReporterEditorInput, data);
 
-		// When editors are forced modal (`workbench.editor.useModal: 'all'`), the
-		// issue reporter still needs to sit alongside the rest of the app so the
-		// user can capture screenshots and recordings. In the Agents window, target
-		// the main editor part's active group explicitly to open it docked in the
-		// editor area instead of as a modal overlay.
-		const preferredGroup = data.isSessionsWindow ? this.editorGroupService.mainPart.activeGroup : undefined;
-		await this.editorService.openEditor(input, { pinned: true }, preferredGroup);
+		await this.editorService.openEditor(input, { pinned: true });
 	}
 
 	/**

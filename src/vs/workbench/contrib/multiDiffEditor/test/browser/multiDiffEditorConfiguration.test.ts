@@ -37,7 +37,6 @@ suite('MultiDiffEditorConfiguration', () => {
 			default: property.default,
 			scope: property.scope,
 			isExperimental: property.tags?.includes('experimental'),
-			experiment: property.experiment,
 		}, {
 			type: 'string',
 			enum: ['cards', 'noCards'],
@@ -48,7 +47,6 @@ suite('MultiDiffEditorConfiguration', () => {
 			default: 'noCards',
 			scope: ConfigurationScope.WINDOW,
 			isExperimental: true,
-			experiment: { mode: 'auto' },
 		});
 		assert.strictEqual(defaultMultiDiffEditorExperimentalVariant, 'noCards');
 	});

@@ -200,7 +200,7 @@ suite('ModernUIContribution', () => {
 		}();
 		const instantiationService = store.add(new TestInstantiationService());
 		instantiationService.stub(IConfigurationService, configurationService);
-		instantiationService.stub(IWorkbenchEnvironmentService, { isSessionsWindow: false });
+		instantiationService.stub(IWorkbenchEnvironmentService, {});
 		const parent = MenuRegistry.getMenuItems(MenuId.GlobalActivity)
 			.filter(isISubmenuItem)
 			.find(item => (typeof item.title === 'string' ? item.title : item.title.value) === 'Layout Density');
@@ -853,7 +853,7 @@ suite('ModernUIContribution', () => {
 		});
 	});
 
-	test('pane composite actions fill regular and Agents headers', () => {
+	test('pane composite actions fill regular and tabs-only headers', () => {
 		const regularRoot = document.createElement('div');
 		regularRoot.className = 'monaco-workbench modern-ui modern-ui-tabs';
 		document.body.appendChild(regularRoot);
@@ -865,45 +865,45 @@ suite('ModernUIContribution', () => {
 		const regularIconBadgeContent = appendElement(regularIconBadge, 'badge-content');
 		regularIcon.actionItem.insertBefore(regularIconBadge, regularIcon.indicator);
 
-		const agentsRoot = document.createElement('div');
-		agentsRoot.className = 'monaco-workbench modern-ui-tabs';
-		document.body.appendChild(agentsRoot);
-		store.add(toDisposable(() => agentsRoot.remove()));
-		const agents = createCompositeAction(agentsRoot, 35, false);
-		const agentsIcon = createCompositeAction(agentsRoot, 35, true, true);
-		const agentsIconBadge = appendElement(agentsIcon.actionItem, 'badge compact');
-		const agentsIconBadgeContent = appendElement(agentsIconBadge, 'badge-content');
-		agentsIcon.actionItem.insertBefore(agentsIconBadge, agentsIcon.indicator);
+		const tabsOnlyRoot = document.createElement('div');
+		tabsOnlyRoot.className = 'monaco-workbench modern-ui-tabs';
+		document.body.appendChild(tabsOnlyRoot);
+		store.add(toDisposable(() => tabsOnlyRoot.remove()));
+		const tabsOnly = createCompositeAction(tabsOnlyRoot, 35, false);
+		const tabsOnlyIcon = createCompositeAction(tabsOnlyRoot, 35, true, true);
+		const tabsOnlyIconBadge = appendElement(tabsOnlyIcon.actionItem, 'badge compact');
+		const tabsOnlyIconBadgeContent = appendElement(tabsOnlyIconBadge, 'badge-content');
+		tabsOnlyIcon.actionItem.insertBefore(tabsOnlyIconBadge, tabsOnlyIcon.indicator);
 
-		const targetWindow = getWindow(agents.actionItem);
-		const agentsIconTargetBounds = agentsIcon.actionItem.getBoundingClientRect();
-		const agentsIconIndicatorBounds = agentsIcon.indicator.getBoundingClientRect();
+		const targetWindow = getWindow(tabsOnly.actionItem);
+		const tabsOnlyIconTargetBounds = tabsOnlyIcon.actionItem.getBoundingClientRect();
+		const tabsOnlyIconIndicatorBounds = tabsOnlyIcon.indicator.getBoundingClientRect();
 		assert.deepStrictEqual({
 			regularTargetHeight: targetWindow.getComputedStyle(regular.actionItem).height,
 			regularIndicatorHeight: targetWindow.getComputedStyle(regular.indicator).height,
 			regularIconBadgeTop: targetWindow.getComputedStyle(regularIconBadgeContent).top,
 			regularIconBadgeRight: targetWindow.getComputedStyle(regularIconBadgeContent).right,
-			agentsTargetHeight: targetWindow.getComputedStyle(agents.actionItem).height,
-			agentsIndicatorHeight: targetWindow.getComputedStyle(agents.indicator).height,
-			agentsIconTargetHeight: targetWindow.getComputedStyle(agentsIcon.actionItem).height,
-			agentsIconIndicatorHeight: targetWindow.getComputedStyle(agentsIcon.indicator).height,
-			agentsIconIndicatorTopInset: agentsIconIndicatorBounds.top - agentsIconTargetBounds.top,
-			agentsIconIndicatorBottomInset: agentsIconTargetBounds.bottom - agentsIconIndicatorBounds.bottom,
-			agentsIconBadgeTop: targetWindow.getComputedStyle(agentsIconBadgeContent).top,
-			agentsIconBadgeRight: targetWindow.getComputedStyle(agentsIconBadgeContent).right,
+			tabsOnlyTargetHeight: targetWindow.getComputedStyle(tabsOnly.actionItem).height,
+			tabsOnlyIndicatorHeight: targetWindow.getComputedStyle(tabsOnly.indicator).height,
+			tabsOnlyIconTargetHeight: targetWindow.getComputedStyle(tabsOnlyIcon.actionItem).height,
+			tabsOnlyIconIndicatorHeight: targetWindow.getComputedStyle(tabsOnlyIcon.indicator).height,
+			tabsOnlyIconIndicatorTopInset: tabsOnlyIconIndicatorBounds.top - tabsOnlyIconTargetBounds.top,
+			tabsOnlyIconIndicatorBottomInset: tabsOnlyIconTargetBounds.bottom - tabsOnlyIconIndicatorBounds.bottom,
+			tabsOnlyIconBadgeTop: targetWindow.getComputedStyle(tabsOnlyIconBadgeContent).top,
+			tabsOnlyIconBadgeRight: targetWindow.getComputedStyle(tabsOnlyIconBadgeContent).right,
 		}, {
 			regularTargetHeight: '32px',
 			regularIndicatorHeight: '24px',
 			regularIconBadgeTop: '13px',
 			regularIconBadgeRight: '2px',
-			agentsTargetHeight: '35px',
-			agentsIndicatorHeight: '24px',
-			agentsIconTargetHeight: '35px',
-			agentsIconIndicatorHeight: '24px',
-			agentsIconIndicatorTopInset: 5.5,
-			agentsIconIndicatorBottomInset: 5.5,
-			agentsIconBadgeTop: '13px',
-			agentsIconBadgeRight: '2px',
+			tabsOnlyTargetHeight: '35px',
+			tabsOnlyIndicatorHeight: '24px',
+			tabsOnlyIconTargetHeight: '35px',
+			tabsOnlyIconIndicatorHeight: '24px',
+			tabsOnlyIconIndicatorTopInset: 5.5,
+			tabsOnlyIconIndicatorBottomInset: 5.5,
+			tabsOnlyIconBadgeTop: '13px',
+			tabsOnlyIconBadgeRight: '2px',
 		});
 	});
 
@@ -943,21 +943,21 @@ suite('ModernUIContribution', () => {
 		const auxiliary = createCompositeAction(regularRoot, 40, true);
 		auxiliary.actionItem.closest('.part')?.classList.add('auxiliarybar');
 
-		const agentsRoot = document.createElement('div');
-		agentsRoot.className = 'monaco-workbench modern-ui-tabs';
-		document.body.appendChild(agentsRoot);
-		store.add(toDisposable(() => agentsRoot.remove()));
-		const agents = createCompositeAction(agentsRoot, 35, true);
+		const tabsOnlyRoot = document.createElement('div');
+		tabsOnlyRoot.className = 'monaco-workbench modern-ui-tabs';
+		document.body.appendChild(tabsOnlyRoot);
+		store.add(toDisposable(() => tabsOnlyRoot.remove()));
+		const tabsOnly = createCompositeAction(tabsOnlyRoot, 35, true);
 
 		const targetWindow = getWindow(regular.actionLabel);
 		assert.deepStrictEqual({
 			regularLabelWeight: targetWindow.getComputedStyle(regular.actionLabel).fontWeight,
 			auxiliaryLabelWeight: targetWindow.getComputedStyle(auxiliary.actionLabel).fontWeight,
-			agentsLabelWeight: targetWindow.getComputedStyle(agents.actionLabel).fontWeight,
+			tabsOnlyLabelWeight: targetWindow.getComputedStyle(tabsOnly.actionLabel).fontWeight,
 		}, {
 			regularLabelWeight: '400',
 			auxiliaryLabelWeight: '400',
-			agentsLabelWeight: '400',
+			tabsOnlyLabelWeight: '400',
 		});
 	});
 
@@ -994,13 +994,13 @@ suite('ModernUIContribution', () => {
 		const activityLabel = appendElement(actionItem, 'action-label codicon');
 		const indicator = appendElement(actionItem, 'active-item-indicator');
 		const badgeContent = appendElement(appendElement(actionItem, 'badge'), 'badge-content');
-		const agentsRoot = document.createElement('div');
-		agentsRoot.className = 'monaco-workbench modern-ui-tabs';
-		agentsRoot.style.setProperty('--vscode-modernTab-activeBackground', '#654321');
-		agentsRoot.style.setProperty('--vscode-modernTab-activeForeground', '#fedcba');
-		document.body.appendChild(agentsRoot);
-		store.add(toDisposable(() => agentsRoot.remove()));
-		const horizontalAction = createCompositeAction(agentsRoot, 35, true, true);
+		const tabsOnlyRoot = document.createElement('div');
+		tabsOnlyRoot.className = 'monaco-workbench modern-ui-tabs';
+		tabsOnlyRoot.style.setProperty('--vscode-modernTab-activeBackground', '#654321');
+		tabsOnlyRoot.style.setProperty('--vscode-modernTab-activeForeground', '#fedcba');
+		document.body.appendChild(tabsOnlyRoot);
+		store.add(toDisposable(() => tabsOnlyRoot.remove()));
+		const horizontalAction = createCompositeAction(tabsOnlyRoot, 35, true, true);
 		horizontalAction.actionLabel.classList.add('codicon');
 
 		const part = appendElement(root, 'part pane-composite-part');

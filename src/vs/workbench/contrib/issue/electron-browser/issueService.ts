@@ -17,7 +17,6 @@ import { SIDE_BAR_BACKGROUND } from '../../../common/theme.js';
 import { IIssueFormService, IssueReporterData, IssueReporterExtensionData, IssueReporterStyles, IWorkbenchIssueService } from '../common/issue.js';
 import { IAuthenticationService } from '../../../services/authentication/common/authentication.js';
 import { IWorkbenchExtensionEnablementService } from '../../../services/extensionManagement/common/extensionManagement.js';
-import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
 import { IIntegrityService } from '../../../services/integrity/common/integrity.js';
 
 export class NativeIssueService implements IWorkbenchIssueService {
@@ -31,7 +30,6 @@ export class NativeIssueService implements IWorkbenchIssueService {
 		@IWorkspaceTrustManagementService private readonly workspaceTrustManagementService: IWorkspaceTrustManagementService,
 		@IAuthenticationService private readonly authenticationService: IAuthenticationService,
 		@IIntegrityService private readonly integrityService: IIntegrityService,
-		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 	) { }
 
@@ -59,7 +57,6 @@ export class NativeIssueService implements IWorkbenchIssueService {
 			whenDataComplete: dataComplete.p,
 			restrictedMode: !this.workspaceTrustManagementService.isWorkspaceTrusted(),
 			isInstallationPure: true,
-			isSessionsWindow: this.environmentService.isSessionsWindow,
 			githubAccessToken: '',
 		}, dataOverrides);
 
@@ -133,7 +130,6 @@ export class NativeIssueService implements IWorkbenchIssueService {
 			enabledExtensions: extensionData,
 			restrictedMode: !this.workspaceTrustManagementService.isWorkspaceTrusted(),
 			isInstallationPure,
-			isSessionsWindow: this.environmentService.isSessionsWindow,
 			githubAccessToken,
 		}, dataOverrides);
 

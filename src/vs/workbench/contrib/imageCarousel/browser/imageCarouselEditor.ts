@@ -545,7 +545,7 @@ window.addEventListener("message",function(e){var m=e.data;if(m.type==="loadVide
 
 		let buffer: Uint8Array;
 		if (image.data) {
-			// Handle both VSBuffer (has .buffer property) and raw Uint8Array from chat attachments
+			// Handle both VSBuffer (has .buffer property) and raw Uint8Array
 			buffer = image.data instanceof Uint8Array ? image.data : image.data.buffer;
 		} else if (image.uri) {
 			const content = await this._fileService.readFile(image.uri);

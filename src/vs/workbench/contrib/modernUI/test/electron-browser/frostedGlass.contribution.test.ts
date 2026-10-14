@@ -18,7 +18,6 @@ import { INativeHostService } from '../../../../../platform/native/common/native
 import { Registry } from '../../../../../platform/registry/common/platform.js';
 import { ColorScheme } from '../../../../../platform/theme/common/theme.js';
 import { TestColorTheme, TestThemeService } from '../../../../../platform/theme/test/common/testThemeService.js';
-import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
 import { IWorkbenchLayoutService, LayoutSettings, ModernUIFrostedGlassOpacity } from '../../../../services/layout/browser/layoutService.js';
 import { FrostedGlassContribution } from '../../electron-browser/frostedGlass.contribution.js';
 import '../../../../browser/workbench.contribution.js';
@@ -28,7 +27,7 @@ suite('FrostedGlassContribution', () => {
 	// Registry suites remove startup contributions before these tests execute.
 	const properties = { ...Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).getConfigurationProperties() };
 
-	function createServices(enabled = true, isSessionsWindow = false) {
+	function createServices(enabled = true) {
 		const configuration = new TestConfigurationService({
 			[LayoutSettings.MODERN_UI]: true,
 			[LayoutSettings.MODERN_UI_FROSTED_GLASS]: enabled,
@@ -64,10 +63,7 @@ suite('FrostedGlassContribution', () => {
 		const log = store.add(new class extends NullLogService {
 			override warn(message: string): void { warnings.push(message); }
 		}());
-		const environment = new class extends mock<IWorkbenchEnvironmentService>() {
-			override readonly isSessionsWindow = isSessionsWindow;
-		}();
-		const createContribution = () => store.add(new FrostedGlassContribution(configuration, layout, accessibility, theme, nativeHost, log, environment));
+		const createContribution = () => store.add(new FrostedGlassContribution(configuration, layout, accessibility, theme, nativeHost, log));
 		const state = () => layout.containers.map(container => container.classList.contains('modern-ui-frosted-glass'));
 		const styleState = () => layout.containers.map(container => ({
 			glass: container.classList.contains('modern-ui-frosted-glass'),
@@ -84,20 +80,6 @@ suite('FrostedGlassContribution', () => {
 		};
 		return { configuration, layout, addedContainer, accessibility, transparencyChanged, theme, nativeHost, gpuChanged, warnings, createContribution, state, styleState, configure };
 	}
-
-	test('shares enabled and opacity defaults with the Agents window', () => {
-		assert.deepStrictEqual({
-			enabled: properties[LayoutSettings.MODERN_UI_FROSTED_GLASS].default,
-			agentsWindow: properties[LayoutSettings.MODERN_UI_FROSTED_GLASS].agentsWindow,
-			opacity: properties[LayoutSettings.MODERN_UI_FROSTED_GLASS_OPACITY].default,
-			agentsOpacity: properties[LayoutSettings.MODERN_UI_FROSTED_GLASS_OPACITY].agentsWindow,
-		}, {
-			enabled: true,
-			agentsWindow: undefined,
-			opacity: 80,
-			agentsOpacity: undefined,
-		});
-	});
 
 	test('registers both settings without experimental names or tags', () => {
 		const keys = [LayoutSettings.MODERN_UI_FROSTED_GLASS, LayoutSettings.MODERN_UI_FROSTED_GLASS_OPACITY];
@@ -155,37 +137,6 @@ suite('FrostedGlassContribution', () => {
 		await Promise.resolve();
 		assert.deepStrictEqual({ state: services.state(), checks: services.nativeHost.checks }, { state: [false], checks: 1 });
 	});
-
-	test('Agents overlays do not depend on the editor-window Modern UI setting', async () => {
-		const services = createServices(true, true);
-		await services.configure(LayoutSettings.MODERN_UI, false);
-		await services.configure(LayoutSettings.MODERN_UI_FROSTED_GLASS_OPACITY, 75);
-		services.createContribution();
-		await Promise.resolve();
-		const enabledState = services.styleState();
-		await services.configure(LayoutSettings.MODERN_UI_FROSTED_GLASS, false);
-		assert.deepStrictEqual({ enabledState, disabledState: services.styleState() }, {
-			enabledState: [{ glass: true, opacity: '75%' }],
-			disabledState: [{ glass: false, opacity: '' }],
-		});
-	});
-
-	for (const fallback of ['disabled', 'reduced transparency', 'high contrast', 'software compositing']) {
-		test(`Agents overlays retain the ${fallback} fallback`, async () => {
-			const services = createServices(fallback !== 'disabled', true);
-			await services.configure(LayoutSettings.MODERN_UI, false);
-			services.accessibility.reduced = fallback === 'reduced transparency';
-			if (fallback === 'high contrast') {
-				services.theme.setTheme(new TestColorTheme({}, ColorScheme.HIGH_CONTRAST_DARK));
-			}
-			if (fallback === 'software compositing') {
-				services.nativeHost.result = Promise.resolve(false);
-			}
-			services.createContribution();
-			await Promise.resolve();
-			assert.deepStrictEqual(services.styleState(), [{ glass: false, opacity: '' }]);
-		});
-	}
 
 	for (const accelerated of [true, false]) {
 		test(`stays solid until compositing is known, then uses accelerated=${accelerated}`, async () => {

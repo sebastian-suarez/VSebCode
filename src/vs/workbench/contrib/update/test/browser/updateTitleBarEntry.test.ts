@@ -23,9 +23,9 @@ import { IProductService } from '../../../../../platform/product/common/productS
 import { ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
 import { IUpdateService, State } from '../../../../../platform/update/common/update.js';
 import { InEditorZenModeContext } from '../../../../common/contextkeys.js';
-import { getAdditionalUpdateTitleBarMenuWhen, UpdateTitleBarEntry } from '../../browser/updateTitleBarEntry.js';
+import { UpdateTitleBarEntry } from '../../browser/updateTitleBarEntry.js';
 import { UpdateTooltip } from '../../browser/updateTooltip.js';
-import { UpdateGlobalActivityBadgeVisibleContext, UpdateTitleBarChatInProgressContext, UpdateTitleBarContext, UpdateTitleBarEditorVisibleContext } from '../../common/update.js';
+import { UpdateGlobalActivityBadgeVisibleContext, UpdateTitleBarContext } from '../../common/update.js';
 
 class TestCommandService extends mock<ICommandService>() {
 	private readonly _onDidExecuteCommand = new Emitter<ICommandEvent>();
@@ -122,13 +122,11 @@ suite('UpdateGlobalActivityBadgeVisibleContext', () => {
 			{ name: 'toggle menu', updateVisible: true, menuBarVisibility: 'toggle', activityBarLocation: 'top', expected: customMenuBarCanBeHidden },
 			{ name: 'compact menu', updateVisible: true, menuBarVisibility: 'compact', activityBarLocation: 'top', expected: customMenuBarCanBeHidden },
 			{ name: 'bottom activity bar', updateVisible: true, menuBarVisibility: 'visible', activityBarLocation: 'bottom', expected: true },
-			{ name: 'chat in progress', updateVisible: true, menuBarVisibility: 'visible', activityBarLocation: 'top', chatInProgress: true, expected: true },
 		];
 
 		const actual = scenarios.map(scenario => {
 			const contextKeyService = new TestContextKeyService();
 			UpdateTitleBarContext.bindTo(contextKeyService).set(scenario.updateVisible);
-			UpdateTitleBarChatInProgressContext.bindTo(contextKeyService).set(scenario.chatInProgress ?? false);
 			InEditorZenModeContext.bindTo(contextKeyService);
 			contextKeyService.createKey('config.window.menuBarVisibility', scenario.menuBarVisibility);
 			contextKeyService.createKey('config.workbench.activityBar.location', scenario.activityBarLocation);
@@ -140,27 +138,6 @@ suite('UpdateGlobalActivityBadgeVisibleContext', () => {
 		});
 
 		assert.deepStrictEqual(actual, scenarios.map(({ name, expected }) => ({ name, visible: expected })));
-	});
-});
-
-suite('UpdateTitleBarVisibleContexts', () => {
-
-	ensureNoDisposablesAreLeakedInTestSuite();
-
-	test('shows an additional placement during an active chat while the editor hides it', () => {
-		const contextKeyService = new TestContextKeyService();
-		UpdateTitleBarContext.bindTo(contextKeyService).set(true);
-		UpdateTitleBarChatInProgressContext.bindTo(contextKeyService).set(true);
-		InEditorZenModeContext.bindTo(contextKeyService).set(false);
-		contextKeyService.createKey('inDebugMode', false);
-
-		assert.deepStrictEqual({
-			additional: contextKeyService.contextMatchesRules(getAdditionalUpdateTitleBarMenuWhen()),
-			editor: contextKeyService.contextMatchesRules(UpdateTitleBarEditorVisibleContext),
-		}, {
-			additional: true,
-			editor: false,
-		});
 	});
 });
 

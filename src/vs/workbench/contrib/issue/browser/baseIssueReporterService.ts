@@ -83,7 +83,6 @@ export class BaseIssueReporterService extends Disposable {
 		public product: IProductConfiguration,
 		public readonly window: Window,
 		public readonly isWeb: boolean,
-		private readonly fetcher: typeof fetch = (input, init) => fetch(input, init),
 		@IIssueFormService public readonly issueFormService: IIssueFormService,
 		@IThemeService public readonly themeService: IThemeService,
 		@IFileService public readonly fileService: IFileService,
@@ -286,7 +285,7 @@ export class BaseIssueReporterService extends Disposable {
 			container.appendChild(filingNote);
 		}
 
-		filingNote.textContent = escape(localize('internalPreviewMessage', 'If your copilot debug logs contain private information:'));
+		filingNote.textContent = escape(localize('internalPreviewMessage', 'If your debug logs contain private information:'));
 	}
 
 	private updatePublicGithubButton(container: HTMLElement): void {
@@ -694,12 +693,6 @@ export class BaseIssueReporterService extends Disposable {
 		this.addEventListener('description', 'input', (e: Event) => {
 			const issueDescription = (<HTMLInputElement>e.target).value;
 			this.issueReporterModel.update({ issueDescription });
-
-			if (this.issueReporterModel.fileOnExtension() === false && !this.issueReporterModel.getData().fileOnMarketplace) {
-				// eslint-disable-next-line no-restricted-syntax
-				const title = (<HTMLInputElement>this.getElementById('issue-title')).value;
-				this.searchVSCodeIssues(title, issueDescription);
-			}
 		});
 
 		this.addEventListener('issue-title', 'input', _ => {
@@ -849,10 +842,10 @@ export class BaseIssueReporterService extends Disposable {
 		return selectedExtension && selectedExtension.bugsUrl;
 	}
 
-	public searchVSCodeIssues(title: string, issueDescription?: string): void {
+	public searchVSCodeIssues(title: string): void {
 		this.clearSearchResults();
 		if (title) {
-			this.searchDuplicates(title, issueDescription, this.similarIssueSearchGeneration);
+			this.searchProductIssues(title, this.similarIssueSearchGeneration);
 		}
 	}
 
@@ -869,8 +862,7 @@ export class BaseIssueReporterService extends Disposable {
 			return this.searchMarketplaceIssues(title);
 		}
 
-		const description = this.issueReporterModel.getData().issueDescription;
-		this.searchDuplicates(title, description, this.similarIssueSearchGeneration);
+		this.searchProductIssues(title, this.similarIssueSearchGeneration);
 	}
 
 	private searchExtensionIssues(title: string): void {
@@ -891,6 +883,13 @@ export class BaseIssueReporterService extends Disposable {
 		}
 
 		this.clearSearchResults();
+	}
+
+	private searchProductIssues(title: string, generation: number): void {
+		const gitHubInfo = this.product.reportIssueUrl ? this.parseGitHubUrl(this.product.reportIssueUrl) : undefined;
+		if (gitHubInfo) {
+			this.searchGitHub(`${gitHubInfo.owner}/${gitHubInfo.repositoryName}`, title, generation);
+		}
 	}
 
 	private searchMarketplaceIssues(title: string): void {
@@ -937,41 +936,6 @@ export class BaseIssueReporterService extends Disposable {
 		});
 	}
 
-	@debounce(300)
-	private searchDuplicates(title: string, body: string | undefined, generation: number): void {
-		if (this._store.isDisposed || generation !== this.similarIssueSearchGeneration) {
-			return;
-		}
-		const controller = new AbortController();
-		this.similarIssueSearch.value = toDisposable(() => controller.abort());
-		const url = 'https://vscode-probot.westus.cloudapp.azure.com:7890/duplicate_candidates';
-		const init = {
-			method: 'POST',
-			body: JSON.stringify({
-				title,
-				body
-			}),
-			headers: new Headers({
-				'Content-Type': 'application/json'
-			}),
-			signal: controller.signal,
-		};
-
-		void this.fetcher(url, init).then(async response => {
-			const result: { candidates?: readonly ISimilarIssue[] } | null = await response.json();
-			if (controller.signal.aborted) {
-				return;
-			}
-			if (!result || !Array.isArray(result.candidates)) {
-				throw new Error('Unexpected response, no candidates property');
-			}
-			this.displaySearchResults(result.candidates);
-		}).catch(error => {
-			if (!controller.signal.aborted) {
-				this.logService.warn('[IssueReporter] Error fetching duplicate issues', error);
-			}
-		});
-	}
 
 	private displaySearchResults(results: readonly ISimilarIssue[]) {
 		// eslint-disable-next-line no-restricted-syntax

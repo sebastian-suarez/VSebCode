@@ -95,7 +95,6 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).regis
 			default: product.quality !== 'stable',
 			tags: ['experimental'],
 			scope: ConfigurationScope.WINDOW,
-			experiment: { mode: 'startup' },
 			markdownDescription: localize('browser.enableRemoteProxy', "When enabled, browser requests in remote workspaces are proxied through the remote connection. This allows web pages to access resources available on the remote host."),
 		}
 	}

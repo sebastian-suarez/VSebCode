@@ -33,7 +33,6 @@ export class BrowserViewCDPService extends Disposable implements IBrowserViewCDP
 				host: {
 					windowId: mainWindow.vscodeWindowId
 				},
-				owner: { type: 'user' },
 				session: { scope: BrowserViewStorageScope.Ephemeral }
 			}
 		);

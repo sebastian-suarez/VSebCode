@@ -9,14 +9,13 @@ import { IManagedHoverContent, IManagedHoverOptions, IHoverWidget } from '../../
 import { IAction, WorkbenchActionExecutedClassification, WorkbenchActionExecutedEvent } from '../../../../base/common/actions.js';
 import { AnchorAlignment } from '../../../../base/common/layout.js';
 import { Disposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
-import { autorun } from '../../../../base/common/observable.js';
 import { isWeb } from '../../../../base/common/platform.js';
 import { localize } from '../../../../nls.js';
 import { IActionViewItemService } from '../../../../platform/actions/browser/actionViewItemService.js';
-import { Action2, IMenuItem, MenuId, MenuRegistry, registerAction2 } from '../../../../platform/actions/common/actions.js';
+import { Action2, MenuId, registerAction2 } from '../../../../platform/actions/common/actions.js';
 import { ICommandService } from '../../../../platform/commands/common/commands.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
-import { ContextKeyExpr, ContextKeyExpression, IContextKey, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
+import { IContextKey, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
@@ -24,8 +23,7 @@ import { ITelemetryService } from '../../../../platform/telemetry/common/telemet
 import { DisablementReason, IUpdateService, State, StateType } from '../../../../platform/update/common/update.js';
 import { IWorkbenchContribution } from '../../../common/contributions.js';
 import { IHostService } from '../../../services/host/browser/host.js';
-import { IChatService } from '../../chat/common/chatService/chatService.js';
-import { UpdateTitleBarChatInProgressContext, UpdateTitleBarContext, UpdateTitleBarEditorVisibleContext } from '../common/update.js';
+import { UpdateTitleBarContext, UpdateTitleBarEditorVisibleContext } from '../common/update.js';
 import { computeProgressPercent } from '../common/updateUtils.js';
 import './media/updateTitleBarEntry.css';
 import { UpdateTooltip } from './updateTooltip.js';
@@ -39,23 +37,6 @@ const UPDATE_TITLE_BAR_SETTING = 'update.titleBar';
 
 const ACTIONABLE_STATES: readonly StateType[] = [StateType.AvailableForDownload, StateType.Downloaded, StateType.Ready];
 const DETAILED_STATES: readonly StateType[] = [...ACTIONABLE_STATES, StateType.CheckingForUpdates, StateType.Downloading, StateType.Updating, StateType.Overwriting, StateType.Cancelling];
-
-/**
- * Optional secondary placement for the update indicator (e.g. used by the Agents
- * app). Limited to one because the contribution tracks a single rendered entry.
- */
-let additionalMenuPlacement: { readonly menuId: MenuId; readonly item: Omit<IMenuItem, 'command'> } | undefined;
-
-export function registerUpdateTitleBarMenuPlacement(menuId: MenuId, item: Omit<IMenuItem, 'command'> = {}): void {
-	if (additionalMenuPlacement) {
-		throw new Error('An additional update title bar menu placement is already registered');
-	}
-	additionalMenuPlacement = { menuId, item };
-}
-
-export function getAdditionalUpdateTitleBarMenuWhen(when?: ContextKeyExpression): ContextKeyExpression {
-	return ContextKeyExpr.and(UpdateTitleBarContext, when)!;
-}
 
 registerAction2(class UpdateIndicatorTitleBarAction extends Action2 {
 	constructor() {
@@ -87,7 +68,6 @@ export class UpdateTitleBarContribution extends Disposable implements IWorkbench
 
 	constructor(
 		@IActionViewItemService actionViewItemService: IActionViewItemService,
-		@IChatService chatService: IChatService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IHostService private readonly hostService: IHostService,
@@ -103,11 +83,6 @@ export class UpdateTitleBarContribution extends Disposable implements IWorkbench
 
 		this.context = UpdateTitleBarContext.bindTo(contextKeyService);
 		this.tooltip = this._register(instantiationService.createInstance(UpdateTooltip));
-
-		const chatInProgressContext = UpdateTitleBarChatInProgressContext.bindTo(contextKeyService);
-		this._register(autorun(reader => {
-			chatInProgressContext.set(chatService.requestInProgressObs.read(reader));
-		}));
 
 		this.state = updateService.state;
 		this._register(updateService.onStateChange((state) => {
@@ -126,23 +101,6 @@ export class UpdateTitleBarContribution extends Disposable implements IWorkbench
 			UPDATE_TITLE_BAR_ACTION_ID,
 			(action, options) => this.createEntry(instantiationService, action, options, AnchorAlignment.RIGHT)
 		));
-
-		if (additionalMenuPlacement) {
-			const { menuId, item } = additionalMenuPlacement;
-			MenuRegistry.appendMenuItem(menuId, {
-				...item,
-				command: {
-					id: UPDATE_TITLE_BAR_ACTION_ID,
-					title: localize('updateIndicatorTitleBarAction', 'Update'),
-				},
-				when: getAdditionalUpdateTitleBarMenuWhen(item.when),
-			});
-			this._register(actionViewItemService.register(
-				menuId,
-				UPDATE_TITLE_BAR_ACTION_ID,
-				(action, options) => this.createEntry(instantiationService, action, options, AnchorAlignment.LEFT)
-			));
-		}
 
 		void this.onStateChange(true);
 	}

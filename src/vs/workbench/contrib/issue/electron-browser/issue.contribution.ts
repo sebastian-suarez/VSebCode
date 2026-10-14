@@ -53,14 +53,12 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration).regis
 		'issueReporter.wizard.enabled': {
 			type: 'boolean',
 			default: false,
-			description: localize('issueReporter.wizard.enabled', "Enable the new issue reporter wizard instead of the classic issue reporter."),
-			experiment: { mode: 'auto' }
+			description: localize('issueReporter.wizard.enabled', "Enable the new issue reporter wizard instead of the classic issue reporter.")
 		},
 		'issueReporter.wizard.fullWorkspaceScan': {
 			type: 'boolean',
 			default: true,
-			description: localize('issueReporter.wizard.fullWorkspaceScan', "When auto-collecting performance diagnostics for the issue reporter wizard, walk the full workspace instead of stopping at the default 20,000-file cap. Set to false on very large workspaces if the scan slows the initial wizard render."),
-			experiment: { mode: 'auto' }
+			description: localize('issueReporter.wizard.fullWorkspaceScan', "When auto-collecting performance diagnostics for the issue reporter wizard, walk the full workspace instead of stopping at the default 20,000-file cap. Set to false on very large workspaces if the scan slows the initial wizard render.")
 		},
 	}
 });

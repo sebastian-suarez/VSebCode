@@ -15,13 +15,12 @@ import { TestConfigurationService } from '../../../../../platform/configuration/
 import { FileChangesEvent, FileChangeType } from '../../../../../platform/files/common/files.js';
 import { IEditableData } from '../../../../common/views.js';
 import { IHostService } from '../../../../services/host/browser/host.js';
-import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
 import { NullFilesConfigurationService, TestFileService } from '../../../../test/common/workbenchTestServices.js';
 import { ExplorerService } from '../../browser/explorerService.js';
 import { IExplorerView } from '../../browser/files.js';
 import { ExplorerItem, NewExplorerItem } from '../../common/explorerModel.js';
-import { SESSIONS_FILES_VIEW_ID, VIEW_ID } from '../../common/files.js';
+import { VIEW_ID } from '../../common/files.js';
 
 suite('Files - ExplorerService', () => {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
@@ -72,22 +71,18 @@ suite('Files - ExplorerService', () => {
 		root.addChild(item);
 	});
 
-	for (const isSessionsWindow of [false, true]) {
-		test(`derives the view id from the application before and after view creation (sessions: ${isSessionsWindow})`, () => {
-			const instantiation = workbenchInstantiationService({
-				fileService: () => fileService,
-				configurationService: () => new TestConfigurationService({ explorer: { autoReveal: false } }),
-			}, store);
-			instantiation.stub(IWorkbenchEnvironmentService, { isSessionsWindow });
-			const service = store.add(instantiation.createInstance(ExplorerService));
-			const before = service.getViewId();
-			service.registerView(new class extends mock<IExplorerView>() {
-				override readonly id = 'registered.explorer';
-			});
-			const expected = isSessionsWindow ? SESSIONS_FILES_VIEW_ID : VIEW_ID;
-			assert.deepStrictEqual({ before, after: service.getViewId() }, { before: expected, after: expected });
+	test('derives the view id from the application before and after view creation', () => {
+		const instantiation = workbenchInstantiationService({
+			fileService: () => fileService,
+			configurationService: () => new TestConfigurationService({ explorer: { autoReveal: false } }),
+		}, store);
+		const service = store.add(instantiation.createInstance(ExplorerService));
+		const before = service.getViewId();
+		service.registerView(new class extends mock<IExplorerView>() {
+			override readonly id = 'registered.explorer';
 		});
-	}
+		assert.deepStrictEqual({ before, after: service.getViewId() }, { before: VIEW_ID, after: VIEW_ID });
+	});
 
 	test('refreshes on window focus when not editing', () => {
 		focusChanged.fire(false);

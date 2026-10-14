@@ -14,14 +14,13 @@ import { ILanguageSelection, ILanguageService } from '../../../../../editor/comm
 import { ITextModel } from '../../../../../editor/common/model.js';
 import { IModelService } from '../../../../../editor/common/services/model.js';
 import { ServicesAccessor } from '../../../../../platform/instantiation/common/instantiation.js';
-import { AUX_WINDOW_GROUP, IEditorService, PreferredGroup, SIDE_GROUP } from '../../../../services/editor/common/editorService.js';
-import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
+import { IEditorService, PreferredGroup, SIDE_GROUP } from '../../../../services/editor/common/editorService.js';
 import { OpenMultiDiffEditorLayoutDebugAction } from '../../browser/actions.js';
 
 suite('MultiDiffEditor Actions', () => {
 	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
 
-	async function getLayoutDebugTargetGroup(isSessionsWindow: boolean): Promise<PreferredGroup | undefined> {
+	async function getLayoutDebugTargetGroup(): Promise<PreferredGroup | undefined> {
 		const onWillDispose = disposables.add(new Emitter<void>());
 		let isDisposed = false;
 		const model = disposables.add(new class extends mock<ITextModel>() {
@@ -62,9 +61,6 @@ suite('MultiDiffEditor Actions', () => {
 				return { languageId: 'jsonl', onDidChange: Event.None };
 			}
 		}();
-		const environmentService = new class extends mock<IWorkbenchEnvironmentService>() {
-			override readonly isSessionsWindow = isSessionsWindow;
-		}();
 		const accessor = {
 			get: (service: unknown) => {
 				if (service === IEditorService) {
@@ -76,9 +72,6 @@ suite('MultiDiffEditor Actions', () => {
 				if (service === ILanguageService) {
 					return languageService;
 				}
-				if (service === IWorkbenchEnvironmentService) {
-					return environmentService;
-				}
 				throw new Error('Unexpected service');
 			},
 		} as ServicesAccessor;
@@ -88,13 +81,7 @@ suite('MultiDiffEditor Actions', () => {
 		return targetGroup;
 	}
 
-	test('opens layout debug in an auxiliary window from the Agents Window', async () => {
-		assert.deepStrictEqual({
-			workbench: await getLayoutDebugTargetGroup(false),
-			agentsWindow: await getLayoutDebugTargetGroup(true),
-		}, {
-			workbench: SIDE_GROUP,
-			agentsWindow: AUX_WINDOW_GROUP,
-		});
+	test('opens layout debug to the side', async () => {
+		assert.strictEqual(await getLayoutDebugTargetGroup(), SIDE_GROUP);
 	});
 });

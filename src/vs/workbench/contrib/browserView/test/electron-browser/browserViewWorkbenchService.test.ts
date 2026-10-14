@@ -12,7 +12,6 @@ import { upcastPartial } from '../../../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { BrowserViewEvent, BrowserViewPresentation, BrowserViewStorageScope, browserZoomDefaultIndex, IBrowserViewCreateOptions, IBrowserViewInfo, serializeBrowserViewInfo } from '../../../../../platform/browserView/common/browserView.js';
 import { IMainProcessService } from '../../../../../platform/ipc/common/mainProcessService.js';
-import { IAgentNetworkFilterService } from '../../../../../platform/networkFilter/common/networkFilterService.js';
 import { IWorkspaceTrustEnablementService, IWorkspaceTrustManagementService } from '../../../../../platform/workspace/common/workspaceTrust.js';
 import { INativeWorkbenchEnvironmentService } from '../../../../services/environment/electron-browser/environmentService.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
@@ -63,10 +62,6 @@ suite('BrowserViewWorkbenchService', () => {
 			getEffectiveZoomIndex: () => browserZoomDefaultIndex,
 			onDidChangeZoom: Event.None,
 		}));
-		instantiationService.stub(IAgentNetworkFilterService, upcastPartial<IAgentNetworkFilterService>({
-			isEnabled: () => false,
-			onDidChange: Event.None,
-		}));
 		const service = store.add(instantiationService.createInstance(BrowserViewWorkbenchService));
 		instantiationService.stub(IBrowserViewWorkbenchService, service);
 		return { service, events, creationOptions, loadedUrls };
@@ -74,15 +69,14 @@ suite('BrowserViewWorkbenchService', () => {
 
 	function info(id: string, presentation = BrowserViewPresentation.Listed): IBrowserViewInfo {
 		return {
-			id, host: { windowId: 1 }, owner: { type: 'user' }, presentation,
+			id, host: { windowId: 1 }, presentation,
 			state: {
 				url: '', title: '', canGoBack: false, canGoForward: false,
 				loading: false, focused: false, visible: false, isDevToolsOpen: false,
 				lastScreenshot: undefined, lastFavicon: undefined, lastError: undefined, certificateError: undefined,
 				storageScope: BrowserViewStorageScope.Global, storageKeys: {},
 				permissions: { origins: {} }, browserZoomIndex: browserZoomDefaultIndex,
-				elementSelectionState: { active: false, options: {} },
-				isRemoteSession: false, isAreaSelectionActive: false, device: undefined, audiences: [],
+				isRemoteSession: false, device: undefined,
 			}
 		};
 	}
@@ -146,7 +140,7 @@ suite('BrowserViewWorkbenchService', () => {
 		const [restoredSerialized, restoredScreenshot] = serializeBrowserViewInfo(restored);
 		events.fire([{ type: 'snapshot', windowId: 1, views: [restoredSerialized] }, [restoredScreenshot]]);
 
-		const externalModel = await service.createExternalBrowserView('https://example.test/preview', 'canvas');
+		const externalModel = await service.createExternalBrowserView('https://example.test/preview', 'openFileCommand');
 		const [childSerialized, childScreenshot] = serializeBrowserViewInfo(info('external-child', BrowserViewPresentation.Unlisted));
 		events.fire([{ type: 'created', windowId: 1, data: { info: childSerialized } }, [childScreenshot]]);
 		const [listedSerialized, listedScreenshot] = serializeBrowserViewInfo(info('listed-page'));
@@ -164,7 +158,7 @@ suite('BrowserViewWorkbenchService', () => {
 			}, {
 				creationPresentations: [BrowserViewPresentation.Unlisted],
 				creationUrls: [undefined],
-				openSources: ['canvas'],
+				openSources: ['openFileCommand'],
 				loadedUrls: [{ id: externalModel.id, url: 'https://example.test/preview' }],
 				knownIds: ['listed-page'],
 			});

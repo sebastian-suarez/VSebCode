@@ -48,7 +48,6 @@ import { URI } from '../../../../base/common/uri.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 import { threadHasMeaningfulComments } from './commentsModel.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
-import { IsSessionsWindowContext } from '../../../common/contextkeys.js';
 
 export const ID = 'editor.contrib.review';
 
@@ -502,7 +501,7 @@ export class CommentController extends Disposable implements IEditorContribution
 		this._activeEditorHasCommentingRange = CommentContextKeys.activeEditorHasCommentingRange.bindTo(contextKeyService);
 		this._commentWidgetVisible = CommentContextKeys.commentWidgetVisible.bindTo(contextKeyService);
 
-		if (editor instanceof EmbeddedCodeEditorWidget || IsSessionsWindowContext.getValue(contextKeyService)) {
+		if (editor instanceof EmbeddedCodeEditorWidget) {
 			return;
 		}
 

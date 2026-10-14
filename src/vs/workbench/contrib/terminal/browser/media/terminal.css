@@ -336,82 +336,8 @@
 	text-align: left;
 }
 
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry {
-	flex-shrink: 0;
-	height: 22px;
-	line-height: 22px;
-	display: flex;
-	align-items: center;
-	padding: 0;
-	cursor: pointer;
-	background-color: transparent;
-	color: inherit;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-entry {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 6px;
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	box-sizing: border-box;
-	overflow: hidden;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-entry:hover {
-	background-color: var(--vscode-toolbar-hoverBackground);
-}
-
 .monaco-workbench .pane-body.integrated-terminal .tabs-list-container.drop-target {
 	background-color: var(--vscode-list-dropBackground);
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-chat-entry-label {
-	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .tabs-container.has-text .terminal-tabs-chat-entry .terminal-tabs-entry {
-	justify-content: flex-start;
-	padding: 0 10px;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-chat-entry-label:empty {
-	display: none;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-chat-entry-delete {
-	display: none;
-	align-items: center;
-	justify-content: center;
-	width: 16px;
-	height: 16px;
-	padding: 2px;
-	margin-left: auto;
-	cursor: pointer;
-	opacity: 0.8;
-	flex-shrink: 0;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry:hover .terminal-tabs-chat-entry-delete,
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry:focus-within .terminal-tabs-chat-entry-delete {
-	display: flex;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry .terminal-tabs-chat-entry-delete:hover {
-	opacity: 1;
-	background-color: var(--vscode-toolbar-hoverBackground);
-	border-radius: 3px;
-}
-
-.monaco-workbench .pane-body.integrated-terminal .tabs-container:not(.has-text) .terminal-tabs-chat-entry .terminal-tabs-chat-entry-delete,
-.monaco-workbench .pane-body.integrated-terminal .tabs-container:not(.has-text) .terminal-tabs-chat-entry:hover .terminal-tabs-chat-entry-delete,
-.monaco-workbench .pane-body.integrated-terminal .tabs-container:not(.has-text) .terminal-tabs-chat-entry:focus-within .terminal-tabs-chat-entry-delete {
-	display: none;
 }
 
 .monaco-workbench .pane-body.integrated-terminal .tabs-list .terminal-tabs-entry {

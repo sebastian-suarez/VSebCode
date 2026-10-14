@@ -12,7 +12,7 @@ import { Action2 } from '../../../../../platform/actions/common/actions.js';
 import { ICommandService } from '../../../../../platform/commands/common/commands.js';
 import { IDialogService } from '../../../../../platform/dialogs/common/dialogs.js';
 import { IInstantiationService, ServicesAccessor } from '../../../../../platform/instantiation/common/instantiation.js';
-import { IQuickInputService, IQuickPickItem, IQuickPickSeparator } from '../../../../../platform/quickinput/common/quickInput.js';
+import { IQuickInputService, IQuickPickItem } from '../../../../../platform/quickinput/common/quickInput.js';
 import { AllowedExtension, IAuthenticationService } from '../../../../services/authentication/common/authentication.js';
 import { IAuthenticationQueryService, IAccountQuery } from '../../../../services/authentication/common/authenticationQuery.js';
 import { IExtensionService } from '../../../../services/extensions/common/extensions.js';
@@ -72,7 +72,7 @@ class ManageTrustedExtensionsForAccountActionImpl {
 		}
 		const picker = this._createQuickPick(accountQuery);
 		picker.items = items;
-		picker.selectedItems = items.filter((i): i is TrustedExtensionsQuickPickItem => i.type !== 'separator' && !!i.picked);
+		picker.selectedItems = items.filter(i => !!i.picked);
 		picker.show();
 	}
 
@@ -147,16 +147,9 @@ class ManageTrustedExtensionsForAccountActionImpl {
 			return [];
 		}
 
-		const trustedExtensions = filteredExtensions.filter(e => e.trusted);
-		const otherExtensions = filteredExtensions.filter(e => !e.trusted);
 		const sortByLastUsed = (a: AllowedExtension, b: AllowedExtension) => (b.lastUsed || 0) - (a.lastUsed || 0);
 
-		const _toQuickPickItem = this._toQuickPickItem.bind(this);
-		return [
-			...otherExtensions.sort(sortByLastUsed).map(_toQuickPickItem),
-			{ type: 'separator', label: localize('trustedExtensions', "Trusted by Microsoft") } satisfies IQuickPickSeparator,
-			...trustedExtensions.sort(sortByLastUsed).map(_toQuickPickItem)
-		];
+		return filteredExtensions.sort(sortByLastUsed).map(extension => this._toQuickPickItem(extension));
 	}
 
 	private _toQuickPickItem(extension: AllowedExtension): TrustedExtensionsQuickPickItem {
@@ -164,18 +157,10 @@ class ManageTrustedExtensionsForAccountActionImpl {
 		const description = lastUsed
 			? localize({ key: 'accountLastUsedDate', comment: ['The placeholder {0} is a string with time information, such as "3 days ago"'] }, "Last used this account {0}", fromNow(lastUsed, true))
 			: localize('notUsed', "Has not used this account");
-		let tooltip: string | undefined;
-		let disabled: boolean | undefined;
-		if (extension.trusted) {
-			tooltip = localize('trustedExtensionTooltip', "This extension is trusted by Microsoft and\nalways has access to this account");
-			disabled = true;
-		}
 		return {
 			label: extension.name,
 			extension,
 			description,
-			tooltip,
-			disabled,
 			buttons: [this._viewDetailsButton, this._managePreferencesButton],
 			picked: extension.allowed === undefined || extension.allowed
 		};

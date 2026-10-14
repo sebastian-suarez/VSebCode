@@ -28,15 +28,8 @@ suite('BaseIssueReporterService', () => {
 	const currentIssue: ISimilarIssue = { html_url: 'https://github.com/owner/repo/issues/1', title: 'Current issue' };
 	const staleIssue: ISimilarIssue = { html_url: 'https://github.com/owner/repo/issues/2', title: 'Stale issue' };
 
-	function createDuplicateResponse(candidates: readonly ISimilarIssue[]): Response {
-		return new class extends Response {
-			override async json(): Promise<{ candidates: readonly ISimilarIssue[] }> { return { candidates }; }
-		}();
-	}
-
 	function createReporter(
 		searchGitHubIssues: IIssueFormService['searchGitHubIssues'] = async () => [currentIssue],
-		fetcher: typeof fetch = async () => { throw new Error('Unexpected duplicate search'); },
 	) {
 		const iframe = document.createElement('iframe');
 		document.body.appendChild(iframe);
@@ -73,12 +66,13 @@ suite('BaseIssueReporterService', () => {
 		instantiationService.stub(ILogService, { warn: message => { warnings.push(message); } });
 		const reporter = store.add(instantiationService.createInstance(BaseIssueReporterService, false, {
 			styles: {}, zoomLevel: 0, enabledExtensions: [], restrictedMode: false,
-			isInstallationPure: true, isSessionsWindow: false, githubAccessToken: '',
+			isInstallationPure: true, githubAccessToken: '',
 		}, { type: 'test', arch: 'test', release: 'test' }, new class extends mock<IProductConfiguration>() {
 			override readonly nameShort = 'Test';
 			override readonly version = '1.0.0';
+			override readonly reportIssueUrl = 'https://github.com/owner/product/issues';
 			override readonly reportMarketplaceIssueUrl = 'https://github.com/owner/marketplace/issues';
-		}(), targetWindow, true, fetcher));
+		}(), targetWindow, true));
 		reporter.issueReporterModel.update({
 			selectedExtension: {
 				id: 'publisher.extension', name: 'extension', displayName: 'Extension', version: '1.0.0',
@@ -91,24 +85,24 @@ suite('BaseIssueReporterService', () => {
 
 	for (const source of ['marketplace', 'extension'] as const) {
 		for (const timing of ['debounce', 'active'] as const) {
-			test(`stale duplicate results do not cancel a ${source} search during ${timing}`, () => runWithFakedTimers({}, async () => {
-				const duplicates = new DeferredPromise<Response>();
+			test(`stale product results do not cancel a ${source} search during ${timing}`, () => runWithFakedTimers({}, async () => {
+				const productSearch = new DeferredPromise<readonly ISimilarIssue[]>();
 				const search = new DeferredPromise<readonly ISimilarIssue[]>();
 				const calls: { repo: string; title: string; signal: AbortSignal }[] = [];
 				const { reporter, results } = createReporter((repo, title, signal) => {
 					calls.push({ repo, title, signal });
-					return search.p;
-				}, () => duplicates.p);
-				reporter.searchVSCodeIssues('Previous title', 'Previous description');
+					return repo === 'owner/product' ? productSearch.p : search.p;
+				});
+				reporter.searchVSCodeIssues('Previous title');
 				await timeout(301);
 				reporter.searchIssues('Current title', source === 'extension', source === 'marketplace');
 				if (timing === 'active') {
 					await timeout(301);
 				}
-				await duplicates.complete(createDuplicateResponse([staleIssue]));
+				await productSearch.complete([staleIssue]);
 				await timeout(0);
 				if (timing === 'debounce') {
-					assert.strictEqual(calls.length, 0);
+					assert.strictEqual(calls.length, 1);
 				}
 				await timeout(301);
 				await search.complete([currentIssue]);
@@ -117,39 +111,39 @@ suite('BaseIssueReporterService', () => {
 					calls: calls.map(call => ({ repo: call.repo, title: call.title, aborted: call.signal.aborted })),
 					titles: Array.from(results.querySelectorAll('a'), link => link.textContent),
 				}, {
-					calls: [{ repo: `owner/${source}`, title: 'Current title', aborted: false }],
+					calls: [
+						{ repo: 'owner/product', title: 'Previous title', aborted: true },
+						{ repo: `owner/${source}`, title: 'Current title', aborted: false },
+					],
 					titles: [currentIssue.title],
 				});
 			}));
 		}
 	}
 
-	test('renders current product duplicate results without cancelling their request', () => runWithFakedTimers({}, async () => {
-		let request: RequestInit | undefined;
-		const { reporter, results } = createReporter(undefined, async (_url, init) => {
-			request = init;
-			return createDuplicateResponse([currentIssue]);
+	test('renders product results from the product repository without cancelling their request', () => runWithFakedTimers({}, async () => {
+		const calls: { repo: string; title: string; signal: AbortSignal }[] = [];
+		const { reporter, results } = createReporter(async (repo, title, signal) => {
+			calls.push({ repo, title, signal });
+			return [currentIssue];
 		});
-		reporter.searchVSCodeIssues('Current title', 'Current description');
+		reporter.searchVSCodeIssues('Current title');
 		await timeout(301);
+		await timeout(0);
 		assert.deepStrictEqual({
-			method: request?.method,
-			body: request?.body,
-			aborted: request?.signal?.aborted,
+			calls: calls.map(call => ({ repo: call.repo, title: call.title, aborted: call.signal.aborted })),
 			titles: Array.from(results.querySelectorAll('a'), link => link.textContent),
 		}, {
-			method: 'POST',
-			body: JSON.stringify({ title: 'Current title', body: 'Current description' }),
-			aborted: false,
+			calls: [{ repo: 'owner/product', title: 'Current title', aborted: false }],
 			titles: [currentIssue.title],
 		});
 	}));
 
-	test('editing a Marketplace description does not start a product duplicate search', () => runWithFakedTimers({}, async () => {
-		let duplicateCalls = 0;
-		const { reporter, title, description, results } = createReporter(undefined, async () => {
-			duplicateCalls++;
-			return createDuplicateResponse([staleIssue]);
+	test('editing the description does not start a product search', () => runWithFakedTimers({}, async () => {
+		const calls: string[] = [];
+		const { reporter, title, description, results } = createReporter(async repo => {
+			calls.push(repo);
+			return repo === 'owner/marketplace' ? [currentIssue] : [staleIssue];
 		});
 		reporter.issueReporterModel.update({ fileOnExtension: false, fileOnMarketplace: true });
 		reporter.setEventHandlers();
@@ -158,10 +152,11 @@ suite('BaseIssueReporterService', () => {
 		description.value = 'Updated description';
 		description.dispatchEvent(new Event('input'));
 		await timeout(301);
+		await timeout(0);
 		assert.deepStrictEqual({
-			duplicateCalls,
+			calls,
 			titles: Array.from(results.querySelectorAll('a'), link => link.textContent),
-		}, { duplicateCalls: 0, titles: [currentIssue.title] });
+		}, { calls: ['owner/marketplace'], titles: [currentIssue.title] });
 	}));
 
 	test('failed GitHub searches do not keep results for the previous title', () => runWithFakedTimers({}, async () => {
@@ -181,15 +176,12 @@ suite('BaseIssueReporterService', () => {
 		}, { titles: [], count: 0, warnings: ['[IssueReporter] Error fetching GitHub issues'] });
 	}));
 
-	for (const backend of ['github', 'duplicates'] as const) {
+	for (const backend of ['marketplace', 'product'] as const) {
 		for (const action of ['clear', 'dispose'] as const) {
 			test(`${action} cancels a debounced ${backend} search`, () => runWithFakedTimers({}, async () => {
 				let calls = 0;
-				const { reporter } = createReporter(async () => { calls++; return []; }, async () => {
-					calls++;
-					return createDuplicateResponse([]);
-				});
-				reporter.searchIssues('Title', false, backend === 'github');
+				const { reporter } = createReporter(async () => { calls++; return []; });
+				reporter.searchIssues('Title', false, backend === 'marketplace');
 				if (action === 'clear') {
 					reporter.clearSearchResults();
 				} else {
@@ -201,17 +193,13 @@ suite('BaseIssueReporterService', () => {
 
 			test(`${action} aborts an active ${backend} search and suppresses late results`, () => runWithFakedTimers({}, async () => {
 				const pending = new DeferredPromise<void>();
-				let signal: AbortSignal | null | undefined;
+				let signal: AbortSignal | undefined;
 				const { reporter, results } = createReporter(async (_repo, _title, requestSignal) => {
 					signal = requestSignal;
 					await pending.p;
 					return [staleIssue];
-				}, async (_url, init) => {
-					signal = init?.signal;
-					await pending.p;
-					return createDuplicateResponse([staleIssue]);
 				});
-				reporter.searchIssues('Title', false, backend === 'github');
+				reporter.searchIssues('Title', false, backend === 'marketplace');
 				await timeout(301);
 				if (action === 'clear') {
 					reporter.clearSearchResults();

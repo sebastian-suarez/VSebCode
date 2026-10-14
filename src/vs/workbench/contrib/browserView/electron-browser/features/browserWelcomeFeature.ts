@@ -5,8 +5,6 @@
 
 import { localize } from '../../../../../nls.js';
 import { DisposableStore } from '../../../../../base/common/lifecycle.js';
-import { IContextKeyService } from '../../../../../platform/contextkey/common/contextkey.js';
-import { ChatContextKeys } from '../../../chat/common/actions/chatContextKeys.js';
 import { createBrowserWelcome } from '../../browser/browserWelcome.js';
 import { IBrowserViewModel } from '../../common/browserView.js';
 import { BrowserEditorInput } from '../../common/browserEditorInput.js';
@@ -26,18 +24,12 @@ export class BrowserWelcomeFeature extends BrowserEditorContribution {
 	private readonly _container: HTMLElement;
 	private readonly _widget: IBrowserEditorWidget;
 
-	constructor(
-		editor: BrowserEditor,
-		@IContextKeyService contextKeyService: IContextKeyService,
-	) {
+	constructor(editor: BrowserEditor) {
 		super(editor);
 
-		const chatEnabled = contextKeyService.getContextKeyValue<boolean>(ChatContextKeys.enabled.key);
 		this._container = createBrowserWelcome(
 			localize('browser.welcomeTitle', "Browser"),
-			chatEnabled
-				? localize('browser.welcomeSubtitleChat', "Use Add Element to Chat to reference UI elements in chat prompts.")
-				: localize('browser.welcomeSubtitle', "Enter a URL above to get started."),
+			localize('browser.welcomeSubtitle', "Enter a URL above to get started."),
 		);
 
 		this._widget = { location: BrowserWidgetLocation.ContentArea, element: this._container, order: 50 };

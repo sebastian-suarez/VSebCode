@@ -20,8 +20,6 @@ import { WorkbenchActionExecutedClassification, WorkbenchActionExecutedEvent } f
 import { TypeConstraint } from '../../../../../base/common/types.js';
 import { IJSONSchema } from '../../../../../base/common/jsonSchema.js';
 import { MarshalledId } from '../../../../../base/common/marshallingIds.js';
-import { ICodeEditor } from '../../../../../editor/browser/editorBrowser.js';
-import { isEqual } from '../../../../../base/common/resources.js';
 
 // Kernel Command
 export const SELECT_KERNEL_ID = '_notebook.selectKernel';
@@ -116,18 +114,6 @@ export function getContextFromUri(accessor: ServicesAccessor, context?: any) {
 	}
 
 	return undefined;
-}
-
-export function findTargetCellEditor(context: INotebookCellActionContext, targetCell: ICellViewModel) {
-	let foundEditor: ICodeEditor | undefined = undefined;
-	for (const [, codeEditor] of context.notebookEditor.codeEditors) {
-		if (isEqual(codeEditor.getModel()?.uri, targetCell.uri)) {
-			foundEditor = codeEditor;
-			break;
-		}
-	}
-
-	return foundEditor;
 }
 
 export abstract class NotebookAction extends Action2 {

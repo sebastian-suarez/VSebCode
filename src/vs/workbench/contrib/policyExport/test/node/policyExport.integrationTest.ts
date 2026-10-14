@@ -25,10 +25,9 @@ suite('PolicyExport Integration Tests', () => {
 		// FileAccess.asFileUri('') points to the 'out' directory.
 		const rootPath = dirname(FileAccess.asFileUri('').fsPath);
 		const exportScript = join(rootPath, 'build/lib/policies/exportPolicyData.ts');
-		const fixturePath = join(rootPath, 'src/vs/workbench/contrib/policyExport/test/node/extensionPolicyFixture.json');
 		await execFile('node', [exportScript, '--check', '--skip-transpile'], {
 			cwd: rootPath,
-			env: { ...process.env, DISTRO_PRODUCT_JSON: fixturePath, VSCODE_SKIP_PRELAUNCH: '1' },
+			env: { ...process.env, VSCODE_SKIP_PRELAUNCH: '1' },
 			maxBuffer: 10 * 1024 * 1024,
 		});
 	});

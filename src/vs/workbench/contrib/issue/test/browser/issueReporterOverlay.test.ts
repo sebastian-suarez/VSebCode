@@ -72,7 +72,7 @@ suite('IssueReporterOverlay', () => {
 			const container = document.createElement('div');
 			const overlay = store.add(new IssueReporterOverlay({
 				styles: {}, zoomLevel: 0, enabledExtensions: [], restrictedMode: false,
-				isInstallationPure: true, isSessionsWindow: false, githubAccessToken: '',
+				isInstallationPure: true, githubAccessToken: '',
 				issueType: IssueType.Bug, issueSource: IssueSource.Marketplace,
 				issueTitle: 'Public search', issueBody: 'Issue description',
 			}, false, container, new TestContextViewService(), (repo, title, signal) => {
@@ -106,7 +106,7 @@ suite('IssueReporterOverlay', () => {
 		const container = document.createElement('div');
 		const overlay = store.add(new IssueReporterOverlay({
 			styles: {}, zoomLevel: 0, enabledExtensions: [], restrictedMode: false,
-			isInstallationPure: true, isSessionsWindow: false, githubAccessToken: '',
+			isInstallationPure: true, githubAccessToken: '',
 			issueType: IssueType.Bug, issueSource: IssueSource.Marketplace,
 			issueTitle: 'Public search', issueBody: 'Issue description',
 		}, false, container, new TestContextViewService(), async () => { calls++; return []; }));
@@ -129,7 +129,6 @@ suite('IssueReporterOverlay', () => {
 			enabledExtensions: [],
 			restrictedMode: false,
 			isInstallationPure: true,
-			isSessionsWindow: false,
 			githubAccessToken: '',
 		}, false, container, new TestContextViewService(), async () => []));
 		overlay.show();
@@ -196,7 +195,6 @@ suite('IssueReporterOverlay', () => {
 				enabledExtensions: [],
 				restrictedMode: false,
 				isInstallationPure: true,
-				isSessionsWindow: false,
 				githubAccessToken: '',
 				issueTitle: 'Screenshot annotation',
 			},
@@ -240,7 +238,6 @@ suite('IssueReporterOverlay', () => {
 				enabledExtensions: [],
 				restrictedMode: false,
 				isInstallationPure: true,
-				isSessionsWindow: false,
 				githubAccessToken: '',
 				issueType: IssueType.Bug,
 				issueSource: IssueSource.VSCode,

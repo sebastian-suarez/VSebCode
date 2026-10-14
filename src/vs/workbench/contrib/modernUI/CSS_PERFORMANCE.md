@@ -31,12 +31,10 @@ rule. A previous editor-tab fix replaced ten generated decoration-class
 substring checks with the stable `.monaco-decoration-itemColor` marker and made
 a full style recalculation 2.4 times faster on a 3.7k-node workbench.
 
-This work removes the three non-codicon production uses:
+This work removes the non-codicon production uses:
 
 - Custom-view decoration detection now uses the stable
   `.monaco-decoration-itemColor` and `.monaco-decoration-badge` markers.
-- Chat placeholder styling targets Monaco's existing after-content decoration
-  class, `.ced-chat-session-detail-4`.
 
 The 36 existing codicon-family uses (33 stylesheet selectors and three rules
 emitted from TypeScript) are deliberately unchanged. They are an established,
@@ -69,15 +67,14 @@ module classes such as `.modern-ui`, `.modern-ui-tabs`, and
 
 ### Remaining `:has(...)` register
 
-The one disconnected editor-header rule was removed. The remaining 114
-pseudo-class uses across 111 selector lines in 38 stylesheets (plus six rules
-emitted from TypeScript) were classified as follows:
+The one disconnected editor-header rule was removed. The remaining
+pseudo-class uses were classified as follows:
 
 | Risk | Owners | Decision |
 | --- | --- | --- |
-| Hot mutation paths | Sessions split-view sashes (`sessions/browser/media/workbench.css`, 12), sessions list rows (`sessionsList.css`, 14), changes rows (`changesView.css`, 3), custom view rows (`views.css`, 5), Agent Sessions rows (`agentsessionsviewer.css`, 2), streaming Chat (`chatThinkingContent.css`, 5; `chat.css`, 10), and notebook adjacent selection rules emitted by `notebookEditorWidget.ts` (3) | Follow-up candidates. Each needs a component-owned state marker and lifecycle tests before replacement. |
-| Bounded interactive widgets | Action Widget, Sessions Chat input/view/widget, mobile Chat input, automation cards, Browser View, Chat debug/models/voice/dictation/feedback/code-block/confirmation/model-picker/context-usage/tunnel widgets, multi-file diff, issue reporter, and notebook toolbar | Retain until a component trace shows measurable cost. Their invalidation subject is local, while mirrored state would add mutation paths. |
-| Cold or structural content | Rendered Markdown task items (1), phone/sidebar/mobile shell layout (10), account/automation/banner/blocked-session structure (4), command-center compact layout (3), surveys (6), and release-note webview rules emitted by `releaseNotesEditor.ts` (3) | Retain. These are constructed or configured infrequently and do not contribute to the measured Modern UI tab/resize workload. |
+| Hot mutation paths | Custom view rows (`views.css`, 5) and notebook adjacent selection rules emitted by `notebookEditorWidget.ts` (3) | Follow-up candidates. Each needs a component-owned state marker and lifecycle tests before replacement. |
+| Bounded interactive widgets | Action Widget, Browser View, multi-file diff, issue reporter, and notebook toolbar | Retain until a component trace shows measurable cost. Their invalidation subject is local, while mirrored state would add mutation paths. |
+| Cold or structural content | Rendered Markdown task items (1) and command-center compact layout (3) | Retain. These are constructed or configured infrequently and do not contribute to the measured Modern UI tab/resize workload. |
 
 ## Performance test suite
 

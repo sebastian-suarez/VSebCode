@@ -6,13 +6,12 @@
 /*
  * Modern UI module: "Tabs".
  *
- * Shared modern tab presentation used by the regular workbench and the Agents
- * window: transparent, rounded, borderless pills with a subtle active highlight.
+ * Modern tab presentation of the workbench: transparent, rounded, borderless
+ * pills with a subtle active highlight.
  *
- * All rules are gated behind the tab-specific `.modern-ui-tabs` class.
- * ModernUIContribution toggles it on regular workbench containers when
- * `workbench.experimental.modernUI` is enabled, while the Agents workbench
- * applies it independently of the broader Modern UI modules.
+ * All rules are gated behind the tab-specific `.modern-ui-tabs` class, which
+ * ModernUIContribution toggles on the workbench containers when
+ * `workbench.experimental.modernUI` is enabled.
  */
 
 .modern-ui-tabs.monaco-workbench {
@@ -1104,10 +1103,6 @@
 .modern-ui-tabs.monaco-workbench .pane-body.integrated-terminal .tabs-container.has-text .tabs-list .terminal-tabs-entry {
 	padding-left: 8px;
 	padding-right: 8px;
-}
-
-.modern-ui-tabs.monaco-workbench .pane-body.integrated-terminal .terminal-tabs-chat-entry {
-	padding: 4px;
 }
 
 .modern-ui-tabs.monaco-workbench .pane-body.integrated-terminal .tabs-list .codicon {

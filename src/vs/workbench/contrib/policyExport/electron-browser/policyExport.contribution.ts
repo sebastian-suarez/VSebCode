@@ -8,9 +8,9 @@ import { Disposable } from '../../../../base/common/lifecycle.js';
 import { IWorkbenchConfigurationService } from '../../../services/configuration/common/configuration.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { INativeEnvironmentService } from '../../../../platform/environment/common/environment.js';
-import { process } from '../../../../base/parts/sandbox/electron-browser/globals.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { INativeHostService } from '../../../../platform/native/common/native.js';
+import { IProductService } from '../../../../platform/product/common/productService.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
 import { Extensions, IConfigurationRegistry } from '../../../../platform/configuration/common/configurationRegistry.js';
 import { IProgressService, ProgressLocation } from '../../../../platform/progress/common/progress.js';
@@ -22,23 +22,6 @@ import { ExportedPolicyDataDto } from '../common/policyDto.js';
 import { join } from '../../../../base/common/path.js';
 import { hasKey } from '../../../../base/common/types.js';
 import { arePolicyReferenceTypesCompatible } from '../common/policyReference.js';
-import { agentHostPolicySupport } from '../../../../platform/agentHost/common/agentHostPolicySupport.js';
-
-interface ExtensionConfigurationPolicyEntry {
-	readonly name: string;
-	readonly category: string;
-	readonly minimumVersion: `${number}.${number}`;
-	readonly description: string;
-}
-
-/**
- * A reference-shaped entry in the distro `extensionConfigurationPolicy`: the extension setting
- * attaches to a policy *owned* by an in-code setting (which provides the catalog metadata and the
- * `value` callback) via a `policyReference` pointer.
- */
-interface ExtensionConfigurationPolicyReferenceEntry {
-	readonly policyReference: { readonly name: string };
-}
 
 export class PolicyExportContribution extends Disposable implements IWorkbenchContribution {
 	static readonly ID = 'workbench.contrib.policyExport';
@@ -50,6 +33,7 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 		@IFileService private readonly fileService: IFileService,
 		@IWorkbenchConfigurationService private readonly configurationService: IWorkbenchConfigurationService,
 		@INativeHostService private readonly nativeHostService: INativeHostService,
+		@IProductService private readonly productService: IProductService,
 		@IProgressService private readonly progressService: IProgressService,
 		@ILogService private readonly logService: ILogService,
 	) {
@@ -117,11 +101,8 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 				}
 				this.log(`Discovered ${policyData.policies.length} policies to export.`);
 
-				// Merge extension configuration policies from the distro's product.json.
-				// Checks DISTRO_PRODUCT_JSON env var (for testing),
-				// then falls back to fetching from GitHub API with GITHUB_TOKEN.
-				const distroProduct = await this.getDistroProductJson();
-				const extensionPolicies = distroProduct.extensionConfigurationPolicy as Record<string, ExtensionConfigurationPolicyEntry | ExtensionConfigurationPolicyReferenceEntry> | undefined;
+				// Merge the extension configuration policies of the product.
+				const extensionPolicies = this.productService.extensionConfigurationPolicy;
 				// Reference-shaped product entries (extension settings attaching to an in-code-owned
 				// policy), collected by owning policy name so they can be linked below.
 				const productReferencesByPolicyName = new Map<string, string[]>();
@@ -148,8 +129,8 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 							continue;
 						}
 						// Owner ("parent") entry: full catalog metadata is required.
-						if (!entry.name || !entry.category || !entry.description) {
-							throw new Error(`Extension policy '${key}' is missing required 'name', 'category', or 'description' field.`);
+						if (!entry.name || !entry.category || !entry.localization?.description) {
+							throw new Error(`Extension policy '${key}' is missing required 'name', 'category', or 'localization.description' field.`);
 						}
 						policyData.policies.push({
 							key,
@@ -157,7 +138,8 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 							category: entry.category,
 							minimumVersion: entry.minimumVersion,
 							localization: {
-								description: { key, value: entry.description },
+								description: entry.localization.description,
+								enumDescriptions: entry.localization.enumDescriptions,
 							},
 							type: 'boolean',
 							default: true,
@@ -170,7 +152,7 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 
 				// Link policyReference settings and enforce type match (same value is applied verbatim).
 				// References come from both in-code settings (`getPolicyReferenceConfigurations`) and
-				// reference-shaped distro product entries collected above.
+				// reference-shaped product entries collected above.
 				const policyReferenceConfigurations = configurationRegistry.getPolicyReferenceConfigurations();
 				const linkedProductReferenceNames = new Set<string>();
 				let linkedReferences = 0;
@@ -206,14 +188,6 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 				}
 				this.log(`Linked ${linkedReferences} referenced settings across ${policyData.policies.length} policies.`);
 
-				for (const policy of policyData.policies) {
-					const support = Object.hasOwn(agentHostPolicySupport, policy.name) ? agentHostPolicySupport[policy.name] : undefined;
-					if (!support) {
-						throw new Error(`Policy '${policy.name}' has no Agent Host support status. Add it to 'agentHostPolicySupport' in 'src/vs/platform/agentHost/common/agentHostPolicySupport.ts'.`);
-					}
-					policy.agentHost = { status: support.status };
-				}
-
 				const disclaimerComment = `/** THIS FILE IS AUTOMATICALLY GENERATED USING \`npm run export-policy-data\`. DO NOT MODIFY IT MANUALLY. **/`;
 				const policyDataFileContent = `${disclaimerComment}\n${JSON.stringify(policyData, null, 4)}\n`;
 				await this.fileService.writeFile(URI.file(policyDataPath), VSBuffer.fromString(policyDataFileContent));
@@ -225,66 +199,6 @@ export class PolicyExportContribution extends Disposable implements IWorkbenchCo
 			this.log('Failed to export policy', error);
 			await this.nativeHostService.exit(1);
 		}
-	}
-
-	/**
-	 * Reads the distro product.json for the 'stable' quality.
-	 * Checks DISTRO_PRODUCT_JSON env var (for testing),
-	 * then falls back to fetching from the GitHub API using GITHUB_TOKEN.
-	 */
-	private async getDistroProductJson(): Promise<Record<string, unknown>> {
-		const root = this.nativeEnvironmentService.appRoot;
-
-		// 1. DISTRO_PRODUCT_JSON env var (for testing)
-		const envPath = process.env['DISTRO_PRODUCT_JSON'];
-		if (envPath) {
-			this.log(`Reading distro product.json from DISTRO_PRODUCT_JSON=${envPath}`);
-			const content = (await this.fileService.readFile(URI.file(envPath))).value.toString();
-			return JSON.parse(content);
-		}
-
-		// 2. GitHub API with GITHUB_TOKEN
-		const packageJsonPath = join(root, 'package.json');
-		const packageJsonContent = (await this.fileService.readFile(URI.file(packageJsonPath))).value.toString();
-		const packageJson = JSON.parse(packageJsonContent);
-		const distroCommit: string | undefined = packageJson.distro;
-
-		if (!distroCommit) {
-			throw new Error(
-				'No distro commit found in package.json. ' +
-				'Use `npm run export-policy-data` which sets up the required environment.'
-			);
-		}
-
-		const token = process.env['GITHUB_TOKEN'];
-		if (!token) {
-			throw new Error(
-				'GITHUB_TOKEN is required to fetch distro product.json. ' +
-				'Use `npm run export-policy-data` which sets up the required environment.'
-			);
-		}
-
-		this.log(`Fetching distro product.json for commit ${distroCommit} from GitHub...`);
-		const url = `https://api.github.com/repos/microsoft/vscode-distro/contents/mixin/stable/product.json?ref=${encodeURIComponent(distroCommit)}`;
-		const response = await fetch(url, {
-			headers: {
-				'Accept': 'application/vnd.github+json',
-				'Authorization': `Bearer ${token}`,
-				'X-GitHub-Api-Version': '2022-11-28',
-				'User-Agent': 'VSCode Build'
-			}
-		});
-
-		if (!response.ok) {
-			throw new Error(`Failed to fetch distro product.json: ${response.status} ${response.statusText}`);
-		}
-
-		const data = await response.json() as { content: string; encoding: string };
-		if (data.encoding !== 'base64') {
-			throw new Error(`Unexpected encoding from GitHub API: ${data.encoding}`);
-		}
-		const content = VSBuffer.wrap(Uint8Array.from(atob(data.content), c => c.charCodeAt(0))).toString();
-		return JSON.parse(content);
 	}
 }
 

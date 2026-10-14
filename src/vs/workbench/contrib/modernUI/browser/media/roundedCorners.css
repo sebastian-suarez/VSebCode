@@ -81,42 +81,6 @@
 	border-radius: var(--vscode-cornerRadius-small);
 }
 
-/*
- * Agent status pill (experimental title-bar widget). A connected pill/badge
- * group whose segments hardcode 5-6px per-corner radii, with a few intentional
- * flat (0) seams where segments butt together. Re-map every rounded corner to
- * the controls tier while preserving each segment's shape and the flat seams.
- */
-
-/* All-corners segments */
-.modern-ui .agent-status-pill,
-.modern-ui .agent-status-badge,
-.modern-ui .agent-status-badge-section:only-child,
-.modern-ui .agent-status-esc-button,
-.modern-ui .agent-status-enter-button {
-	border-radius: var(--vscode-cornerRadius-small);
-}
-
-/* Leading-edge segments (rounded left, flat right) */
-.modern-ui .agent-status-pill .agent-status-input-area,
-.modern-ui .agent-status-command-center-toolbar,
-.modern-ui .agent-status-badge-section:first-child,
-.modern-ui .agent-status-badge-section.sparkle .action-container {
-	border-radius: var(--vscode-cornerRadius-small) 0 0 var(--vscode-cornerRadius-small);
-}
-
-/* Trailing-edge segments (flat left, rounded right) */
-.modern-ui .agent-status-badge-section:last-child,
-.modern-ui .agent-status-badge-section.sparkle:last-child .dropdown-action-container {
-	border-radius: 0 var(--vscode-cornerRadius-small) var(--vscode-cornerRadius-small) 0;
-}
-
-/* Intentional flat seams where a segment butts up against its neighbour */
-.modern-ui .agent-status-line-separator + .agent-status-input-area,
-.modern-ui .agent-status-pill.compact-mode .agent-status-badge-section.sparkle .action-container {
-	border-radius: 0;
-}
-
 /* Scrollbar sliders (panels, editor, lists — all consistent) */
 .modern-ui .monaco-scrollable-element > .scrollbar > .slider {
 	border-radius: var(--vscode-cornerRadius-small);
@@ -239,7 +203,7 @@
 }
 
 /* =============================================================================
- * Sashes — round the hover/drag affordance ends (mirrors the Agents window).
+ * Sashes — round the hover/drag affordance ends.
  * ========================================================================== */
 .modern-ui .monaco-sash:before {
 	border-radius: calc(var(--vscode-sash-hover-size) / 2);
@@ -252,10 +216,6 @@
 
 .modern-ui .monaco-sash:not(.disabled) > .orthogonal-drag-handle {
 	border-radius: var(--vscode-sash-size);
-}
-
-.modern-ui.monaco-workbench .pane-body.integrated-terminal .tabs-container.has-text .terminal-tabs-chat-entry .terminal-tabs-entry {
-	border-radius: var(--vscode-cornerRadius-small);
 }
 
 .modern-ui.monaco-workbench .terminal-resize-overlay {

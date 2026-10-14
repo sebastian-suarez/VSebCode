@@ -21,8 +21,8 @@ suite('Frosted glass styles', () => {
 		return createFrostedGlassOverlays(store, background);
 	}
 
-	function createNestedMenu(domPosition: ContextViewDOMPosition, windowClass = 'modern-ui') {
-		const root = append(document.body, `monaco-workbench ${windowClass} modern-ui-frosted-glass monaco-enable-motion`);
+	function createNestedMenu(domPosition: ContextViewDOMPosition) {
+		const root = append(document.body, 'monaco-workbench modern-ui modern-ui-frosted-glass monaco-enable-motion');
 		store.add(toDisposable(() => root.remove()));
 		root.style.setProperty('--vscode-menu-background', '#242424');
 		root.style.setProperty('--modern-ui-glass-opacity', '50%');
@@ -59,44 +59,41 @@ suite('Frosted glass styles', () => {
 		return container.querySelector<HTMLElement>('.monaco-submenu')!;
 	}
 
-	for (const windowClass of ['modern-ui', 'agent-sessions-workbench']) {
-		for (const kind of ['plain', 'dropdown', 'tabbed', 'submenu']) {
-			(supportsGlass(document.body) ? test : test.skip)(`scales every ${kind} picker in ${windowClass} without an opacity or tint transition`, () => {
-				const { root, picker } = createFrostedGlassOverlays(store, '#242424', `monaco-workbench ${windowClass}`);
-				root.style.setProperty('--vscode-agentsPanel-background', '#242424');
-				picker.style.width = '200px';
-				picker.style.height = '100px';
-				if (kind === 'dropdown') {
-					picker.classList.add('action-widget-dropdown');
-				} else if (kind === 'tabbed') {
-					append(picker, 'tabbed-action-list-tabbar');
-				} else if (kind === 'submenu') {
-					picker.classList.add('action-list-submenu-panel');
-					picker.style.position = 'absolute';
-				}
-				root.style.setProperty('--modern-ui-glass-opacity', '50%');
-				root.classList.add('modern-ui-frosted-glass', 'monaco-enable-motion');
-				const [animation] = picker.getAnimations();
-				assert.ok(animation, 'Every popup renderer must opt in to the shared glass scale');
-				const read = () => {
-					const style = getWindow(picker).getComputedStyle(picker);
-					return {
-						scale: style.transform === 'none' ? 1 : new DOMMatrixReadOnly(style.transform).a,
-						opacity: style.opacity,
-						tint: Math.round(readColor(picker, '::before').rgba.a * 100),
-						blur: getWindow(picker).getComputedStyle(picker, '::before').backdropFilter,
-					};
+	for (const kind of ['plain', 'dropdown', 'tabbed', 'submenu']) {
+		(supportsGlass(document.body) ? test : test.skip)(`scales every ${kind} picker without an opacity or tint transition`, () => {
+			const { root, picker } = createFrostedGlassOverlays(store, '#242424', 'monaco-workbench modern-ui');
+			picker.style.width = '200px';
+			picker.style.height = '100px';
+			if (kind === 'dropdown') {
+				picker.classList.add('action-widget-dropdown');
+			} else if (kind === 'tabbed') {
+				append(picker, 'tabbed-action-list-tabbar');
+			} else if (kind === 'submenu') {
+				picker.classList.add('action-list-submenu-panel');
+				picker.style.position = 'absolute';
+			}
+			root.style.setProperty('--modern-ui-glass-opacity', '50%');
+			root.classList.add('modern-ui-frosted-glass', 'monaco-enable-motion');
+			const [animation] = picker.getAnimations();
+			assert.ok(animation, 'Every popup renderer must opt in to the shared glass scale');
+			const read = () => {
+				const style = getWindow(picker).getComputedStyle(picker);
+				return {
+					scale: style.transform === 'none' ? 1 : new DOMMatrixReadOnly(style.transform).a,
+					opacity: style.opacity,
+					tint: Math.round(readColor(picker, '::before').rgba.a * 100),
+					blur: getWindow(picker).getComputedStyle(picker, '::before').backdropFilter,
 				};
-				animation.pause();
-				animation.currentTime = 0;
-				const opening = read();
-				animation.finish();
-				assert.deepStrictEqual({ opening, settled: read() }, {
-					opening: { scale: 0.97, opacity: '1', tint: 50, blur: 'blur(12px)' },
-					settled: { scale: 1, opacity: '1', tint: 50, blur: 'blur(12px)' },
-				});
+			};
+			animation.pause();
+			animation.currentTime = 0;
+			const opening = read();
+			animation.finish();
+			assert.deepStrictEqual({ opening, settled: read() }, {
+				opening: { scale: 0.97, opacity: '1', tint: 50, blur: 'blur(12px)' },
+				settled: { scale: 1, opacity: '1', tint: 50, blur: 'blur(12px)' },
 			});
-		}
+		});
 	}
 
 	for (const domPosition of [ContextViewDOMPosition.ABSOLUTE, ContextViewDOMPosition.FIXED_SHADOW]) {
@@ -104,42 +101,40 @@ suite('Frosted glass styles', () => {
 		const supportsShadowSelectors = CSS.supports('selector(:host-context(.modern-ui))');
 		const glassMotionTest = supportsGlass(document.body) && (domPosition !== ContextViewDOMPosition.FIXED_SHADOW || supportsShadowSelectors) ? test : test.skip;
 
-		for (const windowClass of ['modern-ui', 'agent-sessions-workbench']) {
-			glassMotionTest(`closing motion scales ${name} menu contents and glass together in ${windowClass}`, () => {
-				const { root, container, surface, contextView, finishOpening } = createNestedMenu(domPosition, windowClass);
-				finishOpening();
-				contextView.hide();
-				container.getAnimations({ subtree: true }).forEach(animation => {
-					animation.pause();
-					animation.currentTime = 75;
-				});
-				const targetWindow = getWindow(container);
-				const paint = targetWindow.getComputedStyle(container, '::before');
-				const contents = targetWindow.getComputedStyle(surface);
-				const scale = (transform: string) => transform === 'none' ? 1 : new DOMMatrixReadOnly(transform).a;
-				const state = {
-					hasEditorMarker: root.classList.contains('modern-ui'),
-					closing: container.classList.contains(CONTEXT_VIEW_MENU_MOTION_CLOSING_CLASS),
-					inert: container.inert,
-					paintAnimation: paint.animationName,
-					contentAnimation: contents.animationName,
-					scalesTogether: scale(paint.transform) === scale(contents.transform),
-					shrinking: scale(contents.transform) < 1 && scale(contents.transform) > 0.99,
-					paintOpacity: paint.opacity,
-				};
-				contextView.hide(undefined, true);
-				assert.deepStrictEqual(state, {
-					hasEditorMarker: windowClass === 'modern-ui',
-					closing: true,
-					inert: true,
-					paintAnimation: 'frosted-glass-menu-motion-close',
-					contentAnimation: 'context-view-menu-motion-close',
-					scalesTogether: true,
-					shrinking: true,
-					paintOpacity: '1',
-				});
+		glassMotionTest(`closing motion scales ${name} menu contents and glass together`, () => {
+			const { root, container, surface, contextView, finishOpening } = createNestedMenu(domPosition);
+			finishOpening();
+			contextView.hide();
+			container.getAnimations({ subtree: true }).forEach(animation => {
+				animation.pause();
+				animation.currentTime = 75;
 			});
-		}
+			const targetWindow = getWindow(container);
+			const paint = targetWindow.getComputedStyle(container, '::before');
+			const contents = targetWindow.getComputedStyle(surface);
+			const scale = (transform: string) => transform === 'none' ? 1 : new DOMMatrixReadOnly(transform).a;
+			const state = {
+				hasEditorMarker: root.classList.contains('modern-ui'),
+				closing: container.classList.contains(CONTEXT_VIEW_MENU_MOTION_CLOSING_CLASS),
+				inert: container.inert,
+				paintAnimation: paint.animationName,
+				contentAnimation: contents.animationName,
+				scalesTogether: scale(paint.transform) === scale(contents.transform),
+				shrinking: scale(contents.transform) < 1 && scale(contents.transform) > 0.99,
+				paintOpacity: paint.opacity,
+			};
+			contextView.hide(undefined, true);
+			assert.deepStrictEqual(state, {
+				hasEditorMarker: true,
+				closing: true,
+				inert: true,
+				paintAnimation: 'frosted-glass-menu-motion-close',
+				contentAnimation: 'context-view-menu-motion-close',
+				scalesTogether: true,
+				shrinking: true,
+				paintOpacity: '1',
+			});
+		});
 
 		for (const useMenuMotionClass of [false, true]) {
 			glassMotionTest(`scales the complete ${name} ${useMenuMotionClass ? 'dropdown' : 'context'} menu without fading`, () => {

@@ -16,7 +16,7 @@ import { IViewsService } from '../../../../services/views/common/viewsService.js
 import { REVEAL_IN_EXPLORER_COMMAND_ID } from '../../browser/fileConstants.js';
 import { IExplorerService } from '../../browser/files.js';
 import { ExplorerView } from '../../browser/views/explorerView.js';
-import { SESSIONS_FILES_VIEW_ID, VIEW_ID } from '../../common/files.js';
+import { VIEW_ID } from '../../common/files.js';
 import '../../browser/fileCommands.js';
 
 suite('Reveal in Explorer command', () => {
@@ -49,25 +49,23 @@ suite('Reveal in Explorer command', () => {
 		return { instantiation, calls, view };
 	}
 
-	for (const viewId of [VIEW_ID, SESSIONS_FILES_VIEW_ID]) {
-		test(`reveals in the application's Explorer: ${viewId}`, async () => {
-			const { instantiation, calls, view } = createServices(viewId);
-			await instantiation.invokeFunction(CommandsRegistry.getCommand(REVEAL_IN_EXPLORER_COMMAND_ID)!.handler, resource);
-			assert.deepStrictEqual({ calls, autoReveal: view.autoReveal }, {
-				calls: [
-					{ view: viewId, focus: false },
-					{ expanded: true },
-					{ select: resource.toString(), reveal: 'force', autoReveal: false },
-					{ focus: true },
-				],
-				autoReveal: true,
-			});
+	test('reveals in the Explorer', async () => {
+		const { instantiation, calls, view } = createServices(VIEW_ID);
+		await instantiation.invokeFunction(CommandsRegistry.getCommand(REVEAL_IN_EXPLORER_COMMAND_ID)!.handler, resource);
+		assert.deepStrictEqual({ calls, autoReveal: view.autoReveal }, {
+			calls: [
+				{ view: VIEW_ID, focus: false },
+				{ expanded: true },
+				{ select: resource.toString(), reveal: 'force', autoReveal: false },
+				{ focus: true },
+			],
+			autoReveal: true,
 		});
-	}
+	});
 
 	test('restores auto-reveal when selection fails', async () => {
 		const error = new Error('Selection failed');
-		const { instantiation, view } = createServices(SESSIONS_FILES_VIEW_ID, error);
+		const { instantiation, view } = createServices(VIEW_ID, error);
 		await assert.rejects(async () => instantiation.invokeFunction(CommandsRegistry.getCommand(REVEAL_IN_EXPLORER_COMMAND_ID)!.handler, resource), error);
 		assert.strictEqual(view.autoReveal, true);
 	});

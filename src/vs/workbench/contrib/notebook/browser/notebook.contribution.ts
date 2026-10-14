@@ -69,7 +69,6 @@ import './controller/editActions.js';
 import './controller/cellOutputActions.js';
 import './controller/apiActions.js';
 import './controller/foldingController.js';
-import './controller/chat/notebook.chat.contribution.js';
 import './controller/variablesActions.js';
 
 // Editor Contribution
@@ -97,7 +96,6 @@ import './contrib/debug/notebookCellPausing.js';
 import './contrib/debug/notebookDebugDecorations.js';
 import './contrib/execute/executionEditorProgress.js';
 import './contrib/kernelDetection/notebookKernelDetection.js';
-import './contrib/cellDiagnostics/cellDiagnostics.js';
 import './contrib/multicursor/notebookMulticursor.js';
 import './contrib/multicursor/notebookSelectionHighlight.js';
 import './contrib/notebookVariables/notebookInlineVariables.js';
@@ -1261,11 +1259,6 @@ configurationRegistry.registerConfiguration({
 				nls.localize('notebook.scrolling.revealNextCellOnExecute.none.description', 'Do not scroll.'),
 			],
 			default: 'fullCell'
-		},
-		[NotebookSetting.cellGenerate]: {
-			markdownDescription: nls.localize('notebook.cellGenerate', "Enable experimental generate action to create code cell with inline chat enabled."),
-			type: 'boolean',
-			default: true
 		},
 		[NotebookSetting.notebookVariablesView]: {
 			markdownDescription: nls.localize('notebook.VariablesView.description', "Enable the experimental notebook variables view within the debug panel."),

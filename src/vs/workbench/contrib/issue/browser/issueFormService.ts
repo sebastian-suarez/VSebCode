@@ -5,7 +5,8 @@
 import { safeSetInnerHtml } from '../../../../base/browser/domSanitize.js';
 import { createStyleSheet } from '../../../../base/browser/domStylesheets.js';
 import { getMenuWidgetCSS, Menu, unthemedMenuStyles } from '../../../../base/browser/ui/menu/menu.js';
-import { Disposable, DisposableStore, IReference, MutableDisposable } from '../../../../base/common/lifecycle.js';
+import { CancellationTokenSource } from '../../../../base/common/cancellation.js';
+import { Disposable, DisposableStore } from '../../../../base/common/lifecycle.js';
 import { isLinux, isWindows } from '../../../../base/common/platform.js';
 import Severity from '../../../../base/common/severity.js';
 import { localize } from '../../../../nls.js';
@@ -15,12 +16,10 @@ import { IContextKeyService } from '../../../../platform/contextkey/common/conte
 import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { ExtensionIdentifier, ExtensionIdentifierSet } from '../../../../platform/extensions/common/extensions.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
-import { IGitHubAnonymousClient, IGitHubService } from '../../../../platform/github/common/githubService.js';
-import { GitHubRequestError } from '../../../../platform/github/common/githubTypes.js';
-import { arrayProperty, asObject, requiredString, stringProperty } from '../../../../platform/github/common/githubResponse.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import product from '../../../../platform/product/common/product.js';
+import { asJson, IRequestService } from '../../../../platform/request/common/request.js';
 import { IRectangle } from '../../../../platform/window/common/window.js';
 import { AuxiliaryWindowMode, IAuxiliaryWindowService } from '../../../services/auxiliaryWindow/browser/auxiliaryWindowService.js';
 import { IHostService } from '../../../services/host/browser/host.js';
@@ -98,7 +97,6 @@ export class IssueFormService extends Disposable implements IIssueFormService {
 
 	/** Bounded cache of already-uploaded attachments to avoid re-uploading on retry within a session. Uses a content hash so large data URLs aren't retained as keys. */
 	private readonly uploadCache = new LRUCache<string, import('./githubUploadService.js').IGitHubUploadResult>(32);
-	private readonly gitHubSearchClient = this._register(new MutableDisposable<IReference<IGitHubAnonymousClient>>());
 
 	constructor(
 		@IInstantiationService protected readonly instantiationService: IInstantiationService,
@@ -113,7 +111,7 @@ export class IssueFormService extends Disposable implements IIssueFormService {
 		@IGitHubUploadService protected readonly githubUploadService: IGitHubUploadService,
 		@IEditorService protected readonly editorService: IEditorService,
 		@IClipboardService protected readonly clipboardService: IClipboardService,
-		@IGitHubService private readonly gitHubService: IGitHubService,
+		@IRequestService private readonly requestService: IRequestService,
 	) {
 		super();
 	}
@@ -121,25 +119,39 @@ export class IssueFormService extends Disposable implements IIssueFormService {
 	async searchGitHubIssues(repo: string, title: string, signal: AbortSignal): Promise<readonly ISimilarIssue[]> {
 		signal.throwIfAborted();
 		if (this._store.isDisposed) {
-			throw new GitHubRequestError('Issue reporter was disposed', 'unknown');
+			throw new Error('Issue reporter was disposed');
 		}
-		this.gitHubSearchClient.value ??= this.gitHubService.acquireAnonymousClient({ apiBaseUri: 'https://api.github.com' });
 		const query = encodeURIComponent(`is:issue repo:${repo} ${title}`);
+		const cancellation = new CancellationTokenSource();
+		const abortListener = () => cancellation.cancel();
+		signal.addEventListener('abort', abortListener);
 		try {
-			const response = await this.gitHubSearchClient.value.object.get<unknown>(`/search/issues?q=${query}`, signal, {
-				caller: 'github.query',
-				deadline: Date.now() + 10_000,
-			});
-			const items = arrayProperty(asObject(response.data, 'GitHub issue search response was malformed'), 'items');
-			return items.map(item => {
-				const issue = asObject(item, 'GitHub issue search result was malformed');
-				return { html_url: requiredString(issue, 'html_url'), title: requiredString(issue, 'title'), state: stringProperty(issue, 'state') };
+			const context = await this.requestService.request({
+				type: 'GET',
+				url: `https://api.github.com/search/issues?q=${query}`,
+				callSite: 'issueReporter.searchGitHubIssues',
+				headers: { 'Accept': 'application/vnd.github+json' },
+				timeout: 10_000,
+			}, cancellation.token);
+			const response = await asJson<{ readonly items?: unknown }>(context);
+			if (!response || !Array.isArray(response.items)) {
+				throw new Error('GitHub issue search response was malformed');
+			}
+			return response.items.map((item: unknown): ISimilarIssue => {
+				const issue = item as { readonly html_url?: unknown; readonly title?: unknown; readonly state?: unknown } | null;
+				if (!issue || typeof issue.html_url !== 'string' || typeof issue.title !== 'string') {
+					throw new Error('GitHub issue search result was malformed');
+				}
+				return { html_url: issue.html_url, title: issue.title, state: typeof issue.state === 'string' ? issue.state : undefined };
 			});
 		} catch (error) {
 			if (!signal.aborted) {
 				this.logService.warn('[IssueFormService] GitHub issue search failed', error);
 			}
 			throw error;
+		} finally {
+			signal.removeEventListener('abort', abortListener);
+			cancellation.dispose();
 		}
 	}
 
@@ -445,7 +457,7 @@ export class IssueFormService extends Disposable implements IIssueFormService {
 	}
 
 	private addTemplateToUrl(baseUrl: string, owner?: string, repositoryName?: string, issueSource?: IssueSource): string {
-		const needsTemplate = issueSource === IssueSource.VSCode || issueSource === IssueSource.AgentsWindow || (owner?.toLowerCase() === 'microsoft' && repositoryName?.toLowerCase() === 'vscode');
+		const needsTemplate = issueSource === IssueSource.VSCode || (owner?.toLowerCase() === 'microsoft' && repositoryName?.toLowerCase() === 'vscode');
 		if (!needsTemplate) {
 			return baseUrl;
 		}

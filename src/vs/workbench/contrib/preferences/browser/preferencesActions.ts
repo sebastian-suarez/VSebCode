@@ -122,14 +122,6 @@ export interface IConfigurationPropertyInformation {
 		previewFeature?: string;
 		defaultValue?: string | number;
 	};
-	experiment?: {
-		mode: 'startup' | 'auto';
-		name?: string;
-	};
-	agentsWindow?: {
-		default?: unknown;
-		readOnly?: boolean;
-	};
 	section?: {
 		id?: string;
 		title?: string;
@@ -169,8 +161,7 @@ CommandsRegistry.registerCommand({
 		// reading the registry, otherwise extension settings may be missing.
 		await extensionService.whenInstalledExtensionsRegistered();
 
-		// Some built-in extensions (e.g. Copilot when chat setup is incomplete) may be
-		// disabled and therefore not contribute their configuration. Enable any disabled
+		// Some built-in extensions may be disabled and therefore not contribute their configuration. Enable any disabled
 		// built-in extensions and wait for them to register so their settings are dumped too.
 		const installed = await extensionManagementService.getInstalled();
 		const toEnable = installed.filter(e => e.isBuiltin && extensionEnablementService.canChangeEnablement(e) && !extensionEnablementService.isEnabled(e));

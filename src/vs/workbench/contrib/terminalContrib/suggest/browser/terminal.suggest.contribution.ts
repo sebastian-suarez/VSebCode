@@ -529,7 +529,7 @@ registerActiveInstanceAction({
 	f1: false,
 	precondition: ContextKeyExpr.and(ContextKeyExpr.or(TerminalContextKeys.processSupported, TerminalContextKeys.terminalHasBeenCreated), TerminalContextKeys.isOpen, TerminalContextKeys.focus, TerminalContextKeys.suggestWidgetVisible, SimpleSuggestContext.HasFocusedSuggestion),
 	keybinding: {
-		// HACK: Force weight to be higher than that to start terminal chat
+		// HACK: Force weight to be higher than extension keybindings
 		weight: KeybindingWeight.ExternalExtension + 2,
 		primary: KeyMod.CtrlCmd | KeyCode.Space,
 		secondary: [KeyMod.CtrlCmd | KeyCode.KeyI],

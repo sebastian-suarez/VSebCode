@@ -9,13 +9,11 @@ import { InEditorZenModeContext, MenuBarVisibleContext } from '../../../common/c
 export const ShowCurrentReleaseNotesActionId = 'update.showCurrentReleaseNotes';
 
 export const UpdateTitleBarContext = new RawContextKey<boolean>('updateTitleBar', false);
-export const UpdateTitleBarChatInProgressContext = new RawContextKey<boolean>('updateTitleBarChatRequestInProgress', false);
 
 export const UpdateTitleBarEditorVisibleContext = ContextKeyExpr.and(
 	UpdateTitleBarContext,
 	InEditorZenModeContext.negate(),
-	ContextKeyExpr.not('inDebugMode'),
-	UpdateTitleBarChatInProgressContext.negate()
+	ContextKeyExpr.not('inDebugMode')
 )!;
 
 export const UpdateGlobalActivityBadgeVisibleContext = ContextKeyExpr.or(
