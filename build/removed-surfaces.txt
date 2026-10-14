@@ -373,6 +373,7 @@ src/vs/workbench/test/browser/componentFixtures/aiStats.fixture.ts
 src/vs/workbench/test/browser/componentFixtures/editor/actionListPlacement.fixture.ts
 src/vs/workbench/test/browser/componentFixtures/editor/inlineChatAffordance.fixture.ts
 src/vs/workbench/test/browser/componentFixtures/editor/inlineChatZoneWidget.fixture.ts
+src/vs/workbench/test/browser/componentFixtures/editor/multiDiffEditorChatChanges.json
 src/vs/workbench/test/common/chatIssue.test.ts
 src/vscode-dts/vscode.proposed.agentEditorComments.d.ts
 src/vscode-dts/vscode.proposed.agentSessionsWorkspace.d.ts

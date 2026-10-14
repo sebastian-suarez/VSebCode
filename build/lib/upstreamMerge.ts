@@ -13,6 +13,7 @@ import { execFileSync, spawnSync } from 'child_process';
 import { isRemovedSurface, readRemovedSurfaces, type IRemovedSurfaces } from './removedSurfaces.ts';
 
 export const upstreamBaseBranch = 'upstream-base';
+const mainBranch = 'main';
 const upstreamRemote = 'upstream';
 
 // Files that may conflict between upstream main and a release branch without blocking the base:
@@ -49,6 +50,7 @@ export interface IUpstreamMergeReport {
 	readonly oldBase: string;
 	readonly newBase: string;
 	readonly removed: readonly string[];
+	readonly removedAdditions: readonly string[];
 	readonly remainingConflicts: readonly string[];
 	readonly remainingAdditions: readonly string[];
 	readonly delta: IUpstreamDelta;
@@ -134,7 +136,7 @@ export function mergeTag(repoRoot: string, tag: string): { conflicted: string[];
 	}
 	return {
 		conflicted: nulSeparated(git(repoRoot, ['diff', '--name-only', '-z', '--diff-filter=U'])),
-		added: nulSeparated(git(repoRoot, ['diff', '--cached', '--name-only', '-z', '--diff-filter=A'])),
+		added: nulSeparated(git(repoRoot, ['diff', '--cached', '--name-only', '-z', '--no-renames', '--diff-filter=A'])),
 	};
 }
 
@@ -145,7 +147,7 @@ export function mergeTag(repoRoot: string, tag: string): { conflicted: string[];
 export function deleteRemovedSurfaces(repoRoot: string, paths: readonly string[], surfaces: IRemovedSurfaces): string[] {
 	const covered = [...new Set(paths.filter(filePath => isRemovedSurface(surfaces, filePath)))].sort();
 	for (let i = 0; i < covered.length; i += 200) {
-		git(repoRoot, ['rm', '-q', '-f', '--', ...covered.slice(i, i + 200)]);
+		git(repoRoot, ['--literal-pathspecs', 'rm', '-q', '-f', '--', ...covered.slice(i, i + 200)]);
 	}
 	return covered;
 }
@@ -155,7 +157,7 @@ export function deleteRemovedSurfaces(repoRoot: string, paths: readonly string[]
  * `product.json` fields, new dependencies of the manifests and new API proposals.
  */
 export function describeUpstreamDelta(repoRoot: string, oldBase: string, newBase: string): IUpstreamDelta {
-	const added = nulSeparated(git(repoRoot, ['diff', '--name-only', '-z', '--diff-filter=A', oldBase, newBase]));
+	const added = nulSeparated(git(repoRoot, ['diff', '--name-only', '-z', '--no-renames', '--diff-filter=A', oldBase, newBase]));
 	const newFolders = new Set<string>();
 	for (const root of watchedRoots) {
 		const existing = new Set(git(repoRoot, ['ls-tree', '--name-only', oldBase, `${root}/`]).split('\n'));
@@ -201,6 +203,10 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 	if (git(repoRoot, ['status', '--porcelain']) !== '') {
 		throw new Error('The working tree must be clean before an upstream merge.');
 	}
+	const branch = gitResult(repoRoot, ['symbolic-ref', '--short', 'HEAD']).stdout.trim();
+	if (branch !== mainBranch) {
+		throw new Error(`The upstream merge runs on ${mainBranch}, because it advances ${upstreamBaseBranch}; the current branch is ${branch || 'detached'}.`);
+	}
 	if (options.fetch) {
 		git(repoRoot, ['fetch', upstreamRemote, '--tags']);
 	}
@@ -242,12 +248,14 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 		throw new Error(`${error instanceof Error ? error.message : String(error)}\nThe merge was aborted; the working tree is back at ${preMergeHead.slice(0, 11)} and ${upstreamBaseBranch} is unchanged.`);
 	}
 	const removedSet = new Set(removed);
+	const addedSet = new Set(added);
 	return {
 		tag,
 		preMergeHead,
 		oldBase,
 		newBase,
 		removed,
+		removedAdditions: removed.filter(file => addedSet.has(file)),
 		remainingConflicts: conflicted.filter(file => !removedSet.has(file)),
 		remainingAdditions: added.filter(file => !removedSet.has(file)),
 		delta: describeUpstreamDelta(repoRoot, oldBase, newBase),
@@ -262,7 +270,8 @@ export function formatReport(report: IUpstreamMergeReport): string {
 	return [
 		`Merged ${report.tag} into the working tree and the index, not committed yet.`,
 		`${upstreamBaseBranch}: ${report.oldBase.slice(0, 11)} -> ${report.newBase.slice(0, 11)}`,
-		`Deleted again inside the removed surfaces: ${report.removed.length} paths`,
+		`Deleted again inside the removed surfaces: ${report.removed.length - report.removedAdditions.length} conflicting paths`,
+		...list('New upstream files deleted inside the removed surfaces, check that none of them is wanted', report.removedAdditions),
 		...list('Conflicts to resolve by hand', report.remainingConflicts),
 		...list('Additions outside the removed surfaces, to keep or to add to build/removed-surfaces.txt', report.remainingAdditions),
 		...list('New upstream folders', report.delta.newFolders),
@@ -270,8 +279,9 @@ export function formatReport(report: IUpstreamMergeReport): string {
 		...list('New dependencies', report.delta.newDependencies),
 		...list('New API proposals', report.delta.newApiProposals),
 		'',
-		'Next: resolve the conflicts hunk by hunk (an upstream hunk is dropped only when it concerns a removed surface), review the additions, then `git commit` for the merge commit, and check that the fork changes the same paths as before:',
+		'Next: resolve the conflicts hunk by hunk (an upstream hunk is dropped only when it concerns a removed surface), review the additions, then `git commit` for the merge commit, and check that the fork changes the same paths as before plus the new upstream files deleted above:',
 		`  diff <(git diff --name-only ${report.oldBase.slice(0, 11)} ${report.preMergeHead.slice(0, 11)}) <(git diff --name-only ${upstreamBaseBranch} HEAD)`,
+		...(report.newBase === report.oldBase ? [] : [`To abort this merge instead, run git merge --abort and restore the base: git update-ref refs/heads/${upstreamBaseBranch} ${report.oldBase} ${report.newBase}`]),
 		`Then: npm install, npm run fork-header -- ${upstreamBaseBranch} (no rewrite expected), npm run typecheck-client, and the validation list of CLAUDE.md.`,
 	].join('\n');
 }

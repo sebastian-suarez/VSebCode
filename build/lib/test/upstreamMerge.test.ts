@@ -60,6 +60,7 @@ function createRepo(): IRepo {
 function createHistory(repo: IRepo): { base: string; tag: string } {
 	repo.write({
 		'src/vs/platform/keep/a.ts': 'export const a = 1;\n',
+		'src/vs/platform/keep/moved.ts': 'export const moved = 1;\n',
 		'src/vs/platform/removed/r.ts': 'r1\n',
 		'product.json': '{\n\t"nameShort": "Code"\n}\n',
 		'package.json': '{\n\t"dependencies": {\n\t\t"x": "1"\n\t}\n}\n',
@@ -67,6 +68,7 @@ function createHistory(repo: IRepo): { base: string; tag: string } {
 	const base = repo.commit('upstream base');
 	repo.git('branch', upstreamBaseBranch);
 	repo.git('checkout', '-q', '-b', 'release');
+	repo.git('mv', 'src/vs/platform/keep/moved.ts', 'src/vs/platform/removed/moved.ts');
 	repo.write({
 		'src/vs/platform/keep/a.ts': 'export const a = 2;\n',
 		'src/vs/platform/keep/n.ts': 'export const n = 1;\n',
@@ -113,7 +115,8 @@ suite('upstream merge', () => {
 					preMergeHead,
 					oldBase: base,
 					newBase,
-					removed: ['src/vs/platform/removed/n.ts', 'src/vs/platform/removed/r.ts'],
+					removed: ['src/vs/platform/removed/moved.ts', 'src/vs/platform/removed/n.ts', 'src/vs/platform/removed/r.ts'],
+					removedAdditions: ['src/vs/platform/removed/moved.ts', 'src/vs/platform/removed/n.ts'],
 					remainingConflicts: [],
 					remainingAdditions: ['src/vs/platform/keep/n.ts', 'src/vs/platform/newFeature/x.ts', 'src/vscode-dts/vscode.proposed.foo.d.ts'],
 					delta: {
@@ -131,7 +134,7 @@ suite('upstream merge', () => {
 				manifestKept: removedSurfacesFile,
 				tagMerged: true,
 				forkChangedPathsBefore: `${removedSurfacesFile}\nsrc/vs/platform/removed/r.ts`,
-				forkChangedPathsAfter: `${removedSurfacesFile}\nsrc/vs/platform/removed/n.ts\nsrc/vs/platform/removed/r.ts`,
+				forkChangedPathsAfter: `${removedSurfacesFile}\nsrc/vs/platform/removed/moved.ts\nsrc/vs/platform/removed/n.ts\nsrc/vs/platform/removed/r.ts`,
 			});
 		} finally {
 			fs.rmSync(repo.root, { recursive: true, force: true });
@@ -226,7 +229,7 @@ suite('upstream merge', () => {
 					newDependencies: ['y (package.json)'],
 					newApiProposals: ['foo'],
 				},
-				removed: ['src/vs/platform/removed/n.ts', 'src/vs/platform/removed/r.ts'],
+				removed: ['src/vs/platform/removed/moved.ts', 'src/vs/platform/removed/n.ts', 'src/vs/platform/removed/r.ts'],
 			});
 		} finally {
 			fs.rmSync(repo.root, { recursive: true, force: true });
@@ -259,7 +262,7 @@ suite('upstream merge', () => {
 		}
 	});
 
-	test('refuses a dirty tree, a missing tag and a tag already merged', () => {
+	test('refuses a dirty tree, a missing tag, a tag already merged and another branch', () => {
 		const repo = createRepo();
 		try {
 			createHistory(repo);
@@ -277,10 +280,13 @@ suite('upstream merge', () => {
 			const missing = attempt('9.9.9');
 			repo.git('tag', '0.0.1', 'HEAD~1');
 			const merged = attempt('0.0.1');
-			assert.deepStrictEqual({ dirty, missing, merged }, {
+			repo.git('checkout', '-q', '-b', 'feature');
+			const branch = attempt('1.1.0');
+			assert.deepStrictEqual({ dirty, missing, merged, branch }, {
 				dirty: 'The working tree must be clean before an upstream merge.',
 				missing: 'The tag 9.9.9 does not exist; run git fetch upstream --tags.',
 				merged: 'The tag 0.0.1 is already merged.',
+				branch: `The upstream merge runs on main, because it advances ${upstreamBaseBranch}; the current branch is feature.`,
 			});
 		} finally {
 			fs.rmSync(repo.root, { recursive: true, force: true });
