@@ -34,9 +34,9 @@ suite('removed surfaces', () => {
 	});
 
 	test('separates staged deletions from the paths still present', () => {
-		assert.deepStrictEqual(parseStagedPaths('M\tbuild/removed-surfaces.txt\nD\tsrc/vs/platform/chat/common/chatSettings.ts\nA\tsrc/new.ts\nR100\told.ts\tnew.ts\n'), {
-			all: ['build/removed-surfaces.txt', 'src/vs/platform/chat/common/chatSettings.ts', 'src/new.ts', 'new.ts'],
-			present: ['build/removed-surfaces.txt', 'src/new.ts', 'new.ts'],
+		assert.deepStrictEqual(parseStagedPaths('M\0build/removed-surfaces.txt\0D\0src/vs/platform/chat/common/chatSettings.ts\0A\0src/new.ts\0R100\0old.ts\0new.ts\0A\0src/vs/platform/chat/caf\u00e9 file.ts\0'), {
+			all: ['build/removed-surfaces.txt', 'src/vs/platform/chat/common/chatSettings.ts', 'src/new.ts', 'new.ts', 'src/vs/platform/chat/caf\u00e9 file.ts'],
+			present: ['build/removed-surfaces.txt', 'src/new.ts', 'new.ts', 'src/vs/platform/chat/caf\u00e9 file.ts'],
 		});
 	});
 

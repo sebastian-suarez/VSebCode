@@ -116,7 +116,7 @@ export function advanceUpstreamBase(repoRoot: string, tag: string, sign: boolean
 	}
 	const tree = gitResult(repoRoot, ['merge-tree', '--write-tree', '--no-messages', '-X', 'theirs', oldBase, tagCommit]);
 	if (tree.status !== 0) {
-		throw new Error(`The upstream base and ${tag} conflict beyond what -X theirs resolves; build the base by hand in a scratch worktree:\n${tree.stdout.trim()}`);
+		throw new Error(`The upstream base and ${tag} conflict beyond what -X theirs resolves; build the base by hand in a scratch worktree as the merge of ${oldBase.slice(0, 11)} and ${tag}:\n${tree.stdout.trim()}`);
 	}
 	const treeId = tree.stdout.trim().split('\n')[0];
 	const commit = git(repoRoot, ['commit-tree', ...(sign ? ['-S'] : []), treeId, '-p', oldBase, '-p', tagCommit, '-m', `upstream: ${tag} merged`]);
@@ -244,10 +244,16 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 		baseAlreadyAdvanced = true;
 	} else if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tagCommit, oldBase]).status === 0) {
 		throw new Error(`The branch ${upstreamBaseBranch} already contains ${tag}; merge a newer tag.`);
-	} else {
+	}
+	// The base must hold exactly the upstream content main contains: no upstream commit outside main
+	const foreignCommit = gitResult(repoRoot, ['rev-list', '--no-merges', '-n', '1', oldBase, `^${preMergeHead}`]).stdout.trim();
+	if (foreignCommit) {
+		throw new Error(`The branch ${upstreamBaseBranch} contains the upstream commit ${foreignCommit.slice(0, 11)} that ${mainBranch} does not; the base must be the merge of the previous base and the merged tag only.`);
+	}
+	if (!baseAlreadyAdvanced) {
 		const audit = auditUpstreamSides(repoRoot, oldBase, tagCommit, surfaces);
 		if (audit.length > 0) {
-			throw new Error(`The upstream base and ${tag} conflict in surviving files, which -X theirs would resolve silently; build the base by hand in a scratch worktree:\n${audit.map(file => `  ${file}`).join('\n')}`);
+			throw new Error(`The upstream base and ${tag} conflict in surviving files, which -X theirs would resolve silently; build the base by hand in a scratch worktree as the merge of ${oldBase.slice(0, 11)} and ${tag}:\n${audit.map(file => `  ${file}`).join('\n')}`);
 		}
 	}
 	const { conflicted, added } = mergeTag(repoRoot, tag);

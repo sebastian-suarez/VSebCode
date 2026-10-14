@@ -275,6 +275,30 @@ suite('upstream merge', () => {
 		}
 	});
 
+	test('refuses a base that holds an upstream commit main does not', () => {
+		const repo = createRepo();
+		try {
+			createHistory(repo);
+			// Upstream main moved on, and the base was moved there by hand without merging it into main
+			repo.git('checkout', '-q', upstreamBaseBranch);
+			repo.write({ 'src/vs/platform/keep/foreign.ts': 'export const foreign = 1;\n' });
+			const foreign = repo.commit('upstream main moved on');
+			repo.git('checkout', '-q', 'main');
+			let message = '';
+			try {
+				runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: false });
+			} catch (error) {
+				message = error instanceof Error ? error.message : String(error);
+			}
+			assert.deepStrictEqual({ message, treeClean: repo.git('status', '--porcelain') }, {
+				message: `The branch ${upstreamBaseBranch} contains the upstream commit ${foreign.slice(0, 11)} that main does not; the base must be the merge of the previous base and the merged tag only.`,
+				treeClean: '',
+			});
+		} finally {
+			fs.rmSync(repo.root, { recursive: true, force: true });
+		}
+	});
+
 	test('reports when there is no merge to abort', () => {
 		const repo = createRepo();
 		try {

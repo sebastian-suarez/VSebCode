@@ -309,7 +309,7 @@ if (import.meta.main) {
 		});
 	} else {
 		cp.exec(
-			'git diff --cached --name-status',
+			'git diff --cached --name-status -z',
 			{ maxBuffer: 2000 * 1024 },
 			(err, out) => {
 				if (err) {

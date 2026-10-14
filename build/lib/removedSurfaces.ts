@@ -66,21 +66,26 @@ export function findRemovedSurfaces(repoRoot: string, paths?: readonly string[],
 }
 
 /**
- * Splits the output of `git diff --cached --name-status` into every staged path and the paths that
- * are still present afterwards (a staged deletion of a removed surface is the right thing to do,
- * not a re-introduction). A rename or copy names the new path.
+ * Splits the output of `git diff --cached --name-status -z` into every staged path and the paths
+ * still present afterwards (a staged deletion of a removed surface is the right thing to do, not a
+ * re-introduction). A rename or copy names the new path. The NUL-separated form keeps paths with
+ * unusual characters unquoted.
  */
 export function parseStagedPaths(nameStatusOutput: string): { all: string[]; present: string[] } {
+	const fields = nameStatusOutput.split('\0');
 	const all: string[] = [];
 	const present: string[] = [];
-	for (const line of nameStatusOutput.split(/\r?\n/)) {
-		if (!line) {
+	for (let i = 0; i < fields.length; i++) {
+		const status = fields[i];
+		if (!status) {
 			continue;
 		}
-		const fields = line.split('\t');
-		const filePath = fields[fields.length - 1];
+		const filePath = status.startsWith('R') || status.startsWith('C') ? fields[i += 2] : fields[++i];
+		if (filePath === undefined) {
+			break;
+		}
 		all.push(filePath);
-		if (!fields[0].startsWith('D')) {
+		if (!status.startsWith('D')) {
 			present.push(filePath);
 		}
 	}
