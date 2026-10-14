@@ -142,7 +142,7 @@ if not defined SUITE_FILTER if defined HAS_FILTER (
 :: Forward grep pattern to extension test runners
 if defined GREP_PATTERN set "MOCHA_GREP=%GREP_PATTERN%"
 
-set API_TESTS_EXTRA_ARGS=--disable-telemetry --disable-experiments --skip-welcome --skip-release-notes --crash-reporter-directory=%VSCODECRASHDIR% --logsPath=%VSCODELOGSDIR% --no-cached-data --disable-updates --use-inmemory-secretstorage --disable-extensions --disable-workspace-trust --user-data-dir=%VSCODEUSERDATADIR%
+set API_TESTS_EXTRA_ARGS=--disable-telemetry --disable-experiments --skip-welcome --crash-reporter-directory=%VSCODECRASHDIR% --logsPath=%VSCODELOGSDIR% --no-cached-data --use-inmemory-secretstorage --disable-extensions --disable-workspace-trust --user-data-dir=%VSCODEUSERDATADIR%
 
 call :should_run_suite api-folder || goto skip_api_folder
 echo.

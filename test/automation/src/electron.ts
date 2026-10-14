@@ -23,12 +23,10 @@ export async function resolveElectronConfiguration(options: LaunchOptions): Prom
 	const env = { ...process.env };
 
 	const args: string[] = [
-		'--skip-release-notes',
 		'--skip-welcome',
 		'--disable-telemetry',
 		'--disable-experiments',
 		'--no-cached-data',
-		'--disable-updates',
 		'--disable-extension=vscode.vscode-api-tests',
 		`--crash-reporter-directory=${crashesPath}`,
 		'--disable-workspace-trust',

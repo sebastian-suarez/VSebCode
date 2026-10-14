@@ -9,10 +9,7 @@ import * as cp from 'child_process';
 import * as path from 'path';
 import * as os from 'os';
 import minimist from 'minimist';
-import * as vscodetest from '@vscode/test-electron';
-import fetch from 'node-fetch';
 import { Quality, MultiLogger, Logger, ConsoleLogger, FileLogger, measureAndLog, getDevElectronPath, getBuildElectronPath, getBuildVersion, ApplicationOptions } from '../../automation';
-import { retry } from './utils';
 
 import { setup as setupDataLossTests } from './areas/workbench/data-loss.test';
 import { setup as setupPreferencesTests } from './areas/preferences/preferences.test';
@@ -287,64 +284,10 @@ async function setupRepository(): Promise<void> {
 }
 
 async function ensureStableCode(): Promise<void> {
-	let stableCodePath = opts['stable-build'];
+	const stableCodePath = opts['stable-build'];
 	if (!stableCodePath) {
-		const current = parseVersion(version!);
-		const versionsReq = await retry(() => measureAndLog(() => fetch('https://update.code.visualstudio.com/api/releases/stable'), 'versionReq', logger), 1000, 20);
-
-		if (!versionsReq.ok) {
-			throw new Error('Could not fetch releases from update server');
-		}
-
-		const versions: string[] = await measureAndLog(() => versionsReq.json(), 'versionReq.json()', logger);
-		const stableVersion = versions.find(raw => {
-			const version = parseVersion(raw);
-			return version.major < current.major || (version.major === current.major && version.minor < current.minor);
-		});
-
-		if (!stableVersion) {
-			throw new Error(`Could not find suitable stable version for ${version}`);
-		}
-
-		logger.log(`Found VS Code v${version}, downloading previous VS Code version ${stableVersion}...`);
-
-		let lastProgressMessage: string | undefined = undefined;
-		let lastProgressReportedAt = 0;
-		const stableCodeDestination = path.join(testDataPath, 's');
-		const stableCodeExecutable = await retry(() => measureAndLog(() => vscodetest.download({
-			cachePath: stableCodeDestination,
-			version: stableVersion,
-			extractSync: true,
-			reporter: {
-				report: report => {
-					let progressMessage = `download stable code progress: ${report.stage}`;
-					const now = Date.now();
-					if (progressMessage !== lastProgressMessage || now - lastProgressReportedAt > 10000) {
-						lastProgressMessage = progressMessage;
-						lastProgressReportedAt = now;
-
-						if (report.stage === 'downloading') {
-							progressMessage += ` (${report.bytesSoFar}/${report.totalBytes})`;
-						}
-
-						logger.log(progressMessage);
-					}
-				},
-				error: error => logger.log(`download stable code error: ${error}`)
-			}
-		}), 'download stable code', logger), 1000, 3, async () => {
-			fs.rmSync(stableCodeDestination, { recursive: true, force: true, maxRetries: 10, retryDelay: 1000 });
-		});
-
-		if (process.platform === 'darwin') {
-			// Visual Studio Code.app/Contents/MacOS/Code
-			stableCodePath = path.dirname(path.dirname(path.dirname(stableCodeExecutable)));
-		} else {
-			// VSCode/Code.exe (Windows) | VSCode/code (Linux)
-			stableCodePath = path.dirname(stableCodeExecutable);
-		}
-
-		opts['stable-version'] = parseVersion(stableVersion);
+		logger.log('No --stable-build given, skipping the migration tests');
+		return;
 	}
 
 	if (!fs.existsSync(stableCodePath)) {
@@ -353,7 +296,7 @@ async function ensureStableCode(): Promise<void> {
 
 	logger.log(`Using stable build ${stableCodePath} for migration tests`);
 
-	opts['stable-build'] = stableCodePath;
+	opts['stable-version'] = parseVersion(getBuildVersion(stableCodePath));
 }
 
 async function setup(): Promise<void> {
@@ -382,7 +325,7 @@ async function setup(): Promise<void> {
 
 // Before all tests run setup
 before(async function () {
-	this.timeout(5 * 60 * 1000); // increase since we download VSCode
+	this.timeout(5 * 60 * 1000); // increase since we clone the test repository
 
 	const options: ApplicationOptions = {
 		quality,

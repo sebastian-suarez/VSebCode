@@ -12,6 +12,9 @@
 		"outDir": "out",
 		"sourceMap": true,
 		"skipLibCheck": true,
+		"types": [
+			"node"
+		],
 		"lib": [
 			"esnext", // for #201187
 			"dom"
