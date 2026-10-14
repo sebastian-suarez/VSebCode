@@ -41,19 +41,3 @@ export function shouldDownloadElectron(repoRoot = root, environment: NodeJS.Proc
 		return true;
 	}
 }
-
-/**
- * Check the cached Electron version without launching it or requiring installed dependencies.
- */
-export function isExpectedElectronInstalled(rootDir: string = root): boolean {
-	const { electronVersion } = getElectronVersion(rootDir);
-	try {
-		const installedVersion = fs.readFileSync(path.join(rootDir, '.build', 'electron', 'version'), 'utf8').trim().replace(/^v/, '');
-		return installedVersion === electronVersion;
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-			return false;
-		}
-		throw error;
-	}
-}
