@@ -110,7 +110,6 @@
 	"git.branchProtection": [
 		"main",
 		"main-*",
-		"distro",
 		"release/*"
 	],
 	"git.branchProtectionPrompt": "alwaysCommitToNewBranch",
