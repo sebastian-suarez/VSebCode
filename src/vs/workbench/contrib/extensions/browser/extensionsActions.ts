@@ -12,7 +12,7 @@ import * as json from '../../../../base/common/json.js';
 import { IContextMenuService } from '../../../../platform/contextview/browser/contextView.js';
 import { disposeIfDisposable } from '../../../../base/common/lifecycle.js';
 import { NotificationText } from '../../../../platform/notification/common/notificationMessage.js';
-import { IExtension, ExtensionState, IExtensionsWorkbenchService, IExtensionContainer, TOGGLE_IGNORE_EXTENSION_ACTION_ID, SELECT_INSTALL_VSIX_EXTENSION_COMMAND_ID, THEME_ACTIONS_GROUP, INSTALL_ACTIONS_GROUP, UPDATE_ACTIONS_GROUP, ExtensionEditorTab, ExtensionRuntimeActionType, IExtensionArg, AutoUpdateConfigurationKey } from '../common/extensions.js';
+import { IExtension, ExtensionState, IExtensionsWorkbenchService, IExtensionContainer, SELECT_INSTALL_VSIX_EXTENSION_COMMAND_ID, THEME_ACTIONS_GROUP, INSTALL_ACTIONS_GROUP, UPDATE_ACTIONS_GROUP, ExtensionEditorTab, ExtensionRuntimeActionType, IExtensionArg, AutoUpdateConfigurationKey } from '../common/extensions.js';
 import { ExtensionsConfigurationInitialContent } from '../common/extensionsFileTemplate.js';
 import { IGalleryExtension, IExtensionGalleryService, ILocalExtension, InstallOptions, InstallOperation, ExtensionManagementErrorCode, IAllowedExtensionsService, shouldRequireRepositorySignatureFor } from '../../../../platform/extensionManagement/common/extensionManagement.js';
 import { IWorkbenchExtensionEnablementService, EnablementState, IExtensionManagementServerService, IExtensionManagementServer, IWorkbenchExtensionManagementService } from '../../../services/extensionManagement/common/extensionManagement.js';
@@ -52,10 +52,9 @@ import { IProgressService, ProgressLocation } from '../../../../platform/progres
 import { IActionViewItemOptions, ActionViewItem } from '../../../../base/browser/ui/actionbar/actionViewItems.js';
 import { EXTENSIONS_CONFIG, IExtensionsConfigContent } from '../../../services/extensionRecommendations/common/workspaceExtensionsConfig.js';
 import { getErrorMessage, isCancellationError } from '../../../../base/common/errors.js';
-import { IUserDataSyncEnablementService } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { IContextMenuProvider } from '../../../../base/browser/contextmenu.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { errorIcon, infoIcon, manageExtensionIcon, syncEnabledIcon, syncIgnoredIcon, trustIcon, warningIcon } from './extensionsIcons.js';
+import { errorIcon, infoIcon, manageExtensionIcon, trustIcon, warningIcon } from './extensionsIcons.js';
 import { isIOS, isWeb, language } from '../../../../base/common/platform.js';
 import { IExtensionManifestPropertiesService } from '../../../services/extensions/common/extensionManifestPropertiesService.js';
 import { IWorkspaceTrustEnablementService, IWorkspaceTrustManagementService } from '../../../../platform/workspace/common/workspaceTrust.js';
@@ -1478,9 +1477,7 @@ export class MenuItemExtensionAction extends ExtensionAction {
 		if (!this.extension) {
 			return;
 		}
-		if (this.action.id === TOGGLE_IGNORE_EXTENSION_ACTION_ID) {
-			this.checked = !this.extensionsWorkbenchService.isExtensionIgnoredToSync(this.extension);
-		} else if (this.action.id === ToggleAutoUpdateForExtensionAction.ID) {
+		if (this.action.id === ToggleAutoUpdateForExtensionAction.ID) {
 			this.checked = this.extensionsWorkbenchService.isAutoUpdateEnabledFor(this.extension);
 		} else if (this.action.id === ToggleAutoUpdatesForPublisherAction.ID) {
 			this.checked = this.extensionsWorkbenchService.isAutoUpdateEnabledFor(this.extension.publisher);
@@ -2701,44 +2698,6 @@ export class ExtensionStatusLabelAction extends Action implements IExtensionCont
 		return Promise.resolve();
 	}
 
-}
-
-export class ToggleSyncExtensionAction extends DropDownExtensionAction {
-
-	private static readonly IGNORED_SYNC_CLASS = `${ExtensionAction.ICON_ACTION_CLASS} extension-sync ${ThemeIcon.asClassName(syncIgnoredIcon)}`;
-	private static readonly SYNC_CLASS = `${this.ICON_ACTION_CLASS} extension-sync ${ThemeIcon.asClassName(syncEnabledIcon)}`;
-
-	constructor(
-		@IConfigurationService private readonly configurationService: IConfigurationService,
-		@IExtensionsWorkbenchService private readonly extensionsWorkbenchService: IExtensionsWorkbenchService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
-		@IInstantiationService instantiationService: IInstantiationService,
-	) {
-		super('extensions.sync', '', ToggleSyncExtensionAction.SYNC_CLASS, false, instantiationService);
-		this._register(Event.filter(this.configurationService.onDidChangeConfiguration, e => e.affectsConfiguration('settingsSync.ignoredExtensions'))(() => this.update()));
-		this._register(userDataSyncEnablementService.onDidChangeEnablement(() => this.update()));
-		this.update();
-	}
-
-	update(): void {
-		this.enabled = !!this.extension && this.userDataSyncEnablementService.isEnabled() && this.extension.state === ExtensionState.Installed;
-		if (this.extension) {
-			const isIgnored = this.extensionsWorkbenchService.isExtensionIgnoredToSync(this.extension);
-			this.class = isIgnored ? ToggleSyncExtensionAction.IGNORED_SYNC_CLASS : ToggleSyncExtensionAction.SYNC_CLASS;
-			this.tooltip = isIgnored ? localize('ignored', "This extension is ignored during sync") : localize('synced', "This extension is synced");
-		}
-	}
-
-	override async run(): Promise<any> {
-		return super.run([
-			[
-				new Action(
-					'extensions.syncignore',
-					this.extensionsWorkbenchService.isExtensionIgnoredToSync(this.extension!) ? localize('sync', "Sync this extension") : localize('do not sync', "Do not sync this extension")
-					, undefined, true, () => this.extensionsWorkbenchService.toggleExtensionIgnoredToSync(this.extension!))
-			]
-		]);
-	}
 }
 
 export type ExtensionStatus = { readonly message: IMarkdownString; readonly icon?: ThemeIcon };

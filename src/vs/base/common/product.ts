@@ -46,14 +46,6 @@ export interface IChatSessionRecommendation {
 	readonly postInstallCommand?: string;
 }
 
-export type ConfigurationSyncStore = {
-	url: string;
-	insidersUrl: string;
-	stableUrl: string;
-	canSwitch?: boolean;
-	authenticationProviders: IStringDictionary<{ scopes: string[] }>;
-};
-
 export type ExtensionUntrustedWorkspaceSupport = {
 	readonly default?: boolean | 'limited';
 	readonly override?: boolean | 'limited';
@@ -241,9 +233,6 @@ export interface IProductConfiguration {
 
 	readonly authClientIdMetadataUrl?: string;
 
-	readonly 'configurationSync.store'?: ConfigurationSyncStore;
-
-	readonly 'editSessions.store'?: Omit<ConfigurationSyncStore, 'insidersUrl' | 'stableUrl'>;
 	readonly darwinUniversalAssetId?: string;
 	readonly darwinBundleIdentifier?: string;
 	readonly profileTemplatesUrl?: string;

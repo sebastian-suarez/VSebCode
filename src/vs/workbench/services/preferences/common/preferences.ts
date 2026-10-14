@@ -86,7 +86,6 @@ export interface ISetting {
 	enumDescriptionsAreMarkdown?: boolean;
 	uniqueItems?: boolean;
 	tags?: string[];
-	disallowSyncIgnore?: boolean;
 	restricted?: boolean;
 	extensionInfo?: IExtensionInfo;
 	validator?: (value: any) => string | null;

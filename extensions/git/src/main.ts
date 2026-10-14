@@ -23,7 +23,6 @@ import { TerminalEnvironmentManager, TerminalShellExecutionManager } from './ter
 import { createIPCServer, IPCServer } from './ipc/ipcServer';
 import { GitEditor, GitEditorDocumentLinkProvider } from './gitEditor';
 import { GitPostCommitCommandsProvider } from './postCommitCommands';
-import { GitEditSessionIdentityProvider } from './editSessionIdentityProvider';
 import { GitCommitInputBoxCodeActionsProvider, GitCommitInputBoxDiagnosticsManager } from './diagnostics';
 import { GitBlameController } from './blame';
 import { CloneManager } from './cloneManager';
@@ -118,7 +117,6 @@ async function createModel(context: ExtensionContext, logger: LogOutputChannel, 
 		new GitDecorations(model),
 		new GitBlameController(model),
 		new GitTimelineProvider(model, cc),
-		new GitEditSessionIdentityProvider(model),
 		new TerminalShellExecutionManager(model, logger)
 	);
 

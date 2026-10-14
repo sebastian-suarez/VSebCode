@@ -521,12 +521,6 @@ const newCommands: ApiCommand[] = [
 		[ApiCommandArgument.Arr(ApiCommandArgument.TestItem)],
 		ApiCommandResult.Void
 	),
-	// --- continue edit session
-	new ApiCommand(
-		'vscode.experimental.editSession.continue', '_workbench.editSessions.actions.continueEditSession', 'Continue the current edit session in a different workspace',
-		[ApiCommandArgument.Uri.with('workspaceUri', 'The target workspace to continue the current edit session in')],
-		ApiCommandResult.Void
-	),
 	// --- context keys
 	new ApiCommand(
 		'setContext', '_setContext', 'Set a custom context key value that can be used in when clauses.',

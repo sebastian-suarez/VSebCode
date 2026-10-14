@@ -128,15 +128,11 @@ export interface NativeParsedArgs {
 	'skip-sessions-welcome'?: boolean;
 	'remote'?: string;
 	'force'?: boolean;
-	'do-not-sync'?: boolean;
 	'preserve-env'?: boolean;
 	'force-user-env'?: boolean;
 	'force-disable-user-env'?: boolean;
-	'sync'?: 'on' | 'off';
 	'logsPath'?: string;
 	'__enable-file-policy'?: boolean;
-	editSessionId?: string;
-	continueOn?: string;
 	'locate-shell-integration-path'?: string;
 	'profile'?: string;
 	'profile-temp'?: boolean;

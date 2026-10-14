@@ -18,7 +18,6 @@ import { TestConfigurationService } from '../../../../../platform/configuration/
 import { IContextMenuService } from '../../../../../platform/contextview/browser/contextView.js';
 import { COPILOT_SANDBOX_ALLOWED_HOSTS_KEY, COPILOT_SANDBOX_ALLOW_BYPASS_KEY, COPILOT_SANDBOX_ALLOW_DEV_TOOL_ACCESS_KEY, COPILOT_SANDBOX_ALLOW_LOCAL_NETWORK_KEY, COPILOT_SANDBOX_ALLOW_OUTBOUND_KEY, COPILOT_SANDBOX_ENABLED_KEY, COPILOT_SANDBOX_LSP_SERVERS_KEY, COPILOT_SANDBOX_MCP_SERVERS_KEY, IManagedSettingsService, NullManagedSettingsService } from '../../../../../platform/policy/common/copilotManagedSettings.js';
 import { AgentSandboxSettingId } from '../../../../../platform/sandbox/common/settings.js';
-import { IUserDataSyncEnablementService } from '../../../../../platform/userDataSync/common/userDataSync.js';
 import { ISetting } from '../../../../services/preferences/common/preferences.js';
 import { SettingsTarget } from '../../browser/preferencesWidgets.js';
 import { AbstractSettingRenderer, ISettingChangeEvent, SettingTreeRenderers } from '../../browser/settingsTree.js';
@@ -49,7 +48,6 @@ class TestSettingRenderer extends AbstractSettingRenderer {
 					dispose() { },
 					updateScopeOverrides() { },
 					updateWorkspaceTrust() { },
-					updateSyncIgnored() { },
 					updateDefaultOverrideIndicator() { },
 					updatePreviewIndicator() { },
 					updateAdvancedIndicator() { },
@@ -149,7 +147,6 @@ suite('SettingsTree renderer', () => {
 			instantiationService.stub(IManagedSettingsService, new NullManagedSettingsService());
 			instantiationService.stub(IManagedSettingsPresentationService, store.add(instantiationService.createInstance(ManagedSettingsPresentationService)));
 			instantiationService.stub(IExperimentalSettingsService, store.add(new ExperimentalSettingsService()));
-			instantiationService.stub(IUserDataSyncEnablementService, { isEnabled: () => false });
 			const contextMenuService = new class extends TestContextMenuService {
 				delegate: Parameters<IContextMenuService['showContextMenu']>[0] | undefined;
 				override showContextMenu(delegate: Parameters<IContextMenuService['showContextMenu']>[0]): void {
@@ -269,7 +266,6 @@ suite('SettingsTree renderer', () => {
 			}());
 			instantiationService.stub(IExperimentalSettingsService, store.add(new ExperimentalSettingsService()));
 			instantiationService.stub(IManagedSettingsPresentationService, store.add(instantiationService.createInstance(ManagedSettingsPresentationService)));
-			instantiationService.stub(IUserDataSyncEnablementService, { isEnabled: () => false });
 			const model = store.add(instantiationService.createInstance(SettingsTreeModel, { settingsTarget: ConfigurationTarget.USER_LOCAL }, true));
 			model.update({
 				id: 'test', label: 'Test',
@@ -329,7 +325,6 @@ suite('SettingsTree renderer', () => {
 			}());
 			instantiationService.stub(IManagedSettingsPresentationService, store.add(instantiationService.createInstance(ManagedSettingsPresentationService)));
 			instantiationService.stub(IExperimentalSettingsService, store.add(new ExperimentalSettingsService()));
-			instantiationService.stub(IUserDataSyncEnablementService, { isEnabled: () => false });
 			const model = store.add(instantiationService.createInstance(SettingsTreeModel, { settingsTarget: ConfigurationTarget.USER_LOCAL }, true));
 			model.update({
 				id: 'test', label: 'Test',

@@ -735,7 +735,6 @@ export class DefaultSettings extends Disposable {
 			enumItemLabels: prop.enumItemLabels,
 			uniqueItems: prop.uniqueItems,
 			tags: prop.tags,
-			disallowSyncIgnore: prop.disallowSyncIgnore,
 			restricted: prop.restricted,
 			extensionInfo: isString(prop.source) ? undefined : prop.source,
 			deprecationMessage: prop.markdownDeprecationMessage || prop.deprecationMessage,

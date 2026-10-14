@@ -57,17 +57,6 @@ import { IStorageService } from '../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../platform/telemetry/common/telemetry.js';
 import { NullTelemetryService } from '../../../platform/telemetry/common/telemetryUtils.js';
 import { ExtensionStorageService, IExtensionStorageService } from '../../../platform/extensionManagement/common/extensionStorage.js';
-import { IgnoredExtensionsManagementService, IIgnoredExtensionsManagementService } from '../../../platform/userDataSync/common/ignoredExtensions.js';
-import { IUserDataSyncLocalStoreService, IUserDataSyncLogService, IUserDataSyncEnablementService, IUserDataSyncService, IUserDataSyncStoreManagementService, IUserDataSyncStoreService, IUserDataSyncUtilService, registerConfiguration as registerUserDataSyncConfiguration, IUserDataSyncResourceProviderService } from '../../../platform/userDataSync/common/userDataSync.js';
-import { IUserDataSyncAccountService, UserDataSyncAccountService } from '../../../platform/userDataSync/common/userDataSyncAccount.js';
-import { UserDataSyncLocalStoreService } from '../../../platform/userDataSync/common/userDataSyncLocalStoreService.js';
-import { UserDataSyncAccountServiceChannel, UserDataSyncStoreManagementServiceChannel } from '../../../platform/userDataSync/common/userDataSyncIpc.js';
-import { UserDataSyncLogService } from '../../../platform/userDataSync/common/userDataSyncLog.js';
-import { IUserDataSyncMachinesService, UserDataSyncMachinesService } from '../../../platform/userDataSync/common/userDataSyncMachines.js';
-import { UserDataSyncEnablementService } from '../../../platform/userDataSync/common/userDataSyncEnablementService.js';
-import { UserDataSyncService } from '../../../platform/userDataSync/common/userDataSyncService.js';
-import { UserDataSyncServiceChannel } from '../../../platform/userDataSync/common/userDataSyncServiceIpc.js';
-import { UserDataSyncStoreManagementService, UserDataSyncStoreService } from '../../../platform/userDataSync/common/userDataSyncStoreService.js';
 import { IUserDataProfileStorageService } from '../../../platform/userDataProfile/common/userDataProfileStorageService.js';
 import { markNodeCompileCacheReady } from '../../../base/node/nodeCompileCache.js';
 import { SharedProcessUserDataProfileStorageService } from '../../../platform/userDataProfile/node/userDataProfileStorageService.js';
@@ -102,7 +91,6 @@ import { IPolicyService, NullPolicyService } from '../../../platform/policy/comm
 import { UserDataProfilesService } from '../../../platform/userDataProfile/common/userDataProfileIpc.js';
 import { UserDataProfilesCleaner } from './contrib/userDataProfilesCleaner.js';
 import { IRemoteTunnelService } from '../../../platform/remoteTunnel/common/remoteTunnel.js';
-import { UserDataSyncResourceProviderService } from '../../../platform/userDataSync/common/userDataSyncResourceProvider.js';
 import { ExtensionsContributions } from './contrib/extensions.js';
 import { localize } from '../../../nls.js';
 import { LogService } from '../../../platform/log/common/logService.js';
@@ -113,7 +101,6 @@ import { ExtensionsProfileScannerService } from '../../../platform/extensionMana
 import { ExtensionRecommendationNotificationServiceChannelClient } from '../../../platform/extensionRecommendations/common/extensionRecommendationsIpc.js';
 import { INativeHostService } from '../../../platform/native/common/native.js';
 import { NativeHostService } from '../../../platform/native/common/nativeHostService.js';
-import { UserDataAutoSyncService } from '../../../platform/userDataSync/node/userDataAutoSyncService.js';
 import { ExtensionTipsService } from '../../../platform/extensionManagement/node/extensionTipsService.js';
 import { IMainProcessService, MainProcessService } from '../../../platform/ipc/common/mainProcessService.js';
 import { RemoteStorageService } from '../../../platform/storage/common/storageService.js';
@@ -182,8 +169,6 @@ class SharedProcessMain extends Disposable implements IClientConnectionFilter {
 		// Services
 		const instantiationService = await this.initServices();
 
-		// Config
-		registerUserDataSyncConfiguration();
 
 		instantiationService.invokeFunction(accessor => {
 			const logService = accessor.get(ILogService);
@@ -356,21 +341,10 @@ class SharedProcessMain extends Disposable implements IClientConnectionFilter {
 		// Diagnostics
 		services.set(IDiagnosticsService, new SyncDescriptor(DiagnosticsService, undefined, false /* proxied to other processes */));
 
-		// Settings Sync
-		services.set(IUserDataSyncAccountService, new SyncDescriptor(UserDataSyncAccountService, undefined, true));
-		services.set(IUserDataSyncLogService, new SyncDescriptor(UserDataSyncLogService, undefined, true));
-		services.set(IUserDataSyncUtilService, ProxyChannel.toService(this.server.getChannel('userDataSyncUtil', client => client.ctx !== 'main')));
+		// Extensions
 		services.set(IGlobalExtensionEnablementService, new SyncDescriptor(GlobalExtensionEnablementService, undefined, false /* Eagerly resets installed extensions */));
-		services.set(IIgnoredExtensionsManagementService, new SyncDescriptor(IgnoredExtensionsManagementService, undefined, true));
 		services.set(IExtensionStorageService, new SyncDescriptor(ExtensionStorageService));
-		services.set(IUserDataSyncStoreManagementService, new SyncDescriptor(UserDataSyncStoreManagementService, undefined, true));
-		services.set(IUserDataSyncStoreService, new SyncDescriptor(UserDataSyncStoreService, undefined, true));
-		services.set(IUserDataSyncMachinesService, new SyncDescriptor(UserDataSyncMachinesService, undefined, true));
-		services.set(IUserDataSyncLocalStoreService, new SyncDescriptor(UserDataSyncLocalStoreService, undefined, false /* Eagerly cleans up old backups */));
-		services.set(IUserDataSyncEnablementService, new SyncDescriptor(UserDataSyncEnablementService, undefined, true));
-		services.set(IUserDataSyncService, new SyncDescriptor(UserDataSyncService, undefined, false /* Initializes the Sync State */));
 		services.set(IUserDataProfileStorageService, new SyncDescriptor(SharedProcessUserDataProfileStorageService, undefined, true));
-		services.set(IUserDataSyncResourceProviderService, new SyncDescriptor(UserDataSyncResourceProviderService, undefined, true));
 
 		// Signing
 		services.set(ISignService, new SyncDescriptor(SignService, undefined, false /* proxied to other processes */));
@@ -440,24 +414,6 @@ class SharedProcessMain extends Disposable implements IClientConnectionFilter {
 		const profilingChannel = ProxyChannel.fromService(accessor.get(IV8InspectProfilingService), this._store);
 		this.server.registerChannel('v8InspectProfiling', profilingChannel);
 
-		// Settings Sync
-		const userDataSyncMachineChannel = ProxyChannel.fromService(accessor.get(IUserDataSyncMachinesService), this._store);
-		this.server.registerChannel('userDataSyncMachines', userDataSyncMachineChannel);
-
-
-		const userDataSyncAccountChannel = new UserDataSyncAccountServiceChannel(accessor.get(IUserDataSyncAccountService));
-		this.server.registerChannel('userDataSyncAccount', userDataSyncAccountChannel);
-
-		const userDataSyncStoreManagementChannel = new UserDataSyncStoreManagementServiceChannel(accessor.get(IUserDataSyncStoreManagementService));
-		this.server.registerChannel('userDataSyncStoreManagement', userDataSyncStoreManagementChannel);
-
-		const userDataSyncChannel = new UserDataSyncServiceChannel(accessor.get(IUserDataSyncService), accessor.get(IUserDataProfilesService), accessor.get(ILogService));
-		this.server.registerChannel('userDataSync', userDataSyncChannel);
-
-		const userDataAutoSync = this._register(accessor.get(IInstantiationService).createInstance(UserDataAutoSyncService));
-		this.server.registerChannel('userDataAutoSync', ProxyChannel.fromService(userDataAutoSync, this._store));
-
-		this.server.registerChannel('IUserDataSyncResourceProviderService', ProxyChannel.fromService(accessor.get(IUserDataSyncResourceProviderService), this._store));
 
 		// Tunnel
 		const sharedProcessTunnelChannel = ProxyChannel.fromService(accessor.get(ISharedProcessTunnelService), this._store);

@@ -256,11 +256,6 @@ export interface IConfigurationPropertySchema extends IJSONSchema {
 	ignoreSync?: boolean;
 
 	/**
-	 * When enabled this setting is ignored during sync and user cannot override this.
-	 */
-	disallowSyncIgnore?: boolean;
-
-	/**
 	 * Disallow extensions to contribute configuration default value for this setting.
 	 */
 	disallowConfigurationDefault?: boolean;

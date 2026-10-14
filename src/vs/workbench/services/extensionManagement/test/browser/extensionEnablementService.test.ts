@@ -21,8 +21,6 @@ import { Schemas } from '../../../../../base/common/network.js';
 import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 import { productService, TestLifecycleService } from '../../../../test/browser/workbenchTestServices.js';
 import { GlobalExtensionEnablementService } from '../../../../../platform/extensionManagement/common/extensionEnablementService.js';
-import { IUserDataSyncAccountService, UserDataSyncAccountService } from '../../../../../platform/userDataSync/common/userDataSyncAccount.js';
-import { IUserDataSyncEnablementService } from '../../../../../platform/userDataSync/common/userDataSync.js';
 import { ILifecycleService } from '../../../lifecycle/common/lifecycle.js';
 import { INotificationService } from '../../../../../platform/notification/common/notification.js';
 import { TestNotificationService } from '../../../../../platform/notification/test/common/testNotificationService.js';
@@ -99,9 +97,7 @@ export class TestExtensionEnablementService extends ExtensionEnablementService {
 			workbenchExtensionManagementService,
 			instantiationService.get(IConfigurationService),
 			extensionManagementServerService,
-			instantiationService.get(IUserDataSyncEnablementService) || instantiationService.stub(IUserDataSyncEnablementService, <Partial<IUserDataSyncEnablementService>>{ isEnabled() { return false; } }),
 			instantiationService.get(IDefaultAccountService) || instantiationService.stub(IDefaultAccountService, new class extends mock<IDefaultAccountService>() { override getDefaultAccountAuthenticationProvider(): IDefaultAccountAuthenticationProvider { return { id: 'default-auth-provider', name: 'default-auth-provider', enterprise: false }; } }),
-			instantiationService.get(IUserDataSyncAccountService) || instantiationService.stub(IUserDataSyncAccountService, UserDataSyncAccountService),
 			instantiationService.get(ILifecycleService) || instantiationService.stub(ILifecycleService, disposables.add(new TestLifecycleService())),
 			instantiationService.get(INotificationService) || instantiationService.stub(INotificationService, new TestNotificationService()),
 			instantiationService.get(IHostService),
@@ -517,30 +513,6 @@ suite('ExtensionEnablementService Test', () => {
 		assert.strictEqual(testObject.canChangeEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), true);
 	});
 
-	test('test canChangeEnablement return true for auth extension when user data sync account does not depends on it', () => {
-		instantiationService.stub(IUserDataSyncAccountService, <Partial<IUserDataSyncAccountService>>{
-			account: { authenticationProviderId: 'b' }
-		});
-		testObject = disposableStore.add(new TestExtensionEnablementService(instantiationService));
-		assert.strictEqual(testObject.canChangeEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), true);
-	});
-
-	test('test canChangeEnablement return true for auth extension when user data sync account depends on it but auto sync is off', () => {
-		instantiationService.stub(IUserDataSyncAccountService, <Partial<IUserDataSyncAccountService>>{
-			account: { authenticationProviderId: 'a' }
-		});
-		testObject = disposableStore.add(new TestExtensionEnablementService(instantiationService));
-		assert.strictEqual(testObject.canChangeEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), true);
-	});
-
-	test('test canChangeEnablement return false for auth extension and user data sync account depends on it and auto sync is on', () => {
-		instantiationService.stub(IUserDataSyncEnablementService, <Partial<IUserDataSyncEnablementService>>{ isEnabled() { return true; } });
-		instantiationService.stub(IUserDataSyncAccountService, <Partial<IUserDataSyncAccountService>>{
-			account: { authenticationProviderId: 'a' }
-		});
-		testObject = disposableStore.add(new TestExtensionEnablementService(instantiationService));
-		assert.strictEqual(testObject.canChangeEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), false);
-	});
 
 	test('test canChangeWorkspaceEnablement return true', () => {
 		assert.strictEqual(testObject.canChangeWorkspaceEnablement(aLocalExtension('pub.a')), true);
@@ -551,17 +523,8 @@ suite('ExtensionEnablementService Test', () => {
 		assert.strictEqual(testObject.canChangeWorkspaceEnablement(aLocalExtension('pub.a')), false);
 	});
 
-	test('test canChangeWorkspaceEnablement return true for auth extension when it is not used by settings sync', () => {
+	test('test canChangeWorkspaceEnablement return true for auth extension', () => {
 		assert.strictEqual(testObject.canChangeWorkspaceEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), true);
-	});
-
-	test('test canChangeWorkspaceEnablement return false for auth extension when settings sync depends on it', () => {
-		instantiationService.stub(IUserDataSyncEnablementService, <Partial<IUserDataSyncEnablementService>>{ isEnabled() { return true; } });
-		instantiationService.stub(IUserDataSyncAccountService, <Partial<IUserDataSyncAccountService>>{
-			account: { authenticationProviderId: 'a' }
-		});
-		testObject = disposableStore.add(new TestExtensionEnablementService(instantiationService));
-		assert.strictEqual(testObject.canChangeWorkspaceEnablement(aLocalExtension('pub.a', { authentication: [{ id: 'a', label: 'a' }] })), false);
 	});
 
 	test('test canChangeEnablement return false when extensions are disabled in environment', () => {

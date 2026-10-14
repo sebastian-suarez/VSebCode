@@ -14,7 +14,7 @@ import { IPagedRenderer } from '../../../../base/browser/ui/list/listPaging.js';
 import { IExtension, ExtensionContainers, ExtensionState, IExtensionsWorkbenchService, IExtensionsViewState } from '../common/extensions.js';
 import { ManageExtensionAction, ExtensionStatusLabelAction, RemoteInstallAction, ExtensionStatusAction, LocalInstallAction, ButtonWithDropDownExtensionAction, InstallDropdownAction, InstallingLabelAction, ButtonWithDropdownExtensionActionViewItem, DropDownExtensionAction, WebInstallAction, MigrateDeprecatedExtensionAction, SetLanguageAction, ClearLanguageAction, UpdateAction } from './extensionsActions.js';
 import { areSameExtensions } from '../../../../platform/extensionManagement/common/extensionManagementUtil.js';
-import { RatingsWidget, InstallCountWidget, RecommendationWidget, RemoteBadgeWidget, ExtensionPackCountWidget as ExtensionPackBadgeWidget, SyncIgnoredWidget, ExtensionHoverWidget, ExtensionRuntimeStatusWidget, ExtensionRestartRequiredWidget, PreReleaseBookmarkWidget, PublisherWidget, ExtensionKindIndicatorWidget, ExtensionIconWidget } from './extensionsWidgets.js';
+import { RatingsWidget, InstallCountWidget, RecommendationWidget, RemoteBadgeWidget, ExtensionPackCountWidget as ExtensionPackBadgeWidget, ExtensionHoverWidget, ExtensionRuntimeStatusWidget, ExtensionRestartRequiredWidget, PreReleaseBookmarkWidget, PublisherWidget, ExtensionKindIndicatorWidget, ExtensionIconWidget } from './extensionsWidgets.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { IWorkbenchExtensionEnablementService } from '../../../services/extensionManagement/common/extensionManagement.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
@@ -82,7 +82,6 @@ export class Renderer implements IPagedRenderer<IExtension, ITemplateData> {
 		const restartRequired = append(header, $('span.restart-required'));
 		const installCount = append(header, $('span.install-count'));
 		const ratings = append(header, $('span.ratings'));
-		const syncIgnore = append(header, $('span.sync-ignored'));
 		const extensionKindIndicator = append(header, $('span'));
 		const activationStatus = append(header, $('span.activation-status'));
 		const description = append(details, $('.description.ellipsis'));
@@ -137,7 +136,6 @@ export class Renderer implements IPagedRenderer<IExtension, ITemplateData> {
 			extensionPackBadgeWidget,
 			publisherWidget,
 			extensionHoverWidget,
-			this.instantiationService.createInstance(SyncIgnoredWidget, syncIgnore),
 			this.instantiationService.createInstance(ExtensionRestartRequiredWidget, restartRequired),
 			this.instantiationService.createInstance(ExtensionRuntimeStatusWidget, this.extensionViewState, activationStatus),
 			this.instantiationService.createInstance(InstallCountWidget, installCount, true),

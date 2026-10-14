@@ -73,8 +73,6 @@ import './services/extensionManagement/electron-browser/extensionManagementServe
 import './services/extensionManagement/electron-browser/extensionGalleryManifestService.js';
 import './services/extensionManagement/electron-browser/extensionGalleryAccountService.js';
 import './services/extensionManagement/electron-browser/extensionTipsService.js';
-import './services/userDataSync/electron-browser/userDataSyncService.js';
-import './services/userDataSync/electron-browser/userDataAutoSyncService.js';
 import './services/timer/electron-browser/timerService.js';
 import './services/environment/electron-browser/shellEnvironmentService.js';
 import './services/integrity/electron-browser/integrityService.js';
@@ -88,7 +86,6 @@ import '../platform/remoteTunnel/electron-browser/remoteTunnelService.js';
 import './services/files/electron-browser/elevatedFileService.js';
 import './services/search/electron-browser/searchService.js';
 import './services/workingCopy/electron-browser/workingCopyHistoryService.js';
-import './services/userDataSync/browser/userDataSyncEnablementService.js';
 import './services/extensions/electron-browser/nativeExtensionService.js';
 import '../platform/userDataProfile/electron-browser/userDataProfileStorageService.js';
 import './services/auxiliaryWindow/electron-browser/auxiliaryWindowService.js';
@@ -153,8 +150,6 @@ import './contrib/terminal/electron-browser/terminal.contribution.js';
 // Themes
 import './contrib/themes/browser/themes.test.contribution.js';
 import './services/themes/electron-browser/themes.contribution.js';
-// User Data Sync
-import './contrib/userDataSync/electron-browser/userDataSync.contribution.js';
 
 // Tags
 // Performance

@@ -59,7 +59,6 @@ import { EXTENSIONS_SUPPORT_AGENTS_WINDOW } from '../../../services/extensions/c
 import { IHostService } from '../../../services/host/browser/host.js';
 import { LifecyclePhase } from '../../../services/lifecycle/common/lifecycle.js';
 import { IPreferencesService } from '../../../services/preferences/common/preferences.js';
-import { CONTEXT_SYNC_ENABLEMENT } from '../../../services/userDataSync/common/userDataSync.js';
 import { IViewsService } from '../../../services/views/common/viewsService.js';
 import { WORKSPACE_TRUST_EXTENSION_SUPPORT } from '../../../services/workspaces/common/workspaceTrust.js';
 import { IPluginInstallService } from '../../chat/common/plugins/pluginInstallService.js';
@@ -67,7 +66,7 @@ import { ILanguageModelToolsService } from '../../chat/common/tools/languageMode
 import { CONTEXT_KEYBINDINGS_EDITOR } from '../../preferences/common/preferences.js';
 import { IWebview } from '../../webview/browser/webview.js';
 import { Query } from '../common/extensionQuery.js';
-import { AutoRestartConfigurationKey, AutoUpdateConfigurationKey, CONTEXT_EXTENSIONS_GALLERY_STATUS, CONTEXT_HAS_GALLERY, DefaultViewsContext, ExtensionEditorTab, ExtensionRuntimeActionType, EXTENSIONS_CATEGORY, extensionsFilterSubMenu, extensionsSearchActionsMenu, HasOutdatedExtensionsContext, IExtensionArg, IExtensionsViewPaneContainer, IExtensionsWorkbenchService, INSTALL_ACTIONS_GROUP, INSTALL_EXTENSION_FROM_VSIX_COMMAND_ID, IWorkspaceRecommendedExtensionsView, LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID, OUTDATED_EXTENSIONS_VIEW_ID, SELECT_INSTALL_VSIX_EXTENSION_COMMAND_ID, THEME_ACTIONS_GROUP, TOGGLE_IGNORE_EXTENSION_ACTION_ID, UPDATE_ACTIONS_GROUP, VIEWLET_ID, WORKSPACE_RECOMMENDATIONS_VIEW_ID } from '../common/extensions.js';
+import { AutoRestartConfigurationKey, AutoUpdateConfigurationKey, CONTEXT_EXTENSIONS_GALLERY_STATUS, CONTEXT_HAS_GALLERY, DefaultViewsContext, ExtensionEditorTab, ExtensionRuntimeActionType, EXTENSIONS_CATEGORY, extensionsFilterSubMenu, extensionsSearchActionsMenu, HasOutdatedExtensionsContext, IExtensionArg, IExtensionsViewPaneContainer, IExtensionsWorkbenchService, INSTALL_ACTIONS_GROUP, INSTALL_EXTENSION_FROM_VSIX_COMMAND_ID, IWorkspaceRecommendedExtensionsView, LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID, OUTDATED_EXTENSIONS_VIEW_ID, SELECT_INSTALL_VSIX_EXTENSION_COMMAND_ID, THEME_ACTIONS_GROUP, UPDATE_ACTIONS_GROUP, VIEWLET_ID, WORKSPACE_RECOMMENDATIONS_VIEW_ID } from '../common/extensions.js';
 import { ExtensionsConfigurationSchema, ExtensionsConfigurationSchemaId } from '../common/extensionsFileTemplate.js';
 import { ExtensionsInput } from '../common/extensionsInput.js';
 import { KeymapExtensions } from '../common/extensionsUtils.js';
@@ -1639,54 +1638,6 @@ class ExtensionsContributions extends Disposable implements IWorkbenchContributi
 		});
 
 		this.registerExtensionAction({
-			id: 'workbench.extensions.action.installAndDonotSync',
-			title: localize('install installAndDonotSync', "Install (Do not Sync)"),
-			menu: {
-				id: MenuId.ExtensionContext,
-				group: '0_install',
-				when: ContextKeyExpr.and(ContextKeyExpr.equals('extensionStatus', 'uninstalled'), ContextKeyExpr.has('isGalleryExtension'), ContextKeyExpr.has('isExtensionAllowed'), ContextKeyExpr.not('extensionDisallowInstall'), CONTEXT_SYNC_ENABLEMENT),
-				order: 1
-			},
-			run: async (accessor: ServicesAccessor, extensionId: string) => {
-				const instantiationService = accessor.get(IInstantiationService);
-				const extension = this.extensionsWorkbenchService.local.filter(e => areSameExtensions(e.identifier, { id: extensionId }))[0]
-					|| (await this.extensionsWorkbenchService.getExtensions([{ id: extensionId }], CancellationToken.None))[0];
-				if (extension) {
-					const action = instantiationService.createInstance(InstallAction, {
-						installPreReleaseVersion: this.extensionManagementService.preferPreReleases,
-						isMachineScoped: true,
-					});
-					action.extension = extension;
-					return runAction(action);
-				}
-			}
-		});
-
-		this.registerExtensionAction({
-			id: 'workbench.extensions.action.installPrereleaseAndDonotSync',
-			title: localize('installPrereleaseAndDonotSync', "Install Pre-Release (Do not Sync)"),
-			menu: {
-				id: MenuId.ExtensionContext,
-				group: '0_install',
-				when: ContextKeyExpr.and(ContextKeyExpr.equals('extensionStatus', 'uninstalled'), ContextKeyExpr.has('isGalleryExtension'), ContextKeyExpr.has('extensionHasPreReleaseVersion'), ContextKeyExpr.has('isPreReleaseExtensionAllowed'), ContextKeyExpr.not('extensionDisallowInstall'), CONTEXT_SYNC_ENABLEMENT),
-				order: 2
-			},
-			run: async (accessor: ServicesAccessor, extensionId: string) => {
-				const instantiationService = accessor.get(IInstantiationService);
-				const extension = this.extensionsWorkbenchService.local.filter(e => areSameExtensions(e.identifier, { id: extensionId }))[0]
-					|| (await this.extensionsWorkbenchService.getExtensions([{ id: extensionId }], CancellationToken.None))[0];
-				if (extension) {
-					const action = instantiationService.createInstance(InstallAction, {
-						isMachineScoped: true,
-						preRelease: true
-					});
-					action.extension = extension;
-					return runAction(action);
-				}
-			}
-		});
-
-		this.registerExtensionAction({
 			id: InstallAnotherVersionAction.ID,
 			title: InstallAnotherVersionAction.LABEL,
 			menu: {
@@ -1849,22 +1800,6 @@ class ExtensionsContributions extends Disposable implements IWorkbenchContributi
 			}
 		});
 
-		this.registerExtensionAction({
-			id: TOGGLE_IGNORE_EXTENSION_ACTION_ID,
-			title: localize2('workbench.extensions.action.toggleIgnoreExtension', "Sync This Extension"),
-			menu: {
-				id: MenuId.ExtensionContext,
-				group: '2_configure',
-				when: ContextKeyExpr.and(ContextKeyExpr.equals('extensionStatus', 'installed'), CONTEXT_SYNC_ENABLEMENT, ContextKeyExpr.equals('isWorkspaceScopedExtension', false)),
-				order: 4
-			},
-			run: async (accessor: ServicesAccessor, id: string) => {
-				const extension = this.extensionsWorkbenchService.local.find(e => areSameExtensions({ id }, e.identifier));
-				if (extension) {
-					return this.extensionsWorkbenchService.toggleExtensionIgnoredToSync(extension);
-				}
-			}
-		});
 
 		this.registerExtensionAction({
 			id: 'workbench.extensions.action.ignoreRecommendation',

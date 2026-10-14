@@ -16,7 +16,7 @@ import { ILabelService } from '../../../platform/label/common/label.js';
 import { INotificationService } from '../../../platform/notification/common/notification.js';
 import { AuthInfo, Credentials, IRequestService } from '../../../platform/request/common/request.js';
 import { WorkspaceTrustRequestOptions, IWorkspaceTrustManagementService, IWorkspaceTrustRequestService, ResourceTrustRequestOptions } from '../../../platform/workspace/common/workspaceTrust.js';
-import { IWorkspace, IWorkspaceContextService, isUntitledWorkspace, WorkspaceFolder } from '../../../platform/workspace/common/workspace.js';
+import { IWorkspace, IWorkspaceContextService, isUntitledWorkspace } from '../../../platform/workspace/common/workspace.js';
 import { extHostNamedCustomer, IExtHostContext } from '../../services/extensions/common/extHostCustomers.js';
 import { checkGlobFileExists } from '../../services/extensions/common/workspaceContains.js';
 import { IFileQueryBuilderOptions, ITextQueryBuilderOptions, QueryBuilder } from '../../services/search/common/queryBuilder.js';
@@ -24,7 +24,6 @@ import { IEditorService, ISaveEditorsResult } from '../../services/editor/common
 import { IFileMatch, IPatternInfo, ISearchProgressItem, ISearchService } from '../../services/search/common/search.js';
 import { IWorkspaceEditingService } from '../../services/workspaces/common/workspaceEditing.js';
 import { ExtHostContext, ExtHostWorkspaceShape, ITextSearchComplete, IWorkspaceData, MainContext, MainThreadWorkspaceShape, ResourceTrustRequestOptionsDto } from '../common/extHost.protocol.js';
-import { IEditSessionIdentityService } from '../../../platform/workspace/common/editSessions.js';
 import { EditorResourceAccessor, SaveReason, SideBySideEditor } from '../../common/editor.js';
 import { coalesce } from '../../../base/common/arrays.js';
 import { ICanonicalUriService } from '../../../platform/workspace/common/canonicalUri.js';
@@ -42,7 +41,6 @@ export class MainThreadWorkspace extends Disposable implements MainThreadWorkspa
 		extHostContext: IExtHostContext,
 		@ISearchService private readonly _searchService: ISearchService,
 		@IWorkspaceContextService private readonly _contextService: IWorkspaceContextService,
-		@IEditSessionIdentityService private readonly _editSessionIdentityService: IEditSessionIdentityService,
 		@ICanonicalUriService private readonly _canonicalUriService: ICanonicalUriService,
 		@IEditorService private readonly _editorService: IEditorService,
 		@IWorkspaceEditingService private readonly _workspaceEditingService: IWorkspaceEditingService,
@@ -267,27 +265,6 @@ export class MainThreadWorkspace extends Disposable implements MainThreadWorkspa
 
 	private _onDidChangeWorkspaceTrustedFolders(): void {
 		this._proxy.$onDidChangeWorkspaceTrustedFolders();
-	}
-
-	// --- edit sessions ---
-	private registeredEditSessionProviders = this._register(new DisposableMap<number, IDisposable>());
-
-	$registerEditSessionIdentityProvider(handle: number, scheme: string) {
-		const disposable = this._editSessionIdentityService.registerEditSessionIdentityProvider({
-			scheme: scheme,
-			getEditSessionIdentifier: async (workspaceFolder: WorkspaceFolder, token: CancellationToken) => {
-				return this._proxy.$getEditSessionIdentifier(workspaceFolder.uri, token);
-			},
-			provideEditSessionIdentityMatch: async (workspaceFolder: WorkspaceFolder, identity1: string, identity2: string, token: CancellationToken) => {
-				return this._proxy.$provideEditSessionIdentityMatch(workspaceFolder.uri, identity1, identity2, token);
-			}
-		});
-
-		this.registeredEditSessionProviders.set(handle, disposable);
-	}
-
-	$unregisterEditSessionIdentityProvider(handle: number) {
-		this.registeredEditSessionProviders.deleteAndDispose(handle);
 	}
 
 	// --- canonical uri identities ---

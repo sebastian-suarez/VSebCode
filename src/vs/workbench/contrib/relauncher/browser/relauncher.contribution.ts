@@ -13,7 +13,6 @@ import { ConfigurationTarget, IConfigurationChangeEvent, IConfigurationService }
 import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
-import { IUserDataSyncEnablementService, IUserDataSyncService, SyncStatus } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { IWindowsConfiguration, IWindowSettings, MenuSettings, MenuStyleConfiguration, TitleBarSetting, TitlebarStyle } from '../../../../platform/window/common/window.js';
 import { IWorkspaceContextService, WorkbenchState } from '../../../../platform/workspace/common/workspace.js';
 import { IWorkbenchContribution, IWorkbenchContributionsRegistry, Extensions as WorkbenchExtensions } from '../../../common/contributions.js';
@@ -21,7 +20,6 @@ import { IWorkbenchEnvironmentService } from '../../../services/environment/comm
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
 import { IHostService } from '../../../services/host/browser/host.js';
 import { LifecyclePhase } from '../../../services/lifecycle/common/lifecycle.js';
-import { IUserDataSyncWorkbenchService } from '../../../services/userDataSync/common/userDataSync.js';
 
 interface IConfiguration extends IWindowsConfiguration {
 	debug?: { console?: { wordWrap?: boolean } };
@@ -104,9 +102,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 	constructor(
 		@IHostService private readonly hostService: IHostService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
-		@IUserDataSyncService private readonly userDataSyncService: IUserDataSyncService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
-		@IUserDataSyncWorkbenchService userDataSyncWorkbenchService: IUserDataSyncWorkbenchService,
 		@IProductService private readonly productService: IProductService,
 		@IDialogService private readonly dialogService: IDialogService
 	) {
@@ -114,7 +109,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 
 		this.update(false);
 		this._register(this.configurationService.onDidChangeConfiguration(e => this.onConfigurationChange(e)));
-		this._register(userDataSyncWorkbenchService.onDidTurnOnSync(e => this.update(true)));
 	}
 
 	private onConfigurationChange(e: IConfigurationChangeEvent): void {
@@ -122,16 +116,7 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 			return;
 		}
 
-		// Skip if turning on sync is in progress
-		if (this.isTurningOnSyncInProgress()) {
-			return;
-		}
-
 		this.update(e.source !== ConfigurationTarget.DEFAULT /* do not ask to relaunch if defaults changed */);
-	}
-
-	private isTurningOnSyncInProgress(): boolean {
-		return !this.userDataSyncEnablementService.isEnabled() && this.userDataSyncService.status === SyncStatus.Syncing;
 	}
 
 	private update(askToRelaunch: boolean): void {

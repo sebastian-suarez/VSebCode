@@ -156,14 +156,6 @@
 	color: currentColor;
 }
 
-.extension-list-item > .details > .header-container > .header .sync-ignored {
-	display: flex;
-}
-
-.extension-list-item > .details > .header-container > .header .sync-ignored > .codicon {
-	font-size: 100%;
-}
-
 .extension-list-item > .details > .description {
 	padding-right: 8px;
 	line-height: normal;

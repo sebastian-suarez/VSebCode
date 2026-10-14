@@ -65,7 +65,6 @@ import '../workbench/browser/parts/statusbar/statusbarPart.js';
 import '../platform/actions/common/actions.contribution.js';
 import '../platform/undoRedo/common/undoRedoService.js';
 import '../platform/mcp/common/mcpResourceScannerService.js';
-import '../workbench/services/workspaces/common/editSessionIdentityService.js';
 import '../workbench/services/workspaces/common/canonicalUriService.js';
 import '../workbench/services/extensions/browser/extensionUrlHandler.js';
 import '../workbench/services/keybinding/common/keybindingEditing.js';
@@ -101,7 +100,6 @@ import '../workbench/services/extensionRecommendations/common/extensionIgnoredRe
 import '../workbench/services/extensionRecommendations/common/workspaceExtensionsConfig.js';
 import '../workbench/services/extensionManagement/common/extensionFeaturesManagemetService.js';
 import '../workbench/services/notification/common/notificationService.js';
-import '../workbench/services/userDataSync/common/userDataSyncUtil.js';
 import '../workbench/services/userDataProfile/browser/userDataProfileImportExportService.js';
 import '../workbench/services/userDataProfile/browser/userDataProfileManagement.js';
 import '../workbench/services/userDataProfile/common/remoteUserDataProfiles.js';
@@ -115,7 +113,6 @@ import '../workbench/services/filesConfiguration/common/filesConfigurationServic
 import '../workbench/services/views/browser/viewDescriptorService.js';
 import '../workbench/services/views/browser/viewsService.js';
 import '../workbench/services/quickinput/browser/quickInputService.js';
-import '../workbench/services/userDataSync/browser/userDataSyncWorkbenchService.js';
 import '../workbench/services/authentication/browser/authenticationService.js';
 import '../workbench/services/authentication/browser/authenticationExtensionsService.js';
 import '../workbench/services/authentication/browser/authenticationUsageService.js';
@@ -167,10 +164,7 @@ import { IDownloadService } from '../platform/download/common/download.js';
 import { DownloadService } from '../platform/download/common/downloadService.js';
 import { OpenerService } from '../editor/browser/services/openerService.js';
 import { IOpenerService } from '../platform/opener/common/opener.js';
-import { IgnoredExtensionsManagementService, IIgnoredExtensionsManagementService } from '../platform/userDataSync/common/ignoredExtensions.js';
 import { ExtensionStorageService, IExtensionStorageService } from '../platform/extensionManagement/common/extensionStorage.js';
-import { IUserDataSyncLogService } from '../platform/userDataSync/common/userDataSync.js';
-import { UserDataSyncLogService } from '../platform/userDataSync/common/userDataSyncLog.js';
 import { AllowedExtensionsService } from '../platform/extensionManagement/common/allowedExtensionsService.js';
 import { IAllowedMcpServersService, IMcpGalleryService } from '../platform/mcp/common/mcpManagement.js';
 import { McpGalleryService } from '../platform/mcp/common/mcpGalleryService.js';
@@ -179,9 +173,7 @@ import { IWebWorkerService } from '../platform/webWorker/browser/webWorkerServic
 import { WebWorkerService } from '../platform/webWorker/browser/webWorkerServiceImpl.js';
 import { ISessionsSetUpService, SessionsSetUpService } from './browser/sessionsSetUpService.js';
 
-registerSingleton(IUserDataSyncLogService, UserDataSyncLogService, InstantiationType.Delayed);
 registerSingleton(IAllowedExtensionsService, AllowedExtensionsService, InstantiationType.Delayed);
-registerSingleton(IIgnoredExtensionsManagementService, IgnoredExtensionsManagementService, InstantiationType.Delayed);
 registerSingleton(IGlobalExtensionEnablementService, GlobalExtensionEnablementService, InstantiationType.Delayed);
 registerSingleton(IExtensionStorageService, ExtensionStorageService, InstantiationType.Delayed);
 registerSingleton(IContextViewService, ContextViewService, InstantiationType.Delayed);
@@ -402,8 +394,6 @@ import '../workbench/contrib/authentication/browser/authentication.contribution.
 // User Data Profiles
 import '../workbench/contrib/userDataProfile/browser/userDataProfile.contribution.js';
 
-// Continue Edit Session
-import '../workbench/contrib/editSessions/browser/editSessions.contribution.js';
 
 // Remote Coding Agents
 import '../workbench/contrib/remoteCodingAgents/browser/remoteCodingAgents.contribution.js';

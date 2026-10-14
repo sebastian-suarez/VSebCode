@@ -20,7 +20,6 @@ import { ICommandService } from '../../../../platform/commands/common/commands.j
 import { ConfigurationTarget } from '../../../../platform/configuration/common/configuration.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
-import { IUserDataSyncEnablementService } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { IWorkbenchConfigurationService } from '../../../services/configuration/common/configuration.js';
 import { ADVANCED_INDICATOR_DESCRIPTION, EXPERIMENTAL_INDICATOR_DESCRIPTION, POLICY_SETTING_TAG, PREVIEW_INDICATOR_DESCRIPTION } from '../common/preferences.js';
 import { SettingsTreeSettingElement } from './settingsTreeModels.js';
@@ -47,19 +46,6 @@ interface SettingIndicator {
 }
 
 /**
- * Contains a set of the sync-ignored settings
- * to keep the sync ignored indicator and the getIndicatorsLabelAriaLabel() function in sync.
- * SettingsTreeIndicatorsLabel#updateSyncIgnored provides the source of truth.
- */
-let cachedSyncIgnoredSettingsSet: Set<string> = new Set<string>();
-
-/**
- * Contains a copy of the sync-ignored settings to determine when to update
- * cachedSyncIgnoredSettingsSet.
- */
-let cachedSyncIgnoredSettings: string[] = [];
-
-/**
  * Renders the indicators next to a setting, such as "Also Modified In".
  */
 export class SettingsTreeIndicatorsLabel implements IDisposable {
@@ -69,7 +55,6 @@ export class SettingsTreeIndicatorsLabel implements IDisposable {
 	private readonly advancedIndicator: SettingIndicator;
 	private readonly workspaceTrustIndicator: SettingIndicator;
 	private readonly scopeOverridesIndicator: SettingIndicator;
-	private readonly syncIgnoredIndicator: SettingIndicator;
 	private readonly defaultOverrideIndicator: SettingIndicator;
 
 	/** Indicators that each have their own square container at the top-right of the setting */
@@ -85,7 +70,6 @@ export class SettingsTreeIndicatorsLabel implements IDisposable {
 		container: HTMLElement,
 		@IWorkbenchConfigurationService private readonly configurationService: IWorkbenchConfigurationService,
 		@IHoverService private readonly hoverService: IHoverService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
 		@ILanguageService private readonly languageService: ILanguageService,
 		@ICommandService private readonly commandService: ICommandService) {
 		this.indicatorsContainerElement = DOM.append(container, $('.setting-indicators-container'));
@@ -97,9 +81,8 @@ export class SettingsTreeIndicatorsLabel implements IDisposable {
 
 		this.workspaceTrustIndicator = this.createWorkspaceTrustIndicator();
 		this.scopeOverridesIndicator = this.createScopeOverridesIndicator();
-		this.syncIgnoredIndicator = this.createSyncIgnoredIndicator();
 		this.defaultOverrideIndicator = this.createDefaultOverrideIndicator();
-		this.parenthesizedIndicators = [this.workspaceTrustIndicator, this.scopeOverridesIndicator, this.syncIgnoredIndicator, this.defaultOverrideIndicator];
+		this.parenthesizedIndicators = [this.workspaceTrustIndicator, this.scopeOverridesIndicator, this.defaultOverrideIndicator];
 	}
 
 	private defaultHoverOptions: Partial<IHoverOptions> = {
@@ -144,25 +127,6 @@ export class SettingsTreeIndicatorsLabel implements IDisposable {
 		return {
 			element: otherOverridesElement,
 			label: otherOverridesLabel,
-			disposables
-		};
-	}
-
-	private createSyncIgnoredIndicator(): SettingIndicator {
-		const disposables = new DisposableStore();
-		const syncIgnoredElement = $('span.setting-indicator.setting-item-ignored');
-		const syncIgnoredLabel = disposables.add(new SimpleIconLabel(syncIgnoredElement));
-		syncIgnoredLabel.text = localize('extensionSyncIgnoredLabel', 'Not synced');
-
-		const syncIgnoredHoverContent = localize('syncIgnoredTitle', "This setting is ignored during sync");
-		disposables.add(this.hoverService.setupDelayedHover(syncIgnoredElement, {
-			...this.defaultHoverOptions,
-			content: syncIgnoredHoverContent,
-		}, { setupKeyboardEvents: true }));
-
-		return {
-			element: syncIgnoredElement,
-			label: syncIgnoredLabel,
 			disposables
 		};
 	}
@@ -291,16 +255,6 @@ export class SettingsTreeIndicatorsLabel implements IDisposable {
 	updateWorkspaceTrust(element: SettingsTreeSettingElement) {
 		this.workspaceTrustIndicator.element.style.display = element.isUntrusted ? 'inline' : 'none';
 		this.render();
-	}
-
-	updateSyncIgnored(element: SettingsTreeSettingElement, ignoredSettings: string[]) {
-		this.syncIgnoredIndicator.element.style.display = this.userDataSyncEnablementService.isEnabled()
-			&& ignoredSettings.includes(element.setting.key) ? 'inline' : 'none';
-		this.render();
-		if (cachedSyncIgnoredSettings !== ignoredSettings) {
-			cachedSyncIgnoredSettings = ignoredSettings;
-			cachedSyncIgnoredSettingsSet = new Set<string>(cachedSyncIgnoredSettings);
-		}
 	}
 
 	updatePreviewIndicator(element: SettingsTreeSettingElement) {
@@ -590,11 +544,6 @@ export function getIndicatorsLabelAriaLabel(element: SettingsTreeSettingElement,
 		if (element.overriddenScopeList.length) {
 			ariaLabelSections.push(`${otherOverridesStart} ${otherOverridesList}`);
 		}
-	}
-
-	// Add sync ignored text
-	if (cachedSyncIgnoredSettingsSet.has(element.setting.key)) {
-		ariaLabelSections.push(localize('syncIgnoredAriaLabel', "Setting ignored during sync"));
 	}
 
 	// Add default override indicator text

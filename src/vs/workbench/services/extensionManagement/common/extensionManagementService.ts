@@ -27,13 +27,12 @@ import { IDownloadService } from '../../../../platform/download/common/download.
 import { coalesce, distinct, isNonEmptyArray } from '../../../../base/common/arrays.js';
 import { IDialogService, IPromptButton } from '../../../../platform/dialogs/common/dialogs.js';
 import Severity from '../../../../base/common/severity.js';
-import { IUserDataSyncEnablementService, SyncResource } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { Promises } from '../../../../base/common/async.js';
 import { IWorkspaceTrustRequestService, WorkspaceTrustRequestButton } from '../../../../platform/workspace/common/workspaceTrust.js';
 import { IExtensionManifestPropertiesService } from '../../extensions/common/extensionManifestPropertiesService.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { ICommandService } from '../../../../platform/commands/common/commands.js';
-import { isString, isUndefined } from '../../../../base/common/types.js';
+import { isString } from '../../../../base/common/types.js';
 import { FileChangesEvent, IFileService } from '../../../../platform/files/common/files.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { CancellationError, getErrorMessage } from '../../../../base/common/errors.js';
@@ -100,7 +99,6 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 		@IConfigurationService protected readonly configurationService: IConfigurationService,
 		@IProductService productService: IProductService,
 		@IDownloadService protected readonly downloadService: IDownloadService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
 		@IDialogService private readonly dialogService: IDialogService,
 		@IWorkspaceTrustRequestService private readonly workspaceTrustRequestService: IWorkspaceTrustRequestService,
 		@IExtensionManifestPropertiesService private readonly extensionManifestPropertiesService: IExtensionManifestPropertiesService,
@@ -475,13 +473,6 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 				}
 
 				const servers = await this.getExtensionManagementServersToInstall(extension, manifest);
-				if (!options.isMachineScoped && this.isExtensionsSyncEnabled()) {
-					if (this.extensionManagementServerService.localExtensionManagementServer
-						&& !servers.includes(this.extensionManagementServerService.localExtensionManagementServer)
-						&& await this.extensionManagementServerService.localExtensionManagementServer.extensionManagementService.canInstall(extension) === true) {
-						servers.push(this.extensionManagementServerService.localExtensionManagementServer);
-					}
-				}
 				for (const server of servers) {
 					let exensions = extensionsByServer.get(server);
 					if (!exensions) {
@@ -529,18 +520,7 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 		}
 
 		servers = servers?.length ? this.validServers(gallery, manifest, servers) : await this.getExtensionManagementServersToInstall(gallery, manifest);
-		if (!installOptions || isUndefined(installOptions.isMachineScoped)) {
-			const isMachineScoped = await this.hasToFlagExtensionsMachineScoped([gallery]);
-			installOptions = { ...(installOptions || {}), isMachineScoped };
-		}
-
-		if (!installOptions.isMachineScoped && this.isExtensionsSyncEnabled()) {
-			if (this.extensionManagementServerService.localExtensionManagementServer
-				&& !servers.includes(this.extensionManagementServerService.localExtensionManagementServer)
-				&& await this.extensionManagementServerService.localExtensionManagementServer.extensionManagementService.canInstall(gallery) === true) {
-				servers.push(this.extensionManagementServerService.localExtensionManagementServer);
-			}
-		}
+		installOptions = { ...(installOptions || {}) };
 
 		return Promises.settled(servers.map(server => server.extensionManagementService.installFromGallery(gallery, installOptions))).then(([local]) => local);
 	}
@@ -736,40 +716,6 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 		}
 
 		return servers;
-	}
-
-	private isExtensionsSyncEnabled(): boolean {
-		return this.userDataSyncEnablementService.isEnabled() && this.userDataSyncEnablementService.isResourceEnabled(SyncResource.Extensions);
-	}
-
-	private async hasToFlagExtensionsMachineScoped(extensions: IGalleryExtension[]): Promise<boolean> {
-		if (this.isExtensionsSyncEnabled()) {
-			const { result } = await this.dialogService.prompt<boolean>({
-				type: Severity.Info,
-				message: extensions.length === 1 ? localize('install extension', "Install Extension") : localize('install extensions', "Install Extensions"),
-				detail: extensions.length === 1
-					? localize('install single extension', "Would you like to install and synchronize '{0}' extension across your devices?", extensions[0].displayName)
-					: localize('install multiple extensions', "Would you like to install and synchronize extensions across your devices?"),
-				buttons: [
-					{
-						label: localize({ key: 'install', comment: ['&& denotes a mnemonic'] }, "&&Install"),
-						run: () => false
-					},
-					{
-						label: localize({ key: 'install and do no sync', comment: ['&& denotes a mnemonic'] }, "Install (Do &&not sync)"),
-						run: () => true
-					}
-				],
-				cancelButton: {
-					run: () => {
-						throw new CancellationError();
-					}
-				}
-			});
-
-			return result;
-		}
-		return false;
 	}
 
 	getExtensionsControlManifest(): Promise<IExtensionsControlManifest> {

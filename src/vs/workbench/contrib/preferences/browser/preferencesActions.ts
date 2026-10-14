@@ -111,7 +111,6 @@ export interface IConfigurationPropertyInformation {
 	included?: boolean;
 	tags?: string[];
 	ignoreSync?: boolean;
-	disallowSyncIgnore?: boolean;
 	disallowConfigurationDefault?: boolean;
 	keywords?: string[];
 	editPresentation?: string;

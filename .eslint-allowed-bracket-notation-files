@@ -331,8 +331,6 @@ src/vs/platform/configuration/test/common/policyConfiguration.test.ts
 src/vs/platform/contextkey/browser/contextKeyService.ts
 src/vs/platform/policy/test/common/policy.test.ts
 src/vs/platform/userDataProfile/electron-main/userDataProfile.ts
-src/vs/platform/userDataSync/common/abstractSynchronizer.ts
-src/vs/platform/userDataSync/common/userDataSyncStoreService.ts
 src/vs/workbench/services/configuration/common/configurationModels.ts
 src/vs/workbench/services/configuration/test/browser/configurationEditing.test.ts
 src/vs/workbench/services/configuration/test/common/configurationModels.test.ts

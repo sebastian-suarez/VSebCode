@@ -7,21 +7,18 @@ import * as DOM from '../../../../base/browser/dom.js';
 import { StandardKeyboardEvent } from '../../../../base/browser/keyboardEvent.js';
 import { ActionBar } from '../../../../base/browser/ui/actionbar/actionbar.js';
 import * as aria from '../../../../base/browser/ui/aria/aria.js';
-import { Button } from '../../../../base/browser/ui/button/button.js';
 import { Orientation, Sizing, SplitView } from '../../../../base/browser/ui/splitview/splitview.js';
 import { ToggleActionViewItem } from '../../../../base/browser/ui/toggle/toggle.js';
 import { ITreeElement } from '../../../../base/browser/ui/tree/tree.js';
-import { CodeWindow } from '../../../../base/browser/window.js';
 import { Action } from '../../../../base/common/actions.js';
 import { CancelablePromise, createCancelablePromise, Delayer, raceTimeout } from '../../../../base/common/async.js';
 import { CancellationToken, CancellationTokenSource } from '../../../../base/common/cancellation.js';
 import { Color } from '../../../../base/common/color.js';
-import { fromNow } from '../../../../base/common/date.js';
 import { isCancellationError } from '../../../../base/common/errors.js';
-import { Emitter, Event } from '../../../../base/common/event.js';
+import { Event } from '../../../../base/common/event.js';
 import { Iterable } from '../../../../base/common/iterator.js';
 import { KeyCode } from '../../../../base/common/keyCodes.js';
-import { Disposable, DisposableStore, dispose, type IDisposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
+import { DisposableStore, dispose, type IDisposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
 import * as platform from '../../../../base/common/platform.js';
 import { StopWatch } from '../../../../base/common/stopwatch.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
@@ -30,7 +27,6 @@ import { ILanguageService } from '../../../../editor/common/languages/language.j
 import { ITextResourceConfigurationService } from '../../../../editor/common/services/textResourceConfiguration.js';
 import { localize } from '../../../../nls.js';
 import { IExperimentalSettingsService } from '../../../services/configuration/common/experimentalSettings.js';
-import { ICommandService } from '../../../../platform/commands/common/commands.js';
 import { ConfigurationTarget, IConfigurationUpdateOverrides } from '../../../../platform/configuration/common/configuration.js';
 import { ConfigurationScope, Extensions, IConfigurationRegistry } from '../../../../platform/configuration/common/configurationRegistry.js';
 import { IContextKey, IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
@@ -45,10 +41,9 @@ import { IEditorProgressService, IProgressRunner } from '../../../../platform/pr
 import { Registry } from '../../../../platform/registry/common/platform.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { defaultButtonStyles, defaultToggleStyles } from '../../../../platform/theme/browser/defaultStyles.js';
+import { defaultToggleStyles } from '../../../../platform/theme/browser/defaultStyles.js';
 import { asCssVariable, editorForeground } from '../../../../platform/theme/common/colorRegistry.js';
 import { IThemeService } from '../../../../platform/theme/common/themeService.js';
-import { IUserDataSyncEnablementService, IUserDataSyncService, SyncStatus } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { IWorkspaceTrustManagementService } from '../../../../platform/workspace/common/workspaceTrust.js';
 import { registerNavigableContainer } from '../../../browser/actions/widgetNavigationCommands.js';
 import { EditorPane } from '../../../browser/parts/editor/editorPane.js';
@@ -61,7 +56,6 @@ import { ALWAYS_SHOW_ADVANCED_SETTINGS_SETTING, IOpenSettingsOptions, IPreferenc
 import { SettingsEditor2Input } from '../../../services/preferences/common/preferencesEditorInput.js';
 import { nullRange, Settings2EditorModel } from '../../../services/preferences/common/preferencesModels.js';
 import { IUserDataProfileService } from '../../../services/userDataProfile/common/userDataProfile.js';
-import { IUserDataSyncWorkbenchService } from '../../../services/userDataSync/common/userDataSync.js';
 import { SuggestEnabledInputWithHistory } from '../../codeEditor/browser/suggestEnabledInput/suggestEnabledInput.js';
 import { ADVANCED_SETTING_TAG, AGENTS_WINDOW_SETTING_TAG, CONTEXT_AI_SETTING_RESULTS_AVAILABLE, CONTEXT_SETTINGS_EDITOR, CONTEXT_SETTINGS_FIRST_ROW_FOCUS, CONTEXT_SETTINGS_ROW_FOCUS, CONTEXT_SETTINGS_SEARCH_FOCUS, CONTEXT_TOC_ROW_FOCUS, EMBEDDINGS_SEARCH_PROVIDER_NAME, ENABLE_LANGUAGE_FILTER, EXP_ASSIGNMENT_SETTING_TAG, EXTENSION_FETCH_TIMEOUT_MS, EXTENSION_SETTING_TAG, FEATURE_SETTING_TAG, FILTER_MODEL_SEARCH_PROVIDER_NAME, getExperimentalExtensionToggleData, ID_SETTING_TAG, IPreferencesSearchService, ISearchProvider, LANGUAGE_SETTING_TAG, LLM_RANKED_SEARCH_PROVIDER_NAME, MODIFIED_SETTING_TAG, POLICY_SETTING_TAG, REQUIRE_TRUSTED_WORKSPACE_SETTING_TAG, SETTINGS_EDITOR_COMMAND_CLEAR_SEARCH_RESULTS, SETTINGS_EDITOR_COMMAND_SHOW_AI_RESULTS, SETTINGS_EDITOR_COMMAND_SUGGEST_FILTERS, SETTINGS_EDITOR_COMMAND_TOGGLE_AI_SEARCH, STRING_MATCH_SEARCH_PROVIDER_NAME, TF_IDF_SEARCH_PROVIDER_NAME, WorkbenchSettingsEditorSettings, WORKSPACE_TRUST_SETTING_TAG } from '../common/preferences.js';
 import { settingsHeaderBorder, settingsSashBorder, settingsTextInputBorder } from '../common/settingsEditorColorRegistry.js';
@@ -229,7 +223,6 @@ export class SettingsEditor2 extends EditorPane {
 	private readonly viewState: ISettingsEditorViewState;
 	private readonly _searchResultModel = this._register(new MutableDisposable<SearchResultModel>());
 	private searchResultLabel: string | null = null;
-	private lastSyncedLabel: string | null = null;
 	private settingsOrderByTocIndex: Map<string, number> | null = null;
 
 	private tocRowFocused: IContextKey<boolean>;
@@ -280,8 +273,6 @@ export class SettingsEditor2 extends EditorPane {
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IStorageService private readonly storageService: IStorageService,
 		@IEditorGroupsService protected editorGroupService: IEditorGroupsService,
-		@IUserDataSyncWorkbenchService private readonly userDataSyncWorkbenchService: IUserDataSyncWorkbenchService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
 		@IWorkspaceTrustManagementService private readonly workspaceTrustManagementService: IWorkspaceTrustManagementService,
 		@IExtensionService private readonly extensionService: IExtensionService,
 		@ILanguageService private readonly languageService: ILanguageService,
@@ -805,10 +796,6 @@ export class SettingsEditor2 extends EditorPane {
 			label += `. ${this.searchResultLabel}`;
 		}
 
-		if (this.lastSyncedLabel) {
-			label += `. ${this.lastSyncedLabel}`;
-		}
-
 		this.searchWidget.updateAriaLabel(label);
 	}
 
@@ -896,14 +883,6 @@ export class SettingsEditor2 extends EditorPane {
 				this.focusSettings();
 			}
 		}));
-
-		if (this.userDataSyncWorkbenchService.enabled && this.userDataSyncEnablementService.canToggleEnablement()) {
-			const syncControls = this._register(this.instantiationService.createInstance(SyncControls, this.window, headerControlsContainer));
-			this._register(syncControls.onDidChangeLastSyncedLabel(lastSyncedLabel => {
-				this.lastSyncedLabel = lastSyncedLabel;
-				this.updateInputAriaLabel();
-			}));
-		}
 
 		this.controlsElement = DOM.append(this.searchContainer, DOM.$('.search-container-widgets'));
 
@@ -2296,84 +2275,6 @@ export class SettingsEditor2 extends EditorPane {
 		}
 
 		super.saveState();
-	}
-}
-
-class SyncControls extends Disposable {
-	private readonly lastSyncedLabel!: HTMLElement;
-	private readonly turnOnSyncButton!: Button;
-
-	private readonly _onDidChangeLastSyncedLabel = this._register(new Emitter<string>());
-	public readonly onDidChangeLastSyncedLabel = this._onDidChangeLastSyncedLabel.event;
-
-	constructor(
-		window: CodeWindow,
-		container: HTMLElement,
-		@ICommandService private readonly commandService: ICommandService,
-		@IUserDataSyncService private readonly userDataSyncService: IUserDataSyncService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
-		@ITelemetryService telemetryService: ITelemetryService,
-	) {
-		super();
-
-		const headerRightControlsContainer = DOM.append(container, $('.settings-right-controls'));
-		const turnOnSyncButtonContainer = DOM.append(headerRightControlsContainer, $('.turn-on-sync'));
-		this.turnOnSyncButton = this._register(new Button(turnOnSyncButtonContainer, { title: true, ...defaultButtonStyles }));
-		this.lastSyncedLabel = DOM.append(headerRightControlsContainer, $('.last-synced-label'));
-		DOM.hide(this.lastSyncedLabel);
-
-		this.turnOnSyncButton.enabled = true;
-		this.turnOnSyncButton.label = localize('turnOnSyncButton', "Backup and Sync Settings");
-		DOM.hide(this.turnOnSyncButton.element);
-
-		this._register(this.turnOnSyncButton.onDidClick(async () => {
-			await this.commandService.executeCommand('workbench.userDataSync.actions.turnOn');
-		}));
-
-		this.updateLastSyncedTime();
-		this._register(this.userDataSyncService.onDidChangeLastSyncTime(() => {
-			this.updateLastSyncedTime();
-		}));
-
-		const updateLastSyncedTimer = this._register(new DOM.WindowIntervalTimer());
-		updateLastSyncedTimer.cancelAndSet(() => this.updateLastSyncedTime(), 60 * 1000, window);
-
-		this.update();
-		this._register(this.userDataSyncService.onDidChangeStatus(() => {
-			this.update();
-		}));
-
-		this._register(this.userDataSyncEnablementService.onDidChangeEnablement(() => {
-			this.update();
-		}));
-	}
-
-	private updateLastSyncedTime(): void {
-		const last = this.userDataSyncService.lastSyncTime;
-		let label: string;
-		if (typeof last === 'number') {
-			const d = fromNow(last, true, undefined, true);
-			label = localize('lastSyncedLabel', "Last synced: {0}", d);
-		} else {
-			label = '';
-		}
-
-		this.lastSyncedLabel.textContent = label;
-		this._onDidChangeLastSyncedLabel.fire(label);
-	}
-
-	private update(): void {
-		if (this.userDataSyncService.status === SyncStatus.Uninitialized) {
-			return;
-		}
-
-		if (this.userDataSyncEnablementService.isEnabled() || this.userDataSyncService.status !== SyncStatus.Idle) {
-			DOM.show(this.lastSyncedLabel);
-			DOM.hide(this.turnOnSyncButton.element);
-		} else {
-			DOM.hide(this.lastSyncedLabel);
-			DOM.show(this.turnOnSyncButton.element);
-		}
 	}
 }
 

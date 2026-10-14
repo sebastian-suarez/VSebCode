@@ -55,8 +55,6 @@ import { defaultButtonStyles, getInputBoxStyle, getListStyles, getSelectBoxStyle
 import { editorBackground, foreground } from '../../../../platform/theme/common/colorRegistry.js';
 import { IThemeService } from '../../../../platform/theme/common/themeService.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
-import { getIgnoredSettings } from '../../../../platform/userDataSync/common/settingsMerge.js';
-import { IUserDataSyncEnablementService, getDefaultIgnoredSettings } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { hasNativeContextMenu } from '../../../../platform/window/common/window.js';
 import { APPLICATION_SCOPES, APPLY_ALL_PROFILES_SETTING, IWorkbenchConfigurationService } from '../../../services/configuration/common/configuration.js';
 import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
@@ -882,10 +880,6 @@ export abstract class AbstractSettingRenderer extends Disposable implements ITre
 	protected readonly _onDidFocusSetting = this._register(new Emitter<SettingsTreeSettingElement>());
 	readonly onDidFocusSetting: Event<SettingsTreeSettingElement> = this._onDidFocusSetting.event;
 
-	private ignoredSettings: string[];
-	private readonly _onDidChangeIgnoredSettings = this._register(new Emitter<void>());
-	readonly onDidChangeIgnoredSettings: Event<void> = this._onDidChangeIgnoredSettings.event;
-
 	protected readonly _onDidChangeSettingHeight = this._register(new Emitter<HeightChangeParams>());
 	readonly onDidChangeSettingHeight: Event<HeightChangeParams> = this._onDidChangeSettingHeight.event;
 
@@ -911,12 +905,6 @@ export abstract class AbstractSettingRenderer extends Disposable implements ITre
 		@IMarkdownRendererService private readonly _markdownRendererService: IMarkdownRendererService,
 	) {
 		super();
-
-		this.ignoredSettings = getIgnoredSettings(getDefaultIgnoredSettings(), this._configService);
-		this._register(this._configService.onDidChangeConfiguration(e => {
-			this.ignoredSettings = getIgnoredSettings(getDefaultIgnoredSettings(), this._configService);
-			this._onDidChangeIgnoredSettings.fire();
-		}));
 	}
 
 	abstract renderTemplate(container: HTMLElement): any;
@@ -1074,13 +1062,9 @@ export abstract class AbstractSettingRenderer extends Disposable implements ITre
 		this.renderValue(element, <ISettingItemTemplate>template, onChange);
 
 		template.indicatorsLabel.updateWorkspaceTrust(element);
-		template.indicatorsLabel.updateSyncIgnored(element, this.ignoredSettings);
 		template.indicatorsLabel.updateDefaultOverrideIndicator(element);
 		template.indicatorsLabel.updatePreviewIndicator(element);
 		template.indicatorsLabel.updateAdvancedIndicator(element);
-		template.elementDisposables.add(this.onDidChangeIgnoredSettings(() => {
-			template.indicatorsLabel.updateSyncIgnored(element, this.ignoredSettings);
-		}));
 
 		this.updateSettingTabbable(element, template);
 		template.elementDisposables.add(element.onDidChangeTabbable(() => {
@@ -2232,7 +2216,6 @@ export class SettingTreeRenderers extends Disposable {
 		@IInstantiationService private readonly _instantiationService: IInstantiationService,
 		@IContextMenuService private readonly _contextMenuService: IContextMenuService,
 		@IContextViewService private readonly _contextViewService: IContextViewService,
-		@IUserDataSyncEnablementService private readonly _userDataSyncEnablementService: IUserDataSyncEnablementService,
 	) {
 		super();
 		this.settingActions = [
@@ -2297,9 +2280,6 @@ export class SettingTreeRenderers extends Disposable {
 		const actions: IAction[] = [];
 		if (!(setting.scope && APPLICATION_SCOPES.includes(setting.scope)) && settingTarget === ConfigurationTarget.USER_LOCAL) {
 			actions.push(this._instantiationService.createInstance(ApplySettingToAllProfilesAction, setting));
-		}
-		if (this._userDataSyncEnablementService.isEnabled() && !setting.disallowSyncIgnore) {
-			actions.push(this._instantiationService.createInstance(SyncSettingAction, setting));
 		}
 		if (actions.length) {
 			actions.splice(0, 0, new Separator());
@@ -2809,50 +2789,6 @@ class CopySettingAsURLAction extends Action {
 
 		return Promise.resolve(undefined);
 	}
-}
-
-class SyncSettingAction extends Action {
-	static readonly ID = 'settings.stopSyncingSetting';
-	static readonly LABEL = localize('stopSyncingSetting', "Sync This Setting");
-
-	constructor(
-		private readonly setting: ISetting,
-		@IConfigurationService private readonly configService: IConfigurationService,
-	) {
-		super(SyncSettingAction.ID, SyncSettingAction.LABEL);
-		this._register(Event.filter(configService.onDidChangeConfiguration, e => e.affectsConfiguration('settingsSync.ignoredSettings'))(() => this.update()));
-		this.update();
-	}
-
-	async update() {
-		const ignoredSettings = getIgnoredSettings(getDefaultIgnoredSettings(), this.configService);
-		this.checked = !ignoredSettings.includes(this.setting.key);
-	}
-
-	override async run(): Promise<void> {
-		// first remove the current setting completely from ignored settings
-		let currentValue = [...this.configService.getValue<string[]>('settingsSync.ignoredSettings')];
-		currentValue = currentValue.filter(v => v !== this.setting.key && v !== `-${this.setting.key}`);
-
-		const defaultIgnoredSettings = getDefaultIgnoredSettings();
-		const isDefaultIgnored = defaultIgnoredSettings.includes(this.setting.key);
-		const askedToSync = !this.checked;
-
-		// If asked to sync, then add only if it is ignored by default
-		if (askedToSync && isDefaultIgnored) {
-			currentValue.push(`-${this.setting.key}`);
-		}
-
-		// If asked not to sync, then add only if it is not ignored by default
-		if (!askedToSync && !isDefaultIgnored) {
-			currentValue.push(this.setting.key);
-		}
-
-		this.configService.updateValue('settingsSync.ignoredSettings', currentValue.length ? currentValue : undefined, ConfigurationTarget.USER);
-
-		return Promise.resolve(undefined);
-	}
-
 }
 
 class ApplySettingToAllProfilesAction extends Action {

@@ -69,7 +69,6 @@ export const serverOptions: OptionDescriptions<Required<ServerParsedArgs>> = {
 	'default-folder': { type: 'string', description: nls.localize('default-folder', 'The workspace folder to open when no input is specified in the browser URL. A relative or absolute path resolved against the current working directory.') },
 	'default-workspace': { type: 'string', description: nls.localize('default-workspace', 'The workspace to open when no input is specified in the browser URL. A relative or absolute path resolved against the current working directory.') },
 
-	'enable-sync': { type: 'boolean' },
 	'github-auth': { type: 'string' },
 	'use-test-resolver': { type: 'boolean' },
 
@@ -88,7 +87,6 @@ export const serverOptions: OptionDescriptions<Required<ServerParsedArgs>> = {
 	'show-versions': OPTIONS['show-versions'],
 	'category': OPTIONS['category'],
 	'force': OPTIONS['force'],
-	'do-not-sync': OPTIONS['do-not-sync'],
 	'do-not-include-pack-dependencies': OPTIONS['do-not-include-pack-dependencies'],
 	'pre-release': OPTIONS['pre-release'],
 	'start-server': { type: 'boolean', cat: 'e', description: nls.localize('start-server', "Start the server when installing or uninstalling extensions. To be used in combination with 'install-extension', 'install-builtin-extension' and 'uninstall-extension'.") },
@@ -204,7 +202,6 @@ export interface ServerParsedArgs {
 	folder: string;
 
 
-	'enable-sync'?: boolean;
 	'github-auth'?: string;
 	'use-test-resolver'?: boolean;
 
@@ -222,7 +219,6 @@ export interface ServerParsedArgs {
 	'show-versions'?: boolean;
 	'category'?: string;
 	force?: boolean; // used by install-extension
-	'do-not-sync'?: boolean; // used by install-extension
 	'pre-release'?: boolean; // used by install-extension
 	'do-not-include-pack-dependencies'?: boolean; // used by install-extension
 

@@ -18,8 +18,6 @@ import { ChatAIDisabledSettingId } from '../../../../platform/chat/common/chatSe
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { StorageManager } from '../../../../platform/extensionManagement/common/extensionEnablementService.js';
 import { webWorkerExtHostConfig, WebWorkerExtHostConfigValue } from '../../extensions/common/extensions.js';
-import { IUserDataSyncAccountService } from '../../../../platform/userDataSync/common/userDataSyncAccount.js';
-import { IUserDataSyncEnablementService } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { ILifecycleService, LifecyclePhase } from '../../lifecycle/common/lifecycle.js';
 import { INotificationService, NotificationPriority, Severity } from '../../../../platform/notification/common/notification.js';
 import { NotificationTelemetryId, NotificationActionTelemetryId } from '../../../../platform/notification/common/notificationTelemetry.js';
@@ -75,9 +73,7 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
 		@IExtensionManagementService private readonly extensionManagementService: IExtensionManagementService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IExtensionManagementServerService private readonly extensionManagementServerService: IExtensionManagementServerService,
-		@IUserDataSyncEnablementService private readonly userDataSyncEnablementService: IUserDataSyncEnablementService,
 		@IDefaultAccountService private readonly defaultAccountService: IDefaultAccountService,
-		@IUserDataSyncAccountService private readonly userDataSyncAccountService: IUserDataSyncAccountService,
 		@ILifecycleService private readonly lifecycleService: ILifecycleService,
 		@INotificationService private readonly notificationService: INotificationService,
 		@IHostService hostService: IHostService,
@@ -244,11 +240,6 @@ export class ExtensionEnablementService extends Disposable implements IWorkbench
 
 		const defaultAccountAuthProvider = this.defaultAccountService.getDefaultAccountAuthenticationProvider();
 		if (manifest.contributes!.authentication!.some(a => a.id === defaultAccountAuthProvider.id)) {
-			return true;
-		}
-
-		if (this.userDataSyncEnablementService.isEnabled() && this.userDataSyncAccountService.account &&
-			manifest.contributes!.authentication!.some(a => a.id === this.userDataSyncAccountService.account!.authenticationProviderId)) {
 			return true;
 		}
 

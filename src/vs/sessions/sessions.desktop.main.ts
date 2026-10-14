@@ -78,9 +78,6 @@ import '../workbench/services/extensionManagement/electron-browser/extensionMana
 import '../workbench/services/extensionManagement/electron-browser/extensionGalleryManifestService.js';
 import '../workbench/services/extensionManagement/electron-browser/extensionGalleryAccountService.js';
 import '../workbench/services/extensionManagement/electron-browser/extensionTipsService.js';
-import '../workbench/services/userDataSync/electron-browser/userDataSyncService.js';
-import '../workbench/services/userDataSync/electron-browser/userDataAutoSyncService.js';
-import '../workbench/contrib/userDataSync/electron-browser/userDataSyncUtilChannel.contribution.js';
 import '../workbench/services/timer/electron-browser/timerService.js';
 import '../workbench/services/environment/electron-browser/shellEnvironmentService.js';
 import '../workbench/services/integrity/electron-browser/integrityService.js';
@@ -94,7 +91,6 @@ import '../platform/remoteTunnel/electron-browser/remoteTunnelService.js';
 import '../workbench/services/files/electron-browser/elevatedFileService.js';
 import '../workbench/services/search/electron-browser/searchService.js';
 import '../workbench/services/workingCopy/electron-browser/workingCopyHistoryService.js';
-import '../workbench/services/userDataSync/browser/userDataSyncEnablementService.js';
 import '../workbench/services/extensions/electron-browser/nativeExtensionService.js';
 import '../platform/userDataProfile/electron-browser/userDataProfileStorageService.js';
 import '../workbench/services/auxiliaryWindow/electron-browser/auxiliaryWindowService.js';

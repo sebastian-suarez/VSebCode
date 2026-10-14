@@ -45,7 +45,7 @@ export class RemoteExtensionsScannerService implements IRemoteExtensionsScannerS
 		const builtinExtensionsToInstall = environmentService.args['install-builtin-extension'];
 		if (builtinExtensionsToInstall) {
 			_logService.trace('Installing builtin extensions passed via args...');
-			const installOptions: InstallOptions = { isMachineScoped: !!environmentService.args['do-not-sync'], installPreReleaseVersion: !!environmentService.args['pre-release'] };
+			const installOptions: InstallOptions = { installPreReleaseVersion: !!environmentService.args['pre-release'] };
 			performance.mark('code/server/willInstallBuiltinExtensions');
 			this._whenExtensionsReady = this._whenBuiltinExtensionsReady = _extensionManagementCLI.installExtensions([], this._asExtensionIdOrVSIX(builtinExtensionsToInstall), installOptions, !!environmentService.args['force'])
 				.then(() => {
@@ -62,7 +62,6 @@ export class RemoteExtensionsScannerService implements IRemoteExtensionsScannerS
 		if (extensionsToInstall) {
 			_logService.trace('Installing extensions passed via args...');
 			const installOptions: InstallOptions = {
-				isMachineScoped: !!environmentService.args['do-not-sync'],
 				installPreReleaseVersion: !!environmentService.args['pre-release'],
 				isApplicationScoped: true // extensions installed during server startup are available to all profiles
 			};

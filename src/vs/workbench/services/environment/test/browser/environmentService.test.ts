@@ -14,8 +14,8 @@ suite('BrowserWorkbenchEnvironmentService', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
 
 	test('gets enabled extension proposed API from workbench options', () => {
-		const empty = new BrowserWorkbenchEnvironmentService('', URI.file('logs'), { enabledExtensionProposedApi: [] }, TestProductService);
-		const populated = new BrowserWorkbenchEnvironmentService('', URI.file('logs'), { enabledExtensionProposedApi: ['publisher.extension'] }, TestProductService);
+		const empty = new BrowserWorkbenchEnvironmentService(URI.file('logs'), { enabledExtensionProposedApi: [] }, TestProductService);
+		const populated = new BrowserWorkbenchEnvironmentService(URI.file('logs'), { enabledExtensionProposedApi: ['publisher.extension'] }, TestProductService);
 
 		assert.deepStrictEqual({
 			empty: empty.extensionEnabledProposedApi,
@@ -38,7 +38,7 @@ suite('BrowserWorkbenchEnvironmentService', () => {
 	];
 
 	test('ignores extension host options from payload in production', () => {
-		const environmentService = new BrowserWorkbenchEnvironmentService('', URI.file('/logs'), {
+		const environmentService = new BrowserWorkbenchEnvironmentService(URI.file('/logs'), {
 			developmentOptions: { logLevel: LogLevel.Info },
 			workspaceProvider: {
 				workspace: undefined,
@@ -68,7 +68,7 @@ suite('BrowserWorkbenchEnvironmentService', () => {
 	});
 
 	test('accepts extension host options from payload in development', () => {
-		const environmentService = new BrowserWorkbenchEnvironmentService('', URI.file('/logs'), {
+		const environmentService = new BrowserWorkbenchEnvironmentService(URI.file('/logs'), {
 			workspaceProvider: {
 				workspace: undefined,
 				trusted: true,
@@ -102,7 +102,7 @@ suite('BrowserWorkbenchEnvironmentService', () => {
 	});
 
 	test('accepts extension host options from payload in production smoke tests', () => {
-		const environmentService = new BrowserWorkbenchEnvironmentService('', URI.file('/logs'), {
+		const environmentService = new BrowserWorkbenchEnvironmentService(URI.file('/logs'), {
 			developmentOptions: { enableSmokeTestDriver: true, logLevel: LogLevel.Info },
 			workspaceProvider: {
 				workspace: undefined,

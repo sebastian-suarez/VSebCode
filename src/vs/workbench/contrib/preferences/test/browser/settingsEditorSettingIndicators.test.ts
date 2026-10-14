@@ -27,7 +27,6 @@ suite('SettingsTreeIndicatorsLabel', () => {
 			hoverService as never,
 			undefined!,
 			undefined!,
-			undefined!,
 		);
 
 		label.updatePreviewIndicator({ tags: new Set(['preview']) } as unknown as SettingsTreeSettingElement);
