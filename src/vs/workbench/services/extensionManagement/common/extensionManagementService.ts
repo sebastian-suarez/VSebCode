@@ -818,8 +818,6 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 			return publisherLink ? `[${publisherDisplayName}](${publisherLink})` : publisherDisplayName;
 		};
 
-		const unverifiedLink = 'https://aka.ms/vscode-verify-publisher';
-
 		const title = allPublishers.length === 1
 			? localize('checkTrustedPublisherTitle', "Do you trust the publisher \"{0}\"?", allPublishers[0].publisherDisplayName)
 			: allPublishers.length === 2
@@ -858,14 +856,14 @@ export class ExtensionManagementService extends CommontExtensionManagementServic
 			if (unverfiiedPublishers.length) {
 				customMessage.appendText('\n');
 				if (unverfiiedPublishers.length === 1) {
-					customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('unverifiedPublisherWithName', "{0} is [**not** verified]({1}).", getPublisherLink(unverfiiedPublishers[0]), unverifiedLink)}`);
+					customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('unverifiedPublisherWithName', "{0} is **not** verified.", getPublisherLink(unverfiiedPublishers[0]))}`);
 				} else {
-					customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('unverifiedPublishers', "{0} and {1} are [**not** verified]({2}).", unverfiiedPublishers.slice(0, unverfiiedPublishers.length - 1).map(p => getPublisherLink(p)).join(', '), getPublisherLink(unverfiiedPublishers[unverfiiedPublishers.length - 1]), unverifiedLink)}`);
+					customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('unverifiedPublishers', "{0} and {1} are **not** verified.", unverfiiedPublishers.slice(0, unverfiiedPublishers.length - 1).map(p => getPublisherLink(p)).join(', '), getPublisherLink(unverfiiedPublishers[unverfiiedPublishers.length - 1]))}`);
 				}
 			}
 		} else {
 			customMessage.appendText('\n');
-			customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('allUnverifed', "All publishers are [**not** verified]({0}).", unverifiedLink)}`);
+			customMessage.appendMarkdown(`$(${Codicon.unverified.id})&nbsp;${localize('allUnverifed', "All publishers are **not** verified.")}`);
 		}
 
 		customMessage.appendText('\n');

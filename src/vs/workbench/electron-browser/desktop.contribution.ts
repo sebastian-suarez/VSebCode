@@ -388,7 +388,7 @@ import product from '../../platform/product/common/product.js';
 		id: argvDefinitionFileSchemaId,
 		allowComments: true,
 		allowTrailingCommas: true,
-		description: 'VSCode static command line definition file',
+		description: `${product.nameShort} static command line definition file`,
 		type: 'object',
 		additionalProperties: false,
 		properties: {
@@ -402,7 +402,7 @@ import product from '../../platform/product/common/product.js';
 			},
 			'proxy-bypass-list': {
 				type: 'string',
-				description: localize('argv.proxyBypassList', 'Bypass any specified proxy for the given semi-colon-separated list of hosts. Example value "<local>;*.microsoft.com;*foo.com;1.2.3.4:5678", will use the proxy server for all hosts except for local addresses (localhost, 127.0.0.1 etc.), microsoft.com subdomains, hosts that contain the suffix foo.com and anything at 1.2.3.4:5678')
+				description: localize('argv.proxyBypassList', 'Bypass any specified proxy for the given semi-colon-separated list of hosts. Example value "<local>;*.example.com;*foo.com;1.2.3.4:5678", will use the proxy server for all hosts except for local addresses (localhost, 127.0.0.1 etc.), example.com subdomains, hosts that contain the suffix foo.com and anything at 1.2.3.4:5678')
 			},
 			'disable-hardware-acceleration': {
 				type: 'boolean',
@@ -425,11 +425,11 @@ import product from '../../platform/product/common/product.js';
 			},
 			'disable-chromium-sandbox': {
 				type: 'boolean',
-				description: localize('argv.disableChromiumSandbox', "Disables the Chromium sandbox. This is useful when running VS Code as elevated on Linux and running under Applocker on Windows.")
+				description: localize('argv.disableChromiumSandbox', "Disables the Chromium sandbox. This is useful when running {0} as elevated on Linux and running under Applocker on Windows.", product.nameShort)
 			},
 			'use-inmemory-secretstorage': {
 				type: 'boolean',
-				description: localize('argv.useInMemorySecretStorage', "Ensures that an in-memory store will be used for secret storage instead of using the OS's credential store. This is often used when running VS Code extension tests or when you're experiencing difficulties with the credential store.")
+				description: localize('argv.useInMemorySecretStorage', "Ensures that an in-memory store will be used for secret storage instead of using the OS's credential store. This is often used when running {0} extension tests or when you're experiencing difficulties with the credential store.", product.nameShort)
 			},
 			'remote-debugging-port': {
 				type: 'string',

@@ -14,6 +14,7 @@ import { IFileService } from '../../platform/files/common/files.js';
 import { IModelService } from '../../editor/common/services/model.js';
 import { Schemas } from '../../base/common/network.js';
 import { MenuSettings } from '../../platform/window/common/window.js';
+import product from '../../platform/product/common/product.js';
 import { EditorInput } from './editor/editorInput.js';
 import { IEditorResolverService } from '../services/editor/common/editorResolverService.js';
 import { DEFAULT_EDITOR_ASSOCIATION, EditorResourceAccessor, isDiffEditorInput } from './editor.js';
@@ -39,7 +40,7 @@ export const HasWebFileSystemAccess = new RawContextKey<boolean>('hasWebFileSyst
 
 export const EmbedderIdentifierContext = new RawContextKey<string | undefined>('embedderIdentifier', undefined, localize('embedderIdentifier', 'The identifier of the embedder according to the product service, if one is defined'));
 
-export const InAutomationContext = new RawContextKey<boolean>('inAutomation', false, localize('inAutomation', "Whether VS Code is running under automation/smoke test"));
+export const InAutomationContext = new RawContextKey<boolean>('inAutomation', false, localize('inAutomation', "Whether {0} is running under automation/smoke test", product.nameShort));
 
 //#endregion
 

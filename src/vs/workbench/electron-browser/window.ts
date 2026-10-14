@@ -254,22 +254,11 @@ export class NativeWindow extends BaseWindow {
 		});
 
 		ipcRenderer.on('vscode:showTranslatedBuildWarning', () => {
-			this.notificationService.prompt(
-				Severity.Warning,
-				localize("runningTranslated", "You are running an emulated version of {0}. For better performance download the native arm64 version of {0} build for your machine.", this.productService.nameLong),
-				[{
-					label: localize('downloadArmBuild', "Download"),
-					run: () => {
-						const quality = this.productService.quality;
-						const stableURL = 'https://code.visualstudio.com/docs/?dv=osx';
-						const insidersURL = 'https://code.visualstudio.com/docs/?dv=osx&build=insiders';
-						this.openerService.open(quality === 'stable' ? stableURL : insidersURL);
-					}
-				}],
-				{
-					priority: NotificationPriority.URGENT
-				}
-			);
+			this.notificationService.notify({
+				severity: Severity.Warning,
+				message: localize("runningTranslated", "You are running an emulated version of {0}. For better performance download the native arm64 version of {0} build for your machine.", this.productService.nameLong),
+				priority: NotificationPriority.URGENT
+			});
 		});
 
 		ipcRenderer.on('vscode:showArgvParseWarning', () => {

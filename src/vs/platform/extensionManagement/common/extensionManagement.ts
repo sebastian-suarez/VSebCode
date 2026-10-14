@@ -730,7 +730,7 @@ Registry.as<IConfigurationRegistry>(Extensions.Configuration)
 			[AllowedExtensionsConfigKey]: {
 				// Note: Type is set only to object because to support policies generation during build time, where single type is expected.
 				type: 'object',
-				markdownDescription: localize('extensions.allowed', "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions. For more information on how to configure this setting, please visit the [Configure Allowed Extensions](https://aka.ms/vscode/enterprise/extensions/allowed) section."),
+				markdownDescription: localize('extensions.allowed', "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions."),
 				default: '*',
 				defaultSnippets: [{
 					body: {},
@@ -749,7 +749,7 @@ Registry.as<IConfigurationRegistry>(Extensions.Configuration)
 					localization: {
 						description: {
 							key: 'extensions.allowed.policy',
-							value: localize('extensions.allowed.policy', "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions. More information: https://aka.ms/vscode/enterprise/extensions/allowed"),
+							value: localize('extensions.allowed.policy', "Specify a list of extensions that are allowed to use. This helps maintain a secure and consistent development environment by restricting the use of unauthorized extensions."),
 						}
 					}
 				},

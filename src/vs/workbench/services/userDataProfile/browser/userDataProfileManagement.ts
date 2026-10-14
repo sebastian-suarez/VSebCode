@@ -197,7 +197,7 @@ export class UserDataProfileManagementService extends Disposable implements IUse
 		if (shouldRestartExtensionHosts) {
 			if (isRemoteWindow) {
 				const { confirmed } = await this.dialogService.confirm({
-					message: reloadMessage ?? localize('reload message', "Switching a profile requires reloading VS Code."),
+					message: reloadMessage ?? localize('reload message', "Switching a profile requires reloading {0}.", this.productService.nameShort),
 					primaryButton: localize('reload button', "&&Reload"),
 				});
 				if (confirmed) {

@@ -13,6 +13,7 @@ import { Registry } from '../../../../platform/registry/common/platform.js';
 import { IMessage } from './extensions.js';
 import { IExtensionDescription, EXTENSION_CATEGORIES, ExtensionIdentifierSet } from '../../../../platform/extensions/common/extensions.js';
 import { ExtensionKind } from '../../../../platform/environment/common/environment.js';
+import product from '../../../../platform/product/common/product.js';
 import { productSchemaId } from '../../../../platform/product/common/productService.js';
 import { ImplicitActivationEvents, IActivationEventsGenerator } from '../../../../platform/extensionManagement/common/implicitActivationEvents.js';
 import { IDisposable } from '../../../../base/common/lifecycle.js';
@@ -179,21 +180,21 @@ export const schema: IJSONSchema = {
 			properties: {
 				'vscode': {
 					type: 'string',
-					description: nls.localize('vscode.extension.engines.vscode', 'For VS Code extensions, specifies the VS Code version that the extension is compatible with. Cannot be *. For example: ^1.105.0 indicates compatibility with a minimum VS Code version of 1.105.0.'),
+					description: nls.localize('vscode.extension.engines.vscode', "For {0} extensions, specifies the {0} version that the extension is compatible with. Cannot be *. For example: ^1.105.0 indicates compatibility with a minimum {0} version of 1.105.0.", product.nameShort),
 					default: '^1.105.0',
 				}
 			}
 		},
 		publisher: {
-			description: nls.localize('vscode.extension.publisher', 'The publisher of the VS Code extension.'),
+			description: nls.localize('vscode.extension.publisher', "The publisher of the {0} extension.", product.nameShort),
 			type: 'string'
 		},
 		displayName: {
-			description: nls.localize('vscode.extension.displayName', 'The display name for the extension used in the VS Code gallery.'),
+			description: nls.localize('vscode.extension.displayName', "The display name for the extension used in the Marketplace."),
 			type: 'string'
 		},
 		categories: {
-			description: nls.localize('vscode.extension.categories', 'The categories used by the VS Code gallery to categorize the extension.'),
+			description: nls.localize('vscode.extension.categories', "The categories used by the Marketplace to categorize the extension."),
 			type: 'array',
 			uniqueItems: true,
 			items: {
@@ -210,10 +211,10 @@ export const schema: IJSONSchema = {
 		},
 		galleryBanner: {
 			type: 'object',
-			description: nls.localize('vscode.extension.galleryBanner', 'Banner used in the VS Code marketplace.'),
+			description: nls.localize('vscode.extension.galleryBanner', "Banner used in the Marketplace."),
 			properties: {
 				color: {
-					description: nls.localize('vscode.extension.galleryBanner.color', 'The banner color on the VS Code marketplace page header.'),
+					description: nls.localize('vscode.extension.galleryBanner.color', "The banner color on the Marketplace page header."),
 					type: 'string'
 				},
 				theme: {
@@ -224,7 +225,7 @@ export const schema: IJSONSchema = {
 			}
 		},
 		contributes: {
-			description: nls.localize('vscode.extension.contributes', 'All contributions of the VS Code extension represented by this package.'),
+			description: nls.localize('vscode.extension.contributes', "All contributions of the {0} extension represented by this package.", product.nameShort),
 			type: 'object',
 			// eslint-disable-next-line local/code-no-any-casts
 			properties: {
@@ -259,7 +260,7 @@ export const schema: IJSONSchema = {
 			]
 		},
 		activationEvents: {
-			description: nls.localize('vscode.extension.activationEvents', 'Activation events for the VS Code extension.'),
+			description: nls.localize('vscode.extension.activationEvents', "Activation events for the {0} extension.", product.nameShort),
 			type: 'array',
 			items: {
 				type: 'string',
@@ -406,7 +407,7 @@ export const schema: IJSONSchema = {
 					},
 					{
 						label: '*',
-						description: nls.localize('vscode.extension.activationEvents.star', 'An activation event emitted on VS Code startup. To ensure a great end user experience, please use this activation event in your extension only when no other activation events combination works in your use-case.'),
+						description: nls.localize('vscode.extension.activationEvents.star', "An activation event emitted on {0} startup. To ensure a great end user experience, please use this activation event in your extension only when no other activation events combination works in your use-case.", product.nameShort),
 						body: '*'
 					}
 				],
@@ -587,11 +588,11 @@ export const schema: IJSONSchema = {
 			type: 'object',
 			properties: {
 				'vscode:prepublish': {
-					description: nls.localize('vscode.extension.scripts.prepublish', 'Script executed before the package is published as a VS Code extension.'),
+					description: nls.localize('vscode.extension.scripts.prepublish', "Script executed before the package is published as a {0} extension.", product.nameShort),
 					type: 'string'
 				},
 				'vscode:uninstall': {
-					description: nls.localize('vscode.extension.scripts.uninstall', 'Uninstall hook for VS Code extension. Script that gets executed when the extension is completely uninstalled from VS Code which is when VS Code is restarted (shutdown and start) after the extension is uninstalled. Only Node scripts are supported.'),
+					description: nls.localize('vscode.extension.scripts.uninstall', "Uninstall hook for {0} extension. Script that gets executed when the extension is completely uninstalled from {0} which is when {0} is restarted (shutdown and start) after the extension is uninstalled. Only Node scripts are supported.", product.nameShort),
 					type: 'string'
 				}
 			}
@@ -612,7 +613,7 @@ export const schema: IJSONSchema = {
 		},
 		pricing: {
 			type: 'string',
-			markdownDescription: nls.localize('vscode.extension.pricing', 'The pricing information for the extension. Can be Free (default) or Trial. For more details visit: https://code.visualstudio.com/api/working-with-extensions/publishing-extension#extension-pricing-label'),
+			markdownDescription: nls.localize('vscode.extension.pricing', "The pricing information for the extension. Can be Free (default) or Trial."),
 			enum: ['Free', 'Trial'],
 			default: 'Free'
 		}

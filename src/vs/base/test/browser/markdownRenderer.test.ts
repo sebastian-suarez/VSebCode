@@ -1037,7 +1037,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1087,7 +1087,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '\`](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '\`](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1097,7 +1097,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '\`](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '\`](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1301,7 +1301,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1382,7 +1382,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '`](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '`](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1391,7 +1391,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '**](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '**](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 
@@ -1409,7 +1409,7 @@ suite('MarkdownRenderer', () => {
 				const tokens = marked.marked.lexer(incomplete);
 				const newTokens = fillInIncompleteTokens(tokens);
 
-				const completeTokens = marked.marked.lexer(incomplete + '](https://microsoft.com)');
+				const completeTokens = marked.marked.lexer(incomplete + '](https://example.com)');
 				assert.deepStrictEqual(newTokens, completeTokens);
 			});
 

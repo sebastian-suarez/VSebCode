@@ -8,7 +8,6 @@ import { InstantiationType, registerSingleton } from '../../../../platform/insta
 import { IClipboardService } from '../../../../platform/clipboard/common/clipboardService.js';
 import { BrowserClipboardService as BaseBrowserClipboardService } from '../../../../platform/clipboard/browser/clipboardService.js';
 import { INotificationService, Severity } from '../../../../platform/notification/common/notification.js';
-import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { Event } from '../../../../base/common/event.js';
 import { DisposableStore } from '../../../../base/common/lifecycle.js';
 import { IWorkbenchEnvironmentService } from '../../environment/common/environmentService.js';
@@ -20,7 +19,6 @@ export class BrowserClipboardService extends BaseBrowserClipboardService {
 
 	constructor(
 		@INotificationService private readonly notificationService: INotificationService,
-		@IOpenerService private readonly openerService: IOpenerService,
 		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
 		@ILogService logService: ILogService,
 		@ILayoutService layoutService: ILayoutService
@@ -66,9 +64,6 @@ export class BrowserClipboardService extends BaseBrowserClipboardService {
 							listener.dispose();
 							resolve(await this.readText(type));
 						}
-					}, {
-						label: localize('learnMore', "Learn More"),
-						run: () => this.openerService.open('https://go.microsoft.com/fwlink/?linkid=2151362')
 					}],
 					{
 						sticky: true

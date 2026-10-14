@@ -1262,7 +1262,7 @@ function completeLinkTargetArg(tokens: marked.Token): marked.Token {
 }
 
 function completeLinkText(tokens: marked.Token): marked.Token {
-	return completeWithString(tokens, '](https://microsoft.com)', false);
+	return completeWithString(tokens, '](https://example.com)', false);
 }
 
 function completeDoublestar(tokens: marked.Token): marked.Token {
