@@ -99,8 +99,6 @@ export class PartsSplash {
 				editorBorder: theme.getColor(themes.EDITOR_BORDER)?.toString(),
 				surfaceBackground: theme.getColor(themes.SURFACE_BACKGROUND)?.toString(),
 				surfaceBorder: theme.getColor(themes.SURFACE_BORDER)?.toString(),
-				agentsPanelBackground: theme.getColor('agentsPanel.background')?.toString(),
-				agentsPanelBorder: theme.getColor('agentsPanel.border')?.toString(),
 				statusBarBackground: theme.getColor(themes.STATUS_BAR_BACKGROUND)?.toString(),
 				statusBarInactiveBackground: theme.getColor(themes.STATUS_BAR_INACTIVE_BACKGROUND)?.toString(),
 				statusBarBorder: theme.getColor(themes.STATUS_BAR_BORDER)?.toString(),

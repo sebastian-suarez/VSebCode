@@ -5,13 +5,13 @@ benchmark are documented in [CSS_PERFORMANCE.md](./CSS_PERFORMANCE.md).
 
 Modern UI uses the standard workbench color theme system. Theme authors can use these color IDs in a theme's `colors` object, and users can use them in `workbench.colorCustomizations`.
 
-The Modern UI colors below are experimental and require a build that supports them. Enable `workbench.experimental.modernUI` to use them in the main workbench. The shared `modernTab.*` and `modernEditorTab.*` colors also apply to the modern tab style in the Agents window. `statusBar.inactiveBackground` works in both classic and Modern UI layouts.
+The Modern UI colors below are experimental and require a build that supports them. Enable `workbench.experimental.modernUI` to use them in the main workbench. `statusBar.inactiveBackground` works in both classic and Modern UI layouts.
 
 ## Layout density
 
-With Modern UI enabled, `window.density.layout` set to `default` keeps the workbench's floating cards, outer gutters, and rounded corners. In `compact` density, the main editor window's panels meet each other and the surrounding window chrome without outer spacing or corner radii. Internal separators and control padding remain intact; status bar items stay centered and keep their own horizontal inset. This perimeter treatment does not change modal editors, auxiliary editor windows, or the Agents window.
+With Modern UI enabled, `window.density.layout` set to `default` keeps the workbench's floating cards, outer gutters, and rounded corners. In `compact` density, the main editor window's panels meet each other and the surrounding window chrome without outer spacing or corner radii. Internal separators and control padding remain intact; status bar items stay centered and keep their own horizontal inset. This perimeter treatment does not change modal editors or auxiliary editor windows.
 
-Standard HC Connected editors use the editor card's perimeter and `modernPanel.border`, without a second inset group frame. Compact layout shares its square grid-edge seams with adjacent panels. Agents-window detail editors keep their separately owned frame and use `agentsPanel.border`; tab focus and selection accents remain independent of either frame.
+Standard HC Connected editors use the editor card's perimeter and `modernPanel.border`, without a second inset group frame. Compact layout shares its square grid-edge seams with adjacent panels. Tab focus and selection accents remain independent of the frame.
 
 ## Editor tab style
 
@@ -62,11 +62,11 @@ Connected selection strokes belong to the tab fill and selection indicator, not 
 
 Explicit top accents and hover-action backgrounds apply equally to bottom connected tabs, upper wrapped pills, and separate pinned rows.
 
-`editorGroupHeader.connectedTabsBackground` defaults to `editorGroupHeader.tabsBackground`, so themes can keep their established strip palette without customization. The bundled connected palettes are Dark 2026 `#202122`, Light 2026 `#EAEAEA`, Dark Modern `#2B2B2B`, Light Modern `#E5E5E5`, the classic dark themes `#303031`, the classic light themes `#E8E8E8`, and Quiet Light `#E4E4E4`. Their original global `editorGroupHeader.tabsBackground` and `tab.inactiveBackground` values remain unchanged. Shared connected theme derivations, including Agents-window tabs, use `editorGroupHeader.tabsBackground` outside Modern UI; only Modern UI editor tabs adopt the dedicated connected-strip palette.
+`editorGroupHeader.connectedTabsBackground` defaults to `editorGroupHeader.tabsBackground`, so themes can keep their established strip palette without customization. The bundled connected palettes are Dark 2026 `#202122`, Light 2026 `#EAEAEA`, Dark Modern `#2B2B2B`, Light Modern `#E5E5E5`, the classic dark themes `#303031`, the classic light themes `#E8E8E8`, and Quiet Light `#E4E4E4`. Their original global `editorGroupHeader.tabsBackground` and `tab.inactiveBackground` values remain unchanged. Shared connected theme derivations use `editorGroupHeader.tabsBackground` outside Modern UI; only Modern UI editor tabs adopt the dedicated connected-strip palette.
 
 Connected tabs use `tab.inactiveForeground` rather than dimming the general foreground to 50% opacity. The default palettes pair these fills with readable inactive text (at least 4.5:1), including in inactive editor groups. Light Modern and the classic light themes use the existing neutral `#616161`; the classic dark themes use `#A6A6A6`. Explicit legacy foreground customizations still take precedence. HC styling and the original pill label defaults are unchanged.
 
-In high contrast, the connected boundary uses `focusBorder` for the active editor group and `contrastBorder` for other groups. One rounded group frame encloses the title, breadcrumbs, editor header, and document body, including docked Details in the Agents window. With multiple tabs, the surrounding editor-area card stroke is transparent in HC, including in compact layout, so it does not create a second frame. Single and hidden-tab modes retain their original editor-card outline. Keyboard focus and multi-selection indicators remain visible. The frame's inside paint layer does not change editor dimensions when switching themes or active groups.
+In high contrast, the connected boundary uses `focusBorder` for the active editor group and `contrastBorder` for other groups. One rounded group frame encloses the title, breadcrumbs, editor header, and document body. With multiple tabs, the surrounding editor-area card stroke is transparent in HC, including in compact layout, so it does not create a second frame. Single and hidden-tab modes retain their original editor-card outline. Keyboard focus and multi-selection indicators remain visible. The frame's inside paint layer does not change editor dimensions when switching themes or active groups.
 
 ## Frosted glass overlays
 

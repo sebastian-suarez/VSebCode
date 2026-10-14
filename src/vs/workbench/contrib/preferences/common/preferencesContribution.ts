@@ -110,10 +110,9 @@ registry.registerConfiguration({
 	'properties': {
 		'workbench.settings.enableNaturalLanguageSearch': {
 			'type': 'boolean',
-			'description': nls.localize('enableNaturalLanguageSettingsSearch', "Controls whether to enable the natural language search mode for settings. The natural language search is provided by a Microsoft online service."),
+			'description': nls.localize('enableNaturalLanguageSettingsSearch', "Controls whether to enable the natural language search mode for settings. The natural language search runs locally and ranks settings by how closely their names and descriptions match the search terms."),
 			'default': true,
-			'scope': ConfigurationScope.WINDOW,
-			'tags': ['usesOnlineServices']
+			'scope': ConfigurationScope.WINDOW
 		},
 		'workbench.settings.settingsSearchTocBehavior': {
 			'type': 'string',

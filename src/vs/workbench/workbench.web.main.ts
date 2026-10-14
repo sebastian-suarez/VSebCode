@@ -131,18 +131,11 @@ import './contrib/terminal/browser/terminalInstanceService.js';
 // Tasks
 import './contrib/tasks/browser/taskService.js';
 
-// Tags
-
 // Issues
 import './contrib/issue/browser/issue.contribution.js';
 
-// Surveys
-
 // Splash
 import './contrib/splash/browser/splash.contribution.js';
-
-// Remote Start Entry for the Web
-import './contrib/remote/browser/remoteStartEntry.contribution.js';
 
 // Process Explorer
 import './contrib/processExplorer/browser/processExplorer.web.contribution.js';

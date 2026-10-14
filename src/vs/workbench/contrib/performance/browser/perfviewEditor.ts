@@ -209,8 +209,8 @@ export class PerfModelContentProvider implements ITextModelContentProvider {
 		table.push(['init storage (global & workspace)', metrics.timers.ellapsedStorageInit, '[renderer]', undefined]);
 		table.push(['init workspace service', metrics.timers.ellapsedWorkspaceServiceInit, '[renderer]', undefined]);
 		if (isWeb) {
-			table.push(['init settings and global state from settings sync service', metrics.timers.ellapsedRequiredUserDataInit, '[renderer]', undefined]);
-			table.push(['init keybindings, snippets & extensions from settings sync service', metrics.timers.ellapsedOtherUserDataInit, '[renderer]', undefined]);
+			table.push(['init settings and global state from profile template', metrics.timers.ellapsedRequiredUserDataInit, '[renderer]', undefined]);
+			table.push(['init keybindings, tasks, snippets & extensions from profile template', metrics.timers.ellapsedOtherUserDataInit, '[renderer]', undefined]);
 		}
 		table.push(['register extensions & spawn extension host', metrics.timers.ellapsedExtensions, '[renderer]', undefined]);
 		table.push(['restore primary viewlet', metrics.timers.ellapsedViewletRestore, '[renderer]', metrics.viewletId]);

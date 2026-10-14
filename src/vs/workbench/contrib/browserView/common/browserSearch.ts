@@ -16,6 +16,7 @@
  */
 
 import { localize } from '../../../../nls.js';
+import product from '../../../../platform/product/common/product.js';
 
 /**
  * Identifier of the integrated browser address bar search engine.
@@ -67,9 +68,14 @@ function encodeQuery(query: string): string {
 }
 
 /**
- * Ordered list of supported search engines.
+ * Ordered list of supported search engines. The first entry is the default.
  */
 export const BROWSER_SEARCH_ENGINES: readonly IBrowserSearchEngine[] = [
+	{
+		id: BrowserSearchEngineId.DuckDuckGo,
+		label: localize('browser.search.engine.duckduckgo', "DuckDuckGo"),
+		buildSearchUrl: (q) => `https://duckduckgo.com/?q=${encodeQuery(q)}`,
+	},
 	{
 		id: BrowserSearchEngineId.Bing,
 		label: localize('browser.search.engine.bing', "Bing"),
@@ -85,11 +91,6 @@ export const BROWSER_SEARCH_ENGINES: readonly IBrowserSearchEngine[] = [
 		label: localize('browser.search.engine.yahoo', "Yahoo!"),
 		buildSearchUrl: (q) =>
 			`https://search.yahoo.com/search?p=${encodeQuery(q)}`,
-	},
-	{
-		id: BrowserSearchEngineId.DuckDuckGo,
-		label: localize('browser.search.engine.duckduckgo', "DuckDuckGo"),
-		buildSearchUrl: (q) => `https://duckduckgo.com/?q=${encodeQuery(q)}`,
 	},
 ];
 
@@ -120,8 +121,7 @@ const KNOWN_URL_SCHEMES = new Set([
 	'mailto',
 	'chrome',
 	'edge',
-	'vscode',
-	'vscode-insiders',
+	product.urlProtocol,
 ]);
 
 /**
@@ -438,7 +438,7 @@ export function buildSearchUrl(
 }
 
 /**
- * Human-readable label for the given search engine (e.g. "Bing"). Falls back
+ * Human-readable label for the given search engine (e.g. "DuckDuckGo"). Falls back
  * to the default engine's label for an unknown id.
  */
 export function getBrowserSearchEngineLabel(engineId: BrowserSearchEngineId): string {

@@ -112,8 +112,6 @@ import './contrib/extensions/electron-browser/devtoolsExtensionHost.contribution
 // Issues
 import './contrib/issue/electron-browser/issue.contribution.js';
 
-// Surveys
-
 // Process Explorer
 import './contrib/processExplorer/electron-browser/processExplorer.contribution.js';
 
@@ -127,7 +125,6 @@ import './contrib/terminal/electron-browser/terminal.contribution.js';
 import './contrib/themes/browser/themes.test.contribution.js';
 import './services/themes/electron-browser/themes.contribution.js';
 
-// Tags
 // Performance
 import './contrib/performance/electron-browser/performance.contribution.js';
 
@@ -160,8 +157,6 @@ import './contrib/encryption/electron-browser/encryption.contribution.js';
 
 // Modern UI
 import './contrib/modernUI/electron-browser/frostedGlass.contribution.js';
-
-// Emergency Alert
 
 // Policy Export
 import './contrib/policyExport/electron-browser/policyExport.contribution.js';

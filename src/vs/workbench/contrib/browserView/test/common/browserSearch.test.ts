@@ -5,6 +5,7 @@
 
 import assert from 'assert';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
+import product from '../../../../../platform/product/common/product.js';
 import {
 	BrowserSearchEngineId,
 	buildSearchUrl,
@@ -24,7 +25,7 @@ suite('BrowserSearch - resolveAddressBarInput', () => {
 			'data:text/html,<h1>hi</h1>',
 			'view-source:https://example.com',
 			'ftp://files.example.com',
-			'vscode://settings',
+			`${product.urlProtocol}://settings`,
 			'HTTP://EXAMPLE.COM', // case-insensitive scheme
 			'https://münchen.de/pfad?q=wert', // unicode after scheme
 		];
@@ -251,10 +252,10 @@ suite('BrowserSearch - buildSearchUrl', () => {
 		);
 	});
 
-	test('unknown engine id falls back to default (Bing)', () => {
+	test('unknown engine id falls back to default (DuckDuckGo)', () => {
 		assert.strictEqual(
 			buildSearchUrl('cats', 'nonexistent' as BrowserSearchEngineId),
-			'https://www.bing.com/search?q=cats',
+			'https://duckduckgo.com/?q=cats',
 		);
 	});
 });
@@ -270,7 +271,7 @@ suite('BrowserSearch - getBrowserSearchEngineLabel', () => {
 				getBrowserSearchEngineLabel(BrowserSearchEngineId.DuckDuckGo),
 				getBrowserSearchEngineLabel('nonexistent' as BrowserSearchEngineId),
 			],
-			['Bing', 'Google', 'DuckDuckGo', 'Bing'],
+			['Bing', 'Google', 'DuckDuckGo', 'DuckDuckGo'],
 		);
 	});
 });

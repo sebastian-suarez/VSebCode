@@ -31,7 +31,6 @@ import { ILogService } from '../../../../platform/log/common/log.js';
 import { ReloadWindowAction } from '../../../browser/actions/windowActions.js';
 import { EXTENSION_INSTALL_SKIP_WALKTHROUGH_CONTEXT, IExtensionGalleryService, IExtensionManagementService } from '../../../../platform/extensionManagement/common/extensionManagement.js';
 import { IExtensionsWorkbenchService, LIST_WORKSPACE_UNSUPPORTED_EXTENSIONS_COMMAND_ID } from '../../extensions/common/extensions.js';
-import { ServicesAccessor } from '../../../../platform/instantiation/common/instantiation.js';
 import { IMarkdownString, MarkdownString } from '../../../../base/common/htmlContent.js';
 import { RemoteNameContext, VirtualWorkspaceContext } from '../../../common/contextkeys.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
@@ -77,7 +76,6 @@ export class RemoteStatusIndicator extends Disposable implements IWorkbenchContr
 	private static readonly REMOTE_ACTIONS_COMMAND_ID = 'workbench.action.remote.showMenu';
 	private static readonly CLOSE_REMOTE_COMMAND_ID = 'workbench.action.remote.close';
 	private static readonly SHOW_CLOSE_REMOTE_COMMAND_ID = !isWeb; // web does not have a "Close Remote" command
-	private static readonly INSTALL_REMOTE_EXTENSIONS_ID = 'workbench.action.remote.extensions';
 
 	private static readonly DEFAULT_REMOTE_STATUS_LABEL = '$(remote)';
 
@@ -228,23 +226,6 @@ export class RemoteStatusIndicator extends Disposable implements IWorkbenchContr
 					order: 3.5
 				});
 			}
-		}
-
-		if (this.extensionGalleryService.isEnabled()) {
-			this._register(registerAction2(class extends Action2 {
-				constructor() {
-					super({
-						id: RemoteStatusIndicator.INSTALL_REMOTE_EXTENSIONS_ID,
-						category,
-						title: nls.localize2('remote.install', "Install Remote Development Extensions"),
-						f1: true
-					});
-				}
-				run = (accessor: ServicesAccessor, input: string) => {
-					const extensionsWorkbenchService = accessor.get(IExtensionsWorkbenchService);
-					return extensionsWorkbenchService.openSearch(`@recommended:remotes`);
-				};
-			}));
 		}
 	}
 

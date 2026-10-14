@@ -198,14 +198,14 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 			const fallbackInsetFor = (part: 'activityBar' | 'sideBar' | 'editor' | 'auxiliaryBar', edge: 'left' | 'right' | 'top' | 'bottom') =>
 				modernUI ? fallbackOuterEdgesFor(part)[edge] ? floatingOuterMargin : floatingMargin : 0;
 
-			const railBorderColor = colorInfo.modernActivityBarBorder ?? colorInfo.surfaceBorder ?? colorInfo.agentsPanelBorder ?? colorInfo.editorGroupBorder ?? 'transparent';
+			const railBorderColor = colorInfo.modernActivityBarBorder ?? colorInfo.surfaceBorder ?? colorInfo.editorGroupBorder ?? 'transparent';
 
 			const applyFloatingCardStyles = (
 				element: HTMLElement,
 				backgroundColor: string | undefined,
 				partBounds?: IPartsSplashPartBounds,
 				fallbackOuterEdges = { left: true, right: true, top: true, bottom: true },
-				compactBorderColor = colorInfo.surfaceBorder ?? colorInfo.agentsPanelBorder ?? colorInfo.editorGroupBorder ?? 'transparent'
+				compactBorderColor = colorInfo.surfaceBorder ?? colorInfo.editorGroupBorder ?? 'transparent'
 			) => {
 				element.style.boxSizing = 'border-box';
 				if (layoutInfo.modernUICompact === true) {
@@ -225,7 +225,7 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 						outerEdges.bottom && outerEdges.left ? floatingBorderRadius : 0,
 					].map(radius => `${radius}px`).join(' ');
 				} else {
-					element.style.border = `${floatingBorderWidth}px solid ${colorInfo.agentsPanelBorder ?? colorInfo.editorGroupBorder ?? 'transparent'}`;
+					element.style.border = `${floatingBorderWidth}px solid ${colorInfo.editorGroupBorder ?? 'transparent'}`;
 					element.style.borderRadius = `${floatingBorderRadius}px`;
 				}
 				element.style.backgroundColor = backgroundColor ?? colorInfo.editorBackground ?? colorInfo.background;
@@ -356,7 +356,7 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 					});
 				}
 				if (modernUI) {
-					applyFloatingCardStyles(sideDiv, colorInfo.surfaceBackground ?? colorInfo.agentsPanelBackground ?? colorInfo.sideBarBackground, layoutInfo.partBounds?.sideBar, sideBarFallbackOuterEdges);
+					applyFloatingCardStyles(sideDiv, colorInfo.surfaceBackground ?? colorInfo.sideBarBackground, layoutInfo.partBounds?.sideBar, sideBarFallbackOuterEdges);
 				} else {
 					sideDiv.style.backgroundColor = `${colorInfo.sideBarBackground}`;
 				}
@@ -447,7 +447,7 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				const panelDiv = document.createElement('div');
 				setPartBounds(panelDiv, layoutInfo.partBounds.panel);
 				applyFloatingCardStyles(panelDiv, colorInfo.panelBackground ?? colorInfo.editorBackground, layoutInfo.partBounds.panel);
-				panelDiv.style.borderColor = colorInfo.modernPanelBorder ?? colorInfo.surfaceBorder ?? colorInfo.agentsPanelBorder ?? colorInfo.editorGroupBorder ?? 'transparent';
+				panelDiv.style.borderColor = colorInfo.modernPanelBorder ?? colorInfo.surfaceBorder ?? colorInfo.editorGroupBorder ?? 'transparent';
 				splash.appendChild(panelDiv);
 			}
 

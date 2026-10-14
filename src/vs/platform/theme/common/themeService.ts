@@ -243,8 +243,6 @@ export interface IPartsSplash {
 		editorBorder: string | undefined;
 		surfaceBackground: string | undefined;
 		surfaceBorder: string | undefined;
-		agentsPanelBackground: string | undefined;
-		agentsPanelBorder: string | undefined;
 		statusBarBackground: string | undefined;
 		statusBarInactiveBackground: string | undefined;
 		statusBarBorder: string | undefined;

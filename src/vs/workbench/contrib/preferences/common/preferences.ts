@@ -18,19 +18,9 @@ export interface IWorkbenchSettingsConfiguration {
 	workbench: {
 		settings: {
 			openDefaultSettings: boolean;
-			naturalLanguageSearchEndpoint: string;
-			naturalLanguageSearchKey: string;
-			naturalLanguageSearchAutoIngestFeedback: boolean;
-			useNaturalLanguageSearchPost: boolean;
 			enableNaturalLanguageSearch: boolean;
-			enableNaturalLanguageSearchFeedback: boolean;
 		};
 	};
-}
-
-export interface IEndpointDetails {
-	urlBase: string;
-	key?: string;
 }
 
 export const IPreferencesSearchService = createDecorator<IPreferencesSearchService>('preferencesSearchService');

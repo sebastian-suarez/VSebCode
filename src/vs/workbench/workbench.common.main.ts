@@ -163,8 +163,6 @@ registerSingleton(IDownloadService, DownloadService, InstantiationType.Delayed);
 registerSingleton(IOpenerService, OpenerService, InstantiationType.Delayed);
 registerSingleton(IWebWorkerService, WebWorkerService, InstantiationType.Delayed);
 
-// Policy Telemetry
-
 // Telemetry
 import '../platform/telemetry/common/telemetryConfiguration.js';
 
@@ -370,8 +368,6 @@ import './contrib/list/browser/list.contribution.js';
 
 // Accessibility Signals
 import './contrib/accessibilitySignals/browser/accessibilitySignal.contribution.js';
-
-// Bracket Pair Colorizer 2 Telemetry
 
 // Accessibility
 import './contrib/accessibility/browser/accessibility.contribution.js';

@@ -73,11 +73,6 @@ import { ExcludeSettingWidget, IBoolObjectDataItem, IIncludeExcludeDataItem, ILi
 
 const $ = DOM.$;
 
-const multiGroupTocSettings = new Set([
-	'accessibility.signals.chatUserActionRequired',
-	'accessibility.signals.chatResponseReceived'
-]);
-
 function getIncludeExcludeDisplayValue(element: SettingsTreeSettingElement): IIncludeExcludeDataItem[] {
 	const elementDefaultValue: Record<string, unknown> = typeof element.defaultValue === 'object'
 		? element.defaultValue ?? {}
@@ -668,9 +663,7 @@ function getMatchingSettings(allSettings: Set<ISetting>, filter: ITOCFilter): IS
 		// Include if matches include filter and doesn't match exclude filter
 		if (shouldInclude && !shouldExclude) {
 			result.push(setting);
-			if (!multiGroupTocSettings.has(setting.key)) {
-				allSettings.delete(setting);
-			}
+			allSettings.delete(setting);
 		}
 	});
 

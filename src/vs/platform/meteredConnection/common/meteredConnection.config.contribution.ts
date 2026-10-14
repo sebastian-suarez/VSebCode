@@ -19,12 +19,12 @@ configurationRegistry.registerConfiguration({
 			enum: ['auto', 'on', 'off'],
 			enumDescriptions: [
 				localize('meteredConnection.auto', "Automatically detect metered connections using the operating system's network status."),
-				localize('meteredConnection.on', "Always treat the network connection as metered. Automatic updates and downloads will be postponed."),
+				localize('meteredConnection.on', "Always treat the network connection as metered. Automatic extension updates and automatic Git fetches will be paused."),
 				localize('meteredConnection.off', "Never treat the network connection as metered.")
 			],
 			default: 'auto',
 			scope: ConfigurationScope.APPLICATION,
-			description: localize('meteredConnection', "Controls whether the current network connection should be treated as metered. When metered, automatic updates, extension downloads, and other background network activity will be postponed to reduce data usage."),
+			description: localize('meteredConnection', "Controls whether the current network connection should be treated as metered. When metered, automatic extension updates and automatic Git fetches are paused to reduce data usage."),
 			tags: ['usesOnlineServices']
 		}
 	}
