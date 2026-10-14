@@ -8,6 +8,7 @@ import { Action, IAction } from '../../../../../base/common/actions.js';
 import { disposableTimeout } from '../../../../../base/common/async.js';
 import { decodeBase64 } from '../../../../../base/common/buffer.js';
 import { Disposable, DisposableStore, type IDisposable } from '../../../../../base/common/lifecycle.js';
+import { isHighSurrogate } from '../../../../../base/common/strings.js';
 import { localize } from '../../../../../nls.js';
 import { NotificationPriority, Severity, type INotification, type INotificationHandle } from '../../../../../platform/notification/common/notification.js';
 
@@ -17,6 +18,17 @@ import { NotificationPriority, Severity, type INotification, type INotificationH
  * text without limit.
  */
 const MAX_OSC99_TEXT_LENGTH = 10000;
+
+/**
+ * The longest notification id kept; longer ids are cut.
+ */
+const MAX_OSC99_ID_LENGTH = 256;
+
+/**
+ * The most notifications a terminal keeps pending at once; the oldest pending one is dropped when
+ * another starts, so that a process cannot grow the pending state without limit either.
+ */
+const MAX_OSC99_PENDING_NOTIFICATIONS = 100;
 
 /**
  * Removes markdown links `[label](target)` from a notification text in one pass over it and
@@ -249,13 +261,21 @@ export class TerminalNotificationHandler extends Disposable {
 		if (!rawId) {
 			return undefined;
 		}
-		const sanitized = rawId.replace(/[^a-zA-Z0-9_\-+.]/g, '');
+		const sanitized = rawId.replace(/[^a-zA-Z0-9_\-+.]/g, '').slice(0, MAX_OSC99_ID_LENGTH);
 		return sanitized.length > 0 ? sanitized : undefined;
 	}
 
 	private _appendOsc99Text(current: string, addition: string): string {
 		const remaining = MAX_OSC99_TEXT_LENGTH - current.length;
-		return remaining > 0 ? current + addition.slice(0, remaining) : current;
+		if (remaining <= 0) {
+			return current;
+		}
+		let kept = addition.slice(0, remaining);
+		// The cut must not split a surrogate pair
+		if (kept.length < addition.length && isHighSurrogate(kept.charCodeAt(kept.length - 1))) {
+			kept = kept.slice(0, -1);
+		}
+		return current + kept;
 	}
 
 	private _getOrCreateOsc99State(id: string | undefined): IOsc99NotificationState {
@@ -267,6 +287,12 @@ export class TerminalNotificationHandler extends Disposable {
 		}
 		let state = this._osc99PendingNotifications.get(id);
 		if (!state) {
+			if (this._osc99PendingNotifications.size >= MAX_OSC99_PENDING_NOTIFICATIONS) {
+				const oldest = this._osc99PendingNotifications.keys().next().value;
+				if (oldest !== undefined) {
+					this._osc99PendingNotifications.delete(oldest);
+				}
+			}
 			state = this._createOsc99State(id);
 			this._osc99PendingNotifications.set(id, state);
 		}

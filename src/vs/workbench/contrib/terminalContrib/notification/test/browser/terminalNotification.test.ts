@@ -249,6 +249,23 @@ suite('Terminal OSC 99 notifications', () => {
 		strictEqual(host.notifications[0].message, 't'.repeat(10000) + ': ' + 'b'.repeat(10000));
 	});
 
+	test('caps the pending notifications and the id length and keeps surrogate pairs whole', () => {
+		for (let i = 0; i <= 100; i++) {
+			handler.handleSequence(`i=n${i}:d=0:p=title;Title ${i}`);
+		}
+		handler.handleSequence('i=n0:p=body;Body 0');
+		handler.handleSequence('i=n100:p=body;Body 100');
+		handler.handleSequence('i=' + 'a'.repeat(300) + ':d=0:p=title;Long id');
+		handler.handleSequence('i=' + 'a'.repeat(256) + 'b:p=body;same notification');
+		handler.handleSequence('p=title;' + 't'.repeat(9999) + '\u{1F600}');
+		deepStrictEqual(host.notifications.map(notification => notification.message), [
+			'Body 0',
+			'Title 100: Body 100',
+			'Long id: same notification',
+			't'.repeat(9999),
+		]);
+	});
+
 	test('defers display until done', () => {
 		handler.handleSequence('i=chunk:d=0:p=title;Hello ');
 		strictEqual(host.notifications.length, 0);
