@@ -26,7 +26,7 @@ import { IPushErrorHandlerRegistry } from './pushError';
 import { IRemoteSourcePublisherRegistry } from './remotePublisher';
 import { StatusBarCommands } from './statusbar';
 import { toGitUri } from './uri';
-import { anyEvent, combinedDisposable, debounceEvent, dispose, EmptyDisposable, eventToPromise, filterEvent, find, getCommitShortHash, IDisposable, isCopilotWorktreeFolder, isDescendant, isLinuxSnap, isRemote, isWindows, Limiter, onceEvent, pathEquals, relativePath } from './util';
+import { anyEvent, combinedDisposable, debounceEvent, dispose, EmptyDisposable, eventToPromise, filterEvent, find, getCommitShortHash, IDisposable, isDescendant, isLinuxSnap, isRemote, isWindows, Limiter, onceEvent, pathEquals, relativePath } from './util';
 import { IFileWatcher, watch } from './watch';
 import { ISourceControlHistoryItemDetailsProviderRegistry } from './historyItemDetailsProvider';
 import { GitArtifactProvider } from './artifactProvider';
@@ -371,17 +371,15 @@ class ProgressManager {
 		onDidChange(_ => this.updateEnablement(), null, this.disposables);
 		this.updateEnablement();
 
-		if (!workspace.isAgentSessionsWorkspace) {
-			this.repository.onDidChangeOperations(() => {
-				// Disable input box when the commit operation is running
-				this.repository.sourceControl.inputBox.enabled = !this.repository.operations.isRunning(OperationKind.Commit);
-			}, null, this.disposables);
-		}
+		this.repository.onDidChangeOperations(() => {
+			// Disable input box when the commit operation is running
+			this.repository.sourceControl.inputBox.enabled = !this.repository.operations.isRunning(OperationKind.Commit);
+		}, null, this.disposables);
 	}
 
 	private updateEnablement(): void {
 		const config = workspace.getConfiguration('git', Uri.file(this.repository.root));
-		const showProgress = config.get<boolean>('showProgress') === true && !workspace.isAgentSessionsWorkspace;
+		const showProgress = config.get<boolean>('showProgress') === true;
 
 		if (showProgress) {
 			this.enable();
@@ -954,17 +952,12 @@ export class Repository implements Disposable {
 
 		this.disposables.push(new FileEventLogger(onRepositoryWorkingTreeFileChange, onRepositoryDotGitFileChange, logger));
 
-		// Parent source control. Repositories opened in the Sessions app
-		// don't use the parent/child relationship and it is expected for
-		// a worktree repository to be opened while the main repository
-		// is closed.
-		const parentRoot = workspace.isAgentSessionsWorkspace
-			? undefined
-			: repository.kind === 'submodule'
-				? repository.dotGit.superProjectPath
-				: repository.kind === 'worktree' && repository.dotGit.commonPath
-					? path.dirname(repository.dotGit.commonPath)
-					: undefined;
+		// Parent source control
+		const parentRoot = repository.kind === 'submodule'
+			? repository.dotGit.superProjectPath
+			: repository.kind === 'worktree' && repository.dotGit.commonPath
+				? path.dirname(repository.dotGit.commonPath)
+				: undefined;
 		const parent = parentRoot
 			? this.repositoryResolver.getRepository(parentRoot)?.sourceControl
 			: undefined;
@@ -973,20 +966,12 @@ export class Repository implements Disposable {
 		const icon = repository.kind === 'submodule'
 			? new ThemeIcon('archive')
 			: repository.kind === 'worktree'
-				? isCopilotWorktreeFolder(repository.root)
-					? new ThemeIcon('chat-sparkle')
-					: new ThemeIcon('worktree')
+				? new ThemeIcon('worktree')
 				: new ThemeIcon('repo');
 
 		// Hidden
-		// This is a temporary solution to hide:
-		// * repositories in the empty window
-		// * worktrees created by Copilot when the main repository
-		//   is opened. Users can still manually open the worktree
-		//   from the Repositories view.
-		this._isHidden = workspace.workspaceFolders === undefined ||
-			(repository.kind === 'worktree' &&
-				isCopilotWorktreeFolder(repository.root) && parent !== undefined);
+		// This is a temporary solution to hide repositories in the empty window
+		this._isHidden = workspace.workspaceFolders === undefined;
 
 		const root = Uri.file(repository.root);
 		this._sourceControl = scm.createSourceControl('git', 'Git', root, icon, this._isHidden, parent);
@@ -1279,9 +1264,6 @@ export class Repository implements Disposable {
 			async () => {
 				await this.repository.add(resources.map(r => r.fsPath), opts);
 				this.closeDiffEditors([], [...resources.map(r => r.fsPath)]);
-
-				// Accept working set changes across all chat sessions
-				commands.executeCommand('_chat.editSessions.accept', resources);
 			},
 			() => {
 				const resourcePaths = resources.map(r => r.fsPath);
@@ -1339,12 +1321,6 @@ export class Repository implements Disposable {
 				this.closeDiffEditors([...resources.length !== 0 ?
 					resources.map(r => r.fsPath) :
 					this.indexGroup.resourceStates.map(r => r.resourceUri.fsPath)], []);
-
-				// Clear AI contribution tracking for reverted resources
-				const uris = resources.length !== 0
-					? resources
-					: this.indexGroup.resourceStates.map(r => r.resourceUri);
-				commands.executeCommand('_aiEdits.clearAiContributions', uris);
 			},
 			() => {
 				const config = workspace.getConfiguration('git', Uri.file(this.repository.root));
@@ -1426,9 +1402,6 @@ export class Repository implements Disposable {
 				}
 
 				this.closeDiffEditors([], [...toClean, ...toRestore]);
-
-				// Clear AI contribution tracking for discarded resources
-				commands.executeCommand('_aiEdits.clearAiContributions', resources);
 			});
 	}
 
@@ -1469,9 +1442,6 @@ export class Repository implements Disposable {
 						opts.requireUserConfig = config.get<boolean>('requireGitUserConfig');
 					}
 
-					// Add AI co-author trailer if applicable
-					message = await this.appendAICoAuthorTrailer(message, indexResources, workingGroupResources);
-
 					await this.repository.commit(message, opts);
 					await this.commitOperationCleanup(message, indexResources, workingGroupResources);
 				},
@@ -1489,66 +1459,6 @@ export class Repository implements Disposable {
 			this.inputBox.value = await this.getInputTemplate();
 		}
 		this.closeDiffEditors(indexResources, workingGroupResources);
-
-		// Accept working set changes across all chat sessions
-		const resources = indexResources.length !== 0
-			? indexResources.map(r => Uri.file(r))
-			: workingGroupResources.map(r => Uri.file(r));
-		commands.executeCommand('_chat.editSessions.accept', resources);
-
-		// Clear AI contribution tracking for committed resources
-		commands.executeCommand('_aiEdits.clearAiContributions', resources);
-	}
-
-	private static readonly AI_CO_AUTHOR_TRAILER = 'Co-authored-by: Copilot <copilot@github.com>';
-
-	private async appendAICoAuthorTrailer(
-		message: string | undefined,
-		indexResources: string[],
-		workingGroupResources: string[]
-	): Promise<string | undefined> {
-		if (!message) {
-			return message;
-		}
-
-		const chatConfig = workspace.getConfiguration('chat');
-		if (chatConfig.get<boolean>('disableAIFeatures', false)) {
-			return message;
-		}
-
-		const config = workspace.getConfiguration('git', Uri.file(this.root));
-		const addAICoAuthor = config.get<'off' | 'chatAndAgent' | 'all'>('addAICoAuthor', 'off');
-
-		if (addAICoAuthor === 'off') {
-			return message;
-		}
-
-		// Don't add if trailer is already present
-		if (message.includes(Repository.AI_CO_AUTHOR_TRAILER)) {
-			return message;
-		}
-
-		const resources = indexResources.length !== 0
-			? indexResources.map(r => Uri.file(r))
-			: workingGroupResources.map(r => Uri.file(r));
-
-		if (resources.length === 0) {
-			return message;
-		}
-
-		try {
-			const level = addAICoAuthor === 'all' ? 'all' : 'chatAndAgent';
-			const hasAiContributions = await commands.executeCommand<boolean>('_aiEdits.hasAiContributions', resources, level);
-			if (hasAiContributions) {
-				// Ensure proper trailer formatting: blank line before trailers
-				const trimmed = message.trimEnd();
-				return `${trimmed}\n\n${Repository.AI_CO_AUTHOR_TRAILER}`;
-			}
-		} catch {
-			// Command may not be available (e.g., in web environment)
-		}
-
-		return message;
 	}
 
 	private commitOperationGetOptimisticResourceGroups(opts: CommitOptions): GitResourceGroups {
@@ -1622,9 +1532,6 @@ export class Repository implements Disposable {
 				}
 
 				this.closeDiffEditors([], [...toClean, ...toCheckout]);
-
-				// Clear AI contribution tracking for discarded resources
-				commands.executeCommand('_aiEdits.clearAiContributions', resources);
 			},
 			() => {
 				const resourcePaths = resources.map(r => r.fsPath);
@@ -2311,9 +2218,6 @@ export class Repository implements Disposable {
 				}
 
 				await this.repository.checkout(treeish, [], opts);
-
-				// Clear all AI contribution tracking on branch switch
-				commands.executeCommand('_aiEdits.clearAllAiContributions');
 			});
 	}
 
@@ -2321,9 +2225,6 @@ export class Repository implements Disposable {
 		const refLabel = opts.detached ? getCommitShortHash(Uri.file(this.root), treeish) : treeish;
 		await this.run(Operation.CheckoutTracking(refLabel), async () => {
 			await this.repository.checkout(treeish, [], { ...opts, track: true });
-
-			// Clear all AI contribution tracking on branch switch
-			commands.executeCommand('_aiEdits.clearAllAiContributions');
 		});
 	}
 
@@ -2355,11 +2256,6 @@ export class Repository implements Disposable {
 	async reset(treeish: string, hard?: boolean): Promise<void> {
 		await this.run(Operation.Reset, async () => {
 			await this.repository.reset(treeish, hard);
-
-			if (hard) {
-				// Clear all AI contribution tracking on hard reset
-				commands.executeCommand('_aiEdits.clearAllAiContributions');
-			}
 		});
 	}
 

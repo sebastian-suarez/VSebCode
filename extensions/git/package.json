@@ -9,8 +9,6 @@
     "vscode": "^1.5.0"
   },
   "enabledApiProposals": [
-    "agentSessionsWorkspace",
-    "agentsWindowConfiguration",
     "canonicalUriProvider",
     "contribEditSessions",
     "contribEditorContentMenu",
@@ -3284,11 +3282,7 @@
           "type": "boolean",
           "scope": "resource",
           "description": "%config.enabled%",
-          "default": true,
-          "agentsWindow": {
-            "default": true,
-            "readOnly": true
-          }
+          "default": true
         },
         "git.path": {
           "type": [
@@ -3323,10 +3317,7 @@
         "git.autorefresh": {
           "type": "boolean",
           "description": "%config.autorefresh%",
-          "default": true,
-          "agentsWindow": {
-            "default": true
-          }
+          "default": true
         },
         "git.autofetch": {
           "type": [
@@ -3343,10 +3334,7 @@
           "default": false,
           "tags": [
             "usesOnlineServices"
-          ],
-          "agentsWindow": {
-            "default": true
-          }
+          ]
         },
         "git.autofetchPeriod": {
           "type": "number",
@@ -3405,10 +3393,7 @@
           "type": "boolean",
           "description": "%config.branchRandomNameEnable%",
           "default": false,
-          "scope": "resource",
-          "agentsWindow": {
-            "default": true
-          }
+          "scope": "resource"
         },
         "git.branchRandomName.dictionary": {
           "type": "array",
@@ -3439,11 +3424,7 @@
         "git.confirmSync": {
           "type": "boolean",
           "description": "%config.confirmSync%",
-          "default": true,
-          "agentsWindow": {
-            "default": false,
-            "readOnly": true
-          }
+          "default": true
         },
         "git.confirmCommittedDelete": {
           "type": "boolean",
@@ -3641,21 +3622,13 @@
           ],
           "markdownDescription": "%config.postCommitCommand%",
           "scope": "resource",
-          "default": "none",
-          "agentsWindow": {
-            "default": "none",
-            "readOnly": true
-          }
+          "default": "none"
         },
         "git.rememberPostCommitCommand": {
           "type": "boolean",
           "description": "%config.rememberPostCommitCommand%",
           "scope": "resource",
-          "default": false,
-          "agentsWindow": {
-            "default": false,
-            "readOnly": true
-          }
+          "default": false
         },
         "git.openAfterClone": {
           "type": "string",
@@ -3718,10 +3691,7 @@
           "type": "boolean",
           "scope": "resource",
           "default": false,
-          "description": "%config.detectWorktrees%",
-          "agentsWindow": {
-            "default": false
-          }
+          "description": "%config.detectWorktrees%"
         },
         "git.detectWorktreesLimit": {
           "type": "number",
@@ -3765,22 +3735,6 @@
           "default": false,
           "description": "%config.alwaysSignOff%"
         },
-        "git.addAICoAuthor": {
-          "type": "string",
-          "enum": [
-            "off",
-            "chatAndAgent",
-            "all"
-          ],
-          "enumDescriptions": [
-            "%config.addAICoAuthor.off%",
-            "%config.addAICoAuthor.chatAndAgent%",
-            "%config.addAICoAuthor.all%"
-          ],
-          "scope": "resource",
-          "default": "off",
-          "description": "%config.addAICoAuthor%"
-        },
         "git.ignoreSubmodules": {
           "type": "boolean",
           "scope": "resource",
@@ -3809,11 +3763,7 @@
           "type": "boolean",
           "description": "%config.showProgress%",
           "default": true,
-          "scope": "resource",
-          "agentsWindow": {
-            "default": false,
-            "readOnly": true
-          }
+          "scope": "resource"
         },
         "git.rebaseWhenSync": {
           "type": "boolean",

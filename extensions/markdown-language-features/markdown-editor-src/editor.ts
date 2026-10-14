@@ -3,15 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CommentModeController, CommentsModel, CommentsView, EditorController, EditorModel, EditorView, GutterMarker, OffsetRange, Selection, StringEdit, StringReplacement, StringValue, commands, findNodeOffsetById, vscodeHostKeyboardProfile, vscodeLocalKeyboardProfile, type CodeBlockAstNode, type LinkPresentationKind } from '@vscode/markdown-editor';
+import { EditorController, EditorModel, EditorView, GutterMarker, OffsetRange, Selection, StringEdit, StringReplacement, StringValue, commands, findNodeOffsetById, vscodeHostKeyboardProfile, vscodeLocalKeyboardProfile, type CodeBlockAstNode, type LinkPresentationKind } from '@vscode/markdown-editor';
 import type { IframeEmbeddedEditorHostTransport, IframeEmbeddedEditorProvider, ResolvedIframeEmbeddedEditor } from '@vscode/markdown-editor/web-editors';
-import { Disposable, autorun, observableValue, transaction } from '@vscode/observables';
+import { Disposable, autorun, transaction } from '@vscode/observables';
 import { HubRpcConnection } from '@vscode/hubrpc';
 import 'katex/dist/katex.min.css';
 import '@vscode/markdown-editor/editor.css';
 import '@vscode/markdown-editor/themes/vscode-default.css';
-import '@vscode/markdown-editor/commentInput.css';
-import '@vscode/markdown-editor/commentWidget.css';
 import './markdownEditor.css';
 import { WebviewSyntaxHighlighter } from './syntaxHighlighter';
 import { WebviewLinkPresentationProvider } from './linkPresentationProvider';
@@ -114,7 +112,6 @@ class Editor extends Disposable {
 	readonly model = new EditorModel();
 	readonly #taskProgressProvider: IframeEmbeddedEditorProvider;
 	isUpdatingFromExtension = false;
-	#isUpdatingComments = false;
 	#mermaidCounter = 0;
 	#codeBlockEditorProviders: readonly CodeBlockEditorProviderDefinition[] = [];
 	#nextCodeBlockEditorRuntimeId = 1;
@@ -133,10 +130,6 @@ class Editor extends Disposable {
 	readonly #pendingEdits = new Set<Promise<void>>();
 	readonly #scrollHost: HTMLElement;
 
-	readonly #comments = new CommentsModel();
-	#commentsView: CommentsView | undefined;
-	/** Whether the workbench feedback store currently accepts new comments for this resource. */
-	readonly #acceptsComments = observableValue<boolean>('acceptsComments', false);
 	readonly #vscode = acquireVsCodeApi();
 	readonly #connection: HubRpcConnection;
 	readonly #transport: MarkdownEditorRpcTransport;
@@ -207,23 +200,6 @@ class Editor extends Disposable {
 					type: marker.type,
 				}));
 				this.model.gutterMarkers.set(converted, undefined);
-			},
-			comments: ({ comments, acceptsComments }) => {
-				this.#isUpdatingComments = true;
-				try {
-					this.#comments.set(comments.map(comment => ({
-						id: comment.id,
-						range: OffsetRange.fromTo(comment.start, comment.endExclusive),
-						body: comment.body,
-						author: comment.author,
-					})));
-				} finally {
-					this.#isUpdatingComments = false;
-				}
-				this.#acceptsComments.set(acceptsComments, undefined);
-			},
-			revealComment: ({ id }) => {
-				this.#commentsView?.revealComment(id);
 			},
 			revealLinkTarget: ({ start, endExclusive, selectionStart }) => {
 				this.#revealRange(start, endExclusive, { anchor: selectionStart, active: selectionStart }, false);
@@ -480,46 +456,6 @@ class Editor extends Disposable {
 		host.appendChild(view.element);
 		postEditorFocus();
 
-		// Render comments as the VS Code V2 markdown cards. The card colours come
-		this.#commentsView = this._register(new CommentsView(this.#comments, view));
-		// The comment input (the gdocs-style "add a comment" affordance) is only
-		// useful when the workbench feedback store will actually accept the comment;
-		// otherwise submitting is a no-op. Mount the controller only while the
-		// resource is in scope for a session, and tear it down when it leaves scope.
-		let commentController: CommentModeController | undefined;
-		this._register(autorun((reader) => {
-			const accepts = reader.readObservable(this.#acceptsComments);
-			if (accepts && !commentController) {
-				commentController = new CommentModeController(model, view, {
-					onSubmit: ({ text, range }) => {
-						this.#send('addComment', this.#host.addComment({ start: range.start, endExclusive: range.endExclusive, text }));
-					},
-				});
-			} else if (!accepts && commentController) {
-				commentController.dispose();
-				commentController = undefined;
-			}
-		}));
-		this._register({ dispose: () => commentController?.dispose() });
-
-		// The comment card's delete button mutates the local CommentsModel
-		// directly. Mirror those removals back to the extension so the shared
-		// store (and the code editor) stay in sync. Removals coming from an
-		// extension-driven update set `#isUpdatingComments`, so they are not
-		// echoed back.
-		let knownCommentIds = new Set(this.#comments.comments.get().map(comment => comment.id));
-		this._register(autorun((reader) => {
-			const currentIds = new Set(reader.readObservable(this.#comments.comments).map(comment => comment.id));
-			if (!this.#isUpdatingComments) {
-				for (const id of knownCommentIds) {
-					if (!currentIds.has(id)) {
-						this.#send('deleteComment', this.#host.deleteComment({ id }));
-					}
-				}
-			}
-			knownCommentIds = currentIds;
-		}));
-
 		if (savedViewState.selection) {
 			const max = content.length;
 			const anchor = Math.min(savedViewState.selection.anchor, max);
@@ -596,7 +532,7 @@ class Editor extends Disposable {
 
 		// Restore scroll last: content height settles over a few frames (async parse,
 		// syntax highlighting, mermaid), so re-apply until it sticks.
-		// TODO@copilot: Consider using a more robust method for restoring scroll position, e.g. by waiting for the editor to stabilize
+		// TODO: Consider using a more robust method for restoring scroll position, e.g. by waiting for the editor to stabilize
 		this.#restoreScroll(host, savedViewState.scrollTop);
 	}
 

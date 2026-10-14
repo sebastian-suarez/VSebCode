@@ -29,7 +29,6 @@ import { NotificationTelemetryId } from '../../../platform/notification/common/n
 import { IProgressStep } from '../../../platform/progress/common/progress.js';
 import { CancellationError, isCancellationError } from '../../../base/common/errors.js';
 import { raceCancellationError, SequencerByKey } from '../../../base/common/async.js';
-import { XaaifyAuthProvider } from './extHostXaaAuthProvider.js';
 
 export interface IExtHostAuthentication extends ExtHostAuthentication { }
 export const IExtHostAuthentication = createDecorator<IExtHostAuthentication>('IExtHostAuthentication');
@@ -60,7 +59,6 @@ export class ExtHostAuthentication implements ExtHostAuthenticationShape {
 	declare _serviceBrand: undefined;
 
 	protected readonly _dynamicAuthProviderCtor = DynamicAuthProvider;
-	protected readonly _xaaAuthProviderCtor = XaaifyAuthProvider(DynamicAuthProvider);
 
 	private _proxy: Proxied<MainThreadAuthenticationShape>;
 	private _authenticationProviders: Map<string, ProviderWithMetadata> = new Map<string, ProviderWithMetadata>();
@@ -362,75 +360,6 @@ export class ExtHostAuthentication implements ExtHostAuthenticationShape {
 		return provider.id;
 	}
 
-	async $registerXaaAuthProvider(
-		issuerComponents: UriComponents,
-		serverMetadata: IAuthorizationServerMetadata,
-		clientId: string | undefined,
-		clientSecret: string | undefined,
-		initialTokens: IAuthorizationToken[] | undefined
-	): Promise<string> {
-		const issuer = URI.revive(issuerComponents);
-		// XAA does not use Dynamic Client Registration — the IdP must already trust the requesting
-		// app for the target audience(s). Always require an admin-provisioned client_id (and
-		// typically client_secret).
-		if (!clientId) {
-			this._logService.info(`Prompting user for client registration details for XAA issuer ${issuer.toString()}`);
-			const clientDetails = await this._proxy.$promptForClientRegistration(issuer.toString());
-			if (!clientDetails) {
-				throw new Error('User did not provide client details');
-			}
-			clientId = clientDetails.clientId;
-			clientSecret = clientDetails.clientSecret;
-		}
-		const provider = new this._xaaAuthProviderCtor(
-			this._extHostWindow,
-			this._extHostUrls,
-			this._initData,
-			this._extHostProgress,
-			this._extHostLoggerService,
-			this._proxy,
-			issuer,
-			serverMetadata,
-			/* resourceMetadata */ undefined,
-			clientId,
-			clientSecret,
-			this._onDidDynamicAuthProviderTokensChange,
-			initialTokens || []
-		);
-
-		await this._providerOperations.queue(provider.id, async () => {
-			this._authenticationProviders.set(
-				provider.id,
-				{
-					label: provider.label,
-					provider,
-					disposable: Disposable.from(
-						provider,
-						provider.onDidChangeSessions(e => this._proxy.$sendDidChangeSessions(provider.id, e)),
-						provider.onDidChangeClientId(() => this._proxy.$sendDidChangeDynamicProviderInfo({
-							providerId: provider.id,
-							clientId: provider.clientId,
-							clientSecret: provider.clientSecret
-						}))
-					),
-					options: { supportsMultipleAccounts: true }
-				}
-			);
-
-			await this._proxy.$registerDynamicAuthenticationProvider({
-				id: provider.id,
-				label: provider.label,
-				supportsMultipleAccounts: true,
-				authorizationServer: issuerComponents,
-				resourceServer: undefined,
-				clientId: provider.clientId,
-				clientSecret: provider.clientSecret
-			});
-		});
-
-		return provider.id;
-	}
-
 	async $onDidChangeDynamicAuthProviderTokens(authProviderId: string, clientId: string, tokens: IAuthorizationToken[]): Promise<void> {
 		this._onDidDynamicAuthProviderTokensChange.fire({ authProviderId, clientId, tokens });
 	}
@@ -451,8 +380,7 @@ class TaskSingler<T> {
 	}
 }
 
-// Mirrors `MICROSOFT_AUTH_HOSTNAMES` and the `is_microsoft_authorization_server` / `is_microsoft_auth_endpoint_aware`
-// matching in github/copilot-agent-runtime `src/runtime/src/auth_base/microsoft.rs`; keep them in sync.
+// Hostnames of the Microsoft identity platform, matched by `isMicrosoftAuthUrl`.
 const MICROSOFT_AUTH_HOSTS = [
 	'login.microsoftonline.com',
 	'login.microsoftonline.de',

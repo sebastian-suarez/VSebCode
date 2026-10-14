@@ -37,8 +37,6 @@ import { ExtHostDocuments } from './extHostDocuments.js';
 import { ExtHostTelemetry, IExtHostTelemetry } from './extHostTelemetry.js';
 import * as typeConvert from './extHostTypeConverters.js';
 import { CodeAction, CodeActionKind, CompletionList, DataTransfer, Disposable, DocumentDropOrPasteEditKind, DocumentSymbol, InlineCompletionsDisposeReasonKind, InlineCompletionTriggerKind, InternalDataTransferItem, Location, NewSymbolNameTriggerKind, Range, SemanticTokens, SemanticTokensEdit, SemanticTokensEdits, SnippetString, SymbolInformation, SyntaxTokenType } from './extHostTypes.js';
-import { Emitter } from '../../../base/common/event.js';
-import { IInlineCompletionsUnificationState } from '../../services/inlineCompletions/common/inlineCompletionsUnification.js';
 
 // --- adapter
 
@@ -1494,7 +1492,6 @@ class InlineCompletionAdapter {
 						icon: item.warning.icon ? typeConvert.IconPath.fromThemeIcon(item.warning.icon) : undefined,
 					} : undefined,
 					correlationId: this._isAdditionsProposedApiEnabled ? item.correlationId : undefined,
-					suggestionId: undefined,
 					uri: (this._isAdditionsProposedApiEnabled && item.uri) ? item.uri : undefined,
 					supportsRename: this._isAdditionsProposedApiEnabled ? item.supportsRename : false,
 					jumpToPosition: (this._isAdditionsProposedApiEnabled && item.jumpToPosition) ? typeConvert.Position.from(item.jumpToPosition) : undefined,
@@ -2168,14 +2165,6 @@ export class ExtHostLanguageFeatures extends CoreDisposable implements extHostPr
 	private readonly _proxy: extHostProtocol.MainThreadLanguageFeaturesShape;
 	private readonly _adapter = new Map<number, AdapterData>();
 
-	private _inlineCompletionsUnificationState: vscode.InlineCompletionsUnificationState;
-	public get inlineCompletionsUnificationState(): vscode.InlineCompletionsUnificationState {
-		return this._inlineCompletionsUnificationState;
-	}
-
-	private readonly _onDidChangeInlineCompletionsUnificationState = this._register(new Emitter<void>());
-	readonly onDidChangeInlineCompletionsUnificationState = this._onDidChangeInlineCompletionsUnificationState.event;
-
 	constructor(
 		mainContext: extHostProtocol.IMainContext,
 		private readonly _uriTransformer: IURITransformer,
@@ -2188,12 +2177,6 @@ export class ExtHostLanguageFeatures extends CoreDisposable implements extHostPr
 	) {
 		super();
 		this._proxy = mainContext.getProxy(extHostProtocol.MainContext.MainThreadLanguageFeatures);
-		this._inlineCompletionsUnificationState = {
-			codeUnification: false,
-			modelUnification: false,
-			extensionUnification: false,
-			expAssignments: []
-		};
 	}
 
 	private _transformDocumentSelector(selector: vscode.DocumentSelector, extension: IExtensionDescription): Array<extHostProtocol.IDocumentFilterDto> {
@@ -2716,11 +2699,6 @@ export class ExtHostLanguageFeatures extends CoreDisposable implements extHostPr
 
 	$freeInlineCompletionsList(handle: number, pid: number, reason: languages.InlineCompletionsDisposeReason): void {
 		this._withAdapter(handle, InlineCompletionAdapter, async adapter => { adapter.disposeCompletions(pid, reason); }, undefined, undefined);
-	}
-
-	$acceptInlineCompletionsUnificationState(state: IInlineCompletionsUnificationState): void {
-		this._inlineCompletionsUnificationState = state;
-		this._onDidChangeInlineCompletionsUnificationState.fire();
 	}
 
 	$handleInlineCompletionSetCurrentModelId(handle: number, modelId: string): void {

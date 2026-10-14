@@ -8,7 +8,7 @@ import { run } from '../esbuild-webview-common.mts';
 
 const rootDir = import.meta.dirname;
 const previewSrcDir = path.join(rootDir, 'preview-src');
-const chatSrcDir = path.join(previewSrcDir, 'chat');
+const editorSrcDir = path.join(previewSrcDir, 'editor');
 
 const cssTextPlugin: Plugin = {
 	name: 'css-text',
@@ -43,15 +43,14 @@ const mermaidMarkdownBuildOptions: Partial<esbuild.BuildOptions> = {
 };
 
 await Promise.all([
-	// Chat
+	// Editor preview
 	run({
 		entryPoints: {
-			'index': path.join(chatSrcDir, 'index.ts'),
-			'index-editor': path.join(chatSrcDir, 'index-editor.ts'),
+			'index-editor': path.join(editorSrcDir, 'index-editor.ts'),
 			'codicon': path.join(rootDir, 'node_modules', '@vscode', 'codicons', 'dist', 'codicon.css'),
 		},
-		srcDir: chatSrcDir,
-		outdir: path.join(rootDir, 'chat-webview-out'),
+		srcDir: editorSrcDir,
+		outdir: path.join(rootDir, 'editor-webview-out'),
 		additionalOptions: {
 			loader: {
 				'.ttf': 'dataurl',

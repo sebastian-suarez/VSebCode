@@ -39,9 +39,6 @@ import { IProductService } from '../../../../platform/product/common/productServ
 import { AuthenticationAccessService, IAuthenticationAccessService } from '../../../services/authentication/browser/authenticationAccessService.js';
 import { IAccountUsage, IAuthenticationUsageService } from '../../../services/authentication/browser/authenticationUsageService.js';
 import { AuthenticationExtensionsService } from '../../../services/authentication/browser/authenticationExtensionsService.js';
-import { AuthenticationMcpService } from '../../../services/authentication/browser/authenticationMcpService.js';
-import { IAuthenticationMcpAccessService } from '../../../services/authentication/browser/authenticationMcpAccessService.js';
-import { IAuthenticationMcpUsageService } from '../../../services/authentication/browser/authenticationMcpUsageService.js';
 import { ILogger, ILoggerService, ILogService, NullLogger, NullLogService } from '../../../../platform/log/common/log.js';
 import { IExtHostInitDataService } from '../../common/extHostInitDataService.js';
 import { ExtHostWindow, IExtHostWindow } from '../../common/extHostWindow.js';
@@ -833,30 +830,6 @@ suite('ExtHostAuthentication', () => {
 				createdContexts: [[authorizationServer.toString(true), context.clientId, context.resource, context.audience]],
 				pending: []
 			});
-		});
-
-		test('retains context when selecting a new MCP account', async () => {
-			const provider = disposables.add(new ContextAuthProvider());
-			const existing = await provider.createSession(['read'], context);
-			registerProvider('context-provider', provider, true);
-			await extHostAuthentication.$getSessions('context-provider', undefined, {});
-			mainInstantiationService.stub(IAuthenticationMcpAccessService, new class extends mock<IAuthenticationMcpAccessService>() {
-				override updateAllowedMcpServers(): void { }
-			}());
-			mainInstantiationService.stub(IAuthenticationMcpUsageService, new class extends mock<IAuthenticationMcpUsageService>() { }());
-			const mcpAuthentication = disposables.add(mainInstantiationService.createInstance(AuthenticationMcpService));
-			const quickInput = mainInstantiationService.get(IQuickInputService);
-			assert.ok(quickInput instanceof AuthTestQuickInputService);
-			quickInput.selectedItemIndex = -1;
-			provider.requests.length = 0;
-
-			await mcpAuthentication.selectSession('context-provider', 'mcp-server', 'MCP Server', ['read'], [existing], context);
-
-			assert.deepStrictEqual(provider.requests.filter(request => request.operation === 'create').map(({ options }) => [
-				options.authorizationServer?.toString(true), options.clientId, options.resource, options.audience
-			]), [
-				[authorizationServer.toString(true), context.clientId, context.resource, context.audience]
-			]);
 		});
 
 		test('account-wide consent clears access requests but preserves another resource sign-in', async () => {

@@ -102,7 +102,7 @@ function toMarkdownEditorPresentation(presentation: vscode.LinkPresentationData 
 	}
 	return {
 		...presentation,
-		kind: presentation.kind === 'chat' ? 'session' : presentation.kind,
+		kind: presentation.kind,
 	};
 }
 

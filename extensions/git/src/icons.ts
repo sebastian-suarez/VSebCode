@@ -15,7 +15,6 @@ import { ThemeIcon } from 'vscode';
 export const Icons = {
 	account: new ThemeIcon('account'),
 	branch: new ThemeIcon('git-branch'),
-	chatWorktree: new ThemeIcon('chat-sparkle'),
 	head: new ThemeIcon('target'),
 	remoteBranch: new ThemeIcon('cloud'),
 	repository: new ThemeIcon('repo'),

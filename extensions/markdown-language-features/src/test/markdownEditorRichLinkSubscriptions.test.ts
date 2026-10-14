@@ -30,7 +30,7 @@ suite('Markdown editor rich link subscriptions', () => {
 		const rules: readonly vscode.LinkPresentationRule[] = [{ id: 'test', uriPattern: /^https:\/\/example\.com\//g, kind: 'session' }];
 		Object.defineProperty(vscode.window, 'linkPresentationRules', { configurable: true, get: () => rules });
 		vscode.window.createLinkPresentationWatcher = () => {
-			const watcher = new TestWatcher({ kind: 'chat', title: 'Current title' });
+			const watcher = new TestWatcher({ kind: 'session', title: 'Current title' });
 			watchers.push(watcher);
 			return watcher;
 		};
@@ -56,7 +56,7 @@ suite('Markdown editor rich link subscriptions', () => {
 			subscriptionId: 'first',
 			presentation: { kind: 'session', title: 'Current title' },
 		}]);
-		watchers[0].update({ kind: 'chat', title: 'Changed title', isLoading: true });
+		watchers[0].update({ kind: 'session', title: 'Changed title', isLoading: true });
 		assert.deepStrictEqual(updates[1], {
 			subscriptionId: 'first',
 			presentation: { kind: 'session', title: 'Changed title', isLoading: true },
@@ -80,9 +80,9 @@ suite('Markdown editor rich link subscriptions', () => {
 		await settle();
 		assert.deepStrictEqual(watchers.map(watcher => watcher.disposed), [true, false, false]);
 		const count = updates.length;
-		watchers[0].update({ kind: 'chat', title: 'Old update' });
+		watchers[0].update({ kind: 'session', title: 'Old update' });
 		assert.strictEqual(updates.length, count);
-		watchers[1].update({ kind: 'chat', title: 'Other update' });
+		watchers[1].update({ kind: 'session', title: 'Other update' });
 		assert.strictEqual(updates.at(-1)?.subscriptionId, 'other');
 		assert.ok(updates.some(value => value.subscriptionId === 'replacement' && value.presentation?.title === 'Current title'));
 	});

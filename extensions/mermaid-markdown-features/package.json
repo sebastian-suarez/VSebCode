@@ -12,10 +12,6 @@
   "engines": {
     "vscode": "^1.104.0"
   },
-  "enabledApiProposals": [
-    "chatOutputRenderer",
-    "chatParticipantPrivate"
-  ],
   "capabilities": {
     "virtualWorkspaces": true,
     "untrustedWorkspaces": {
@@ -60,17 +56,17 @@
       "webview/context": [
         {
           "command": "_mermaid-markdown.openInEditor",
-          "when": "webviewId == 'vscode.mermaid-markdown-features.chatOutputItem' || (webviewSection == 'mermaid' && (webviewId == 'markdown.preview' || webviewId == 'vscode.markdown.preview.editor' || webviewId == 'notebook.output'))",
+          "when": "(webviewSection == 'mermaid' && (webviewId == 'markdown.preview' || webviewId == 'vscode.markdown.preview.editor' || webviewId == 'notebook.output'))",
           "group": "navigation@1"
         },
         {
           "command": "_mermaid-markdown.copySource",
-          "when": "webviewId == 'vscode.mermaid-markdown-features.chatOutputItem' || webviewId == 'vscode.mermaid-markdown-features.preview' || (webviewSection == 'mermaid' && (webviewId == 'markdown.preview' || webviewId == 'vscode.markdown.preview.editor' || webviewId == 'notebook.output'))",
+          "when": "webviewId == 'vscode.mermaid-markdown-features.preview' || (webviewSection == 'mermaid' && (webviewId == 'markdown.preview' || webviewId == 'vscode.markdown.preview.editor' || webviewId == 'notebook.output'))",
           "group": "navigation@2"
         },
         {
           "command": "_mermaid-markdown.resetPanZoom",
-          "when": "!mermaidError && (webviewId == 'vscode.mermaid-markdown-features.chatOutputItem' || webviewId == 'vscode.mermaid-markdown-features.preview')",
+          "when": "!mermaidError && (webviewId == 'vscode.mermaid-markdown-features.preview')",
           "group": "navigation@3"
         }
       ]
@@ -195,45 +191,7 @@
         }
       }
     ],
-    "markdown.markdownItPlugins": true,
-    "chatOutputRenderers": [
-      {
-        "viewType": "vscode.mermaid-markdown-features.chatOutputItem",
-        "mimeTypes": [
-          "text/vnd.mermaid"
-        ],
-        "codeBlockLanguageIdentifiers": [
-          "mermaid"
-        ]
-      }
-    ],
-    "languageModelTools": [
-      {
-        "name": "renderMermaidDiagram",
-        "displayName": "Mermaid Renderer",
-        "toolReferenceName": "renderMermaidDiagram",
-        "legacyToolReferenceFullNames": [
-          "vscode.mermaid-chat-features/renderMermaidDiagram"
-        ],
-        "canBeReferencedInPrompt": true,
-        "modelDescription": "Renders a Mermaid diagram from Mermaid.js markup.",
-        "userDescription": "Render a Mermaid.js diagram from markup.",
-        "when": "chatSessionType == local",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "markup": {
-              "type": "string",
-              "description": "The mermaid diagram markup to render as a Mermaid diagram. This should only be the markup of the diagram. Do not include a wrapping code block."
-            },
-            "title": {
-              "type": "string",
-              "description": "A short title that describes the diagram."
-            }
-          }
-        }
-      }
-    ]
+    "markdown.markdownItPlugins": true
   },
   "scripts": {
     "compile": "gulp compile-extension:mermaid-markdown-features && npm run build-webview",

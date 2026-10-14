@@ -59,7 +59,7 @@ suite('MainThreadDataChannels', () => {
 
 	test('bridges core link presentation watchers and runtime enablement', async () => {
 		const presentation = observableValue<ILinkPresentation | undefined>('presentation', {
-			kind: 'session',
+			kind: 'pullRequest',
 			status: { kind: 'pending', label: 'Loading' },
 		});
 		const configurationService = new TestConfigurationService({ 'test.richLinks.enabled': true });
@@ -72,9 +72,9 @@ suite('MainThreadDataChannels', () => {
 		let providerWatcherCreateCount = 0;
 		let providerWatcherDisposeCount = 0;
 		store.add(linkPresentationService.registerLinkPresentationProvider({
-			id: 'test.sessions',
-			uriPattern: /^agent-host-session:/i,
-			kind: 'session',
+			id: 'test.links',
+			uriPattern: /^test-link:/i,
+			kind: 'pullRequest',
 			enablement: 'test.richLinks.enabled',
 		}, {
 			createLinkPresentationWatcher: () => {
@@ -116,17 +116,17 @@ suite('MainThreadDataChannels', () => {
 			enabledApiProposals: ['linkPresentation'],
 		};
 		assert.throws(
-			() => extHost.createLinkPresentationWatcher(extension, 'test.sessions', URI.parse('https://example.com/not-supported')),
+			() => extHost.createLinkPresentationWatcher(extension, 'test.links', URI.parse('https://example.com/not-supported')),
 			/does not accept/,
 		);
-		const watcher = store.add(extHost.createLinkPresentationWatcher(extension, 'test.sessions', URI.parse('agent-host-session://copilotcli/session')));
+		const watcher = store.add(extHost.createLinkPresentationWatcher(extension, 'test.links', URI.parse('test-link://item/1')));
 		const values: vscode.LinkPresentationData[] = [watcher.presentation];
 		store.add(watcher.onDidChangePresentation(() => values.push(watcher.presentation)));
 
-		presentation.set({ kind: 'session', title: 'Running session', status: { kind: 'pending', label: 'Working' } }, undefined);
+		presentation.set({ kind: 'pullRequest', title: 'Running', status: { kind: 'pending', label: 'Working' } }, undefined);
 		await configurationService.setUserConfiguration('test.richLinks.enabled', false);
 		fireConfigurationChange(configurationService, 'test.richLinks.enabled');
-		presentation.set({ kind: 'session', title: 'Completed session', status: { kind: 'success', label: 'Completed' } }, undefined);
+		presentation.set({ kind: 'pullRequest', title: 'Completed', status: { kind: 'success', label: 'Completed' } }, undefined);
 		await configurationService.setUserConfiguration('test.richLinks.enabled', true);
 		fireConfigurationChange(configurationService, 'test.richLinks.enabled');
 		await Promise.resolve();
@@ -143,13 +143,13 @@ suite('MainThreadDataChannels', () => {
 			providerWatcherDisposeCount,
 		}, {
 			values: [
-				{ kind: 'session', status: { kind: 'pending', label: 'Loading' } },
-				{ kind: 'session', title: 'Running session', status: { kind: 'pending', label: 'Working' } },
-				{ kind: 'session', title: 'Running session', status: { kind: 'pending', label: 'Working' }, isLoading: true },
-				{ kind: 'session', title: 'Completed session', status: { kind: 'success', label: 'Completed' } },
+				{ kind: 'pullRequest', status: { kind: 'pending', label: 'Loading' } },
+				{ kind: 'pullRequest', title: 'Running', status: { kind: 'pending', label: 'Working' } },
+				{ kind: 'pullRequest', title: 'Running', status: { kind: 'pending', label: 'Working' }, isLoading: true },
+				{ kind: 'pullRequest', title: 'Completed', status: { kind: 'success', label: 'Completed' } },
 			],
-			acceptedRules: [{ id: 'test.sessions', source: '^agent-host-session:', flags: 'i', kind: 'session' }],
-			linkPresentationRules: [{ id: 'test.sessions', source: '^agent-host-session:', flags: 'i', kind: 'session' }],
+			acceptedRules: [{ id: 'test.links', source: '^test-link:', flags: 'i', kind: 'pullRequest' }],
+			linkPresentationRules: [{ id: 'test.links', source: '^test-link:', flags: 'i', kind: 'pullRequest' }],
 			ruleChangeCount: 2,
 			providerWatcherCreateCount: 2,
 			providerWatcherDisposeCount: 2,

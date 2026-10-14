@@ -16,7 +16,6 @@ declare module 'vscode' {
 		| 'file'
 		| 'folder'
 		| 'session'
-		| 'chat'
 		| 'repository'
 		| 'branch';
 

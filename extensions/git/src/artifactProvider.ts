@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { LogOutputChannel, SourceControlArtifactProvider, SourceControlArtifactGroup, SourceControlArtifact, Event, EventEmitter, l10n, workspace, Uri, Disposable, Command } from 'vscode';
-import { coalesce, dispose, filterEvent, IDisposable, isCopilotWorktreeFolder } from './util';
+import { coalesce, dispose, filterEvent, IDisposable } from './util';
 import { Repository } from './repository';
 import type { Ref, Worktree } from './api/git';
 import { RefType } from './api/git.constants';
@@ -78,14 +78,6 @@ export class GitArtifactProvider implements SourceControlArtifactProvider, IDisp
 		private readonly repository: Repository,
 		private readonly logger: LogOutputChannel
 	) {
-		// If this is the agents window we don't need to initialize the
-		// repository artifacts provider since the agents window does not
-		// have the Repository explorer view.
-		if (workspace.isAgentSessionsWorkspace) {
-			this._groups = [];
-			return;
-		}
-
 		this._groups = [
 			{ id: 'branches', name: l10n.t('Branches'), icon: Icons.branch, supportsFolders: true },
 			{ id: 'stashes', name: l10n.t('Stashes'), icon: Icons.stash, supportsFolders: false },
@@ -185,11 +177,7 @@ export class GitArtifactProvider implements SourceControlArtifactProvider, IDisp
 						w.commitDetails?.hash.substring(0, shortCommitLength),
 						w.commitDetails?.message.split('\n')[0]
 					]).join(' \u2022 '),
-					icon: w.main
-						? Icons.repository
-						: isCopilotWorktreeFolder(w.path)
-							? Icons.chatWorktree
-							: Icons.worktree
+					icon: w.main ? Icons.repository : Icons.worktree
 				}));
 			}
 		} catch (err) {

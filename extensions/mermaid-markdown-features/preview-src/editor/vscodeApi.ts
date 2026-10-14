@@ -3,16 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-declare module 'vscode' {
-
-	export namespace workspace {
-
-		/**
-		 * Indicates whether the current workspace is an agent sessions workspace.
-		 *
-		 * Agent sessions workspace is a special workspace used for AI agent interactions
-		 * where the window is dedicated to agent session management.
-		 */
-		export const isAgentSessionsWorkspace: boolean;
-	}
+export interface VsCodeApi {
+	getState(): any;
+	setState(state: any): void;
+	postMessage(message: any): void;
 }

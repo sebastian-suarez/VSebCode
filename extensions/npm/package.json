@@ -14,7 +14,6 @@
     "Other"
   ],
   "enabledApiProposals": [
-    "agentsWindowActivation",
     "terminalQuickFixProvider"
   ],
   "scripts": {
@@ -50,9 +49,6 @@
     "workspaceContains:package.json"
   ],
   "capabilities": {
-    "agentsWindow": {
-      "supported": true
-    },
     "virtualWorkspaces": {
       "supported": "limited",
       "description": "%virtualWorkspaces%"

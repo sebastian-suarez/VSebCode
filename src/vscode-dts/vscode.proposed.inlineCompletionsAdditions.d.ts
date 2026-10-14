@@ -21,15 +21,6 @@ declare module 'vscode' {
 		 * @return A {@link Disposable} that unregisters this provider when being disposed.
 		 */
 		export function registerInlineCompletionItemProvider(selector: DocumentSelector, provider: InlineCompletionItemProvider, metadata: InlineCompletionItemProviderMetadata): Disposable;
-
-		/**
-		 * temporary: to be removed
-		 */
-		export const inlineCompletionsUnificationState: InlineCompletionsUnificationState;
-		/**
-		 * temporary: to be removed
-		 */
-		export const onDidChangeCompletionsUnificationState: Event<void>;
 	}
 
 	export interface InlineCompletionItem {
@@ -276,15 +267,5 @@ declare module 'vscode' {
 		 * Defaults to false (might change).
 		 */
 		enableForwardStability?: boolean;
-	}
-
-	/**
-	 * temporary: to be removed
-	 */
-	export interface InlineCompletionsUnificationState {
-		codeUnification: boolean;
-		modelUnification: boolean;
-		extensionUnification: boolean;
-		expAssignments: string[];
 	}
 }

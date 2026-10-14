@@ -7,7 +7,6 @@
   "publisher": "vscode",
   "license": "MIT",
   "enabledApiProposals": [
-    "agentEditorComments",
     "customEditorDiffs",
     "customTextEditorNavigation",
     "documentDiff",

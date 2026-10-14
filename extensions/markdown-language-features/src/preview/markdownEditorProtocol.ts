@@ -102,8 +102,6 @@ export const markdownEditorHost = defineInterface({ id: 'markdown.editor.host' }
 	codeBlockEditorHostTransportMessage: requestType(runtimeMessage, z.void()),
 	disposeCodeBlockEditorHostTransport: requestType(runtime, z.void()),
 	codeBlockEditorDiagnostic: notificationType(z.object({ message: z.string() })),
-	addComment: requestType(z.extend(range, { text: z.string() }), z.void()),
-	deleteComment: requestType(z.object({ id: z.string() }), z.void()),
 	highlight: requestType(z.object({ source: z.string(), languageId: z.string() }), highlightResult),
 	prepareRename: requestType(z.object({ requestId: offset, offset, editEpoch: offset }), z.extend(range, { placeholder: z.string() })),
 	rename: requestType(z.object({ requestId: offset, newName: z.string() }), z.void()),
@@ -127,11 +125,6 @@ export const markdownEditorRenderer = defineInterface({ id: 'markdown.editor.ren
 	gutterMarkers: notificationType(z.object({
 		markers: z.readonly(z.array(z.extend(range, { type: z.enum(['added', 'modified', 'deleted']) }))),
 	})),
-	comments: notificationType(z.object({
-		comments: z.readonly(z.array(z.extend(range, { id: z.string(), body: z.string(), author: z.optional(z.string()) }))),
-		acceptsComments: z.boolean(),
-	})),
-	revealComment: notificationType(z.object({ id: z.string() })),
 	revealLinkTarget: requestType(z.extend(range, { selectionStart: offset }), z.void()),
 	captureNavigationState: requestType(z.object({}), navigationState),
 	revealRange: requestType(z.extend(range, {

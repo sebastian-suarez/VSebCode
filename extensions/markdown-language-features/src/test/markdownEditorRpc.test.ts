@@ -41,8 +41,6 @@ suite('Markdown editor RPC', () => {
 			codeBlockEditorHostTransportMessage: () => { },
 			disposeCodeBlockEditorHostTransport: () => { },
 			codeBlockEditorDiagnostic: () => { },
-			addComment: () => { },
-			deleteComment: () => { },
 			highlight: () => ({ tokens: [], colorMap: [] }),
 			prepareRename: () => ({ start: 0, endExclusive: 1, placeholder: 'name' }),
 			rename: () => { },
@@ -62,8 +60,6 @@ suite('Markdown editor RPC', () => {
 			codeBlockEditorProviders: () => { },
 			codeBlockEditorHostTransportMessage: () => { },
 			gutterMarkers: () => { },
-			comments: () => { },
-			revealComment: () => { },
 			revealLinkTarget: () => { },
 			captureNavigationState: () => ({ editEpoch: 0, revision: 0, scrollTop: 0 }),
 			revealRange: () => { },
@@ -83,20 +79,20 @@ suite('Markdown editor RPC', () => {
 			richLinkSubscriptions: params => { seen.push(params); },
 			codeBlockEditorDiagnostic: params => { seen.push(params); },
 		}, {
-			comments: params => { seen.push(params); },
+			codeBlockEditorProviders: params => { seen.push(params); },
 			highlightThemeChanged: params => { seen.push(params); },
 		});
 		const subscriptions = { subscribe: [{ subscriptionId: 'first', href: 'target' }], unsubscribe: [] };
 		renderer.get(markdownEditorHost).richLinkSubscriptions(subscriptions);
 		renderer.get(markdownEditorHost).codeBlockEditorDiagnostic({ message: 'test' });
-		host.get(markdownEditorRenderer).comments({ comments: [], acceptsComments: true });
+		host.get(markdownEditorRenderer).codeBlockEditorProviders({ codeBlockEditorProviders: [] });
 		host.get(markdownEditorRenderer).highlightThemeChanged({});
 		await new Promise<void>(resolve => setImmediate(resolve));
-		assert.deepStrictEqual(seen, [subscriptions, { message: 'test' }, { comments: [], acceptsComments: true }, {}]);
+		assert.deepStrictEqual(seen, [subscriptions, { message: 'test' }, { codeBlockEditorProviders: [] }, {}]);
 		assert.deepStrictEqual([...hostInbox.messages, ...rendererInbox.messages], [
 			{ channel: 'markdownEditor', messageSecret: 'secret', message: { jsonrpc: '2.0', method: 'markdown.editor.host::richLinkSubscriptions', params: subscriptions } },
 			{ channel: 'markdownEditor', messageSecret: 'secret', message: { jsonrpc: '2.0', method: 'markdown.editor.host::codeBlockEditorDiagnostic', params: { message: 'test' } } },
-			{ channel: 'markdownEditor', messageSecret: 'secret', message: { jsonrpc: '2.0', method: 'markdown.editor.renderer::comments', params: { comments: [], acceptsComments: true } } },
+			{ channel: 'markdownEditor', messageSecret: 'secret', message: { jsonrpc: '2.0', method: 'markdown.editor.renderer::codeBlockEditorProviders', params: { codeBlockEditorProviders: [] } } },
 			{ channel: 'markdownEditor', messageSecret: 'secret', message: { jsonrpc: '2.0', method: 'markdown.editor.renderer::highlightThemeChanged', params: {} } },
 		], 'notifications must not create request IDs or acknowledgement messages');
 		assert.deepStrictEqual(errors, []);
@@ -161,7 +157,7 @@ suite('Markdown editor RPC', () => {
 				? new Promise(resolve => finishFirst = resolve)
 				: { tokens: [], colorMap: ['second'] },
 			resolveCodeBlockEditor: () => ({ descriptor: { html: '<div></div>', runtimeKey: 'editor', contentType: 'text' } }),
-			addComment: params => { seen.push(params); },
+			cancelCompletions: params => { seen.push(params); },
 		}, {
 			update: params => { seen.push(params); },
 			codeBlockEditorHostTransportMessage: params => { seen.push(params); },
@@ -172,7 +168,7 @@ suite('Markdown editor RPC', () => {
 		finishFirst({ tokens: [], colorMap: ['first'] });
 		const remote = host.get(markdownEditorRenderer);
 		await remote.update({ content: 'authoritative\r\n', editEpoch: 3 });
-		await client.addComment({ start: 0, endExclusive: 2, text: 'comment' });
+		await client.cancelCompletions({ requestId: 7 });
 		await remote.codeBlockEditorHostTransportMessage({ runtimeId: 'one', message: { nested: ['opaque', 2] } });
 		assert.deepStrictEqual({
 			first: await first,
@@ -185,7 +181,7 @@ suite('Markdown editor RPC', () => {
 			descriptor: { descriptor: { html: '<div></div>', runtimeKey: 'editor', contentType: 'text' } },
 			seen: [
 				{ content: 'authoritative\r\n', editEpoch: 3 },
-				{ start: 0, endExclusive: 2, text: 'comment' },
+				{ requestId: 7 },
 				{ runtimeId: 'one', message: { nested: ['opaque', 2] } },
 			],
 		});
