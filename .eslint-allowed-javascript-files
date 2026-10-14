@@ -8,7 +8,6 @@
 #
 # Lines starting with `#` are comments. Blank lines are ignored.
 
-.github/skills/heap-snapshot-analysis/helpers/streamSnapshot.mjs
 .vscode-test.js
 build/azure-pipelines/common/installPlaywright.js
 build/azure-pipelines/github-check-run.js
