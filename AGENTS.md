@@ -4,7 +4,7 @@ Shared rules for every coding agent (Claude Code, Codex, Antigravity) working in
 
 ## What this repository is
 
-VSebCode is a fork of `microsoft/vscode` (Code - OSS) that removes everything Microsoft-specific and everything AI-specific from the editor, guided by VSCodium's patch set plus our own analysis, and ships under its own brand (`nameShort` `VSebCode`, `applicationName` `vsc`, data folder `.vsebcode`). The only Microsoft service it keeps is the extension Marketplace. Upstream's engineering conventions apply to the code that remains. `main` tracks upstream release tags merged from the `upstream` remote, never upstream `main`.
+VSebCode is a fork of `microsoft/vscode` (Code - OSS) that removes everything Microsoft-specific and everything AI-specific from the editor, guided by VSCodium's patch set plus our own analysis, and ships under its own brand (`nameShort` `VSebCode`, `applicationName` `vsc`, data folder `.vsebcode`). The only Microsoft service it keeps is the extension Marketplace. Upstream's engineering conventions apply to the code that remains. `main` tracks the latest upstream release tag, merged from the `upstream` remote with `npm run upstream-merge -- <tag>`, never upstream `main`.
 
 ## Ask, do not assume
 
@@ -24,9 +24,9 @@ Node must match the major version in `.nvmrc` (24.x). From the repository root:
 
 - Generated files, never edited by hand: `src/vs/platform/extensions/common/extensionsApiProposals.ts` (built from the `src/vscode-dts` file names), `src/vs/monaco.d.ts`, `build/lib/policies/policyData.jsonc` (`npm run export-policy-data`) and every `package-lock.json`.
 - Build outputs and local state: `out/`, `out-*/`, `.build/`, `node_modules/`, `product.overrides.json`.
-- License obligations: the Microsoft copyright line in `LICENSE.txt` and the header of upstream source files stay. The copyright header has three accepted shapes, enforced by `build/hygiene.ts` and eslint: unmodified upstream files keep the Microsoft header, upstream files the fork modified carry the Microsoft line followed by `Copyright (c) Sebastian Suarez. All rights reserved.`, and files the fork authored carry the Sebastian Suarez line alone; `npm run fork-header -- <upstream-base-commit>` applies it after an upstream merge.
+- License obligations: the Microsoft copyright line in `LICENSE.txt` and the header of upstream source files stay. The copyright header has three accepted shapes, enforced by `build/hygiene.ts` and eslint: unmodified upstream files keep the Microsoft header, upstream files the fork modified carry the Microsoft line followed by `Copyright (c) Sebastian Suarez. All rights reserved.`, and files the fork authored carry the Sebastian Suarez line alone; `npm run fork-header -- upstream-base` applies it after an upstream merge (the branch `upstream-base` holds the upstream content `main` contains).
 - The identity and gallery values of `product.json` and `IProductConfiguration` in `src/vs/base/common/product.ts` change only on a maintainer decision.
-- Removed surfaces (the built-in AI and chat stack, telemetry senders, experiments, surveys, Settings Sync, Cloud Changes, tunnels, the Microsoft and GitHub account extensions, the self-update feed) are not reintroduced; upstream merge conflicts inside deleted folders are resolved by deleting again.
+- Removed surfaces (the built-in AI and chat stack, telemetry senders, experiments, surveys, Settings Sync, Cloud Changes, tunnels, the Microsoft and GitHub account extensions, the self-update feed) are not reintroduced; `build/removed-surfaces.txt` lists them, hygiene fails when one exists, and upstream merge conflicts inside them are resolved by deleting again (`npm run upstream-merge -- <tag>` does it, see `CLAUDE.md`).
 - Git: commit or push only when asked; never bypass commit signing or hooks (`--no-verify`); no AI-assistant attribution anywhere (no `Co-Authored-By` trailers, no "Generated with" footers, no AI accounts as collaborators or reviewers).
 
 ## How to change code
