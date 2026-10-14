@@ -5,16 +5,19 @@
 
 import assert from 'assert';
 import type { ProgressOptions } from 'vscode';
+import { DeferredPromise } from '../../../../base/common/async.js';
 import { encodeBase64, VSBuffer } from '../../../../base/common/buffer.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
-import { Emitter } from '../../../../base/common/event.js';
+import { Emitter, Event } from '../../../../base/common/event.js';
 import { IAuthorizationServerMetadata } from '../../../../base/common/oauth.js';
 import { URI, UriComponents } from '../../../../base/common/uri.js';
 import { mock } from '../../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
-import { ILogger, ILoggerService, NullLogger } from '../../../../platform/log/common/log.js';
+import { ILogger, ILoggerService, NullLogger, NullLogService } from '../../../../platform/log/common/log.js';
 import { INotificationSource } from '../../../../platform/notification/common/notification.js';
 import { Progress } from '../../../../platform/progress/common/progress.js';
+import { URLHandlerRouter } from '../../../../platform/url/common/urlIpc.js';
+import { Client, IClientRouter, IConnectionHub } from '../../../../base/parts/ipc/common/ipc.js';
 import { IAuthenticationProviderSessionOptions } from '../../../services/authentication/common/authentication.js';
 import { DynamicAuthProvider, IAuthorizationToken, reviveAccountIcon, TokenStore } from '../../common/extHostAuthentication.js';
 import { IProgressStepDto, MainThreadAuthenticationShape } from '../../common/extHost.protocol.js';
@@ -23,6 +26,7 @@ import { IExtHostProgress } from '../../common/extHostProgress.js';
 import { IExtHostUrlsService } from '../../common/extHostUrls.js';
 import { IExtHostWindow } from '../../common/extHostWindow.js';
 import { Proxied } from '../../../services/extensions/common/proxyIdentifier.js';
+import { UIKind } from '../../../services/extensions/common/extensionHostProtocol.js';
 
 /** Builds a structurally-valid JWT carrying the given claims. */
 function jwt(claims: object): string {
@@ -77,9 +81,20 @@ suite('DynamicAuthProvider', () => {
 		readonly serverMetadata: IAuthorizationServerMetadata;
 	}
 
-	const resource = 'https://workiq.example.com/mcp';
+	const resource = 'https://resource.example.com/api';
 
 	const servers: Record<string, ITestServer> = {
+		generic: {
+			authorizationServer: 'https://auth.example.com',
+			serverMetadata: {
+				issuer: 'https://auth.example.com',
+				authorization_endpoint: 'https://auth.example.com/authorize',
+				token_endpoint: 'https://auth.example.com/token',
+				response_types_supported: ['code'],
+				scopes_supported: ['openid', 'profile', 'offline_access'],
+			},
+		},
+		// The Microsoft identity platform gets the same requests as every other authorization server.
 		entra: {
 			authorizationServer: 'https://login.microsoftonline.com/organizations/v2.0',
 			serverMetadata: {
@@ -90,34 +105,19 @@ suite('DynamicAuthProvider', () => {
 				scopes_supported: ['openid', 'profile', 'offline_access'],
 			},
 		},
-		nonMicrosoft: {
-			authorizationServer: 'https://auth.example.com',
-			serverMetadata: {
-				issuer: 'https://auth.example.com',
-				authorization_endpoint: 'https://auth.example.com/authorize',
-				token_endpoint: 'https://auth.example.com/token',
-				response_types_supported: ['code'],
-				scopes_supported: ['openid', 'profile', 'offline_access'],
-			},
-		},
-		// A Microsoft authorization endpoint must not opt a non-Microsoft token endpoint into Microsoft behavior.
-		entraWithForeignTokenEndpoint: {
-			authorizationServer: 'https://login.microsoftonline.com/organizations/v2.0',
-			serverMetadata: {
-				issuer: 'https://login.microsoftonline.com/organizations/v2.0',
-				authorization_endpoint: 'https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize',
-				token_endpoint: 'https://auth.example.com/token',
-				response_types_supported: ['code'],
-				scopes_supported: ['openid', 'profile', 'offline_access'],
-			},
-		},
 	};
 
 	function createProvider(options: ITestServer & {
 		readonly resource: string;
 		readonly initialTokens?: IAuthorizationToken[];
 		readonly fetcher?: typeof fetch;
-		readonly onDidOpenUri?: (uri: string) => void;
+		readonly uiKind?: UIKind;
+		/** Receives every opened URI; its result is the result of `openUri`, `false` (cancelled) by default. */
+		readonly onDidOpenUri?: (uri: string) => boolean;
+		/** Answers `$waitForUriHandler`; never settles by default. */
+		readonly waitForUriHandler?: (expectedUri: UriComponents) => Promise<UriComponents>;
+		/** The window id that `createAppUri` appends to the query, as the desktop URL service does; none by default. */
+		readonly windowId?: number;
 	}): TestDynamicAuthProvider {
 		const loggerService = new class extends mock<ILoggerService>() {
 			override createLogger(): ILogger {
@@ -126,22 +126,25 @@ suite('DynamicAuthProvider', () => {
 		}();
 		const proxy = new class extends mock<Proxied<MainThreadAuthenticationShape>>() {
 			override $setSessionsForDynamicAuthProvider = (): Promise<void> => Promise.resolve();
-			// Never settles, so an abandoned authorization flow leaves no rejected promise behind.
-			override $waitForUriHandler = (): Promise<UriComponents> => new Promise<UriComponents>(() => { });
+			// Never settles by default, so an abandoned authorization flow leaves no rejected promise behind.
+			override $waitForUriHandler = (expectedUri: UriComponents): Promise<UriComponents> => options.waitForUriHandler?.(expectedUri) ?? new Promise<UriComponents>(() => { });
 		}();
 		const extHostWindow = new class extends mock<IExtHostWindow>() {
 			override async openUri(uri: string | URI): Promise<boolean> {
-				options.onDidOpenUri?.(uri.toString());
-				return false;
+				return options.onDidOpenUri?.(uri.toString()) ?? false;
 			}
 		}();
 		const extHostUrls = new class extends mock<IExtHostUrlsService>() {
 			override async createAppUri(uri: URI): Promise<URI> {
-				return uri;
+				if (options.windowId === undefined) {
+					return uri;
+				}
+				return uri.with({ query: uri.query ? `${uri.query}&windowId=${options.windowId}` : `windowId=${options.windowId}` });
 			}
 		}();
 		const initData = new class extends mock<IExtHostInitDataService>() {
 			override environment = { appUriScheme: 'vscode', appName: 'Test' } as IExtHostInitDataService['environment'];
+			override uiKind = options.uiKind ?? UIKind.Desktop;
 		}();
 		const extHostProgress = new class extends mock<IExtHostProgress>() {
 			override async withProgressFromSource<R>(_source: string | INotificationSource, _options: ProgressOptions, task: (progress: Progress<IProgressStepDto>, token: CancellationToken) => Thenable<R>): Promise<R> {
@@ -209,7 +212,7 @@ suite('DynamicAuthProvider', () => {
 		});
 	});
 
-	test('refresh sends scope without resource for Microsoft auth, and resource without scope otherwise', async () => {
+	test('refresh sends the resource indicator and no scope to every authorization server', async () => {
 		const results: Record<string, { body: Record<string, string>; scopes: (readonly string[])[] }> = {};
 		for (const [name, server] of Object.entries(servers)) {
 			const bodies: Record<string, string>[] = [];
@@ -243,31 +246,27 @@ suite('DynamicAuthProvider', () => {
 			results[name] = { body: bodies[0], scopes: sessions.map(session => session.scopes) };
 		}
 
-		const refreshBase = { client_id: 'client-id', grant_type: 'refresh_token', refresh_token: 'refresh-token' };
+		const refreshResult = {
+			body: { client_id: 'client-id', grant_type: 'refresh_token', refresh_token: 'refresh-token', resource },
+			scopes: [['api://res/Read']],
+		};
 		assert.deepStrictEqual(results, {
-			entra: {
-				body: { ...refreshBase, scope: 'api://res/Read offline_access' },
-				scopes: [['api://res/Read']],
-			},
-			nonMicrosoft: {
-				body: { ...refreshBase, resource },
-				scopes: [['api://res/Read']],
-			},
-			entraWithForeignTokenEndpoint: {
-				body: { ...refreshBase, resource },
-				scopes: [['api://res/Read']],
-			},
+			generic: refreshResult,
+			entra: refreshResult,
 		});
 	});
 
-	test('authorization URL requests offline_access when advertised and omits resource for Microsoft auth', async () => {
-		const results: Record<string, { scope: string | null; resource: string | null; prompt: string | null }> = {};
+	test('authorization URL requests offline_access when advertised, sends the resource indicator and redirects to the product URL protocol', async () => {
+		const results: Record<string, { scope: string | null; resource: string | null; prompt: string | null; redirectUri: string | null }> = {};
 		for (const [name, server] of Object.entries(servers)) {
 			const openedUris: string[] = [];
 			const provider = createProvider({
 				...server,
 				resource,
-				onDidOpenUri: uri => openedUris.push(uri),
+				onDidOpenUri: uri => {
+					openedUris.push(uri);
+					return false;
+				},
 			});
 
 			await assert.rejects(provider.createSession(['api://res/Read'], {}));
@@ -277,14 +276,162 @@ suite('DynamicAuthProvider', () => {
 				scope: params.get('scope'),
 				resource: params.get('resource'),
 				prompt: params.get('prompt'),
+				redirectUri: params.get('redirect_uri'),
 			};
 		}
 
 		assert.deepStrictEqual(results, {
-			entra: { scope: 'api://res/Read offline_access', resource: null, prompt: null },
-			nonMicrosoft: { scope: 'api://res/Read offline_access', resource, prompt: null },
-			entraWithForeignTokenEndpoint: { scope: 'api://res/Read offline_access', resource, prompt: null },
+			generic: { scope: 'api://res/Read offline_access', resource, prompt: null, redirectUri: 'vscode://dynamicauthprovider/auth.example.com/authorize' },
+			entra: { scope: 'api://res/Read offline_access', resource, prompt: null, redirectUri: 'vscode://dynamicauthprovider/login.microsoftonline.com/authorize' },
 		});
+	});
+
+	/**
+	 * Answers the authorization request the way the authorization server does: it redirects to the `redirect_uri` with the
+	 * `code` and the given `state` (the requested one by default) appended as percent-encoded query parameters. The
+	 * callback is the URI as the main process parses it from the URL the operating system hands over.
+	 */
+	function redirectFromAuthorizationServer(callback: DeferredPromise<UriComponents>, state?: string): (uri: string) => boolean {
+		return uri => {
+			const params = new URL(uri).searchParams;
+			void callback.complete(URI.parse(`${params.get('redirect_uri')}?code=authorization-code&state=${encodeURIComponent(state ?? params.get('state')!)}`));
+			return true;
+		};
+	}
+
+	/** Routes a callback through the main process's URL handler router over the given windows; `next` is the active-window fallback. */
+	async function routeCallback(callback: UriComponents, windowIds: number[], activeWindowId: number): Promise<string> {
+		const connections = windowIds.map(id => ({ ctx: `window:${id}` }) as IConnectionHub<string>['connections'][number]);
+		const hub: IConnectionHub<string> = { connections, onDidAddConnection: Event.None, onDidRemoveConnection: Event.None };
+		const activeWindowRouter = new class implements IClientRouter<string> {
+			async routeCall(): Promise<Client<string>> { return connections.find(c => c.ctx === `window:${activeWindowId}`)!; }
+			async routeEvent(): Promise<Client<string>> { throw new Error('unexpected'); }
+		}();
+		const client = await new URLHandlerRouter(activeWindowRouter, new NullLogService()).routeCall(hub, 'handleURL', [callback]);
+		return client.ctx;
+	}
+
+	test('URL handler flow exchanges the code that the product URL protocol callback delivers', async () => {
+		const callback = new DeferredPromise<UriComponents>();
+		const expectedUris: string[] = [];
+		const tokenRequests: Record<string, string>[] = [];
+		const provider = createProvider({
+			...servers.generic,
+			resource,
+			waitForUriHandler: expectedUri => {
+				expectedUris.push(URI.revive(expectedUri).toString());
+				return callback.p;
+			},
+			onDidOpenUri: redirectFromAuthorizationServer(callback),
+			fetcher: async (_input, init) => {
+				tokenRequests.push(Object.fromEntries(new URLSearchParams(String(init?.body))));
+				return new Response(JSON.stringify({ access_token: jwt({ sub: 'account' }), token_type: 'Bearer' }), {
+					status: 200,
+					headers: { 'Content-Type': 'application/json' },
+				});
+			},
+		});
+
+		const session = await provider.createSession(['api://res/Read'], {});
+
+		const redirectUri = 'vscode://dynamicauthprovider/auth.example.com/authorize';
+		assert.deepStrictEqual({
+			expectedUris,
+			tokenRequests: tokenRequests.map(({ code, redirect_uri }) => ({ code, redirect_uri })),
+			scopes: session.scopes,
+		}, {
+			expectedUris: [redirectUri],
+			tokenRequests: [{ code: 'authorization-code', redirect_uri: redirectUri }],
+			scopes: ['api://res/Read'],
+		});
+	});
+
+	test('URL handler flow reaches the originating window after the active window changed before authorization completed', async () => {
+		const callback = new DeferredPromise<UriComponents>();
+		const authorizationStates: string[] = [];
+		let routedTo: string | undefined;
+		const provider = createProvider({
+			...servers.generic,
+			resource,
+			windowId: 1,
+			waitForUriHandler: async () => {
+				// The user focuses window 2 while the browser shows the authorization page; the main process must still
+				// route the callback to window 1, where this handler waits.
+				routedTo = await routeCallback(await callback.p, [1, 2], 2);
+				return callback.p;
+			},
+			onDidOpenUri: uri => {
+				authorizationStates.push(new URL(uri).searchParams.get('state')!);
+				return redirectFromAuthorizationServer(callback)(uri);
+			},
+			fetcher: async () => new Response(JSON.stringify({ access_token: jwt({ sub: 'account' }), token_type: 'Bearer' }), {
+				status: 200,
+				headers: { 'Content-Type': 'application/json' },
+			}),
+		});
+
+		const session = await provider.createSession(['api://res/Read'], {});
+
+		assert.deepStrictEqual({
+			states: authorizationStates.map(state => state.replace(/nonce=[0-9a-f]{32}/, 'nonce=<nonce>')),
+			routedTo,
+			scopes: session.scopes,
+		}, {
+			states: ['nonce=<nonce>&windowId=1'],
+			routedTo: 'window:1',
+			scopes: ['api://res/Read'],
+		});
+	});
+
+	test('URL handler flow without a window id falls back to the active window', async () => {
+		const callback = new DeferredPromise<UriComponents>();
+		const provider = createProvider({
+			...servers.generic,
+			resource,
+			waitForUriHandler: () => callback.p,
+			onDidOpenUri: redirectFromAuthorizationServer(callback),
+			fetcher: async () => new Response('{}', { status: 500 }),
+		});
+		const sessionPromise = provider.createSession(['api://res/Read'], {});
+
+		assert.strictEqual(await routeCallback(await callback.p, [1, 2], 2), 'window:2');
+		await assert.rejects(sessionPromise);
+	});
+
+	test('URL handler flow rejects a callback whose state does not match the request', async () => {
+		const callback = new DeferredPromise<UriComponents>();
+		let tokenRequests = 0;
+		const provider = createProvider({
+			...servers.generic,
+			resource,
+			waitForUriHandler: () => callback.p,
+			onDidOpenUri: redirectFromAuthorizationServer(callback, 'forged-state'),
+			fetcher: async () => {
+				tokenRequests++;
+				return new Response('{}', { status: 500 });
+			},
+		});
+
+		await assert.rejects(provider.createSession(['api://res/Read'], {}));
+
+		assert.strictEqual(tokenRequests, 0);
+	});
+
+	test('offers no URL handler flow in the browser and fails with a clear error', async () => {
+		const openedUris: string[] = [];
+		const provider = createProvider({
+			...servers.generic,
+			resource,
+			uiKind: UIKind.Web,
+			onDidOpenUri: uri => {
+				openedUris.push(uri);
+				return false;
+			},
+		});
+
+		await assert.rejects(provider.createSession(['api://res/Read'], {}), /requires the desktop application/);
+
+		assert.deepStrictEqual(openedUris, []);
 	});
 });
 

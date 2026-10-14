@@ -14,7 +14,7 @@ import { getAuthenticationSessionRequestKey, IAuthenticationGetSessionsOptions, 
 import { createDecorator } from '../../../platform/instantiation/common/instantiation.js';
 import { IExtHostRpcService } from './extHostRpcService.js';
 import { URI, UriComponents } from '../../../base/common/uri.js';
-import { AuthorizationErrorType, fetchDynamicRegistration, getClaimsFromJWT, IAuthorizationJWTClaims, IAuthorizationProtectedResourceMetadata, IAuthorizationServerMetadata, IAuthorizationTokenResponse, isAuthorizationErrorResponse, isAuthorizationTokenResponse } from '../../../base/common/oauth.js';
+import { AuthorizationErrorType, fetchDynamicRegistration, getClaimsFromJWT, getUrlHandlerRedirectUri, IAuthorizationJWTClaims, IAuthorizationProtectedResourceMetadata, IAuthorizationServerMetadata, IAuthorizationTokenResponse, isAuthorizationErrorResponse, isAuthorizationTokenResponse } from '../../../base/common/oauth.js';
 import { IExtHostWindow } from './extHostWindow.js';
 import { IExtHostInitDataService } from './extHostInitDataService.js';
 import { ILogger, ILoggerService, ILogService } from '../../../platform/log/common/log.js';
@@ -29,6 +29,8 @@ import { NotificationTelemetryId } from '../../../platform/notification/common/n
 import { IProgressStep } from '../../../platform/progress/common/progress.js';
 import { CancellationError, isCancellationError } from '../../../base/common/errors.js';
 import { raceCancellationError, SequencerByKey } from '../../../base/common/async.js';
+import { escapeRegExpCharacters } from '../../../base/common/strings.js';
+import { UIKind } from '../../services/extensions/common/extensionHostProtocol.js';
 
 export interface IExtHostAuthentication extends ExtHostAuthentication { }
 export const IExtHostAuthentication = createDecorator<IExtHostAuthentication>('IExtHostAuthentication');
@@ -283,7 +285,8 @@ export class ExtHostAuthentication implements ExtHostAuthenticationShape {
 			const authorizationServer = URI.revive(authorizationServerComponents);
 			if (serverMetadata.registration_endpoint) {
 				try {
-					const registration = await fetchDynamicRegistration(serverMetadata, this._initData.environment.appName, resourceMetadata?.scopes_supported);
+					const urlHandlerRedirectUri = getSupportedUrlHandlerRedirectUri(this._initData, authorizationServer);
+					const registration = await fetchDynamicRegistration(serverMetadata, this._initData.environment.appName, resourceMetadata?.scopes_supported, urlHandlerRedirectUri ? [urlHandlerRedirectUri] : []);
 					clientId = registration.client_id;
 					clientSecret = registration.client_secret;
 				} catch (err) {
@@ -380,28 +383,12 @@ class TaskSingler<T> {
 	}
 }
 
-// Hostnames of the Microsoft identity platform, matched by `isMicrosoftAuthUrl`.
-const MICROSOFT_AUTH_HOSTS = [
-	'login.microsoftonline.com',
-	'login.microsoftonline.de',
-	'login.microsoftonline.us',
-	'login.partner.microsoftonline.cn',
-	'login.microsoft.com',
-	'login.windows.net',
-	'sts.windows.net',
-];
-
-function isMicrosoftAuthUrl(url: string | undefined): boolean {
-	if (!url) {
-		return false;
-	}
-	let hostname: string;
-	try {
-		hostname = new URL(url).hostname;
-	} catch {
-		return false;
-	}
-	return MICROSOFT_AUTH_HOSTS.some(host => hostname === host || hostname.endsWith(`.${host}`));
+/**
+ * The redirect URI of the URL handler flow for an authorization server, or `undefined` when the workbench runs in a
+ * browser: the authorization server redirects to the product's URL protocol, which only the desktop application receives.
+ */
+function getSupportedUrlHandlerRedirectUri(initData: IExtHostInitDataService, authorizationServer: URI): string | undefined {
+	return initData.uiKind === UIKind.Web ? undefined : getUrlHandlerRedirectUri(initData.environment.appUriScheme, authorizationServer);
 }
 
 export class DynamicAuthProvider implements vscode.AuthenticationProvider {
@@ -422,7 +409,10 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 	}>;
 
 	protected readonly _logger: ILogger;
-	protected readonly _isMicrosoftAuth: boolean;
+	/**
+	 * The redirect URI of the URL handler flow, registered with the authorization server; `undefined` where the flow is not supported.
+	 */
+	private readonly _urlHandlerRedirectUri: string | undefined;
 	private readonly _disposable: DisposableStore;
 
 	constructor(
@@ -448,9 +438,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 			: stringifiedServer;
 		// Auth Provider label is just the resource name if provided, otherwise the authority of the authorization server.
 		this.label = _resourceMetadata?.resource_name ?? this.authorizationServer.authority;
-		// Metadata is untrusted, so the token endpoint must also be Microsoft to earn Microsoft-specific treatment.
-		this._isMicrosoftAuth = (isMicrosoftAuthUrl(stringifiedServer) || isMicrosoftAuthUrl(_serverMetadata.authorization_endpoint))
-			&& isMicrosoftAuthUrl(_serverMetadata.token_endpoint);
+		this._urlHandlerRedirectUri = getSupportedUrlHandlerRedirectUri(_initData, authorizationServer);
 
 		this._logger = loggerService.createLogger(this.id, { name: `Auth: ${this.label}` });
 		this._disposable = new DisposableStore();
@@ -471,10 +459,11 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		this._disposable.add(this._tokenStore.onDidChangeSessions(e => this._onDidChangeSessions.fire(e)));
 		// Will be extended later to support other flows
 		this._createFlows = [];
-		if (_serverMetadata.authorization_endpoint) {
+		const urlHandlerRedirectUri = this._urlHandlerRedirectUri;
+		if (_serverMetadata.authorization_endpoint && urlHandlerRedirectUri) {
 			this._createFlows.push({
 				label: nls.localize('url handler', "URL Handler"),
-				handler: (scopes, progress, token) => this._createWithUrlHandler(scopes, progress, token)
+				handler: (scopes, progress, token) => this._createWithUrlHandler(urlHandlerRedirectUri, scopes, progress, token)
 			});
 		}
 	}
@@ -488,10 +477,10 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 	}
 
 	/**
-	 * The RFC 8707 resource indicator to send in requests. Omitted for Microsoft auth.
+	 * The RFC 8707 resource indicator to send in requests.
 	 */
 	protected get _resourceIndicator(): string | undefined {
-		return this._isMicrosoftAuth ? undefined : this._resourceMetadata?.resource;
+		return this._resourceMetadata?.resource;
 	}
 
 	/**
@@ -536,7 +525,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 							continue;
 						}
 						try {
-							const newToken = await this.exchangeRefreshTokenForToken(token.refresh_token, session.scopes, options.silent !== true);
+							const newToken = await this.exchangeRefreshTokenForToken(token.refresh_token, options.silent !== true);
 							// TODO@TylerLeonhardt: When the core scope handling doesn't care about order, this check should be
 							// updated to not care about order
 							if (newToken.scope !== scopeStr) {
@@ -566,6 +555,13 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 
 	async createSession(scopes: string[], _options: vscode.AuthenticationProviderSessionOptions): Promise<vscode.AuthenticationSession> {
 		this._logger.info(`Creating session for scopes: ${scopes.join(' ')}`);
+		if (!this._createFlows.length) {
+			const message = this._initData.uiKind === UIKind.Web
+				? `Signing in to '${this.label}' requires the desktop application: the browser cannot receive the redirect of the authorization server.`
+				: `The authorization server of '${this.label}' offers no supported sign-in flow.`;
+			this._logger.error(message);
+			throw new Error(message);
+		}
 		let token: IAuthorizationTokenResponse | undefined;
 		for (let i = 0; i < this._createFlows.length; i++) {
 			const { handler } = this._createFlows[i];
@@ -633,7 +629,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		this._disposable.dispose();
 	}
 
-	private async _createWithUrlHandler(scopes: string[], progress: vscode.Progress<IProgressStep>, token: vscode.CancellationToken): Promise<IAuthorizationTokenResponse> {
+	private async _createWithUrlHandler(redirectUri: string, scopes: string[], progress: vscode.Progress<IProgressStep>, token: vscode.CancellationToken): Promise<IAuthorizationTokenResponse> {
 		if (!this._serverMetadata.authorization_endpoint) {
 			throw new Error('Authorization Endpoint required');
 		}
@@ -645,12 +641,15 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		const codeVerifier = this.generateRandomString(64);
 		const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
-		// Generate a random state value to prevent CSRF
+		// Generate a random nonce to prevent CSRF. The state sent to the authorization server is the query of the app URI
+		// built from it: on the desktop the URL service appends the `windowId` of this window, and the main process reads
+		// it from the callback to route the callback to this window, whichever window is active by then. The redirect URI
+		// itself stays the one registered with the server.
 		const nonce = this.generateRandomString(32);
-		const callbackUri = URI.parse(`${this._initData.environment.appUriScheme}://dynamicauthprovider/${this.authorizationServer.authority}/authorize?nonce=${nonce}`);
-		let state: URI;
+		let state: string;
 		try {
-			state = await this._extHostUrls.createAppUri(callbackUri);
+			const appUri = await this._extHostUrls.createAppUri(URI.parse(redirectUri).with({ query: `nonce=${nonce}` }));
+			state = appUri.query;
 		} catch (error) {
 			throw new Error(`Failed to create external URI: ${error}`);
 		}
@@ -659,7 +658,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		const authorizationUrl = new URL(this._serverMetadata.authorization_endpoint);
 		authorizationUrl.searchParams.append('client_id', this._clientId);
 		authorizationUrl.searchParams.append('response_type', 'code');
-		authorizationUrl.searchParams.append('state', state.toString());
+		authorizationUrl.searchParams.append('state', state);
 		authorizationUrl.searchParams.append('code_challenge', codeChallenge);
 		authorizationUrl.searchParams.append('code_challenge_method', 'S256');
 		const scopeString = scopes.join(' ');
@@ -674,11 +673,11 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 			authorizationUrl.searchParams.append('resource', resource);
 		}
 
-		// Use a redirect URI that matches what was registered during dynamic registration
-		const redirectUri = 'https://vscode.dev/redirect';
+		// The authorization server redirects to the product's URL protocol with the `code` and `state` query parameters.
+		// The redirect URI was registered during dynamic registration and is the same for every request to this server.
 		authorizationUrl.searchParams.append('redirect_uri', redirectUri);
 
-		const promise = this.waitForAuthorizationCode(callbackUri);
+		const promise = this.waitForAuthorizationCode(URI.parse(redirectUri), state);
 
 		// Open the browser for user authorization
 		this._logger.info(`Opening authorization URL for scopes: ${scopeString}`);
@@ -732,16 +731,21 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 			.replace(/=+$/, '');
 	}
 
-	private async waitForAuthorizationCode(expectedState: URI): Promise<{ code: string }> {
-		const result = await this._proxy.$waitForUriHandler(expectedState);
-		// Extract the code parameter directly from the query string. NOTE, URLSearchParams does not work here because
-		// it will decode the query string and we need to keep it encoded.
-		const codeMatch = /[?&]code=([^&]+)/.exec(result.query || '');
-		if (!codeMatch || codeMatch.length < 2) {
+	private async waitForAuthorizationCode(redirectUri: URI, expectedState: string): Promise<{ code: string }> {
+		const result = await this._proxy.$waitForUriHandler(redirectUri);
+		// Extract the parameters directly from the query string, which arrives already decoded, so the state, itself a
+		// query, shows up as its own `&`-separated parameters: match it as a whole. NOTE, URLSearchParams does not work
+		// here because it would decode the query string a second time.
+		const query = result.query || '';
+		if (!new RegExp(`(?:^|&)state=${escapeRegExpCharacters(expectedState)}(?=&|$)`).test(query)) {
+			throw new Error('Authentication failed: State does not match');
+		}
+		const code = /(?:^|&)code=([^&]+)/.exec(query)?.[1];
+		if (!code) {
 			// No code parameter found in the query string
 			throw new Error('Authentication failed: No authorization code received');
 		}
-		return { code: codeMatch[1] };
+		return { code };
 	}
 
 	protected async exchangeCodeForToken(code: string, codeVerifier: string, redirectUri: string): Promise<IAuthorizationTokenResponse> {
@@ -802,7 +806,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		throw new Error(`Invalid authorization token response: ${JSON.stringify(result)}`);
 	}
 
-	protected async exchangeRefreshTokenForToken(refreshToken: string, scopes: readonly string[], allowClientRegistration: boolean): Promise<IAuthorizationToken> {
+	protected async exchangeRefreshTokenForToken(refreshToken: string, allowClientRegistration: boolean): Promise<IAuthorizationToken> {
 		if (!this._serverMetadata.token_endpoint) {
 			throw new Error('Token endpoint not available in server metadata');
 		}
@@ -811,13 +815,6 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 		tokenRequest.append('client_id', this._clientId);
 		tokenRequest.append('grant_type', 'refresh_token');
 		tokenRequest.append('refresh_token', refreshToken);
-
-		if (this._isMicrosoftAuth) {
-			const requestScopeString = this._getRequestScopes(scopes).join(' ');
-			if (requestScopeString) {
-				tokenRequest.append('scope', requestScopeString);
-			}
-		}
 
 		// Add resource indicator if available (RFC 8707)
 		const resource = this._resourceIndicator;
@@ -859,7 +856,7 @@ export class DynamicAuthProvider implements vscode.AuthenticationProvider {
 
 	protected async _generateNewClientId(): Promise<void> {
 		try {
-			const registration = await fetchDynamicRegistration(this._serverMetadata, this._initData.environment.appName, this._resourceMetadata?.scopes_supported);
+			const registration = await fetchDynamicRegistration(this._serverMetadata, this._initData.environment.appName, this._resourceMetadata?.scopes_supported, this._urlHandlerRedirectUri ? [this._urlHandlerRedirectUri] : []);
 			this._clientId = registration.client_id;
 			this._clientSecret = registration.client_secret;
 			this._onDidChangeClientId.fire();

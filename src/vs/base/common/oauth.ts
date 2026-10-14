@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { decodeBase64 } from './buffer.js';
+import { URI } from './uri.js';
 
 const WELL_KNOWN_ROUTE = '/.well-known';
 export const AUTH_PROTECTED_RESOURCE_METADATA_DISCOVERY_PATH = `${WELL_KNOWN_ROUTE}/oauth-protected-resource`;
@@ -944,27 +945,50 @@ const grantTypesSupported = ['authorization_code', 'refresh_token', 'urn:ietf:pa
  * the spec and require an exact match.
  */
 export const DEFAULT_AUTH_FLOW_PORT = 33418;
-export async function fetchDynamicRegistration(serverMetadata: IAuthorizationServerMetadata, clientName: string, scopes?: string[]): Promise<IAuthorizationDynamicClientRegistrationResponse> {
+
+/**
+ * Returns the redirect URI of the URL handler authorization flow for an authorization server: a URI of the
+ * product's own URL protocol, which the operating system hands to the desktop application together with the
+ * `code` and `state` query parameters that the authorization server appends. The URI is the same for every
+ * authorization request to that server, so it can be registered with the server. The authority is lowercased
+ * because host names are case-insensitive and `URI.toString` lowercases them as well.
+ *
+ * @param urlProtocol the product's URL protocol (`IProductService.urlProtocol`).
+ * @param authorizationServer the authorization server the URI is registered with.
+ */
+export function getUrlHandlerRedirectUri(urlProtocol: string, authorizationServer: URI): string {
+	return `${urlProtocol}://dynamicauthprovider/${authorizationServer.authority.toLowerCase()}/authorize`;
+}
+
+/**
+ * Registers a public client with the authorization server through dynamic client registration (RFC 7591).
+ *
+ * @param serverMetadata the metadata of the authorization server, which must have a registration endpoint.
+ * @param clientName the human-readable name of the client.
+ * @param scopes the scopes the client may request.
+ * @param additionalRedirectUris redirect URIs to register besides the loopback ones, such as the one of
+ * {@link getUrlHandlerRedirectUri}.
+ */
+export async function fetchDynamicRegistration(serverMetadata: IAuthorizationServerMetadata, clientName: string, scopes?: string[], additionalRedirectUris: readonly string[] = []): Promise<IAuthorizationDynamicClientRegistrationResponse> {
 	if (!serverMetadata.registration_endpoint) {
 		throw new Error('Server does not support dynamic registration');
 	}
 
 	const requestBody: IAuthorizationDynamicClientRegistrationRequest = {
 		client_name: clientName,
-		client_uri: 'https://code.visualstudio.com',
+		client_uri: 'https://github.com/sebastian-suarez/VSebCode',
 		grant_types: serverMetadata.grant_types_supported
 			? serverMetadata.grant_types_supported.filter(gt => grantTypesSupported.includes(gt))
 			: grantTypesSupported,
 		response_types: ['code'],
 		redirect_uris: [
-			'https://insiders.vscode.dev/redirect',
-			'https://vscode.dev/redirect',
 			'http://127.0.0.1/',
 			// Added these for any server that might do
 			// only exact match on the redirect URI even
 			// though the spec says it should not care
 			// about the port.
-			`http://127.0.0.1:${DEFAULT_AUTH_FLOW_PORT}/`
+			`http://127.0.0.1:${DEFAULT_AUTH_FLOW_PORT}/`,
+			...additionalRedirectUris
 		],
 		scope: scopes?.join(AUTH_SCOPE_SEPARATOR),
 		token_endpoint_auth_method: 'none',

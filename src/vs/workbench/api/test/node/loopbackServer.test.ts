@@ -62,7 +62,7 @@ function getScriptBlock(html: string): string {
 	return html.substring(start + '<script>'.length, end);
 }
 
-function render(appUri: URI, appName = 'Visual Studio Code'): string {
+function render(appUri: URI, appName = 'VSebCode'): string {
 	return new LoopbackAuthServer(new NullLogger(), appUri, appName).getHtml();
 }
 
@@ -125,6 +125,11 @@ suite('LoopbackAuthServer - getHtml', () => {
 			uris.map(uri => decodeHtmlAttribute(getRedirectHref(render(uri)))),
 			uris.map(uri => uri.toString(true))
 		);
+	});
+
+	test('loads no remote resources', () => {
+		// The page is served after the redirect from the authorization server; it must not reach out to any other host.
+		assert.deepStrictEqual(render(appUriForAuthority('login.example.com')).match(/https?:\/\/[^\s"'<>)]+/g), null);
 	});
 
 	test('escapes the app name', () => {

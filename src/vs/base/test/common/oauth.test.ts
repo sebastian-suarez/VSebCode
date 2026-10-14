@@ -10,6 +10,7 @@ import {
 	buildResourceRedemptionBody,
 	getClaimsFromJWT,
 	getDefaultMetadataForUrl,
+	getUrlHandlerRedirectUri,
 	isAuthorizationAuthorizeResponse,
 	isAuthorizationDeviceResponse,
 	isAuthorizationErrorResponse,
@@ -28,6 +29,7 @@ import {
 } from '../../common/oauth.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from './utils.js';
 import { encodeBase64, VSBuffer } from '../../common/buffer.js';
+import { URI } from '../../common/uri.js';
 
 suite('OAuth', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
@@ -338,6 +340,16 @@ suite('OAuth', () => {
 			assert.strictEqual(metadata.registration_endpoint, 'https://auth.example.com/register');
 			assert.deepStrictEqual(metadata.response_types_supported, ['code', 'id_token', 'id_token token']);
 		});
+
+		test('getUrlHandlerRedirectUri names the authorization server under the product URL protocol', () => {
+			assert.deepStrictEqual([
+				getUrlHandlerRedirectUri('vsebcode', URI.parse('https://auth.example.com/tenant')),
+				getUrlHandlerRedirectUri('vsebcode', URI.parse('https://Auth.Example.com:8443/tenant?x=1')),
+			], [
+				'vsebcode://dynamicauthprovider/auth.example.com/authorize',
+				'vsebcode://dynamicauthprovider/auth.example.com:8443/authorize',
+			]);
+		});
 	});
 
 	suite('Parsing Functions', () => {
@@ -454,7 +466,7 @@ suite('OAuth', () => {
 			const mockResponse = {
 				client_id: 'generated-client-id',
 				client_name: 'Test Client',
-				client_uri: 'https://code.visualstudio.com'
+				client_uri: 'https://github.com/sebastian-suarez/VSebCode'
 			};
 
 			fetchStub.resolves({
@@ -483,18 +495,38 @@ suite('OAuth', () => {
 			// Verify request body
 			const requestBody = JSON.parse(options.body as string);
 			assert.strictEqual(requestBody.client_name, 'Test Client');
-			assert.strictEqual(requestBody.client_uri, 'https://code.visualstudio.com');
+			assert.strictEqual(requestBody.client_uri, 'https://github.com/sebastian-suarez/VSebCode');
 			assert.deepStrictEqual(requestBody.grant_types, ['authorization_code', 'refresh_token', 'urn:ietf:params:oauth:grant-type:device_code']);
 			assert.deepStrictEqual(requestBody.response_types, ['code']);
 			assert.deepStrictEqual(requestBody.redirect_uris, [
-				'https://insiders.vscode.dev/redirect',
-				'https://vscode.dev/redirect',
 				'http://127.0.0.1/',
 				`http://127.0.0.1:${DEFAULT_AUTH_FLOW_PORT}/`
 			]);
 
 			// Verify response is processed correctly
 			assert.deepStrictEqual(result, mockResponse);
+		});
+
+		test('fetchDynamicRegistration should register additional redirect URIs after the loopback ones', async () => {
+			fetchStub.resolves({
+				ok: true,
+				json: async () => ({ client_id: 'generated-client-id' })
+			} as Response);
+
+			const serverMetadata: IAuthorizationServerMetadata = {
+				issuer: 'https://auth.example.com',
+				registration_endpoint: 'https://auth.example.com/register',
+				response_types_supported: ['code']
+			};
+
+			await fetchDynamicRegistration(serverMetadata, 'Test Client', undefined, ['vsebcode://dynamicauthprovider/auth.example.com/authorize']);
+
+			const [, options] = fetchStub.firstCall.args;
+			assert.deepStrictEqual(JSON.parse(options.body as string).redirect_uris, [
+				'http://127.0.0.1/',
+				`http://127.0.0.1:${DEFAULT_AUTH_FLOW_PORT}/`,
+				'vsebcode://dynamicauthprovider/auth.example.com/authorize'
+			]);
 		});
 
 		test('fetchDynamicRegistration should throw error on non-OK response', async () => {

@@ -26,7 +26,7 @@ import { ExtensionHostKind } from '../../services/extensions/common/extensionHos
 import { Dto, Proxied } from '../../services/extensions/common/proxyIdentifier.js';
 import { IURLService } from '../../../platform/url/common/url.js';
 import { DeferredPromise, raceTimeout } from '../../../base/common/async.js';
-import { IAuthorizationTokenResponse } from '../../../base/common/oauth.js';
+import { DEFAULT_AUTH_FLOW_PORT, getUrlHandlerRedirectUri, IAuthorizationTokenResponse } from '../../../base/common/oauth.js';
 import { IDynamicAuthenticationProviderStorageService } from '../../services/authentication/common/dynamicAuthenticationProviderStorage.js';
 import { IClipboardService } from '../../../platform/clipboard/common/clipboardService.js';
 import { IQuickInputService } from '../../../platform/quickinput/common/quickInput.js';
@@ -612,7 +612,12 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 	}
 
 	async $promptForClientRegistration(authorizationServerUrl: string): Promise<{ clientId: string; clientSecret?: string } | undefined> {
-		const redirectUrls = 'http://127.0.0.1:33418\nhttps://vscode.dev/redirect';
+		// The redirect URIs of the loopback flow and of the URL handler flow, as the extension host sends them.
+		const redirectUris = [
+			`http://127.0.0.1:${DEFAULT_AUTH_FLOW_PORT}/`,
+			getUrlHandlerRedirectUri(this.productService.urlProtocol, URI.parse(authorizationServerUrl))
+		];
+		const redirectUrls = redirectUris.join('\n');
 
 		// Show modal dialog first to explain the situation and get user consent
 		const result = await this.dialogService.prompt({
@@ -646,7 +651,7 @@ export class MainThreadAuthentication extends Disposable implements MainThreadAu
 
 		const clientId = await this.quickInputService.input({
 			title: sharedTitle,
-			prompt: nls.localize('clientIdPrompt', "Enter an existing client ID that has been registered with the following redirect URIs: http://127.0.0.1:33418, https://vscode.dev/redirect"),
+			prompt: nls.localize('clientIdPrompt', "Enter an existing client ID that has been registered with the following redirect URIs: {0}", redirectUris.join(', ')),
 			placeHolder: nls.localize('clientIdPlaceholder', "OAuth client ID (azye39d...)"),
 			ignoreFocusLost: true,
 			validateInput: async (value: string) => {
