@@ -76,7 +76,6 @@ export interface IProductConfiguration {
 	readonly featuredExtensions?: IFeaturedExtension[];
 
 	readonly downloadUrl?: string;
-	readonly updateUrl?: string;
 	readonly webUrl?: string;
 	readonly webEndpointUrlTemplate?: string;
 	readonly webviewContentExternalBaseUrlTemplate?: string;
@@ -117,7 +116,6 @@ export interface IProductConfiguration {
 
 	readonly documentationUrl?: string;
 	readonly serverDocumentationUrl?: string;
-	readonly releaseNotesUrl?: string;
 	readonly keyboardShortcutsUrlMac?: string;
 	readonly keyboardShortcutsUrlLinux?: string;
 	readonly keyboardShortcutsUrlWin?: string;

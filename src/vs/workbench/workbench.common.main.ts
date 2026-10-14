@@ -320,9 +320,6 @@ import './contrib/inlayHints/browser/inlayHintsAccessibilty.js';
 // Themes
 import './contrib/themes/browser/themes.contribution.js';
 
-// Update
-import './contrib/update/browser/update.contribution.js';
-
 // Welcome
 import './contrib/welcomeGettingStarted/browser/gettingStarted.contribution.js';
 import './contrib/welcomeWalkthrough/browser/walkThrough.contribution.js';

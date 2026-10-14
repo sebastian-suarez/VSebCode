@@ -219,10 +219,6 @@
 			"project": "vscode-workbench"
 		},
 		{
-			"name": "vs/workbench/contrib/update",
-			"project": "vscode-workbench"
-		},
-		{
 			"name": "vs/workbench/contrib/url",
 			"project": "vscode-workbench"
 		},

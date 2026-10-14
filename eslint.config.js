@@ -511,8 +511,6 @@ export default defineConfig(
 			'src/vs/platform/telemetry/common/errorTelemetry.ts',
 			'src/vs/platform/theme/common/iconRegistry.ts',
 			'src/vs/platform/theme/common/tokenClassificationRegistry.ts',
-			'src/vs/platform/update/common/updateIpc.ts',
-			'src/vs/platform/update/electron-main/updateService.snap.ts',
 			'src/vs/platform/url/common/urlIpc.ts',
 			'src/vs/platform/userDataProfile/common/userDataProfileIpc.ts',
 			'src/vs/platform/userDataProfile/electron-main/userDataProfileStorageIpc.ts',
