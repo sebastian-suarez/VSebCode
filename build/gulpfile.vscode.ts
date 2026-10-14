@@ -26,10 +26,8 @@ import { createAsar } from './lib/asar.ts';
 import minimist from 'minimist';
 import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask } from './gulpfile.extensions.ts';
 import { checkApiProposalNamesTask, copyCodiconsTask } from './lib/compilation.ts';
-import { ensureCopilotPlatformPackage, getCopilotExcludeFilter, getCopilotRuntimePrebuildFiles, getCopilotRuntimeVersion, getCopilotTgrepExcludeFilter, getRipgrepExcludeFilter } from './lib/copilot.ts';
+import { getRipgrepExcludeFilter } from './lib/ripgrep.ts';
 import { ensureOSProxyResolverPlatformPackage, getOSProxyResolverExcludeFilter, getOSProxyResolverPlatformFiles } from './lib/osProxyResolver.ts';
-import { readAgentSdkResults } from './agent-sdk/common.ts';
-import { readDictationRuntimeResults } from './dictation-runtime/common.ts';
 import { promisify } from 'util';
 import globCallback from 'glob';
 import rceditCallback from 'rcedit';
@@ -42,22 +40,6 @@ const glob = promisify(globCallback);
 const rcedit = promisify(rceditCallback);
 const root = path.dirname(import.meta.dirname);
 const commit = getVersion(root);
-const packageLock = JSON.parse(fs.readFileSync(path.join(root, 'package-lock.json'), 'utf8')) as {
-	readonly packages?: Readonly<Record<string, { readonly version?: string }>>;
-};
-const copilotRuntimeVersion = getCopilotRuntimeVersion(path.join(root, 'node_modules'));
-if (packageJson.copilotRuntimeVersion !== copilotRuntimeVersion) {
-	throw new Error(`package.json declares Copilot runtime ${packageJson.copilotRuntimeVersion}, but @github/copilot-sdk bundles ${copilotRuntimeVersion}.`);
-}
-
-function getLockedPackageVersion(packageName: string): string {
-	const version = packageLock.packages?.[`node_modules/${packageName}`]?.version;
-	if (!version) {
-		throw new Error(`Package ${packageName} is missing a version in package-lock.json.`);
-	}
-
-	return version;
-}
 
 const sourceMappingURLBase = `https://main.vscode-cdn.net/sourcemaps/${commit}`;
 const isCI = !!process.env['CI'] || !!process.env['BUILD_ARTIFACTSTAGINGDIRECTORY'] || !!process.env['GITHUB_WORKSPACE'];
@@ -116,16 +98,6 @@ function computeChecksum(filename: string): string {
 	return hash;
 }
 
-// foundry-local-sdk (on-device chat dictation) loads its N-API addons and shared
-// libraries from the per-user runtime cache. Exclude the package's native files,
-// which may require a newer glibc than VS Code's supported maximum.
-function getFoundryLocalExcludeFilter(): string[] {
-	return [
-		'**',
-		'!**/foundry-local-sdk/prebuilds/**',
-	];
-}
-
 function packageTask(platform: string, arch: string, sourceFolderName: string, destinationFolderName: string, _opts?: { stats?: boolean }) {
 	const destination = path.join(path.dirname(root), destinationFolderName);
 	platform = platform || process.platform;
@@ -140,11 +112,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			'vs/workbench/workbench.desktop.main.css',
 			'vs/workbench/api/node/extensionHostProcess.js',
 			'vs/code/electron-browser/workbench/workbench.html',
-			'vs/code/electron-browser/workbench/workbench.js',
-			'vs/sessions/sessions.desktop.main.js',
-			'vs/sessions/sessions.desktop.main.css',
-			'vs/sessions/electron-browser/sessions.html',
-			'vs/sessions/electron-browser/sessions.js'
+			'vs/code/electron-browser/workbench/workbench.js'
 		]);
 
 		const src = gulp.src(out + '/**', { base: '.' })
@@ -198,24 +166,6 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 				json.date = readISODate(out);
 				json.checksums = checksums;
 				json.version = version;
-				json.copilotVersions = {
-					runtime: copilotRuntimeVersion,
-					sdk: getLockedPackageVersion('@github/copilot-sdk'),
-				};
-				// Stamp agentSdks from the per-platform results file produced
-				// by `build/agent-sdk/produce.ts` (an earlier pipeline step).
-				// Local dev: file absent → empty → not stamped.
-				const agentSdks = readAgentSdkResults();
-				if (Object.keys(agentSdks).length > 0) {
-					json.agentSdks = agentSdks;
-				}
-				// Stamp dictationRuntime from the per-platform results file
-				// produced by `build/dictation-runtime/produce.ts`. Local dev /
-				// unsupported target: file absent → undefined → not stamped.
-				const dictationRuntime = readDictationRuntimeResults();
-				if (dictationRuntime) {
-					json.dictationRuntime = dictationRuntime;
-				}
 				return json;
 			}))
 			.pipe(es.through(function (file) {
@@ -243,15 +193,10 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			.pipe(filter(depFilterPattern))
 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, '.moduleignore')))
 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, `.moduleignore.${process.platform}`)));
-		ensureCopilotPlatformPackage(platform, arch);
-		const copilotRuntimePrebuilds = gulp.src(getCopilotRuntimePrebuildFiles(platform, arch), { base: '.', dot: true, allowEmpty: true });
 		ensureOSProxyResolverPlatformPackage(platform, arch);
 		const osProxyResolverPlatformPackage = gulp.src(getOSProxyResolverPlatformFiles(platform, arch), { base: '.', dot: true, allowEmpty: true });
-		const deps = es.merge(cleanedDeps, copilotRuntimePrebuilds, osProxyResolverPlatformPackage)
-			.pipe(filter(getCopilotExcludeFilter(platform, arch)))
-			.pipe(filter(getCopilotTgrepExcludeFilter(platform, arch)))
+		const deps = es.merge(cleanedDeps, osProxyResolverPlatformPackage)
 			.pipe(filter(getRipgrepExcludeFilter(platform, arch)))
-			.pipe(filter(getFoundryLocalExcludeFilter()))
 			.pipe(filter(getOSProxyResolverExcludeFilter(platform, arch)))
 			.pipe(jsFilter)
 			.pipe(util.rewriteSourceMappingURL(sourceMappingURLBase))
@@ -259,11 +204,6 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 			.pipe(createAsar(path.join(process.cwd(), 'node_modules'), [
 				'**/*.node',
 				'**/@vscode/ripgrep-universal/bin/**',
-				// The SDK runtime wrapper and native module must remain adjacent on disk.
-				'**/@github/copilot-sdk-{darwin,linux,linuxmusl,win32}-*/**',
-				// The Dev Container CLI is spawned as an external Node process,
-				// so its bundled entrypoint must be available outside the ASAR.
-				'**/@devcontainers/cli/**',
 				'**/node-pty/build/Release/*',
 				'**/node-pty/build/Release/conpty/*',
 				'**/node-pty/lib/worker/conoutSocketWorker.js',
@@ -325,7 +265,6 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 				'resources/win32/react.ico',
 				'resources/win32/ruby.ico',
 				'resources/win32/sass.ico',
-				'resources/win32/sessions.ico',
 				'resources/win32/shell.ico',
 				'resources/win32/sql.ico',
 				'resources/win32/typescript.ico',
@@ -496,10 +435,7 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
 		const deps = (await Promise.all([
 			glob('**/*.node', { cwd, ignore: 'extensions/node_modules/@parcel/watcher/**' }),
 			glob('**/rg.exe', { cwd }),
-			glob('**/tgrep.exe', { cwd }),
 			glob('**/*explorer_command*.dll', { cwd }),
-			// TODO@anthonykim1 Remove once @github/copilot ships OneAuthInterop.dll with complete version information.
-			glob('**/OneAuthInterop.dll', { cwd }),
 		])).flatMap(o => o);
 		const packageJson = JSON.parse(await fs.promises.readFile(path.join(cwd, versionedResourcesFolder, 'resources', 'app', 'package.json'), 'utf8'));
 		const product = JSON.parse(await fs.promises.readFile(path.join(cwd, versionedResourcesFolder, 'resources', 'app', 'product.json'), 'utf8'));

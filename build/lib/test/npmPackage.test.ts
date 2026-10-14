@@ -12,7 +12,7 @@ import { suite, test, type TestContext } from 'node:test';
 import { create } from 'tar';
 import { ensureNpmPackage, materializeNpmPackageVersion, type EnsureNpmPackageOptions } from '../npmPackage.ts';
 
-const packageName = '@github/copilot-darwin-arm64';
+const packageName = '@vscode/os-proxy-resolver-darwin-arm64';
 const version = '1.0.73';
 
 function createFixture(t: TestContext, fromLockfile: boolean) {

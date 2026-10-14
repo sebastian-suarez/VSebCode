@@ -33,12 +33,11 @@ export default new class TranslationRemind implements eslint.Rule.RuleModule {
 		const currentFile = context.filename;
 		const matchService = currentFile.match(/vs\/workbench\/services\/\w+/);
 		const matchPart = currentFile.match(/vs\/workbench\/contrib\/\w+/);
-		const matchSessionsPart = currentFile.match(/vs\/sessions\/contrib\/\w+/);
-		if (!matchService && !matchPart && !matchSessionsPart) {
+		if (!matchService && !matchPart) {
 			return;
 		}
 
-		const resource = matchService ? matchService[0] : matchPart ? matchPart[0] : matchSessionsPart![0];
+		const resource = matchService ? matchService[0] : matchPart[0];
 		let resourceDefined = false;
 
 		let json;
@@ -49,7 +48,7 @@ export default new class TranslationRemind implements eslint.Rule.RuleModule {
 			return;
 		}
 		const parsed = JSON.parse(json);
-		const resources = [...parsed.workbench, ...parsed.sessions];
+		const resources = parsed.workbench;
 
 		resources.forEach((existingResource: any) => {
 			if (existingResource.name === resource) {

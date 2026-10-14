@@ -52,7 +52,6 @@ export const unicodeFilter = Object.freeze<string[]>([
 	'!extensions/markdown-language-features/notebook-out/*.js',
 	'!extensions/markdown-language-features/markdown-editor-out/*.js',
 	'!extensions/markdown-math/notebook-out/**',
-	'!extensions/mermaid-markdown-features/chat-webview-out/**',
 	'!extensions/ipynb/notebook-out/**',
 	'!extensions/notebook-renderers/renderer-out/**',
 	'!extensions/php-language-features/src/features/phpGlobalFunctions.ts',
@@ -150,7 +149,6 @@ export const indentationFilter = Object.freeze<string[]>([
 	'!**/*.tiff',
 
 	// except for built files
-	'!extensions/mermaid-markdown-features/chat-webview-out/*.js',
 	'!extensions/mermaid-markdown-features/markdown-preview-out/*.js',
 	'!extensions/mermaid-markdown-features/notebook-out/*.js',
 	'!extensions/markdown-language-features/media/*.js',
@@ -207,9 +205,7 @@ export const copyrightFilter = Object.freeze<string[]>([
 	'!extensions/typescript-language-features/node-maintainer/**',
 	'!extensions/html-language-features/server/src/modes/typescript/*',
 	'!extensions/*/server/bin/*',
-	'!src/vs/platform/agentHost/node/codex/protocol/generated/**',
 	'!src/vs/workbench/contrib/terminal/common/scripts/psreadline/**',
-	'!extensions/mermaid-markdown-features/chat-webview-out/**',
 	'!extensions/mermaid-markdown-features/markdown-preview-out/**',
 	'!extensions/mermaid-markdown-features/notebook-out/**',
 
@@ -232,17 +228,16 @@ export const tsFormattingFilter = Object.freeze<string[]>([
 	'!extensions/vscode-api-tests/testWorkspace/**',
 	'!extensions/vscode-api-tests/testWorkspace2/**',
 	'!extensions/**/*.test.ts',
+	'!extensions/mermaid-markdown-features/editor-webview-out/**',
 	'!extensions/html-language-features/server/lib/jquery.d.ts',
 	'!extensions/terminal-suggest/src/shell/zshBuiltinsCache.ts',
 	'!extensions/terminal-suggest/src/shell/fishBuiltinsCache.ts',
-	'!src/vs/platform/agentHost/node/codex/protocol/generated/**',
 ]);
 
 export const eslintFilter = Object.freeze<string[]>([
 	'**/*.{js,cjs,mjs}',
 	'**/*.{ts,tsx,mts,cts}',
 	'.eslint-plugin-local/**/*.ts',
-	'!src/vs/platform/agentHost/node/codex/protocol/generated/**',
 	...readFileSync(join(import.meta.dirname, '..', '.eslint-ignore'))
 		.toString()
 		.split(/\r\n|\n/)

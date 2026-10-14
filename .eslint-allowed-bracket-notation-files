@@ -9,150 +9,10 @@
 # Lines starting with `#` are comments. Blank lines are ignored.
 
 # Agent Host platform (89 files)
-src/vs/platform/agentHost/browser/webPubSubRelayTransport.ts
-src/vs/platform/agentHost/common/automationMigration.ts
-src/vs/platform/agentHost/common/copilotHome.ts
-src/vs/platform/agentHost/common/meta/agentChangesetFileMeta.ts
-src/vs/platform/agentHost/common/meta/agentChatSurfaceMeta.ts
-src/vs/platform/agentHost/common/meta/agentCompletionAttachmentMeta.ts
-src/vs/platform/agentHost/common/meta/agentCustomizationMeta.ts
-src/vs/platform/agentHost/common/meta/agentErrorMeta.ts
-src/vs/platform/agentHost/common/meta/agentFeedbackAnnotations.ts
-src/vs/platform/agentHost/common/meta/agentMessageDelegationMeta.ts
-src/vs/platform/agentHost/common/meta/agentPermissionRequestMeta.ts
-src/vs/platform/agentHost/common/meta/agentSystemNotificationMeta.ts
-src/vs/platform/agentHost/common/meta/agentToolCallMeta.ts
-src/vs/platform/agentHost/common/sessionArtifactCollection.ts
-src/vs/platform/agentHost/common/sessionArtifacts.ts
-src/vs/platform/agentHost/common/state/protocolUpgrade.ts
-src/vs/platform/agentHost/common/state/sessionState.ts
-src/vs/platform/agentHost/common/taskEventReplay.ts
-src/vs/platform/agentHost/common/webPubSub/framing.ts
-src/vs/platform/agentHost/node/agentHostAutomationService.ts
-src/vs/platform/agentHost/node/agentHostCustomizationEnablementService.ts
-src/vs/platform/agentHost/node/agentHostMain.ts
-src/vs/platform/agentHost/node/agentHostMicrosoftTelemetry.ts
-src/vs/platform/agentHost/node/agentHostRepoInfoTelemetry.ts
-src/vs/platform/agentHost/node/agentHostRestrictedTelemetry.ts
-src/vs/platform/agentHost/node/agentHostServerMain.ts
-src/vs/platform/agentHost/node/agentHostTerminalManager.ts
-src/vs/platform/agentHost/node/appNodeModules.ts
-src/vs/platform/agentHost/node/claude/claudeProxyAuth.ts
-src/vs/platform/agentHost/node/claude/claudeSdkOptions.ts
-src/vs/platform/agentHost/node/claude/claudeToolDisplay.ts
-src/vs/platform/agentHost/node/claude/customizations/scan/claudeNativePluginScan.ts
-src/vs/platform/agentHost/node/codex/codexAgent.ts
-src/vs/platform/agentHost/node/codex/codexDelegation.ts
-src/vs/platform/agentHost/node/codex/codexProxyService.ts
-src/vs/platform/agentHost/node/codex/codexThreadCoordination.ts
-src/vs/platform/agentHost/node/copilot/agentHostSandboxEngine.ts
-src/vs/platform/agentHost/node/copilot/copilotAgent.ts
-src/vs/platform/agentHost/node/copilot/copilotAgentSession.ts
-src/vs/platform/agentHost/node/copilot/copilotCliEnvironment.ts
-src/vs/platform/agentHost/node/copilot/copilotToolDisplay.ts
-src/vs/platform/agentHost/node/copilot/mapSessionEvents.ts
-src/vs/platform/agentHost/node/nodeAgentHostStarter.ts
-src/vs/platform/agentHost/node/protocolServerHandler.ts
-src/vs/platform/agentHost/node/shared/worktreeIsolation.ts
-src/vs/platform/agentHost/node/sshRemoteAgentHostService.ts
-src/vs/platform/agentHost/node/wslRemoteAgentHostHelpers.ts
-src/vs/platform/agentHost/test/browser/webPubSubRelayTransport.test.ts
-src/vs/platform/agentHost/test/common/partialToolInput.test.ts
-src/vs/platform/agentHost/test/common/sessionFolderPickerMeta.test.ts
-src/vs/platform/agentHost/test/common/sessionWorkspacelessMeta.test.ts
-src/vs/platform/agentHost/test/common/state/hostBuildInfoMeta.test.ts
-src/vs/platform/agentHost/test/electron-browser/agentHostProtocolClient.test.ts
-src/vs/platform/agentHost/test/node/agentHostInternalTelemetry.test.ts
-src/vs/platform/agentHost/test/node/agentHostRequestService.test.ts
-src/vs/platform/agentHost/test/node/agentHostSessionTitleController.test.ts
-src/vs/platform/agentHost/test/node/agentSideEffects.test.ts
-src/vs/platform/agentHost/test/node/ahpSurfaceCoverage.ts
-src/vs/platform/agentHost/test/node/byokResponsesTranslation.test.ts
-src/vs/platform/agentHost/test/node/claudeAgent.integrationTest.ts
-src/vs/platform/agentHost/test/node/claudeAgent.test.ts
-src/vs/platform/agentHost/test/node/codex/codexCreateChat.test.ts
-src/vs/platform/agentHost/test/node/codex/codexModelRefresh.test.ts
-src/vs/platform/agentHost/test/node/codex/codexPrewarmEviction.test.ts
-src/vs/platform/agentHost/test/node/codex/codexProfileImage.test.ts
-src/vs/platform/agentHost/test/node/codex/codexSessionConfigKeys.test.ts
-src/vs/platform/agentHost/test/node/codex/codexSessionTitleSpans.test.ts
-src/vs/platform/agentHost/test/node/copilotAgent.test.ts
-src/vs/platform/agentHost/test/node/copilotAgentSession.test.ts
-src/vs/platform/agentHost/test/node/copilotPluginConverters.test.ts
-src/vs/platform/agentHost/test/node/e2e/harness/agentHostE2ETestHarness.ts
-src/vs/platform/agentHost/test/node/e2e/harness/capiReplayProxy.ts
-src/vs/platform/agentHost/test/node/e2e/harness/capiWireCodec.ts
-src/vs/platform/agentHost/test/node/e2e/providers/codexAgentHostE2E.integrationTest.ts
-src/vs/platform/agentHost/test/node/e2e/providers/codexAgentHostLive.integrationTest.ts
-src/vs/platform/agentHost/test/node/e2e/providers/copilotAgentHostE2E.integrationTest.ts
-src/vs/platform/agentHost/test/node/e2e/providers/copilotOtelAgentHostE2E.integrationTest.ts
-src/vs/platform/agentHost/test/node/e2e/providers/copilotPromptsE2E.integrationTest.ts
-src/vs/platform/agentHost/test/node/e2e/suites/agentHostE2ESuites.ts
-src/vs/platform/agentHost/test/node/e2e/suites/copilotCoverageSuite.ts
-src/vs/platform/agentHost/test/node/e2e/suites/multiChatSuite.ts
-src/vs/platform/agentHost/test/node/e2e/suites/sessionPersistenceSuite.ts
-src/vs/platform/agentHost/test/node/mapSessionEvents.perf.test.ts
-src/vs/platform/agentHost/test/node/mockAgent.ts
-src/vs/platform/agentHost/test/node/serverIntegrationTestHelpers.ts
-src/vs/platform/agentHost/test/node/shared/agentHostOctoKitService.test.ts
-src/vs/platform/agentHost/test/node/shared/copilotApiService.test.ts
-src/vs/platform/agentHost/test/node/sshHostKeyVerification.test.ts
-src/vs/platform/agentHost/test/node/sshRemoteAgentHostService.test.ts
 
 # Workbench chat and agents (40 files)
-src/vs/platform/agentPlugins/common/agentPluginParser.ts
-src/vs/platform/agentPlugins/common/pluginParsers.ts
-src/vs/platform/mcp/test/common/mcpManagementService.test.ts
-src/vs/workbench/contrib/chat/browser/actions/createPluginAction.ts
-src/vs/workbench/contrib/chat/browser/agentPluginEditor/agentPluginEditor.ts
-src/vs/workbench/contrib/chat/browser/agentSessions/agentHost/agentHostSessionHandler.ts
-src/vs/workbench/contrib/chat/browser/agentSessions/agentHost/stateToProgressAdapter.ts
-src/vs/workbench/contrib/chat/browser/aiCustomization/embeddedAgentPluginDetail.ts
-src/vs/workbench/contrib/chat/browser/chatDebug/chatDebugCacheExplorerView.ts
-src/vs/workbench/contrib/chat/browser/githubRepoFetcher.ts
-src/vs/workbench/contrib/chat/browser/voiceClient/voiceClientService.ts
-src/vs/workbench/contrib/chat/browser/voiceClient/voiceSessionController.ts
-src/vs/workbench/contrib/chat/browser/voiceClient/voiceToolDispatchService.ts
-src/vs/workbench/contrib/chat/browser/widget/input/editor/chatPasteProviders.ts
-src/vs/workbench/contrib/chat/common/chatArtifactExtraction.ts
-src/vs/workbench/contrib/chat/common/plugins/pluginMarketplaceService.ts
-src/vs/workbench/contrib/chat/common/promptSyntax/promptFileParser.ts
-src/vs/workbench/contrib/chat/common/tools/builtinTools/resolveDebugEventDetailsTool.ts
-src/vs/workbench/contrib/chat/common/tools/builtinTools/runSubagentTool.ts
-src/vs/workbench/contrib/chat/common/voiceClient/voiceClientService.ts
-src/vs/workbench/contrib/chat/test/browser/actions/createPluginAction.test.ts
-src/vs/workbench/contrib/chat/test/browser/agentSessions/agentHostChatInputPicker.test.ts
-src/vs/workbench/contrib/chat/test/browser/agentSessions/agentHostSettingsFileSystemProvider.test.ts
-src/vs/workbench/contrib/chat/test/browser/agentSessions/agentHostUntitledProvisionalSessionService.test.ts
-src/vs/workbench/contrib/chat/test/browser/agentSessions/agentSessionSettingsFileSystemProvider.test.ts
-src/vs/workbench/contrib/chat/test/browser/agentSessions/convertCarouselAnswers.test.ts
-src/vs/workbench/contrib/chat/test/browser/chatSessions/chatSessionsService.test.ts
-src/vs/workbench/contrib/chat/test/browser/voiceClient/voiceSessionController.test.ts
-src/vs/workbench/contrib/chat/test/browser/voiceClient/voiceToolDispatchService.test.ts
-src/vs/workbench/contrib/chat/test/browser/widget/input/chatModelConfigurationStore.test.ts
-src/vs/workbench/contrib/chat/test/common/plugins/agentPluginFormatDetection.test.ts
-src/vs/workbench/contrib/chat/test/common/tools/builtinTools/askQuestionsTool.test.ts
-src/vs/workbench/contrib/chat/test/common/tools/builtinTools/manageTodoListTool.test.ts
-src/vs/workbench/contrib/chat/test/common/tools/builtinTools/runSubagentTool.test.ts
-src/vs/workbench/contrib/inlineChat/browser/inlineChatWidget.ts
-src/vs/workbench/contrib/mcp/common/mcpSandboxService.ts
-src/vs/workbench/contrib/mcp/common/mcpServer.ts
-src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcomeInput.ts
-src/vs/workbench/services/agentHost/test/common/agentHostResourceService.test.ts
-src/vs/workbench/services/chat/common/chatEntitlementService.ts
 
 # Agents Window (11 files)
-src/vs/sessions/contrib/automations/browser/automationService.ts
-src/vs/sessions/contrib/github/browser/githubApiClient.ts
-src/vs/sessions/contrib/github/common/utils.ts
-src/vs/sessions/contrib/providers/agentHost/browser/agentHostAutomationStore.ts
-src/vs/sessions/contrib/providers/agentHost/test/browser/agentHostAutomationStore.test.ts
-src/vs/sessions/contrib/providers/agentHost/test/browser/agentHostSettingsFileSystemProvider.test.ts
-src/vs/sessions/contrib/providers/agentHost/test/browser/agentSessionSettingsFileSystemProvider.test.ts
-src/vs/sessions/contrib/providers/copilotChatSessions/test/browser/permissionPicker.test.ts
-src/vs/sessions/contrib/providers/remoteAgentHost/browser/cloudSandboxApiService.ts
-src/vs/sessions/electron-browser/sessions.ts
-src/vs/sessions/test/browser/chatGroupsView.test.ts
 
 # Build, CI, and scripts (48 files)
 build/darwin/create-dmg.ts
@@ -181,12 +41,8 @@ build/npm/preinstall.ts
 build/npm/update-localization-extension.ts
 build/rspack/rspack.serve-out.config.mts
 build/win32/explorer-dll-fetcher.ts
-scripts/code-agent-host.js
 scripts/code-server.js
-scripts/code-sessions-web.js
 scripts/code-web.js
-scripts/sync-agent-host-protocol.ts
-scripts/test-agent-host-e2e.ts
 
 # Application bootstrap, server, and environment (41 files)
 src/bootstrap-cli.ts
@@ -226,7 +82,6 @@ src/vs/server/node/remoteExtensionHostAgentServer.ts
 src/vs/server/node/remoteExtensionsScanner.ts
 src/vs/server/node/remoteTerminalChannel.ts
 src/vs/server/node/server.cli.ts
-src/vs/server/node/server.cliAgent.ts
 src/vs/server/node/server.main.ts
 src/vs/server/node/serverEnvironmentService.ts
 src/vs/server/node/webClientServer.ts
@@ -278,8 +133,6 @@ src/vs/workbench/contrib/terminal/browser/terminalActions.ts
 src/vs/workbench/contrib/terminal/common/terminalEnvironment.ts
 src/vs/workbench/contrib/terminal/test/browser/terminalInstance.test.ts
 src/vs/workbench/contrib/terminal/test/common/terminalEnvironment.test.ts
-src/vs/workbench/contrib/terminalContrib/chatAgentTools/browser/toolTerminalCreator.ts
-src/vs/workbench/contrib/terminalContrib/chatAgentTools/test/electron-browser/runInTerminalTool.test.ts
 src/vs/workbench/contrib/terminalContrib/history/common/history.ts
 src/vs/workbench/contrib/terminalContrib/history/test/common/history.test.ts
 src/vs/workbench/contrib/terminalContrib/suggest/test/browser/terminalCompletionService.test.ts
@@ -304,7 +157,6 @@ src/vs/workbench/contrib/notebook/browser/view/renderers/backLayerWebView.ts
 # Extension host, API, and extension management (20 files)
 extensions/vscode-api-tests/src/singlefolder-tests/browser.cdp.test.ts
 extensions/vscode-api-tests/src/singlefolder-tests/browser.tools.test.ts
-extensions/vscode-api-tests/src/singlefolder-tests/chat.runInTerminal.test.ts
 extensions/vscode-api-tests/src/singlefolder-tests/configuration.test.ts
 extensions/vscode-api-tests/src/singlefolder-tests/window.test.ts
 extensions/vscode-test-resolver/src/extension.ts
@@ -312,7 +164,6 @@ src/vs/platform/extensionManagement/common/extensionGalleryService.ts
 src/vs/platform/extensionManagement/common/extensionTipsService.ts
 src/vs/platform/extensionManagement/node/extensionLifecycle.ts
 src/vs/workbench/api/common/extHostDebugService.ts
-src/vs/workbench/api/common/extHostMcp.ts
 src/vs/workbench/api/common/extHostVariableResolverService.ts
 src/vs/workbench/api/node/extensionHostProcess.ts
 src/vs/workbench/api/node/extHostExtensionService.ts
@@ -338,22 +189,10 @@ src/vs/workbench/services/configurationResolver/test/electron-browser/configurat
 src/vs/workbench/services/keybinding/common/keybindingEditing.ts
 
 # Telemetry, OTel, and performance (14 files)
-src/vs/platform/otel/test/node/otlp/otlpJsonDecode.test.ts
-src/vs/platform/otel/test/node/otlp/outboundForwarder.test.ts
-src/vs/platform/telemetry/common/commonProperties.ts
-src/vs/platform/telemetry/common/telemetryService.ts
-src/vs/platform/telemetry/test/browser/telemetryService.test.ts
 src/vs/workbench/contrib/performance/browser/performance.contribution.ts
 src/vs/workbench/contrib/performance/test/browser/perfviewEditor.test.ts
-src/vs/workbench/services/telemetry/browser/workbenchCommonProperties.ts
-src/vs/workbench/services/telemetry/common/workbenchCommonProperties.ts
-src/vs/workbench/services/telemetry/test/browser/commonProperties.test.ts
-src/vs/workbench/services/telemetry/test/node/commonProperties.test.ts
 
 # Remote, tunnels, networking, and authentication (11 files)
-extensions/github-authentication/src/test/github.test.ts
-extensions/microsoft-authentication/src/common/experimentation.ts
-src/vs/platform/github/common/githubTransport.ts
 src/vs/platform/remote/node/wsl.ts
 src/vs/platform/request/node/requestService.ts
 src/vs/platform/tunnel/node/tunnelProxy.ts
@@ -361,7 +200,6 @@ src/vs/platform/tunnel/test/node/tunnelProxy.test.ts
 src/vs/platform/webContentExtractor/electron-main/webPageLoader.ts
 src/vs/platform/webContentExtractor/test/electron-main/webPageLoader.test.ts
 src/vs/workbench/contrib/remote/browser/remoteStartEntry.ts
-src/vs/workbench/contrib/remoteTunnel/test/electron-browser/remoteTunnel.contribution.test.ts
 
 # Git extension (6 files)
 extensions/git/src/askpass-main.ts
@@ -372,4 +210,3 @@ extensions/git/src/ipc/ipcServer.ts
 extensions/git/src/util.ts
 
 # Default account service tests (1 file)
-src/vs/workbench/services/accounts/test/browser/defaultAccount.test.ts

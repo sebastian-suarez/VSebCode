@@ -47,7 +47,7 @@ suite('Policy data merge', () => {
 				data: catalog([shared, policy('chat.workbench', 'WorkbenchPolicy')]),
 			},
 			{
-				source: 'Agents window',
+				source: 'Second entrypoint',
 				data: catalog([
 					policy('chat.agents', 'AgentsPolicy'),
 					policy('chat.shared', 'SharedPolicy', ['a.setting', 'shared.setting']),
@@ -66,16 +66,15 @@ suite('Policy data merge', () => {
 	});
 
 	test('emits the same key order regardless of which entrypoint declares references', () => {
-		// Mirrors the export, which adds `agentHost` after linking references.
-		const withReferences: PolicyDto = { ...policy('chat.shared', 'SharedPolicy', ['a.setting']), agentHost: { status: 'enforced' } };
-		const withoutReferences: PolicyDto = { ...policy('chat.shared', 'SharedPolicy'), agentHost: { status: 'enforced' } };
+		const withReferences: PolicyDto = policy('chat.shared', 'SharedPolicy', ['a.setting']);
+		const withoutReferences: PolicyDto = policy('chat.shared', 'SharedPolicy');
 		const keysWhenFirst = Object.keys(mergePolicyData([
 			{ source: 'Workbench', data: catalog([withReferences]) },
-			{ source: 'Agents window', data: catalog([withoutReferences]) },
+			{ source: 'Second entrypoint', data: catalog([withoutReferences]) },
 		]).policies[0]);
 		const keysWhenSecond = Object.keys(mergePolicyData([
 			{ source: 'Workbench', data: catalog([withoutReferences]) },
-			{ source: 'Agents window', data: catalog([withReferences]) },
+			{ source: 'Second entrypoint', data: catalog([withReferences]) },
 		]).policies[0]);
 
 		// Key order determines the serialized policyData.jsonc.
@@ -87,8 +86,8 @@ suite('Policy data merge', () => {
 
 		assert.throws(() => mergePolicyData([
 			{ source: 'Workbench', data: catalog([policy('chat.shared', 'SharedPolicy')]) },
-			{ source: 'Agents window', data: catalog([conflicting]) },
-		]), /Policy 'chat\.shared' differs between 'Workbench' and 'Agents window'\./);
+			{ source: 'Second entrypoint', data: catalog([conflicting]) },
+		]), /Policy 'chat\.shared' differs between 'Workbench' and 'Second entrypoint'\./);
 	});
 
 	test('rejects conflicting categories', () => {
@@ -99,8 +98,8 @@ suite('Policy data merge', () => {
 
 		assert.throws(() => mergePolicyData([
 			{ source: 'Workbench', data: catalog([]) },
-			{ source: 'Agents window', data: catalog([], [conflictingCategory]) },
-		]), /Policy category 'InteractiveSession' differs between 'Workbench' and 'Agents window'\./);
+			{ source: 'Second entrypoint', data: catalog([], [conflictingCategory]) },
+		]), /Policy category 'InteractiveSession' differs between 'Workbench' and 'Second entrypoint'\./);
 	});
 
 	test('rejects duplicate policy keys within an entrypoint', () => {
@@ -118,7 +117,7 @@ suite('Policy data merge', () => {
 	test('rejects a policy name owned by different setting keys', () => {
 		assert.throws(() => mergePolicyData([
 			{ source: 'Workbench', data: catalog([policy('chat.workbench', 'SharedPolicy')]) },
-			{ source: 'Agents window', data: catalog([policy('chat.agents', 'SharedPolicy')]) },
-		]), /Policy name 'SharedPolicy' is owned by both 'chat\.workbench' in 'Workbench' and 'chat\.agents' in 'Agents window'\./);
+			{ source: 'Second entrypoint', data: catalog([policy('chat.agents', 'SharedPolicy')]) },
+		]), /Policy name 'SharedPolicy' is owned by both 'chat\.workbench' in 'Workbench' and 'chat\.agents' in 'Second entrypoint'\./);
 	});
 });

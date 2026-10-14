@@ -14,7 +14,6 @@ src/vs/base/browser/ui/codicons/codicon/codicon.ttf
 build/node_modules
 build/darwin/.dmgbuild
 coverage/
-!/src/vs/platform/agentHost/test/node/e2e/coverage/
 test_data/
 test-results/
 test-results.xml
@@ -25,7 +24,6 @@ product.overrides.json
 *.tsbuildinfo
 .eslintcache
 .vscode-test
-.chat-simulation-data
 test-output.json
 test/componentFixtures/.screenshots/*
 dist

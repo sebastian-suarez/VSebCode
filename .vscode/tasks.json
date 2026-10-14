@@ -406,7 +406,7 @@
 		},
 		{
 			"label": "Run VS Code (Web)",
-			"detail": "Run the Agents window as a web client.",
+			"detail": "Run VS Code as a web client.",
 			"type": "shell",
 			"command": "./scripts/code-server.sh",
 			"windows": {
@@ -496,22 +496,6 @@
 			"windows": {
 				"command": ".\\scripts\\code.bat"
 			},
-			"inAgents": true,
-			"problemMatcher": []
-		},
-		{
-			"label": "Run Agents",
-			"type": "shell",
-			"command": "./scripts/code.sh",
-			"windows": {
-				"command": ".\\scripts\\code.bat"
-			},
-			"args": [
-				"--agents",
-				"--user-data-dir=${userHome}/.vscode-oss-dev",
-				"--extensions-dir=${userHome}/.vscode-oss-dev/extensions"
-			],
-			"inAgents": true,
 			"problemMatcher": []
 		},
 		{
@@ -521,18 +505,7 @@
 				"Run Code"
 			],
 			"dependsOrder": "sequence",
-			"problemMatcher": [],
-			"inAgents": true
-		},
-		{
-			"label": "Build Fast & Run Agents",
-			"dependsOn": [
-				"Build Fast",
-				"Run Agents"
-			],
-			"dependsOrder": "sequence",
-			"problemMatcher": [],
-			"inAgents": true
+			"problemMatcher": []
 		},
 		{
 			"label": "Install Dependencies & Build Fast",
@@ -542,7 +515,6 @@
 				"Build Fast"
 			],
 			"dependsOrder": "sequence",
-			"inAgents": true,
 			"problemMatcher": []
 		},
 		{
@@ -554,7 +526,6 @@
 				"Watch Client Transpile"
 			],
 			"dependsOrder": "sequence",
-			"inAgents": true,
 			"problemMatcher": []
 		},
 		{
@@ -593,7 +564,6 @@
 			"type": "shell",
 			"command": "npx component-explorer serve -p ./test/componentFixtures/component-explorer.json -vv --kill-if-running",
 			"isBackground": true,
-			"inAgents": true,
 			"problemMatcher": {
 				"owner": "component-explorer",
 				"fileLocation": "absolute",

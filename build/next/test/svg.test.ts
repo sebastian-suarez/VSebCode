@@ -171,7 +171,7 @@ suite('SVG finishing', () => {
 		const examples = [
 			'vs/workbench/contrib/extensions/browser/media/language-icon.svg',
 			'vs/workbench/contrib/extensions/browser/media/loading.svg',
-			'vs/workbench/contrib/welcomeGettingStarted/common/media/multi-file-edits.svg',
+			'vs/workbench/contrib/welcomeGettingStarted/common/media/commandPalette.svg',
 		];
 		const inputs = await Promise.all(examples.map(async file => {
 			const sourcePath = path.join(sourceRoot, file);
