@@ -66,6 +66,5 @@
     "cpu-features": false,
     "@vscode/windows-ca-certs@0.3.4": true,
     "@vscode/windows-process-tree@0.8.0": true
-  },
-  "copilotRuntimeVersion": "1.0.96-2"
+  }
 }
