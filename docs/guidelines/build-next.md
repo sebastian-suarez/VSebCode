@@ -31,7 +31,7 @@ grep -l "serverLicense" out-vscode-reh-web-test/vs/code/browser/workbench/workbe
 
 ### Files
 
-- **[index.ts](index.ts)** - Main build orchestrator
+- **[index.ts](../../build/next/index.ts)** - Main build orchestrator
   - `build-fast` command: Persistent non-watch incremental development build
   - `transpile` command: Fast TS → JS using `esbuild.transform()`
   - `bundle` command: TS → bundled JS using `esbuild.build()`
@@ -39,7 +39,7 @@ grep -l "serverLicense" out-vscode-reh-web-test/vs/code/browser/workbench/workbe
 - **[transpile.ts](../../build/next/transpile.ts)** - Shared full/watch/incremental transpile and copy operations
 - **[resources.ts](../../build/next/resources.ts)** - Curated production resource selection and copied JavaScript minification
 - **[standalone.ts](../../build/next/standalone.ts)** - Unbundled desktop Electron preloads and their source-map publication
-- **[nls-plugin.ts](nls-plugin.ts)** - NLS (localization) esbuild plugin
+- **[nls-plugin.ts](../../build/next/nls-plugin.ts)** - NLS (localization) esbuild plugin
 - **[private-to-property.ts](../../build/next/private-to-property.ts)** - Native private to property transformation
 - **[svg.ts](../../build/next/svg.ts)** - Production-only SVG finishing, independent of the legacy gulp infrastructure
 

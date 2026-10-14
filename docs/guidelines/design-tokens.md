@@ -5,7 +5,7 @@ applyTo: src/vs/**/*.css
 
 # Design tokens for sizing, spacing & radii
 
-> **These tokens are the *moves*, not the reasoning.** They implement the **design philosophy** (Values → Principles → Moves): reach for a token *after* naming the feeling and the principle it serves - a radius is an *elevation tier*, a font is a *type role*, not a number. See the [`design-philosophy` skill](../skills/design-philosophy/SKILL.md) for the full vocabulary, worked examples, and how to give UI feedback in design terms.
+> **These tokens are the *moves*, not the reasoning.** They implement the **design philosophy** (Values → Principles → Moves): reach for a token *after* naming the feeling and the principle it serves - a radius is an *elevation tier*, a font is a *type role*, not a number. See the [`design-philosophy` skill](./design-philosophy-reference.md) for the full vocabulary, worked examples, and how to give UI feedback in design terms.
 
 VS Code ships a design-system **size** ramp. These tokens are registered in [baseSizes.ts](../../src/vs/platform/theme/common/sizes/baseSizes.ts) and emitted as `--vscode-*` CSS variables. **When generating or editing CSS, use the token variable instead of a raw `px` value** wherever a token exists for that value. This keeps new UI visually consistent with the design system.
 

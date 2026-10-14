@@ -173,7 +173,7 @@ Moves are the **concrete mechanics** - the tokens, ramps, and tiers. On their ow
 
 This is the one section that touches implementation - and even here, the goal is to keep the *conversation* about design. Treat the Moves as the **shared vocabulary that lets an agreed design be built consistently**, not as the opening move in a review. Reach for them *after* you've named the feeling and the principle, never instead of it.
 
-The size and font tokens live in [`baseSizes.ts`](../../../src/vs/platform/theme/common/sizes/baseSizes.ts); the full reference is in [design-tokens.instructions.md](../../instructions/design-tokens.instructions.md).
+The size and font tokens live in [`baseSizes.ts`](../../src/vs/platform/theme/common/sizes/baseSizes.ts); the full reference is in [design-tokens.md](./design-tokens.md).
 
 <a id="design-tokens"></a>
 ### Tokens are the source of truth, not the pixel
@@ -253,7 +253,7 @@ Chrome that used to carry a permanent fill now reads transparent at rest and onl
 
 **Write in sentence case.** Labels, buttons, menus, and messages capitalize the first word and proper nouns only - *"Start new session,"* not *"Start New Session."* It's calmer, friendlier, and quicker to scan. Report it as *"this is Title Case - make it sentence case,"* a tone fix, not a reword.
 
-> **⚠️ Known conflict - reconcile later.** This sentence-case guidance is the intended modern-UI direction, but it **contradicts** the repo-wide coding guideline that mandates title-style capitalization for command labels, buttons, and menu items (see [coding-guidelines.instructions.md](../../instructions/coding-guidelines.instructions.md), "UI labels"). The two conventions have not yet been reconciled. Until they are, **follow the existing title-case rule for shipped, non-experimental UI**, and apply sentence case only within surfaces that have explicitly adopted the modern UI direction. TODO: agree a single casing convention and update whichever doc loses.
+> **⚠️ Known conflict - reconcile later.** This sentence-case guidance is the intended modern-UI direction, but it **contradicts** the repo-wide coding guideline that mandates title-style capitalization for command labels, buttons, and menu items (see [coding-guidelines.md](./coding-guidelines.md), "UI labels"). The two conventions have not yet been reconciled. Until they are, **follow the existing title-case rule for shipped, non-experimental UI**, and apply sentence case only within surfaces that have explicitly adopted the modern UI direction. TODO: agree a single casing convention and update whichever doc loses.
 
 - **Serves:** *The interface explains itself* (3).
 
