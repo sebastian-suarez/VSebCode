@@ -536,7 +536,8 @@ export class TerminalNotificationHandler extends Disposable {
 		const hasTitle = title.trim().length > 0;
 		const hasBody = body.trim().length > 0;
 		if (hasTitle && hasBody) {
-			return `${title}: ${body}`;
+			// The composition can bring a `[` of the title next to a `](target)` of the body
+			return sanitizeOsc99MessageText(`${title}: ${body}`);
 		}
 		if (hasTitle) {
 			return title;

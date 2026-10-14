@@ -266,6 +266,13 @@ suite('Terminal OSC 99 notifications', () => {
 		]);
 	});
 
+	test('sanitizes the message composed of a title and a body', () => {
+		handler.handleSequence('i=split:d=0:p=title;[Update');
+		handler.handleSequence('i=split:p=body;](command:workbench.action.reloadWindow)');
+		strictEqual(host.notifications.length, 1);
+		strictEqual(host.notifications[0].message, 'Update: ');
+	});
+
 	test('defers display until done', () => {
 		handler.handleSequence('i=chunk:d=0:p=title;Hello ');
 		strictEqual(host.notifications.length, 0);
