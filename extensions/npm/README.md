@@ -1,6 +1,6 @@
 # Node npm
 
-**Notice:** This extension is bundled with Visual Studio Code. It can be disabled but not uninstalled.
+**Notice:** This extension is bundled with VSebCode. It can be disabled but not uninstalled.
 
 ## Features
 
@@ -10,8 +10,6 @@ This extension supports running npm scripts defined in the `package.json` as [ta
 are treated as build tasks.
 
 To run scripts as tasks, use the **Tasks** menu.
-
-Npm task support is also available in the Agents window. The Npm Script Explorer remains exclusive to the editor window.
 
 For more information about auto detection of Tasks, see the [documentation](https://code.visualstudio.com/Docs/editor/tasks#_task-autodetection).
 
