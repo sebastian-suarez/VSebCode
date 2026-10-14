@@ -238,10 +238,6 @@ export const editorLightBulbAutoFixForeground = registerColor('editorLightBulbAu
 	{ dark: '#75BEFF', light: '#007ACC', hcDark: '#75BEFF', hcLight: '#007ACC' },
 	nls.localize('editorLightBulbAutoFixForeground', "The color used for the lightbulb auto fix actions icon."));
 
-export const editorLightBulbAiForeground = registerColor('editorLightBulbAi.foreground',
-	editorLightBulbForeground,
-	nls.localize('editorLightBulbAiForeground', "The color used for the lightbulb AI icon."));
-
 
 // ----- editor snippet
 

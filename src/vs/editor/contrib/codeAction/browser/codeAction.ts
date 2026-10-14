@@ -52,11 +52,6 @@ class ManagedCodeActionSet extends Disposable implements CodeActionSet {
 	}
 
 	private static codeActionsComparator({ action: a }: CodeActionItem, { action: b }: CodeActionItem): number {
-		if (a.isAI && !b.isAI) {
-			return 1;
-		} else if (!a.isAI && b.isAI) {
-			return -1;
-		}
 		if (isNonEmptyArray(a.diagnostics)) {
 			return isNonEmptyArray(b.diagnostics) ? ManagedCodeActionSet.codeActionsPreferredComparator(a, b) : -1;
 		} else if (isNonEmptyArray(b.diagnostics)) {
@@ -84,14 +79,6 @@ class ManagedCodeActionSet extends Disposable implements CodeActionSet {
 
 	public get hasAutoFix() {
 		return this.validActions.some(({ action: fix }) => !!fix.kind && CodeActionKind.QuickFix.contains(new HierarchicalKind(fix.kind)) && !!fix.isPreferred);
-	}
-
-	public get hasAIFix() {
-		return this.validActions.some(({ action: fix }) => !!fix.isAI);
-	}
-
-	public get allAIFixes() {
-		return this.validActions.every(({ action: fix }) => !!fix.isAI);
 	}
 }
 
@@ -259,7 +246,6 @@ export enum ApplyCodeActionReason {
 	FromProblemsView = 'fromProblemsView',
 	FromCodeActions = 'fromCodeActions',
 	FromAILightbulb = 'fromAILightbulb', // direct invocation when clicking on the AI lightbulb
-	FromProblemsHover = 'fromProblemsHover'
 }
 
 export async function applyCodeAction(

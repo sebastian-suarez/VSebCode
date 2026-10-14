@@ -13,8 +13,6 @@ import { onUnexpectedError } from '../../../../base/common/errors.js';
 import { HierarchicalKind } from '../../../../base/common/hierarchicalKind.js';
 import { Lazy } from '../../../../base/common/lazy.js';
 import { Disposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
-import { derivedOpts, IObservable, observableValue } from '../../../../base/common/observable.js';
-import { Event } from '../../../../base/common/event.js';
 import { localize } from '../../../../nls.js';
 import { IActionListDelegate } from '../../../../platform/actionWidget/browser/actionList.js';
 import { IActionWidgetService } from '../../../../platform/actionWidget/browser/actionWidget.js';
@@ -36,12 +34,11 @@ import { ModelDecorationOptions } from '../../../common/model/textModel.js';
 import { ILanguageFeaturesService } from '../../../common/services/languageFeatures.js';
 import { MessageController } from '../../message/browser/messageController.js';
 import { CodeActionAutoApply, CodeActionFilter, CodeActionItem, CodeActionKind, CodeActionSet, CodeActionTrigger, CodeActionTriggerSource } from '../common/types.js';
-import { ApplyCodeActionReason, applyCodeAction, autoFixCommandId, quickFixCommandId } from './codeAction.js';
+import { ApplyCodeActionReason, applyCodeAction } from './codeAction.js';
 import { CodeActionKeybindingResolver } from './codeActionKeybindingResolver.js';
 import { toMenuItems } from './codeActionMenu.js';
 import { CodeActionModel, CodeActionsState } from './codeActionModel.js';
-import { computeLightBulbInfo, LightBulbInfo, LightBulbWidget } from './lightBulbWidget.js';
-import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
+import { LightBulbWidget } from './lightBulbWidget.js';
 
 interface IActionShowOptions {
 	readonly includeDisabledActions?: boolean;
@@ -80,26 +77,6 @@ export class CodeActionController extends Disposable implements IEditorContribut
 
 	private _onlyLightBulbWithEmptySelection = false;
 
-	private readonly _lightBulbInfoObs = observableValue<LightBulbInfo | undefined>(this, undefined);
-	private readonly _preferredKbLabel = observableValue<string | undefined>(this, undefined);
-	private readonly _quickFixKbLabel = observableValue<string | undefined>(this, undefined);
-
-	private _hasLightBulbStateObservers = false;
-
-	public readonly lightBulbState: IObservable<LightBulbInfo | undefined> = derivedOpts<LightBulbInfo | undefined>({
-		owner: this,
-		onLastObserverRemoved: () => {
-			this._hasLightBulbStateObservers = false;
-			this._model.ignoreLightbulbOff = false;
-		},
-	}, reader => {
-		if (!this._hasLightBulbStateObservers) {
-			this._hasLightBulbStateObservers = true;
-			this._model.ignoreLightbulbOff = true;
-		}
-		return this._lightBulbInfoObs.read(reader);
-	});
-
 	constructor(
 		editor: ICodeEditor,
 		@IMarkerService markerService: IMarkerService,
@@ -112,18 +89,12 @@ export class CodeActionController extends Disposable implements IEditorContribut
 		@IActionWidgetService private readonly _actionWidgetService: IActionWidgetService,
 		@IInstantiationService private readonly _instantiationService: IInstantiationService,
 		@IEditorProgressService private readonly _progressService: IEditorProgressService,
-		@IKeybindingService private readonly _keybindingService: IKeybindingService,
 	) {
 		super();
 
 		this._editor = editor;
 		this._model = this._register(new CodeActionModel(this._editor, languageFeaturesService.codeActionProvider, markerService, contextKeyService, progressService, _configurationService));
 		this._register(this._model.onDidChangeState(newState => this.update(newState)));
-
-		this._register(Event.runAndSubscribe(this._keybindingService.onDidUpdateKeybindings, () => {
-			this._preferredKbLabel.set(this._keybindingService.lookupKeybinding(autoFixCommandId)?.getLabel() ?? undefined, undefined);
-			this._quickFixKbLabel.set(this._keybindingService.lookupKeybinding(quickFixCommandId)?.getLabel() ?? undefined, undefined);
-		}));
 
 		this._lightBulbWidget = new Lazy(() => {
 			const widget = this._editor.getContribution<LightBulbWidget>(LightBulbWidget.ID);
@@ -145,17 +116,6 @@ export class CodeActionController extends Disposable implements IEditorContribut
 	}
 
 	private async showCodeActionsFromLightbulb(actions: CodeActionSet, at: IAnchor | IPosition): Promise<void> {
-		if (actions.allAIFixes && actions.validActions.length === 1) {
-			const actionItem = actions.validActions[0];
-			const command = actionItem.action.command;
-			if (command && command.id === 'inlineChat.start') {
-				if (command.arguments && command.arguments.length >= 1 && command.arguments[0]) {
-					command.arguments[0] = { ...command.arguments[0], autoSend: false };
-				}
-			}
-			await this.applyCodeAction(actionItem, false, false, ApplyCodeActionReason.FromAILightbulb);
-			return;
-		}
 		await this.showCodeActionList(actions, at, { includeDisabledActions: false, fromLightbulb: true });
 	}
 
@@ -206,7 +166,6 @@ export class CodeActionController extends Disposable implements IEditorContribut
 	private async update(newState: CodeActionsState.State): Promise<void> {
 		if (newState.type !== CodeActionsState.Type.Triggered) {
 			this.hideLightBulbWidget();
-			this._lightBulbInfoObs.set(undefined, undefined);
 			return;
 		}
 
@@ -235,7 +194,6 @@ export class CodeActionController extends Disposable implements IEditorContribut
 		}
 
 		this._lightBulbWidget.value?.update(actions, newState.trigger, newState.position);
-		this._lightBulbInfoObs.set(computeLightBulbInfo(actions, newState.trigger, this._preferredKbLabel.get(), this._quickFixKbLabel.get()), undefined);
 
 		if (newState.trigger.type === CodeActionTriggerType.Invoke) {
 			if (newState.trigger.filter?.include) { // Triggered for specific scope

@@ -36,8 +36,6 @@ class CodeActionOracle extends Disposable {
 
 	private readonly _autoTriggerTimer = this._register(new TimeoutTimer());
 
-	ignoreLightbulbOff = false;
-
 	constructor(
 		private readonly _editor: ICodeEditor,
 		private readonly _markerService: IMarkerService,
@@ -76,9 +74,9 @@ class CodeActionOracle extends Disposable {
 			return selection;
 		}
 		const enabled = this._editor.getOption(EditorOption.lightbulb).enabled;
-		if (enabled === ShowLightbulbIconMode.Off && !this.ignoreLightbulbOff) {
+		if (enabled === ShowLightbulbIconMode.Off) {
 			return undefined;
-		} else if (enabled === ShowLightbulbIconMode.Off || enabled === ShowLightbulbIconMode.On) {
+		} else if (enabled === ShowLightbulbIconMode.On) {
 			return selection;
 		} else if (enabled === ShowLightbulbIconMode.OnCode) {
 			const isSelectionEmpty = selection.isEmpty();
@@ -150,8 +148,6 @@ const emptyCodeActionSet = Object.freeze<CodeActionSet>({
 	dispose: () => { },
 	documentation: [],
 	hasAutoFix: false,
-	hasAIFix: false,
-	allAIFixes: false,
 });
 
 
@@ -168,22 +164,6 @@ export class CodeActionModel extends Disposable {
 	private readonly codeActionsDisposable: MutableDisposable<IDisposable> = this._register(new MutableDisposable());
 
 	private _disposed = false;
-
-	private _ignoreLightbulbOff = false;
-
-	set ignoreLightbulbOff(value: boolean) {
-		if (this._ignoreLightbulbOff === value) {
-			return;
-		}
-		this._ignoreLightbulbOff = value;
-		const oracle = this._codeActionOracle.value;
-		if (oracle) {
-			oracle.ignoreLightbulbOff = value;
-			if (value) {
-				oracle.trigger({ type: CodeActionTriggerType.Auto, triggerAction: CodeActionTriggerSource.Default });
-			}
-		}
-	}
 
 	constructor(
 		private readonly _editor: ICodeEditor,
@@ -259,11 +239,10 @@ export class CodeActionModel extends Disposable {
 								return emptyCodeActionSet;
 							}
 
-							// Search for non-AI quickfixes in the current code action set - if AI code actions are the only thing found, continue searching for diagnostics in line.
+							// Search for quickfixes in the current code action set - if none are found, continue searching for diagnostics in line.
 							const foundQuickfix = codeActionSet.validActions?.some(action => {
 								return action.action.kind &&
-									CodeActionKind.QuickFix.contains(new HierarchicalKind(action.action.kind)) &&
-									!action.action.isAI;
+									CodeActionKind.QuickFix.contains(new HierarchicalKind(action.action.kind));
 							});
 							const allMarkers = this._markerService.read({ resource: model.uri });
 							if (foundQuickfix) {
@@ -272,7 +251,7 @@ export class CodeActionModel extends Disposable {
 										action.action.diagnostics = [...allMarkers.filter(marker => marker.relatedInformation)];
 									}
 								}
-								const result = this._setCodeActions({ validActions: codeActionSet.validActions, allActions: allCodeActions, documentation: codeActionSet.documentation, hasAutoFix: codeActionSet.hasAutoFix, hasAIFix: codeActionSet.hasAIFix, allAIFixes: codeActionSet.allAIFixes, dispose: () => codeActionSets.dispose() });
+								const result = this._setCodeActions({ validActions: codeActionSet.validActions, allActions: allCodeActions, documentation: codeActionSet.documentation, hasAutoFix: codeActionSet.hasAutoFix, dispose: () => codeActionSets.dispose() });
 								codeActionSetsOwnedByResult = true;
 								return result;
 							} else if (!foundQuickfix) {
@@ -334,17 +313,13 @@ export class CodeActionModel extends Disposable {
 											return -1;
 										} else if (!a.action.isPreferred && b.action.isPreferred) {
 											return 1;
-										} else if (a.action.isAI && !b.action.isAI) {
-											return 1;
-										} else if (!a.action.isAI && b.action.isAI) {
-											return -1;
 										} else {
 											return 0;
 										}
 									});
 
 									// Only retriggers if actually found quickfix on the same line as cursor
-									const result = this._setCodeActions({ validActions: filteredActions, allActions: allCodeActions, documentation: codeActionSet.documentation, hasAutoFix: codeActionSet.hasAutoFix, hasAIFix: codeActionSet.hasAIFix, allAIFixes: codeActionSet.allAIFixes, dispose: () => codeActionSets.dispose() });
+									const result = this._setCodeActions({ validActions: filteredActions, allActions: allCodeActions, documentation: codeActionSet.documentation, hasAutoFix: codeActionSet.hasAutoFix, dispose: () => codeActionSets.dispose() });
 									codeActionSetsOwnedByResult = true;
 									return result;
 								}
@@ -397,7 +372,6 @@ export class CodeActionModel extends Disposable {
 					}, 500);
 				}
 			}, undefined);
-			oracle.ignoreLightbulbOff = this._ignoreLightbulbOff;
 			this._codeActionOracle.value = oracle;
 			this._codeActionOracle.value.trigger({ type: CodeActionTriggerType.Auto, triggerAction: CodeActionTriggerSource.Default });
 		} else {

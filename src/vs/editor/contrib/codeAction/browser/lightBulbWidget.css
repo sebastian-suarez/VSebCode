@@ -13,18 +13,12 @@
 	cursor: pointer;
 }
 
-.monaco-editor .lightBulbWidget.codicon-light-bulb,
-.monaco-editor .lightBulbWidget.codicon-lightbulb-sparkle {
+.monaco-editor .lightBulbWidget.codicon-light-bulb {
 	color: var(--vscode-editorLightBulb-foreground);
 }
 
-.monaco-editor .lightBulbWidget.codicon-lightbulb-autofix,
-.monaco-editor .lightBulbWidget.codicon-lightbulb-sparkle-autofix {
+.monaco-editor .lightBulbWidget.codicon-lightbulb-autofix {
 	color: var(--vscode-editorLightBulbAutoFix-foreground, var(--vscode-editorLightBulb-foreground));
-}
-
-.monaco-editor .lightBulbWidget.codicon-sparkle-filled {
-	color: var(--vscode-editorLightBulbAi-foreground, var(--vscode-icon-foreground));
 }
 
 .monaco-editor .lightBulbWidget:before {
@@ -50,16 +44,10 @@
 	cursor: pointer;
 }
 
-.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb,
-.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb-sparkle {
+.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb {
 	color: var(--vscode-editorLightBulb-foreground);
 }
 
-.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb-auto-fix,
-.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb-aifix-auto-fix {
+.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb-auto-fix {
 	color: var(--vscode-editorLightBulbAutoFix-foreground, var(--vscode-editorLightBulb-foreground));
-}
-
-.monaco-editor .glyph-margin-widgets .cgmr.codicon-gutter-lightbulb-sparkle-filled {
-	color: var(--vscode-editorLightBulbAi-foreground, var(--vscode-icon-foreground));
 }
