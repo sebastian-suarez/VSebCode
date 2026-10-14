@@ -1,5 +1,3 @@
-# VS Code Agents Instructions
+# VSebCode Agent Instructions
 
-This file provides instructions for AI coding agents working with the VS Code codebase.
-
-For detailed project overview, architecture, coding guidelines, and validation steps, see the [Copilot Instructions](.github/copilot-instructions.md).
+Guidance for AI coding agents working in this repository lives in [CLAUDE.md](CLAUDE.md): what the fork removes and keeps, the commands, the architecture notes and the engineering guides under `docs/guidelines/`.
