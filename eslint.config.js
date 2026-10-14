@@ -1771,8 +1771,6 @@ export default defineConfig(
 						'vs/base/parts/*/~',
 						'vs/platform/*/~',
 						'tas-client', // node module allowed even in /common/
-						'@microsoft/1ds-core-js', // node module allowed even in /common/
-						'@microsoft/1ds-post-js', // node module allowed even in /common/
 						'@xterm/headless', // node module allowed even in /common/
 						'@vscode/fs-copyfile', // used by agentHost for file copying after worktree creation
 						'@vscode/tree-sitter-wasm', // used by agentHost for command auto-approval
@@ -1805,8 +1803,6 @@ export default defineConfig(
 						'vs/base/parts/*/~',
 						'vs/platform/*/~',
 						'tas-client', // node module allowed even in /common/
-						'@microsoft/1ds-core-js', // node module allowed even in /common/
-						'@microsoft/1ds-post-js', // node module allowed even in /common/
 						'@xterm/headless', // node module allowed even in /common/
 						'@vscode/tree-sitter-wasm' // used by agentHost for command auto-approval
 					]

@@ -20,13 +20,6 @@ fsevents/test/**
 @vscode/spdlog/*.yml
 !@vscode/spdlog/build/Release/*.node
 
-@vscode/deviceid/binding.gyp
-@vscode/deviceid/build/**
-@vscode/deviceid/deps/**
-@vscode/deviceid/src/**
-@vscode/deviceid/test/**
-@vscode/deviceid/*.yml
-!@vscode/deviceid/build/Release/*.node
 
 @vscode/fs-copyfile/binding.gyp
 @vscode/fs-copyfile/build/**
