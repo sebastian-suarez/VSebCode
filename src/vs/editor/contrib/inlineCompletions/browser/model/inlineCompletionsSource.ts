@@ -13,10 +13,9 @@ import { cloneAndChange } from '../../../../../base/common/objects.js';
 import { derived, IObservable, IObservableWithChange, ITransaction, observableValue, recordChangesLazy, runOnChange, transaction } from '../../../../../base/common/observable.js';
 // eslint-disable-next-line local/code-no-deep-import-of-internal
 import { observableReducerSettable } from '../../../../../base/common/observableInternal/experimental/reducer.js';
-import { isDefined, isObject } from '../../../../../base/common/types.js';
+import { isDefined } from '../../../../../base/common/types.js';
 import { IConfigurationService } from '../../../../../platform/configuration/common/configuration.js';
 import { IContextKeyService } from '../../../../../platform/contextkey/common/contextkey.js';
-import { DataChannelForwardingTelemetryService, forwardToChannelIf, isCopilotLikeExtension } from '../../../../../platform/dataChannel/browser/forwardingTelemetryService.js';
 import { IInstantiationService } from '../../../../../platform/instantiation/common/instantiation.js';
 import { ILogService } from '../../../../../platform/log/common/log.js';
 import { observableConfigValue } from '../../../../../platform/observable/common/platformObservableUtils.js';
@@ -27,16 +26,13 @@ import { Command, InlineCompletionEndOfLifeReasonKind, InlineCompletionTriggerKi
 import { ILanguageConfigurationService } from '../../../../common/languages/languageConfigurationRegistry.js';
 import { ITextModel } from '../../../../common/model.js';
 import { offsetEditFromContentChanges } from '../../../../common/model/textModelStringEdit.js';
-import { isCompletionsEnabledFromObject } from '../../../../common/services/completionsEnablement.js';
 import { IFeatureDebounceInformation } from '../../../../common/services/languageFeatureDebounce.js';
 import { ITextModelService } from '../../../../common/services/resolverService.js';
 import { IModelContentChangedEvent } from '../../../../common/textModelEvents.js';
 import { formatRecordableLogEntry, IRecordableEditorLogEntry, IRecordableLogEntry, StructuredLogger } from '../structuredLogger.js';
-import { InlineCompletionEndOfLifeEvent, sendInlineCompletionsEndOfLifeTelemetry } from '../telemetry.js';
 import { wait } from '../utils.js';
 import { InlineSuggestionIdentity, InlineSuggestionItem } from './inlineSuggestionItem.js';
 import { InlineCompletionContextWithoutUuid, InlineSuggestRequestInfo, provideInlineCompletions, runWhenCancelled } from './provideInlineCompletions.js';
-import { RenameSymbolProcessor } from './renameSymbolProcessor.js';
 import { TextModelValueReference } from './textModelValueReference.js';
 
 export class InlineCompletionsSource extends Disposable {
@@ -45,7 +41,6 @@ export class InlineCompletionsSource extends Disposable {
 	private readonly _updateOperation = this._register(new MutableDisposable<UpdateOperation>());
 
 	private readonly _loggingEnabled;
-	private readonly _sendRequestData;
 
 	private readonly _structuredFetchLogger;
 
@@ -80,17 +75,13 @@ export class InlineCompletionsSource extends Disposable {
 	public readonly inlineCompletions = this._state.map(this, v => v.inlineCompletions);
 	public readonly suggestWidgetInlineCompletions = this._state.map(this, v => v.suggestWidgetInlineCompletions);
 
-	private readonly _renameProcessor: RenameSymbolProcessor;
-	private readonly _dataChannelTelemetryService: DataChannelForwardingTelemetryService;
 
-	private _completionsEnabled: Record<string, boolean> | undefined = undefined;
 
 	constructor(
 		private readonly _textModel: ITextModel,
 		private readonly _versionId: IObservableWithChange<number | null, IModelContentChangedEvent | undefined>,
 		private readonly _debounceValue: IFeatureDebounceInformation,
 		private readonly _cursorPosition: IObservable<Position>,
-		completionsEnablementSetting: string | undefined,
 		@ILanguageConfigurationService private readonly _languageConfigurationService: ILanguageConfigurationService,
 		@ILogService private readonly _logService: ILogService,
 		@IConfigurationService private readonly _configurationService: IConfigurationService,
@@ -99,9 +90,7 @@ export class InlineCompletionsSource extends Disposable {
 		@ITextModelService private readonly _textModelService: ITextModelService,
 	) {
 		super();
-		this._dataChannelTelemetryService = this._instantiationService.createInstance(DataChannelForwardingTelemetryService);
 		this._loggingEnabled = observableConfigValue('editor.inlineSuggest.logFetch', false, this._configurationService).recomputeInitiallyAndOnChange(this._store);
-		this._sendRequestData = observableConfigValue('editor.inlineSuggest.emptyResponseInformation', true, this._configurationService).recomputeInitiallyAndOnChange(this._store);
 		this._structuredFetchLogger = this._register(this._instantiationService.createInstance(StructuredLogger.cast<
 			{ kind: 'start'; requestId: number; context: unknown } & IRecordableEditorLogEntry
 			| { kind: 'end'; error: unknown; durationMs: number; result: unknown; requestId: number } & IRecordableLogEntry
@@ -109,29 +98,9 @@ export class InlineCompletionsSource extends Disposable {
 			'editor.inlineSuggest.logFetch.commandId'
 		));
 
-		this._renameProcessor = this._store.add(this._instantiationService.createInstance(RenameSymbolProcessor));
-
 		this.clearOperationOnTextModelChange.recomputeInitiallyAndOnChange(this._store);
 
-		if (completionsEnablementSetting) {
-			this._updateCompletionsEnablement(completionsEnablementSetting);
-			this._register(this._configurationService.onDidChangeConfiguration(e => {
-				if (e.affectsConfiguration(completionsEnablementSetting)) {
-					this._updateCompletionsEnablement(completionsEnablementSetting);
-				}
-			}));
-		}
-
 		this._state.recomputeInitiallyAndOnChange(this._store);
-	}
-
-	private _updateCompletionsEnablement(enalementSetting: string) {
-		const result = this._configurationService.getValue<Record<string, boolean>>(enalementSetting);
-		if (!isObject(result)) {
-			this._completionsEnabled = undefined;
-		} else {
-			this._completionsEnabled = result;
-		}
 	}
 
 	public readonly clearOperationOnTextModelChange = derived(this, reader => {
@@ -298,11 +267,7 @@ export class InlineCompletionsSource extends Disposable {
 
 				providerSuggestions.forEach(s => s.addPerformanceMarker('providersResolved'));
 
-				const suggestions: InlineSuggestionItem[] = await Promise.all(providerSuggestions.map(async s => {
-					return this._renameProcessor.proposeRenameRefactoring(this._textModel, s, context);
-				}));
-
-				suggestions.forEach(s => s.addPerformanceMarker('renameProcessed'));
+				const suggestions: InlineSuggestionItem[] = providerSuggestions;
 
 				providerResult.cancelAndDispose({ kind: 'lostRace' });
 
@@ -416,7 +381,6 @@ export class InlineCompletionsSource extends Disposable {
 			} finally {
 				store.dispose();
 				decreaseLoadingCount();
-				this._sendInlineCompletionsRequestTelemetry(requestResponseInfo);
 			}
 
 			return true;
@@ -476,82 +440,6 @@ export class InlineCompletionsSource extends Disposable {
 		}, tx);
 		s.inlineCompletions.dispose();
 		s.suggestWidgetInlineCompletions.dispose();
-	}
-
-	private _sendInlineCompletionsRequestTelemetry(
-		requestResponseInfo: RequestResponseData
-	): void {
-		if (!this._sendRequestData.get() && !this._contextKeyService.getContextKeyValue<boolean>('isRunningUnificationExperiment')) {
-			return;
-		}
-
-		if (requestResponseInfo.requestUuid === undefined || requestResponseInfo.hasProducedSuggestion) {
-			return;
-		}
-
-
-		if (!isCompletionsEnabledFromObject(this._completionsEnabled, this._textModel.getLanguageId())) {
-			return;
-		}
-
-		if (!requestResponseInfo.providers.some(p => isCopilotLikeExtension(p.providerId?.extensionId))) {
-			return;
-		}
-
-		const emptyEndOfLifeEvent: InlineCompletionEndOfLifeEvent = {
-			opportunityId: requestResponseInfo.requestUuid,
-			noSuggestionReason: requestResponseInfo.noSuggestionReason ?? 'unknown',
-			extensionId: 'vscode-core',
-			extensionVersion: '0.0.0',
-			groupId: 'empty',
-			shown: false,
-			skuPlan: requestResponseInfo.requestInfo.sku?.plan,
-			skuType: requestResponseInfo.requestInfo.sku?.type,
-			editorType: requestResponseInfo.requestInfo.editorType,
-			requestReason: requestResponseInfo.requestInfo.reason,
-			typingInterval: requestResponseInfo.requestInfo.typingInterval,
-			typingIntervalCharacterCount: requestResponseInfo.requestInfo.typingIntervalCharacterCount,
-			languageId: requestResponseInfo.requestInfo.languageId,
-			selectedSuggestionInfo: !!requestResponseInfo.context.selectedSuggestionInfo,
-			availableProviders: requestResponseInfo.providers.map(p => p.providerId?.toString()).filter(isDefined).join(','),
-			...forwardToChannelIf(requestResponseInfo.providers.some(p => isCopilotLikeExtension(p.providerId?.extensionId))),
-			timeUntilProviderRequest: undefined,
-			timeUntilProviderResponse: undefined,
-			viewKind: undefined,
-			preceeded: undefined,
-			superseded: undefined,
-			reason: undefined,
-			acceptedAlternativeAction: undefined,
-			correlationId: undefined,
-			shownDuration: undefined,
-			shownDurationUncollapsed: undefined,
-			timeUntilShown: undefined,
-			partiallyAccepted: undefined,
-			partiallyAcceptedCountSinceOriginal: undefined,
-			partiallyAcceptedRatioSinceOriginal: undefined,
-			partiallyAcceptedCharactersSinceOriginal: undefined,
-			cursorColumnDistance: undefined,
-			cursorLineDistance: undefined,
-			lineCountOriginal: undefined,
-			lineCountModified: undefined,
-			characterCountOriginal: undefined,
-			characterCountModified: undefined,
-			disjointReplacements: undefined,
-			sameShapeReplacements: undefined,
-			longDistanceHintVisible: undefined,
-			longDistanceHintDistance: undefined,
-			isForAnotherDocument: undefined,
-			notShownReason: undefined,
-			renameCreated: false,
-			renameDuration: undefined,
-			renameTimedOut: false,
-			renameDroppedOtherEdits: undefined,
-			renameDroppedRenameEdits: undefined,
-			performanceMarkers: undefined,
-			editKind: undefined,
-		};
-
-		sendInlineCompletionsEndOfLifeTelemetry(this._dataChannelTelemetryService, emptyEndOfLifeEvent);
 	}
 
 	public clearSuggestWidgetInlineCompletions(tx: ITransaction): void {

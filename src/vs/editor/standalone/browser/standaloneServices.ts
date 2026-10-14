@@ -16,7 +16,6 @@ import * as dom from '../../../base/browser/dom.js';
 import { StandardKeyboardEvent } from '../../../base/browser/keyboardEvent.js';
 import { renderAsPlaintext } from '../../../base/browser/markdownRenderer.js';
 import { mainWindow } from '../../../base/browser/window.js';
-import { IDefaultAccount, IDefaultAccountAuthenticationProvider, IPolicyData } from '../../../base/common/defaultAccount.js';
 import { onUnexpectedError } from '../../../base/common/errors.js';
 import { Emitter, Event, IValueWithChangeEvent, ValueWithChangeEvent } from '../../../base/common/event.js';
 import { IMarkdownString } from '../../../base/common/htmlContent.js';
@@ -28,24 +27,18 @@ import { basename } from '../../../base/common/resources.js';
 import Severity from '../../../base/common/severity.js';
 import * as strings from '../../../base/common/strings.js';
 import { URI } from '../../../base/common/uri.js';
-import { AccessibilityService } from '../../../platform/accessibility/browser/accessibilityService.js';
-import { IAccessibilityService } from '../../../platform/accessibility/common/accessibility.js';
 import { AccessibilityModality, AccessibilitySignal, IAccessibilitySignalService, Sound } from '../../../platform/accessibilitySignal/browser/accessibilitySignalService.js';
 import { IMenuService } from '../../../platform/actions/common/actions.js';
 import { MenuService } from '../../../platform/actions/common/menuService.js';
-import { BrowserClipboardService } from '../../../platform/clipboard/browser/clipboardService.js';
-import { IClipboardService } from '../../../platform/clipboard/common/clipboardService.js';
 import { CommandsRegistry, ICommandEvent, ICommandHandler, ICommandService } from '../../../platform/commands/common/commands.js';
 import { ConfigurationTarget, IConfigurationChangeEvent, IConfigurationData, IConfigurationModel, IConfigurationOverrides, IConfigurationService, IConfigurationValue } from '../../../platform/configuration/common/configuration.js';
 import { Configuration, ConfigurationChangeEvent, ConfigurationModel } from '../../../platform/configuration/common/configurationModels.js';
 import { DefaultConfiguration } from '../../../platform/configuration/common/configurations.js';
-import { ContextKeyService } from '../../../platform/contextkey/browser/contextKeyService.js';
 import { ContextKeyExpression, IContextKeyService } from '../../../platform/contextkey/common/contextkey.js';
 import { ContextMenuService } from '../../../platform/contextview/browser/contextMenuService.js';
 import { IContextMenuService, IContextViewDelegate, IContextViewService, IOpenContextView } from '../../../platform/contextview/browser/contextView.js';
 import { ContextViewService } from '../../../platform/contextview/browser/contextViewService.js';
 import { IDataChannelService, NullDataChannelService } from '../../../platform/dataChannel/common/dataChannel.js';
-import { IDefaultAccountService, MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED } from '../../../platform/defaultAccount/common/defaultAccount.js';
 import { IConfirmation, IConfirmationResult, IDialogService, IInputResult, IPrompt, IPromptBaseButton, IPromptResult, IPromptResultWithCancel, IPromptWithCustomCancel, IPromptWithDefaultCancel } from '../../../platform/dialogs/common/dialogs.js';
 import { ExtensionKind, IEnvironmentService, IExtensionHostDebugParams } from '../../../platform/environment/common/environment.js';
 import { SyncDescriptor } from '../../../platform/instantiation/common/descriptors.js';
@@ -61,26 +54,18 @@ import { ResolvedKeybindingItem } from '../../../platform/keybinding/common/reso
 import { USLayoutResolvedKeybinding } from '../../../platform/keybinding/common/usLayoutResolvedKeybinding.js';
 import { IFormatterChangeEvent, ILabelService, ResourceLabelFormatter, Verbosity } from '../../../platform/label/common/label.js';
 import { ILayoutService } from '../../../platform/layout/browser/layoutService.js';
-import { IListService, ListService } from '../../../platform/list/browser/listService.js';
 import { ConsoleLogger, ILogService, ILoggerService, NullLoggerService } from '../../../platform/log/common/log.js';
 import { LogService } from '../../../platform/log/common/logService.js';
-import { IMarkerService } from '../../../platform/markers/common/markers.js';
-import { MarkerService } from '../../../platform/markers/common/markerService.js';
 import { INotification, INotificationHandle, INotificationService, INotificationSource, INotificationSourceFilter, IPromptChoice, IPromptOptions, IStatusHandle, IStatusMessageOptions, NoOpNotification, NotificationsFilter } from '../../../platform/notification/common/notification.js';
-import { IOpenerService } from '../../../platform/opener/common/opener.js';
 import { IEditorProgressService, IProgress, IProgressCompositeOptions, IProgressDialogOptions, IProgressNotificationOptions, IProgressOptions, IProgressRunner, IProgressService, IProgressStep, IProgressWindowOptions } from '../../../platform/progress/common/progress.js';
-import { IQuickInputService } from '../../../platform/quickinput/common/quickInput.js';
-import { IStorageService, InMemoryStorageService } from '../../../platform/storage/common/storage.js';
 import { ITelemetryService, TelemetryLevel } from '../../../platform/telemetry/common/telemetry.js';
 import { IUserInteractionService } from '../../../platform/userInteraction/browser/userInteractionService.js';
 import { UserInteractionService } from '../../../platform/userInteraction/browser/userInteractionServiceImpl.js';
-import { IWebWorkerService } from '../../../platform/webWorker/browser/webWorkerService.js';
 import { ISingleFolderWorkspaceIdentifier, IWorkspace, IWorkspaceContextService, IWorkspaceFolder, IWorkspaceFoldersChangeEvent, IWorkspaceFoldersWillChangeEvent, IWorkspaceIdentifier, STANDALONE_EDITOR_WORKSPACE_ID, WorkbenchState, WorkspaceFolder } from '../../../platform/workspace/common/workspace.js';
 import { IWorkspaceTrustManagementService, IWorkspaceTrustTransitionParticipant, IWorkspaceTrustUriInfo } from '../../../platform/workspace/common/workspaceTrust.js';
 import { ICodeEditor, IDiffEditor } from '../../browser/editorBrowser.js';
 import { IBulkEditOptions, IBulkEditResult, IBulkEditService, ResourceEdit, ResourceTextEdit } from '../../browser/services/bulkEditService.js';
 import { ICodeEditorService } from '../../browser/services/codeEditorService.js';
-import { OpenerService } from '../../browser/services/openerService.js';
 import { IRenameSymbolTrackerService, NullRenameSymbolTrackerService } from '../../browser/services/renameSymbolTrackerService.js';
 import { isDiffEditorConfigurationKey, isEditorConfigurationKey } from '../../common/config/editorConfigurationSchema.js';
 import { EditorOption } from '../../common/config/editorOptions.js';
@@ -92,20 +77,33 @@ import { WorkspaceEdit } from '../../common/languages.js';
 import { ILanguageService } from '../../common/languages/language.js';
 import { ITextModel } from '../../common/model.js';
 import { LanguageService } from '../../common/services/languageService.js';
-import { IMarkerDecorationsService } from '../../common/services/markerDecorations.js';
-import { MarkerDecorationsService } from '../../common/services/markerDecorationsService.js';
 import { IModelService } from '../../common/services/model.js';
-import { ModelService } from '../../common/services/modelService.js';
-import { ITextModelService } from '../../common/services/resolverService.js';
 import { ITextResourceConfigurationChangeEvent, ITextResourceConfigurationService, ITextResourcePropertiesService } from '../../common/services/textResourceConfiguration.js';
 import { ITreeSitterLibraryService } from '../../common/services/treeSitter/treeSitterLibraryService.js';
 import { StandaloneServicesNLS } from '../../common/standaloneStrings.js';
+import { StandaloneTreeSitterLibraryService } from './standaloneTreeSitterLibraryService.js';
+import { AccessibilityService } from '../../../platform/accessibility/browser/accessibilityService.js';
+import { IAccessibilityService } from '../../../platform/accessibility/common/accessibility.js';
+import { BrowserClipboardService } from '../../../platform/clipboard/browser/clipboardService.js';
+import { IClipboardService } from '../../../platform/clipboard/common/clipboardService.js';
+import { ContextKeyService } from '../../../platform/contextkey/browser/contextKeyService.js';
+import { IListService, ListService } from '../../../platform/list/browser/listService.js';
+import { IMarkerService } from '../../../platform/markers/common/markers.js';
+import { MarkerService } from '../../../platform/markers/common/markerService.js';
+import { IOpenerService } from '../../../platform/opener/common/opener.js';
+import { IQuickInputService } from '../../../platform/quickinput/common/quickInput.js';
+import { IStorageService, InMemoryStorageService } from '../../../platform/storage/common/storage.js';
+import { IWebWorkerService } from '../../../platform/webWorker/browser/webWorkerService.js';
+import { OpenerService } from '../../browser/services/openerService.js';
+import { IMarkerDecorationsService } from '../../common/services/markerDecorations.js';
+import { MarkerDecorationsService } from '../../common/services/markerDecorationsService.js';
+import { ModelService } from '../../common/services/modelService.js';
+import { ITextModelService } from '../../common/services/resolverService.js';
 import { IStandaloneThemeService } from '../common/standaloneTheme.js';
 import { InMemoryTextModelService } from '../../common/services/inMemoryTextModelService.js';
 import { StandaloneQuickInputService } from './quickInput/standaloneQuickInputService.js';
 import { StandaloneWebWorkerService } from './services/standaloneWebWorkerService.js';
 import { StandaloneThemeService } from './standaloneThemeService.js';
-import { StandaloneTreeSitterLibraryService } from './standaloneTreeSitterLibraryService.js';
 
 class StandaloneEditorProgressService implements IEditorProgressService {
 	declare readonly _serviceBrand: undefined;
@@ -166,7 +164,6 @@ class StandaloneEnvironmentService implements IEnvironmentService {
 	readonly isBuilt: boolean = false;
 	readonly disableTelemetry: boolean = false;
 	readonly serviceMachineIdResource: URI = URI.from({ scheme: 'monaco', authority: 'serviceMachineIdResource' });
-	readonly agentSessionsWorkspace: URI = URI.from({ scheme: 'monaco', authority: 'agentSessionsWorkspace' });
 	readonly policyFile?: URI | undefined = undefined;
 }
 
@@ -971,9 +968,6 @@ class StandaloneWorkspaceTrustManagementService implements IWorkspaceTrustManage
 	async setUrisTrust(uri: URI[], trusted: boolean): Promise<void> {
 		// noop
 	}
-	registerTrustedAuthority(scheme: string, authority: string): IDisposable {
-		return Disposable.None;
-	}
 	getTrustedUris(): URI[] {
 		return [];
 	}
@@ -1046,52 +1040,6 @@ class StandaloneAccessbilitySignalService implements IAccessibilitySignalService
 	}
 }
 
-class StandaloneDefaultAccountService implements IDefaultAccountService {
-	declare readonly _serviceBrand: undefined;
-
-	readonly onDidChangeDefaultAccount: Event<IDefaultAccount | null> = Event.None;
-	readonly onDidChangePolicyData: Event<IPolicyData | null> = Event.None;
-	readonly policyData: IPolicyData | null = null;
-	readonly currentDefaultAccount: IDefaultAccount | null = null;
-	readonly copilotTokenInfo = null;
-	readonly onDidChangeCopilotTokenInfo: Event<null> = Event.None;
-	readonly managedSettingsFetchStatus: null = null;
-	readonly managedSettingsFetchedAt: null = null;
-	readonly managedSettingsRawResponse: unknown = null;
-	readonly managedSettingsCompatibilityError = null;
-	readonly onDidChangeManagedSettingsCompatibilityError = Event.None;
-	readonly managedSettingsFreshness = MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED;
-	readonly onDidChangeManagedSettingsFreshness = Event.None;
-
-	async getDefaultAccount(): Promise<IDefaultAccount | null> {
-		return null;
-	}
-
-	setDefaultAccountProvider(): void {
-		// no-op
-	}
-
-	async refresh(): Promise<IDefaultAccount | null> {
-		return null;
-	}
-
-	getDefaultAccountAuthenticationProvider(): IDefaultAccountAuthenticationProvider {
-		return { id: 'default', name: 'Default', enterprise: false };
-	}
-
-	resolveGitHubUrl(path: string): string {
-		return `https://github.com/${path}`;
-	}
-
-	async signIn(): Promise<IDefaultAccount | null> {
-		return null;
-	}
-
-	async signOut(): Promise<void> {
-		// no-op
-	}
-}
-
 export interface IEditorOverrideServices {
 	[index: string]: unknown;
 }
@@ -1134,7 +1082,6 @@ registerSingleton(IAccessibilitySignalService, StandaloneAccessbilitySignalServi
 registerSingleton(ITreeSitterLibraryService, StandaloneTreeSitterLibraryService, InstantiationType.Eager);
 registerSingleton(ILoggerService, NullLoggerService, InstantiationType.Eager);
 registerSingleton(IDataChannelService, NullDataChannelService, InstantiationType.Eager);
-registerSingleton(IDefaultAccountService, StandaloneDefaultAccountService, InstantiationType.Eager);
 registerSingleton(IRenameSymbolTrackerService, NullRenameSymbolTrackerService, InstantiationType.Eager);
 registerSingleton(IUserInteractionService, UserInteractionService, InstantiationType.Eager);
 

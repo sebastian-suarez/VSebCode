@@ -14,7 +14,6 @@ import { buildHistoryFromTasks, renderSwimlanes } from '../../../../../base/test
 import { runWithFakedTimers } from '../../../../../base/test/common/timeTravelScheduler.js';
 import { createTraceLogger, ITraceLogEntry, ITraceLogger } from '../../../../../base/test/common/virtualScheduling/index.js';
 import { IAccessibilitySignalService } from '../../../../../platform/accessibilitySignal/browser/accessibilitySignalService.js';
-import { IDefaultAccountService, MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED } from '../../../../../platform/defaultAccount/common/defaultAccount.js';
 import { SyncDescriptor } from '../../../../../platform/instantiation/common/descriptors.js';
 import { ServiceCollection } from '../../../../../platform/instantiation/common/serviceCollection.js';
 import { TestInstantiationService } from '../../../../../platform/instantiation/test/common/instantiationServiceMock.js';
@@ -287,29 +286,6 @@ export async function withAsyncTestCodeEditorAndInlineCompletionsModel<T>(
 					_serviceBrand: undefined,
 				});
 				options.serviceCollection.set(ITextModelService, new SyncDescriptor(MockTextModelService));
-				options.serviceCollection.set(IDefaultAccountService, {
-					_serviceBrand: undefined,
-					onDidChangeDefaultAccount: Event.None,
-					onDidChangePolicyData: Event.None,
-					policyData: null,
-					currentDefaultAccount: null,
-					copilotTokenInfo: null,
-					onDidChangeCopilotTokenInfo: Event.None,
-					managedSettingsFetchStatus: null,
-					managedSettingsFetchedAt: null,
-					managedSettingsRawResponse: null,
-					managedSettingsCompatibilityError: null,
-					onDidChangeManagedSettingsCompatibilityError: Event.None,
-					managedSettingsFreshness: MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED,
-					onDidChangeManagedSettingsFreshness: Event.None,
-					getDefaultAccount: async () => null,
-					setDefaultAccountProvider: () => { },
-					getDefaultAccountAuthenticationProvider: () => { return { id: 'mockProvider', name: 'Mock Provider', enterprise: false }; },
-					resolveGitHubUrl: (path: string) => `https://github.com/${path}`,
-					refresh: async () => { return null; },
-					signIn: async () => { return null; },
-					signOut: async () => { },
-				});
 				options.serviceCollection.set(IRenameSymbolTrackerService, new NullRenameSymbolTrackerService());
 
 				const d = languageFeaturesService.inlineCompletionsProvider.register({ pattern: '**' }, options.provider);

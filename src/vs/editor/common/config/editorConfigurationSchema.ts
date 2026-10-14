@@ -74,7 +74,6 @@ const editorConfiguration: IConfigurationNode = {
 				nls.localize('wordBasedSuggestions.allDocuments', 'Suggest words from all open documents.'),
 			],
 			description: nls.localize('wordBasedSuggestions', "Controls whether completions should be computed based on words in the document and from which documents they are computed."),
-			experiment: { mode: 'auto' },
 		},
 		'editor.semanticHighlighting.enabled': {
 			enum: [true, false, 'configuredByTheme'],
@@ -118,45 +117,30 @@ const editorConfiguration: IConfigurationNode = {
 			default: false,
 			markdownDescription: nls.localize('editor.experimental.treeSitterTelemetry', "Controls whether tree sitter parsing should be turned on and telemetry collected. Setting `#editor.experimental.preferTreeSitter#` for specific languages will take precedence."),
 			tags: ['experimental'],
-			experiment: {
-				mode: 'auto'
-			}
 		},
 		'editor.experimental.preferTreeSitter.css': {
 			type: 'boolean',
 			default: false,
 			markdownDescription: nls.localize('editor.experimental.preferTreeSitter.css', "Controls whether tree sitter parsing should be turned on for css. This will take precedence over `#editor.experimental.treeSitterTelemetry#` for css."),
 			tags: ['experimental'],
-			experiment: {
-				mode: 'auto'
-			}
 		},
 		'editor.experimental.preferTreeSitter.typescript': {
 			type: 'boolean',
 			default: false,
 			markdownDescription: nls.localize('editor.experimental.preferTreeSitter.typescript', "Controls whether tree sitter parsing should be turned on for typescript. This will take precedence over `#editor.experimental.treeSitterTelemetry#` for typescript."),
 			tags: ['experimental'],
-			experiment: {
-				mode: 'auto'
-			}
 		},
 		'editor.experimental.preferTreeSitter.ini': {
 			type: 'boolean',
 			default: false,
 			markdownDescription: nls.localize('editor.experimental.preferTreeSitter.ini', "Controls whether tree sitter parsing should be turned on for ini. This will take precedence over `#editor.experimental.treeSitterTelemetry#` for ini."),
 			tags: ['experimental'],
-			experiment: {
-				mode: 'auto'
-			}
 		},
 		'editor.experimental.preferTreeSitter.regex': {
 			type: 'boolean',
 			default: false,
 			markdownDescription: nls.localize('editor.experimental.preferTreeSitter.regex', "Controls whether tree sitter parsing should be turned on for regex. This will take precedence over `#editor.experimental.treeSitterTelemetry#` for regex."),
 			tags: ['experimental'],
-			experiment: {
-				mode: 'auto'
-			}
 		},
 		'editor.language.brackets': {
 			type: ['array', 'null'],
@@ -208,7 +192,6 @@ const editorConfiguration: IConfigurationNode = {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.renderSideBySide,
 			description: nls.localize('sideBySide', "Controls whether the diff editor shows the diff side by side or inline."),
-			agentsWindow: { default: true },
 		},
 		'diffEditor.renderSideBySideInlineBreakpoint': {
 			type: 'number',
@@ -219,7 +202,6 @@ const editorConfiguration: IConfigurationNode = {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.useInlineViewWhenSpaceIsLimited,
 			description: nls.localize('useInlineViewWhenSpaceIsLimited', "If enabled and the editor width is too small, the inline view is used."),
-			agentsWindow: { default: true },
 		},
 		'diffEditor.hideOriginalLineNumbers': {
 			type: ['boolean', 'null'],
@@ -230,13 +212,11 @@ const editorConfiguration: IConfigurationNode = {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.renderMarginRevertIcon,
 			description: nls.localize('renderMarginRevertIcon', "When enabled, the diff editor shows arrows in its glyph margin to revert changes."),
-			agentsWindow: { default: false },
 		},
 		'diffEditor.renderGutterMenu': {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.renderGutterMenu,
 			description: nls.localize('renderGutterMenu', "When enabled, the diff editor shows a special gutter for revert and stage actions."),
-			agentsWindow: { default: false },
 		},
 		'diffEditor.ignoreTrimWhitespace': {
 			type: 'boolean',
@@ -247,7 +227,6 @@ const editorConfiguration: IConfigurationNode = {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.renderIndicators,
 			description: nls.localize('renderIndicators', "Controls whether the diff editor shows +/- indicators for added/removed changes."),
-			agentsWindow: { default: false },
 		},
 		'diffEditor.codeLens': {
 			type: 'boolean',
@@ -279,7 +258,6 @@ const editorConfiguration: IConfigurationNode = {
 			type: 'boolean',
 			default: diffEditorDefaultOptions.hideUnchangedRegions.enabled,
 			markdownDescription: nls.localize('hideUnchangedRegions.enabled', "Controls whether the diff editor shows unchanged regions."),
-			agentsWindow: { default: true },
 		},
 		'diffEditor.hideUnchangedRegions.revealLineCount': {
 			type: 'integer',

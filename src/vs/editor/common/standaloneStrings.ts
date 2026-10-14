@@ -37,7 +37,6 @@ export namespace AccessibilityHelpNLS {
 	export const announceCursorPosition = nls.localize("announceCursorPosition", "Run the command: Announce Cursor Position{0} to hear the current line and column.", '<keybinding:editor.action.announceCursorPosition>');
 	export const focusNotifications = nls.localize("focusNotifications", "Focus notification toasts{0} to navigate them with the keyboard. Accept the primary action of a focused notification{1}.", '<keybinding:notifications.focusToasts>', '<keybinding:notification.acceptPrimaryAction>');
 	export const quickChat = nls.localize("quickChatCommand", "Toggle quick chat{0} to open or close a chat session.", '<keybinding:workbench.action.quickchat.toggle>');
-	export const startInlineChat = nls.localize("startInlineChatCommand", "Start inline chat{0} to create an in editor chat session.", '<keybinding:inlineChat.start>');
 	export const startDebugging = nls.localize('debug.startDebugging', "The Debug: Start Debugging command{0} will start a debug session.", '<keybinding:workbench.action.debug.start>');
 	export const setBreakpoint = nls.localize('debugConsole.setBreakpoint', "The Debug: Inline Breakpoint command{0} will set or unset a breakpoint at the current cursor position in the active editor.", '<keybinding:editor.debug.action.toggleInlineBreakpoint>');
 	export const addToWatch = nls.localize('debugConsole.addToWatch', "The Debug: Add to Watch command{0} will add the selected text to the watch view.", '<keybinding:editor.debug.action.selectionToWatch>');
