@@ -59,9 +59,9 @@ if (this.accessibilityService.isScreenReaderOptimized() &&
 ## Multi-Modal Notifications
 
 For important state changes, provide all three:
-1. **Audio signal**: `this.accessibilitySignalService.playSignal(AccessibilitySignal.chatUserActionRequired)`
+1. **Audio signal**: `this.accessibilitySignalService.playSignal(AccessibilitySignal.taskCompleted)`
 2. **ARIA alert**: `status(message)` for screen readers
-3. **OS notification**: Respect `chat.notifyWindowOnConfirmation` setting. OS notifications are **conditional on window focus** — only fire when `targetWindow.document.hasFocus()` is `false` (see `ChatWindowNotifier`)
+3. **OS notification**: Show it with `IHostService.showToast` and respect the feature's setting (for example `task.notifyWindowOnTaskCompletion`). OS notifications are **conditional on window focus** — only fire when `targetWindow.document.hasFocus()` is `false` (see `AbstractTaskService._handleLongRunningTaskCompletion`)
 
 ## Configuration
 

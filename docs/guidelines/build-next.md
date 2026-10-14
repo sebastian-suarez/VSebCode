@@ -79,9 +79,9 @@ Do not remove shared tooling based on its age:
 
 [bundle.ts](../../build/next/bundle.ts) holds the shared ESM options for normal entries (`neutral`) and Node bootstraps (`node`). Both compile TypeScript source directly with esbuild, which emits, scopes, and minifies the helpers each input needs. Their JS and CSS banners contain only the Microsoft copyright comment; do not append executable `tslib` to them. Esbuild does not parse banner text, so it cannot tree-shake it, minify it, or protect it from name/export collisions.
 
-- Desktop, server, server-web, and web entries do not consume the old banner's helpers or initialization. The public workbench and Sessions embedder exports are defined in their source entry points, not in tslib. Removing the banner intentionally removes its accidental 32 helper exports and default export, not any source-defined API.
+- Desktop, server, server-web, and web entries do not consume the old banner's helpers or initialization. The public workbench embedder exports are defined in their source entry points, not in tslib. Removing the banner intentionally removes its accidental 32 helper exports and default export, not any source-defined API.
 - Explicit tslib imports still follow normal bundler resolution: package imports remain external, while explicitly bundled helpers can be tree-shaken. Already-generated JavaScript retains its own helper definitions.
-- Non-minified bundles also omit the redundant library but retain readable esbuild-generated helpers. Development transpilation, standalone CommonJS preloads, and the separate Dev Tunnels bundle do not use the removed banner.
+- Non-minified bundles also omit the redundant library but retain readable esbuild-generated helpers. Development transpilation and standalone CommonJS preloads do not use the removed banner.
 - The removed compiled-JavaScript pipeline stripped TypeScript boilerplate and replaced it with a tslib banner. Direct-from-TypeScript bundles instead use esbuild's scoped, tree-shaken helpers.
 - Keep the copyright banner and existing license/notice packaging. Banner changes belong in esbuild's options so its source maps account for them; do not strip code after generating maps. Product integrity checksums continue to be computed from final bundled bytes during packaging.
 
@@ -192,7 +192,7 @@ The current JavaScript inventory is `vs/workbench/contrib/webview/browser/pre/se
 - Minification does not bundle, wrap, force an output module format, or tree-shake the scripts. A resolver bypasses the repository's `package.json` module-type inference, so classic globals/top-level `this` and CommonJS contexts are preserved; explicit ESM imports/exports remain ESM.
 - Legal comments and ordinary leading copyright/license headers are retained.
 - esbuild composes local external and inline input source maps, embeds original sources, and emits a sibling map with a local or `--source-map-base-url` reference. Copied scripts and bundled outputs share [rewriteSourceMappingURL()](../../build/next/source-map-url.ts) to keep CDN references platform-independent. Source-map read/parse diagnostics (including missing files, malformed JSON/mappings, and unsupported URLs) are promoted to build errors.
-- The standalone-web pipeline uploads all emitted core maps, including copied-script maps. Packaging still runs after resource processing and computes integrity checksums from final output bytes.
+- Nothing uploads the emitted maps, including copied-script maps; minified outputs keep a relative reference to their sibling map. Packaging still runs after resource processing and computes integrity checksums from final output bytes.
 - Generated NLS, tslib banners, native-private/dependency mangling, SVG optimization, and extension minification remain separate concerns.
 
 Focused regression tests (no workbench compilation required):
@@ -207,7 +207,7 @@ node --test build/next/test/resources.test.ts build/next/test/transpile.test.ts 
 
 - Both minified and non-minified bundle outputs embed the original TypeScript in `sourcesContent`. Finalization uses the existing [rewriteSourceMappingURL()](../../build/next/source-map-url.ts), including platform-independent URL separators, before writing JavaScript. Only the trailing map comment changes; executable bytes and esbuild's mappings are preserved.
 - With an omitted or empty `--source-map-base-url`, the sibling `*.js.map` reference remains local. Development transpile/watch/build-fast paths remain separate and retain their inline maps without embedded sources.
-- `core-ci` supplies `https://main.vscode-cdn.net/sourcemaps/<commit>/core`; upstream's release pipeline uploads each map under `sourcemaps/<commit>/core/<output-relative-path>.map`. No extra `out/` or `src/` belongs in the JavaScript's CDN URL.
+- No gulp task passes `--source-map-base-url`: `core-ci` and the packaging bundles keep esbuild's relative `//# sourceMappingURL=` comment to the sibling map, and nothing uploads the maps. The option still exists in [index.ts](../../build/next/index.ts) for a caller that wants absolute map URLs.
 - The bundle command awaits all standalone writes before downstream packaging. CI packaging strips local JS/CSS maps and computes the existing `preload.js` integrity checksum from final JavaScript bytes; do not move URL rewriting after checksum calculation.
 
 Focused tests compile the real three entrypoints into temporary outputs and check CDN/local modes, exact original source content and identity, representative line/column mappings, unchanged CommonJS output, non-desktop omission, development maps, and the upload/map-stripping/checksum assumptions. The packaging check exercises the real file streams and filter, not a complete Electron distribution or a manual debugger session.
@@ -245,9 +245,9 @@ npm run gulp vscode-reh-web-darwin-arm64-min
 
 3. **Entry points and resources** - Per-target definitions are maintained in [index.ts](../../build/next/index.ts), not duplicated in packaging gulpfiles.
 
-4. **Validation** - Official platform and web pipelines invoke `core-ci`, which checks the API proposal registry and type-checks with tsgo before bundling. Required bootstrap entries must fail the build if missing. Post-processing syntax checks remain enabled.
+4. **Validation** - `npm run core-ci` checks the API proposal registry and type-checks with tsgo before bundling. Required bootstrap entries must fail the build if missing. Post-processing syntax checks remain enabled.
 
-5. **Source maps** - Core bundles, copied JavaScript resources, standalone preloads, and the additional Dev Tunnels browser bundle preserve source content and honor the configured CDN map URL. Standalone preload publication lives in [standalone.ts](../../build/next/standalone.ts), which uses the shared `BuildTarget` type exported by [resources.ts](../../build/next/resources.ts). The SDK writer only touches its own emitted files.
+5. **Source maps** - Core bundles, copied JavaScript resources, and standalone preloads preserve source content and reference their sibling maps with relative URLs unless a caller passes `--source-map-base-url`. Standalone preload publication lives in [standalone.ts](../../build/next/standalone.ts), which uses the shared `BuildTarget` type exported by [resources.ts](../../build/next/resources.ts). The SDK writer only touches its own emitted files.
 
 6. **Deferred Unicode validation** - The legacy minifier's whole-output rejection of JS/CSS characters above U+00FF has not been ported. Keep that validation policy separate from infrastructure removal; the separate Unicode escaping work does not itself restore this check.
 

@@ -17,7 +17,6 @@ The `src/vs/` core is partitioned into ordered layers — each may only import f
 4. **`workbench`** — Full VS Code workbench, panels, views, and framework
 5. **`code`** — Desktop app entry point (Electron main, shared process, CLI)
 6. **`server`** — Server app entry point for remote development
-7. **`sessions`** — Agent Sessions window (may import from `workbench` and below; `workbench` must never import from `sessions`)
 
 ## Target Environments
 

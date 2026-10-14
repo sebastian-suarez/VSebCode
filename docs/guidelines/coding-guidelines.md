@@ -57,7 +57,7 @@ Use tabs, not spaces.
 
 ## Code Quality
 
-- Include Microsoft copyright header in all files
+- Copyright header: unmodified upstream files keep the Microsoft header; upstream files the fork modified (and files extracted or moved from upstream code) carry the Microsoft line followed by `Copyright (c) Sebastian Suarez. All rights reserved.`; files the fork authored carry the Sebastian Suarez line alone. `npm run precommit` checks it.
 - Prefer `async`/`await` over `Promise.then()`
 - Localize all user-facing messages
 - Prefer named regex capture groups over numbered ones

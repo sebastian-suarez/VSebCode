@@ -1,5 +1,5 @@
 ---
-applyTo: '{ThirdPartyNotices.txt,cli/ThirdPartyNotices.txt,cglicenses.json,cgmanifest.json}'
+applyTo: '{ThirdPartyNotices.txt,cgmanifest.json}'
 ---
 
 # OSS License Review
@@ -13,11 +13,6 @@ When reviewing changes to these files, verify:
 - License text matches the declared license type (e.g., MIT-declared entry actually contains MIT license text, not Apache)
 - Removed entries are cleanly removed (no leftover fragments)
 - Entries are sorted alphabetically by package name
-
-## cglicenses.json
-
-- New overrides have a justification comment
-- No obviously stale entries for packages no longer in the dependency tree
 
 ## cgmanifest.json
 
