@@ -41,8 +41,6 @@ export interface IExtensionHostInitData {
 	telemetryInfo: {
 		readonly sessionId: string;
 		readonly machineId: string;
-		readonly sqmId: string;
-		readonly devDeviceId: string;
 		readonly firstSessionDate: string;
 		readonly msftInternal?: boolean;
 	};
@@ -65,7 +63,6 @@ export interface IEnvironment {
 	appHost: string;
 	appRoot?: URI;
 	appLanguage: string;
-	isExtensionTelemetryLoggingOnly: boolean;
 	appUriScheme: string;
 	isPortable?: boolean;
 	extensionDevelopmentLocationURI?: URI[];

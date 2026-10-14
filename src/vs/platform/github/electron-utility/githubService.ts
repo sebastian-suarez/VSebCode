@@ -9,8 +9,7 @@ import { INativeEnvironmentService } from '../../environment/common/environment.
 import { ILogService } from '../../log/common/log.js';
 import { INativeHostService } from '../../native/common/native.js';
 import { IProductService } from '../../product/common/productService.js';
-import { ITelemetryService, TELEMETRY_CRASH_REPORTER_SETTING_ID, TELEMETRY_OLD_SETTING_ID, TELEMETRY_SETTING_ID } from '../../telemetry/common/telemetry.js';
-import { getTelemetryLevel } from '../../telemetry/common/telemetryUtils.js';
+import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { createGitHubClientMetadata } from '../common/githubRequestMetadata.js';
 import { GitHubService } from '../common/githubService.js';
 import { createFetch } from './githubFetch.js';
@@ -28,11 +27,7 @@ export class SharedProcessGitHubService extends GitHubService {
 			fetch: createFetch(nativeHostService, configurationService, environmentService, logService),
 			telemetrySource: 'sharedProcess',
 			clientMetadata: createGitHubClientMetadata(productService, 'shared-process', 'node'),
-			onDidChangeTelemetryLevel: Event.map(Event.filter(configurationService.onDidChangeConfiguration, event =>
-				event.affectsConfiguration(TELEMETRY_SETTING_ID)
-				|| event.affectsConfiguration(TELEMETRY_OLD_SETTING_ID)
-				|| event.affectsConfiguration(TELEMETRY_CRASH_REPORTER_SETTING_ID)
-			), () => getTelemetryLevel(configurationService)),
+			onDidChangeTelemetryLevel: Event.None,
 		}, logService, telemetryService);
 	}
 }

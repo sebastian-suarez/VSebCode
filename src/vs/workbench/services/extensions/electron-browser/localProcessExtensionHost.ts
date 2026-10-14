@@ -26,7 +26,6 @@ import { INativeHostService } from '../../../../platform/native/common/native.js
 import { INotificationService, NotificationPriority, Severity } from '../../../../platform/notification/common/notification.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { isLoggingOnly } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { IWorkspaceContextService, WorkbenchState, isUntitledWorkspace } from '../../../../platform/workspace/common/workspace.js';
 import { INativeWorkbenchEnvironmentService } from '../../environment/electron-browser/environmentService.js';
@@ -532,7 +531,6 @@ export class NativeLocalProcessExtensionHost extends Disposable implements IExte
 				appName: this._productService.nameLong,
 				appHost: (this._environmentService.isSessionsWindow ? this._productService.agentsTelemetryAppName : undefined) || this._productService.embedderIdentifier || 'desktop',
 				appUriScheme: this._productService.urlProtocol,
-				isExtensionTelemetryLoggingOnly: isLoggingOnly(this._productService, this._environmentService),
 				isPortable: this._environmentService.isPortable,
 				appLanguage: platform.language,
 				extensionDevelopmentLocationURI: this._environmentService.extensionDevelopmentLocationURI,
@@ -562,8 +560,6 @@ export class NativeLocalProcessExtensionHost extends Disposable implements IExte
 			telemetryInfo: {
 				sessionId: this._telemetryService.sessionId,
 				machineId: this._telemetryService.machineId,
-				sqmId: this._telemetryService.sqmId,
-				devDeviceId: this._telemetryService.devDeviceId ?? this._telemetryService.machineId,
 				firstSessionDate: this._telemetryService.firstSessionDate,
 				msftInternal: this._telemetryService.msftInternal
 			},

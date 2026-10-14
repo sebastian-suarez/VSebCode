@@ -23,7 +23,6 @@ import { generateTokensCSSForColorMap } from '../../../../editor/common/language
 import { ILanguageService } from '../../../../editor/common/languages/language.js';
 import { tokenizeToString } from '../../../../editor/common/languages/textToHtmlTokenizer.js';
 import * as nls from '../../../../nls.js';
-import { IEnvironmentService } from '../../../../platform/environment/common/environment.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
@@ -34,9 +33,7 @@ import { IWebviewWorkbenchService } from '../../webviewPanel/browser/webviewWork
 import { IEditorGroupsService } from '../../../services/editor/common/editorGroupsService.js';
 import { ACTIVE_GROUP, IEditorService } from '../../../services/editor/common/editorService.js';
 import { IExtensionService } from '../../../services/extensions/common/extensions.js';
-import { getTelemetryLevel, supportsTelemetry } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { IConfigurationChangeEvent, IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
-import { TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
 import { Disposable, DisposableStore, MutableDisposable } from '../../../../base/common/lifecycle.js';
 import { SimpleSettingRenderer } from '../../markdown/browser/markdownSettingRenderer.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
@@ -74,7 +71,6 @@ export class ReleaseNotesManager extends Disposable {
 	private _codeBlocks: readonly IReleaseNotesCodeBlock[] = [];
 
 	constructor(
-		@IEnvironmentService private readonly _environmentService: IEnvironmentService,
 		@IKeybindingService private readonly _keybindingService: IKeybindingService,
 		@ILanguageService private readonly _languageService: ILanguageService,
 		@IOpenerService private readonly _openerService: IOpenerService,
@@ -354,18 +350,8 @@ export class ReleaseNotesManager extends Disposable {
 		} else if (uri.scheme === Schemas.command && uri.path === RUN_ONBOARDING_TRYOUT_COMMAND_ID) {
 			await this._currentDocument.value?.openLink(uri);
 		} else {
-			const updated = await this.addGAParameters(uri, 'ReleaseNotes');
-			await this._openerService.open(updated, { allowCommands: ['workbench.action.openSettings', 'summarize.release.notes', RUN_ONBOARDING_TRYOUT_COMMAND_ID] });
+			await this._openerService.open(uri, { allowCommands: ['workbench.action.openSettings', 'summarize.release.notes', RUN_ONBOARDING_TRYOUT_COMMAND_ID] });
 		}
-	}
-
-	private async addGAParameters(uri: URI, origin: string, experiment = '1'): Promise<URI> {
-		if (supportsTelemetry(this._productService, this._environmentService) && getTelemetryLevel(this._configurationService) === TelemetryLevel.USAGE) {
-			if (uri.scheme === 'https' && uri.authority === 'code.visualstudio.com') {
-				return uri.with({ query: `${uri.query ? uri.query + '&' : ''}utm_source=VsCode&utm_medium=${encodeURIComponent(origin)}&utm_content=${encodeURIComponent(experiment)}` });
-			}
-		}
-		return uri;
 	}
 
 	private async renderBody(fileContent: { text: string; base: URI }, tryouts: ReleaseNotesTryouts, codeBlocks: IReleaseNotesCodeBlock[]) {

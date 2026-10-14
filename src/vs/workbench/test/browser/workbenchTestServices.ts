@@ -97,7 +97,7 @@ import { IRemoteAgentEnvironment } from '../../../platform/remote/common/remoteA
 import { IRemoteExtensionsScannerService } from '../../../platform/remote/common/remoteExtensionsScanner.js';
 import { IRemoteSocketFactoryService, RemoteSocketFactoryService } from '../../../platform/remote/common/remoteSocketFactoryService.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../platform/storage/common/storage.js';
-import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../platform/telemetry/common/telemetry.js';
+import { ITelemetryService } from '../../../platform/telemetry/common/telemetry.js';
 import { NullTelemetryService } from '../../../platform/telemetry/common/telemetryUtils.js';
 import { IExtensionTerminalProfile, IShellLaunchConfig, ITerminalBackend, ITerminalLogService, ITerminalProfile, TerminalIcon, TerminalLocation, TerminalShellType } from '../../../platform/terminal/common/terminal.js';
 import { TerminalLogService } from '../../../platform/terminal/common/terminalLogService.js';
@@ -2011,9 +2011,6 @@ export class TestRemoteAgentService implements IRemoteAgentService {
 	async getRawEnvironment(): Promise<IRemoteAgentEnvironment | null> { return null; }
 	async getExtensionHostExitInfo(reconnectionToken: string): Promise<IExtensionHostExitInfo | null> { return null; }
 	async getDiagnosticInfo(options: IDiagnosticInfoOptions): Promise<IDiagnosticInfo | undefined> { return undefined; }
-	async updateTelemetryLevel(telemetryLevel: TelemetryLevel): Promise<void> { }
-	async logTelemetry(eventName: string, data?: ITelemetryData): Promise<void> { }
-	async flushTelemetry(): Promise<void> { }
 	async getRoundTripTime(): Promise<number | undefined> { return undefined; }
 	async endConnection(): Promise<void> { }
 }

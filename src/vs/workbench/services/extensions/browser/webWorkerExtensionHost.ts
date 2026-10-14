@@ -24,7 +24,6 @@ import { ILogService, ILoggerService } from '../../../../platform/log/common/log
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { isLoggingOnly } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { WebWorkerDescriptor } from '../../../../platform/webWorker/browser/webWorkerDescriptor.js';
 import { IWebWorkerService } from '../../../../platform/webWorker/browser/webWorkerService.js';
@@ -312,7 +311,6 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 				appHost: this._productService.embedderIdentifier ?? (platform.isWeb ? 'web' : 'desktop'),
 				appUriScheme: this._productService.urlProtocol,
 				appLanguage: platform.language,
-				isExtensionTelemetryLoggingOnly: isLoggingOnly(this._productService, this._environmentService),
 				isPortable: false,
 				extensionDevelopmentLocationURI: this._environmentService.extensionDevelopmentLocationURI,
 				extensionTestsLocationURI: this._environmentService.extensionTestsLocationURI,
@@ -336,8 +334,6 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 			telemetryInfo: {
 				sessionId: this._telemetryService.sessionId,
 				machineId: this._telemetryService.machineId,
-				sqmId: this._telemetryService.sqmId,
-				devDeviceId: this._telemetryService.devDeviceId ?? this._telemetryService.machineId,
 				firstSessionDate: this._telemetryService.firstSessionDate,
 				msftInternal: this._telemetryService.msftInternal
 			},

@@ -46,7 +46,6 @@ const isSupportedForCmd = (optionId: keyof RemoteParsedArgs) => {
 		case 'enable-smoke-test-driver':
 		case 'extensions-download-dir':
 		case 'builtin-extensions-dir':
-		case 'telemetry':
 			return false;
 		default:
 			return true;

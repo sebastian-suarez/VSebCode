@@ -18,8 +18,6 @@ import { IQuickInputService, IQuickPickItem } from '../../../../platform/quickin
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
 import { URI } from '../../../../base/common/uri.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { IWorkspaceContextService } from '../../../../platform/workspace/common/workspace.js';
-import { IWorkspaceTagsService } from '../../tags/common/workspaceTags.js';
 import { Categories } from '../../../../platform/action/common/actionCommonCategories.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
@@ -52,8 +50,6 @@ export class UserDataProfilesWorkbenchContribution extends Disposable implements
 		@IUserDataProfilesService private readonly userDataProfilesService: IUserDataProfilesService,
 		@IUserDataProfileManagementService private readonly userDataProfileManagementService: IUserDataProfileManagementService,
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
-		@IWorkspaceContextService private readonly workspaceContextService: IWorkspaceContextService,
-		@IWorkspaceTagsService private readonly workspaceTagsService: IWorkspaceTagsService,
 		@IContextKeyService contextKeyService: IContextKeyService,
 		@IEditorService private readonly editorService: IEditorService,
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
@@ -555,21 +551,5 @@ export class UserDataProfilesWorkbenchContribution extends Disposable implements
 		if (count > 0) {
 			this.telemetryService.publicLog2<UserProfilesCountEvent, UserProfilesCountClassification>('profiles:count', { count });
 		}
-
-		const workspaceId = await this.workspaceTagsService.getTelemetryWorkspaceId(this.workspaceContextService.getWorkspace(), this.workspaceContextService.getWorkbenchState());
-		type WorkspaceProfileInfoClassification = {
-			owner: 'sandy081';
-			comment: 'Report profile information of the current workspace';
-			workspaceId: { classification: 'SystemMetaData'; purpose: 'FeatureInsight'; comment: 'A UUID given to a workspace to identify it.' };
-			defaultProfile: { classification: 'SystemMetaData'; purpose: 'FeatureInsight'; comment: 'Whether the profile of the workspace is default or not.' };
-		};
-		type WorkspaceProfileInfoEvent = {
-			workspaceId: string | undefined;
-			defaultProfile: boolean;
-		};
-		this.telemetryService.publicLog2<WorkspaceProfileInfoEvent, WorkspaceProfileInfoClassification>('workspaceProfileInfo', {
-			workspaceId,
-			defaultProfile: this.userDataProfileService.currentProfile.isDefault
-		});
 	}
 }

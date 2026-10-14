@@ -25,8 +25,6 @@ import { IConfigurationRegistry, Extensions as ConfigurationExtensions } from '.
 import { IRemoteAuthorityResolverService } from '../../../../platform/remote/common/remoteAuthorityResolver.js';
 import { OpenLocalFileFolderCommand, OpenLocalFileCommand, OpenLocalFolderCommand, SaveLocalFileCommand, RemoteFileDialogContext } from '../../../services/dialogs/browser/simpleFileDialog.js';
 import { IWorkspaceContextService, WorkbenchState } from '../../../../platform/workspace/common/workspace.js';
-import { ITelemetryService, TELEMETRY_CRASH_REPORTER_SETTING_ID, TELEMETRY_OLD_SETTING_ID, TELEMETRY_SETTING_ID } from '../../../../platform/telemetry/common/telemetry.js';
-import { getTelemetryLevel } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { IContextKeyService, RawContextKey, ContextKeyExpr } from '../../../../platform/contextkey/common/contextkey.js';
 import { INativeHostService } from '../../../../platform/native/common/native.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
@@ -91,31 +89,6 @@ class RemoteExtensionHostEnvironmentUpdater extends Disposable implements IWorkb
 				}
 			}));
 		}
-	}
-}
-
-class RemoteTelemetryEnablementUpdater extends Disposable implements IWorkbenchContribution {
-
-	static readonly ID = 'workbench.contrib.remoteTelemetryEnablementUpdater';
-
-	constructor(
-		@IRemoteAgentService private readonly remoteAgentService: IRemoteAgentService,
-		@IConfigurationService private readonly configurationService: IConfigurationService,
-		@ITelemetryService private readonly telemetryService: ITelemetryService,
-	) {
-		super();
-
-		this.updateRemoteTelemetryEnablement();
-
-		this._register(configurationService.onDidChangeConfiguration(e => {
-			if (e.affectsConfiguration(TELEMETRY_SETTING_ID) || e.affectsConfiguration(TELEMETRY_OLD_SETTING_ID) || e.affectsConfiguration(TELEMETRY_CRASH_REPORTER_SETTING_ID)) {
-				this.updateRemoteTelemetryEnablement();
-			}
-		}));
-	}
-
-	private updateRemoteTelemetryEnablement(): Promise<void> {
-		return this.remoteAgentService.updateTelemetryLevel(Math.min(getTelemetryLevel(this.configurationService), this.telemetryService.telemetryLevel));
 	}
 }
 
@@ -196,7 +169,6 @@ class WSLContextKeyInitializer extends Disposable implements IWorkbenchContribut
 const workbenchContributionsRegistry = Registry.as<IWorkbenchContributionsRegistry>(WorkbenchContributionsExtensions.Workbench);
 workbenchContributionsRegistry.registerWorkbenchContribution(RemoteAgentDiagnosticListener, LifecyclePhase.Eventually);
 workbenchContributionsRegistry.registerWorkbenchContribution(RemoteExtensionHostEnvironmentUpdater, LifecyclePhase.Eventually);
-registerWorkbenchContribution2(RemoteTelemetryEnablementUpdater.ID, RemoteTelemetryEnablementUpdater, WorkbenchPhase.BlockRestore);
 registerWorkbenchContribution2(RemoteEmptyWorkbenchPresentation.ID, RemoteEmptyWorkbenchPresentation, WorkbenchPhase.BlockRestore);
 if (isWindows) {
 	registerWorkbenchContribution2(WSLContextKeyInitializer.ID, WSLContextKeyInitializer, WorkbenchPhase.BlockRestore);

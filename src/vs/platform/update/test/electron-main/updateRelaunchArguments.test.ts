@@ -51,7 +51,6 @@ suite('Win32UpdateService - relaunch arguments', () => {
 			'install-extension': ['some.extension'],
 			'profile': 'work',
 			'profile-temp': true,
-			'crash-reporter-id': 'derived-id',
 			'logsPath': 'C:\\logs',
 			'extensions-dir': 'C:\\ext'
 		});

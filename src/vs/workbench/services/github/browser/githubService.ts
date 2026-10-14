@@ -19,8 +19,7 @@ import { GitHubAuthorizationContext, GitHubClientOptions, GitHubCredentialChange
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
-import { ITelemetryService, TELEMETRY_CRASH_REPORTER_SETTING_ID, TELEMETRY_OLD_SETTING_ID, TELEMETRY_SETTING_ID } from '../../../../platform/telemetry/common/telemetry.js';
-import { getTelemetryLevel } from '../../../../platform/telemetry/common/telemetryUtils.js';
+import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
 import { AuthenticationSession, AuthenticationSessionsChangeEvent, IAuthenticationService } from '../../authentication/common/authentication.js';
 import { IWorkbenchGitHubService } from '../common/githubService.js';
 
@@ -118,11 +117,7 @@ export class WorkbenchGitHubService extends GitHubService implements IWorkbenchG
 			credentialProvider,
 			telemetrySource: isWeb ? 'web' : 'workbench',
 			clientMetadata: createGitHubClientMetadata(productService, 'workbench', 'browser'),
-			onDidChangeTelemetryLevel: Event.map(Event.filter(configurationService.onDidChangeConfiguration, event =>
-				event.affectsConfiguration(TELEMETRY_SETTING_ID)
-				|| event.affectsConfiguration(TELEMETRY_OLD_SETTING_ID)
-				|| event.affectsConfiguration(TELEMETRY_CRASH_REPORTER_SETTING_ID)
-			), () => getTelemetryLevel(configurationService)),
+			onDidChangeTelemetryLevel: Event.None,
 		}, logService, telemetryService);
 		this._credentialProvider = this._register(credentialProvider);
 		let defaultAccountKey = this._getDefaultAccountKey();

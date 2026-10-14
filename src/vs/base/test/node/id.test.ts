@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'assert';
-import { getMachineId, getSqmMachineId, getDevDeviceId } from '../../node/id.js';
+import { getMachineId } from '../../node/id.js';
 import { getMac } from '../../node/macAddress.js';
 import { flakySuite } from './testUtils.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../common/utils.js';
@@ -19,19 +19,6 @@ flakySuite('ID', () => {
 		assert.strictEqual(errors.length, 0);
 	});
 
-	test('getSqmId', async function () {
-		const errors = [];
-		const id = await getSqmMachineId(err => errors.push(err));
-		assert.ok(typeof id === 'string');
-		assert.strictEqual(errors.length, 0);
-	});
-
-	test('getDevDeviceId', async function () {
-		const errors = [];
-		const id = await getDevDeviceId(err => errors.push(err));
-		assert.ok(typeof id === 'string');
-		assert.strictEqual(errors.length, 0);
-	});
 
 	test('getMac', async () => {
 		const macAddress = getMac();

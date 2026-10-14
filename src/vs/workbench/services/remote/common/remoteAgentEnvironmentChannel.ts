@@ -9,7 +9,6 @@ import { URI, UriComponents, UriDto } from '../../../../base/common/uri.js';
 import { IChannel } from '../../../../base/parts/ipc/common/ipc.js';
 import { IRemoteAgentEnvironment } from '../../../../platform/remote/common/remoteAgentEnvironment.js';
 import { IDiagnosticInfoOptions, IDiagnosticInfo } from '../../../../platform/diagnostics/common/diagnostics.js';
-import { ITelemetryData, TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
 import { IExtensionHostExitInfo } from './remoteAgentService.js';
 import { revive } from '../../../../base/common/marshalling.js';
 import { IUserDataProfile } from '../../../../platform/userDataProfile/common/userDataProfile.js';
@@ -100,17 +99,6 @@ export class RemoteExtensionEnvironmentChannelClient {
 		return channel.call<IDiagnosticInfo>('getDiagnosticInfo', options);
 	}
 
-	static updateTelemetryLevel(channel: IChannel, telemetryLevel: TelemetryLevel): Promise<void> {
-		return channel.call<void>('updateTelemetryLevel', { telemetryLevel });
-	}
-
-	static logTelemetry(channel: IChannel, eventName: string, data: ITelemetryData): Promise<void> {
-		return channel.call<void>('logTelemetry', { eventName, data });
-	}
-
-	static flushTelemetry(channel: IChannel): Promise<void> {
-		return channel.call<void>('flushTelemetry');
-	}
 
 	static async ping(channel: IChannel): Promise<void> {
 		await channel.call<void>('ping');

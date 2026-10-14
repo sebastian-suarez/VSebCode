@@ -43,8 +43,6 @@ import { NullLogService, ILogService } from '../../../../../platform/log/common/
 import { IFileService } from '../../../../../platform/files/common/files.js';
 import { IProductService } from '../../../../../platform/product/common/productService.js';
 import { ExtensionRecommendationsService } from '../../browser/extensionRecommendationsService.js';
-import { NoOpWorkspaceTagsService } from '../../../tags/browser/workspaceTagsService.js';
-import { IWorkspaceTagsService } from '../../../tags/common/workspaceTags.js';
 import { ExtensionsWorkbenchService } from '../../browser/extensionsWorkbenchService.js';
 import { IExtensionService } from '../../../../services/extensions/common/extensions.js';
 import { IWorkspaceExtensionsConfigService, WorkspaceExtensionsConfigService } from '../../../../services/extensionRecommendations/common/workspaceExtensionsConfig.js';
@@ -250,7 +248,6 @@ suite('ExtensionRecommendationsService Test', () => {
 		instantiationService.stub(IWorkbenchExtensionEnablementService, disposableStore.add(new TestExtensionEnablementService(instantiationService)));
 		instantiationService.stub(ITelemetryService, NullTelemetryService);
 		instantiationService.stub(IURLService, NativeURLService);
-		instantiationService.stub(IWorkspaceTagsService, new NoOpWorkspaceTagsService());
 		instantiationService.stub(IStorageService, disposableStore.add(new TestStorageService()));
 		instantiationService.stub(ILogService, new NullLogService());
 		instantiationService.stub(IProductService, {

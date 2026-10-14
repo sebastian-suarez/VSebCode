@@ -16,7 +16,7 @@ globalThis._VSCODE_FILE_ROOT = fileURLToPath(new URL('../../../..', import.meta.
 import * as fs from 'fs';
 import * as os from 'os';
 import type { Event } from '../../../base/common/event.js';
-import { DisposableStore, MutableDisposable } from '../../../base/common/lifecycle.js';
+import { DisposableStore } from '../../../base/common/lifecycle.js';
 import { URI } from '../../../base/common/uri.js';
 import { generateUuid } from '../../../base/common/uuid.js';
 import { localize } from '../../../nls.js';
@@ -52,7 +52,6 @@ import { ProtocolServerHandler } from './protocolServerHandler.js';
 import { AgentHostClientFileSystemProvider } from '../common/agentHostClientFileSystemProvider.js';
 import { AGENT_CLIENT_SCHEME } from '../common/agentClientUri.js';
 import { resolveServerUrls } from './serverUrls.js';
-import ErrorTelemetry from '../../telemetry/node/errorTelemetry.js';
 import { AgentHostLaunchKind } from '../common/agentHostTelemetry.js';
 import { ISessionDataService } from '../common/sessionDataService.js';
 
@@ -155,7 +154,6 @@ async function parseServerOptions(): Promise<IServerOptions> {
 async function main(): Promise<void> {
 	const options = await parseServerOptions();
 	const disposables = new DisposableStore();
-	const errorTelemetry = disposables.add(new MutableDisposable<ErrorTelemetry>());
 
 	// Services
 	const productService: IProductService = { _serviceBrand: undefined, ...product };
@@ -225,7 +223,6 @@ async function main(): Promise<void> {
 		completions,
 		customizationEnablementService,
 	} = runtimeServices;
-	errorTelemetry.value = new ErrorTelemetry(runtimeServices.telemetryService);
 
 	// Register agents
 	let sdkDownloadProgress: Event<IAgentSdkDownloadProgress> | undefined;

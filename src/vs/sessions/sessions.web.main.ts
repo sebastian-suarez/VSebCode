@@ -96,8 +96,6 @@ import { UserDataSyncService } from '../platform/userDataSync/common/userDataSyn
 import { IUserDataSyncAccountService, UserDataSyncAccountService } from '../platform/userDataSync/common/userDataSyncAccount.js';
 import { UserDataAutoSyncService } from '../platform/userDataSync/common/userDataAutoSyncService.js';
 import { AccessibilityService } from '../platform/accessibility/browser/accessibilityService.js';
-import { ICustomEndpointTelemetryService } from '../platform/telemetry/common/telemetry.js';
-import { NullEndpointTelemetryService } from '../platform/telemetry/common/telemetryUtils.js';
 import './services/title/browser/titleService.js';
 import { ITimerService, TimerService } from '../workbench/services/timer/browser/timerService.js';
 import { IDiagnosticsService, NullDiagnosticsService } from '../platform/diagnostics/common/diagnostics.js';
@@ -132,7 +130,6 @@ registerSingleton(IUserDataSyncResourceProviderService, UserDataSyncResourceProv
 registerSingleton(IUserDataAutoSyncService, UserDataAutoSyncService, InstantiationType.Eager);
 registerSingleton(IExtensionTipsService, ExtensionTipsService, InstantiationType.Delayed);
 registerSingleton(ITimerService, TimerService, InstantiationType.Delayed);
-registerSingleton(ICustomEndpointTelemetryService, NullEndpointTelemetryService, InstantiationType.Delayed);
 registerSingleton(IDiagnosticsService, NullDiagnosticsService, InstantiationType.Delayed);
 registerSingleton(ILanguagePackService, WebLanguagePacksService, InstantiationType.Delayed);
 registerSingleton(IWebContentExtractorService, NullWebContentExtractorService, InstantiationType.Delayed);
@@ -208,7 +205,6 @@ import '../workbench/contrib/terminal/browser/terminal.web.contribution.js';
 import '../workbench/contrib/externalTerminal/browser/externalTerminal.contribution.js';
 import '../workbench/contrib/terminal/browser/terminalInstanceService.js';
 import '../workbench/contrib/tasks/browser/taskService.js';
-import '../workbench/contrib/tags/browser/workspaceTagsService.js';
 import '../workbench/contrib/issue/browser/issue.contribution.js';
 import '../workbench/contrib/surveys/browser/survey.contribution.js';
 import '../workbench/contrib/splash/browser/splash.contribution.js';

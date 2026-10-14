@@ -4,14 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Disposable } from '../../../base/common/lifecycle.js';
-import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
 import { CommandsRegistry } from '../../../platform/commands/common/commands.js';
-import { IEnvironmentService } from '../../../platform/environment/common/environment.js';
-import { IProductService } from '../../../platform/product/common/productService.js';
 import { isValidAssignmentContext } from '../../../platform/telemetry/common/assignmentContext.js';
 import { ClassifiedEvent, IGDPRProperty, OmitMetadata, StrictPropertyCheck } from '../../../platform/telemetry/common/gdprTypings.js';
-import { ITelemetryService, TelemetryLevel, TELEMETRY_OLD_SETTING_ID, TELEMETRY_SETTING_ID, ITelemetryData } from '../../../platform/telemetry/common/telemetry.js';
-import { supportsTelemetry } from '../../../platform/telemetry/common/telemetryUtils.js';
+import { ITelemetryService, ITelemetryData } from '../../../platform/telemetry/common/telemetry.js';
 import { extHostNamedCustomer, IExtHostContext } from '../../services/extensions/common/extHostCustomers.js';
 import { ExtHostContext, ExtHostTelemetryShape, MainContext, MainThreadTelemetryShape } from '../common/extHost.protocol.js';
 
@@ -24,30 +20,11 @@ export class MainThreadTelemetry extends Disposable implements MainThreadTelemet
 	constructor(
 		extHostContext: IExtHostContext,
 		@ITelemetryService private readonly _telemetryService: ITelemetryService,
-		@IConfigurationService private readonly _configurationService: IConfigurationService,
-		@IEnvironmentService private readonly _environmentService: IEnvironmentService,
-		@IProductService private readonly _productService: IProductService,
 	) {
 		super();
 
 		this._proxy = extHostContext.getProxy(ExtHostContext.ExtHostTelemetry);
-
-		if (supportsTelemetry(this._productService, this._environmentService)) {
-			this._register(this._configurationService.onDidChangeConfiguration(e => {
-				if (e.affectsConfiguration(TELEMETRY_SETTING_ID) || e.affectsConfiguration(TELEMETRY_OLD_SETTING_ID)) {
-					this._proxy.$onDidChangeTelemetryLevel(this.telemetryLevel);
-				}
-			}));
-		}
-		this._proxy.$initializeTelemetryLevel(this.telemetryLevel, supportsTelemetry(this._productService, this._environmentService), this._productService.enabledTelemetryLevels);
-	}
-
-	private get telemetryLevel(): TelemetryLevel {
-		if (!supportsTelemetry(this._productService, this._environmentService)) {
-			return TelemetryLevel.NONE;
-		}
-
-		return this._telemetryService.telemetryLevel;
+		this._proxy.$initializeTelemetryLevel(this._telemetryService.telemetryLevel, false);
 	}
 
 	$publicLog(eventName: string, data: ITelemetryData = Object.create(null)): void {

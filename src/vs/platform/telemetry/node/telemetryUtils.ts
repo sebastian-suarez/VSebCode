@@ -4,12 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { isMacintosh } from '../../../base/common/platform.js';
-import { stripUTF8BOM } from '../../../base/common/strings.js';
-import { getMachineId, getSqmMachineId, getDevDeviceId } from '../../../base/node/id.js';
+import { getMachineId } from '../../../base/node/id.js';
 import { ILogService } from '../../log/common/log.js';
 import { IStateReadService } from '../../state/node/state.js';
-import { machineIdKey, sqmIdKey, devDeviceIdKey } from '../common/telemetry.js';
-
+import { machineIdKey } from '../common/telemetry.js';
 
 export async function resolveMachineId(stateService: IStateReadService, logService: ILogService): Promise<string> {
 	// We cache the machineId for faster lookups
@@ -20,21 +18,4 @@ export async function resolveMachineId(stateService: IStateReadService, logServi
 	}
 
 	return machineId;
-}
-
-export async function resolveSqmId(stateService: IStateReadService, logService: ILogService): Promise<string> {
-	let sqmId = stateService.getItem<string>(sqmIdKey);
-	if (typeof sqmId !== 'string') {
-		sqmId = await getSqmMachineId(logService.error.bind(logService));
-	}
-
-	return sqmId;
-}
-
-export async function resolveDevDeviceId(stateService: IStateReadService, logService: ILogService): Promise<string> {
-	let devDeviceId = stateService.getItem<string>(devDeviceIdKey);
-	if (typeof devDeviceId !== 'string') {
-		devDeviceId = await getDevDeviceId(logService.error.bind(logService));
-	}
-	return stripUTF8BOM(devDeviceId);
 }

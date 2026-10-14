@@ -17,8 +17,8 @@ import { TestInstantiationService } from '../../../../instantiation/test/common/
 import { ILogService, NullLogService } from '../../../../log/common/log.js';
 import product from '../../../../product/common/product.js';
 import { IProductService } from '../../../../product/common/productService.js';
-import { ITelemetryService, TelemetryLevel, type ITelemetryData } from '../../../../telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../../telemetry/common/telemetryService.js';
+import { ITelemetryService, type ITelemetryData } from '../../../../telemetry/common/telemetry.js';
+import { AppenderTelemetryService } from '../appenderTelemetryService.js';
 import { AgentSession } from '../../../common/agent.js';
 import { AgentHostConfigKey } from '../../../common/agentHostCustomizationConfig.js';
 import { IAgentHostCheckpointService, NULL_CHECKPOINT_SERVICE } from '../../../common/agentHostCheckpointService.js';
@@ -58,14 +58,7 @@ function createHarness(disposables: Pick<DisposableStore, 'add'>, fetch: FetchFu
 	const productService: IProductService = { _serviceBrand: undefined, ...product };
 	const apiService = disposables.add(new CopilotApiService(fetch, logService, productService, endpoints));
 	const events: { eventName: string; data: ITelemetryData }[] = [];
-	const telemetry = disposables.add(new AgentHostTelemetryService(TelemetryService.createWithLevel({
-		telemetryLevel: TelemetryLevel.USAGE,
-		sendErrorTelemetry: true,
-		appenders: [{
-			log: (eventName, data) => events.push({ eventName, data }),
-			flush: async () => { },
-		}],
-	}, productService)));
+	const telemetry = disposables.add(new AgentHostTelemetryService(new AppenderTelemetryService((eventName, data) => events.push({ eventName, data }))));
 	instantiationService.stub(ILogService, logService);
 	instantiationService.stub(IProductService, productService);
 	instantiationService.stub(ITelemetryService, telemetry);

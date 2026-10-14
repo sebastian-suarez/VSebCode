@@ -6,12 +6,9 @@
 import { app, BrowserWindow, desktopCapturer, globalShortcut, powerMonitor, protocol, screen as electronScreen, session, Session, systemPreferences, WebFrameMain } from 'electron';
 import { addUNCHostToAllowlist, disableUNCAccessRestrictions } from '../../base/node/unc.js';
 import { validatedIpcMain } from '../../base/parts/ipc/electron-main/ipcMain.js';
-import { hostname, release } from 'os';
 import { initWindowsVersionInfo } from '../../base/node/windowsVersion.js';
-import { VSBuffer } from '../../base/common/buffer.js';
 import { toErrorMessage } from '../../base/common/errorMessage.js';
 import { Event } from '../../base/common/event.js';
-import { parse } from '../../base/common/jsonc.js';
 import { getPathLabel } from '../../base/common/labels.js';
 import { Disposable, DisposableStore, toDisposable } from '../../base/common/lifecycle.js';
 import { Schemas, VSCODE_AUTHORITY } from '../../base/common/network.js';
@@ -20,7 +17,6 @@ import { mark } from '../../base/common/performance.js';
 import { IProcessEnvironment, isLinux, isLinuxSnap, isMacintosh, isWindows, OS } from '../../base/common/platform.js';
 import { assertType } from '../../base/common/types.js';
 import { URI } from '../../base/common/uri.js';
-import { generateUuid } from '../../base/common/uuid.js';
 import { registerContextMenuListener } from '../../base/parts/contextmenu/electron-main/contextmenu.js';
 import { getDelayedChannel, ProxyChannel, StaticRouter } from '../../base/parts/ipc/common/ipc.js';
 import { Server as ElectronIPCServer } from '../../base/parts/ipc/electron-main/ipc.electron.js';
@@ -81,11 +77,8 @@ import { ISignService } from '../../platform/sign/common/sign.js';
 import { IStateService } from '../../platform/state/node/state.js';
 import { StorageDatabaseChannel } from '../../platform/storage/electron-main/storageIpc.js';
 import { ApplicationStorageMainService, IApplicationStorageMainService, IStorageMainService, StorageMainService } from '../../platform/storage/electron-main/storageMainService.js';
-import { resolveCommonProperties } from '../../platform/telemetry/common/commonProperties.js';
 import { ITelemetryService, TelemetryLevel } from '../../platform/telemetry/common/telemetry.js';
-import { TelemetryAppenderClient } from '../../platform/telemetry/common/telemetryIpc.js';
-import { ITelemetryServiceConfig, TelemetryService } from '../../platform/telemetry/common/telemetryService.js';
-import { getPiiPathsFromEnvironment, getTelemetryLevel, getUserContentPathsFromEnvironment, isInternalTelemetry, NullTelemetryService, supportsTelemetry } from '../../platform/telemetry/common/telemetryUtils.js';
+import { NullTelemetryService } from '../../platform/telemetry/common/telemetryUtils.js';
 import { IUpdateService } from '../../platform/update/common/update.js';
 import { UpdateChannel } from '../../platform/update/common/updateIpc.js';
 import { NotAvailableUpdateDialog } from '../../platform/update/electron-main/notAvailableUpdateDialog.js';
@@ -123,7 +116,7 @@ import { UserDataProfilesHandler } from '../../platform/userDataProfile/electron
 import { ProfileStorageChangesListenerChannel } from '../../platform/userDataProfile/electron-main/userDataProfileStorageIpc.js';
 import { Promises, RunOnceScheduler, runWhenGlobalIdle } from '../../base/common/async.js';
 import { CancellationToken } from '../../base/common/cancellation.js';
-import { resolveMachineId, resolveSqmId, resolveDevDeviceId, validateDevDeviceId } from '../../platform/telemetry/electron-main/telemetryUtils.js';
+import { resolveMachineId } from '../../platform/telemetry/electron-main/telemetryUtils.js';
 import { ExtensionsProfileScannerService } from '../../platform/extensionManagement/node/extensionsProfileScannerService.js';
 import { LoggerChannel } from '../../platform/log/electron-main/logIpc.js';
 import { ILoggerMainService } from '../../platform/log/electron-main/loggerService.js';
@@ -152,7 +145,6 @@ import { IWebContentExtractorService } from '../../platform/webContentExtractor/
 import { NativeWebContentExtractorService } from '../../platform/webContentExtractor/electron-main/webContentExtractorService.js';
 import { AgentNetworkFilterService, IAgentNetworkFilterService } from '../../platform/networkFilter/common/networkFilterService.js';
 import { ITerminalSandboxService, NullTerminalSandboxService } from '../../platform/sandbox/common/terminalSandboxService.js';
-import ErrorTelemetry from '../../platform/telemetry/electron-main/errorTelemetry.js';
 import { IProtocolMainService } from '../../platform/protocol/electron-main/protocol.js';
 import { createRemoteResourceRequestHandler } from '../../platform/protocol/electron-main/remoteResourceProtocol.js';
 import { logNodeCompileCacheStatus, markNodeCompileCacheReady, waitForNodeCompileCacheReady } from '../../base/node/nodeCompileCache.js';
@@ -739,23 +731,16 @@ export class CodeApplication extends Disposable {
 
 		// Resolve unique machine ID
 		mark('code/willResolveMachineId');
-		const [machineId, sqmId, devDeviceId] = await Promise.all([
-			resolveMachineId(this.stateService, this.logService),
-			resolveSqmId(this.stateService, this.logService),
-			resolveDevDeviceId(this.stateService, this.logService)
-		]);
+		const machineId = await resolveMachineId(this.stateService, this.logService);
 		mark('code/didResolveMachineId');
 
 		// Shared process
-		const { sharedProcessReady, sharedProcessClient } = this.setupSharedProcess(machineId, sqmId, devDeviceId);
+		const { sharedProcessReady, sharedProcessClient } = this.setupSharedProcess(machineId);
 
 		// Services
 		mark('code/willInitAppServices');
-		const appInstantiationService = await this.initServices(machineId, sqmId, devDeviceId, sharedProcessReady);
+		const appInstantiationService = await this.initServices(machineId, sharedProcessReady);
 		mark('code/didInitAppServices');
-
-		// Error telemetry
-		appInstantiationService.invokeFunction(accessor => this._register(new ErrorTelemetry(accessor.get(ILogService), accessor.get(ITelemetryService))));
 
 		// Agent Host
 		// Always instantiate the starter + manager. They are cheap (the
@@ -764,7 +749,7 @@ export class CodeApplication extends Disposable {
 		// request. The renderer only requests a connection when the runtime is
 		// available and AI features are enabled there, which the main process
 		// cannot fully observe.
-		const agentHostStarter = appInstantiationService.createInstance(ElectronAgentHostStarter, { machineId, sqmId, devDeviceId });
+		const agentHostStarter = appInstantiationService.createInstance(ElectronAgentHostStarter, { machineId });
 		// This manager self-disposes after its lifecycle join; CodeApplication disposes before later shutdown listeners run.
 		const agentHostProcessManager = appInstantiationService.createInstance(AgentHostProcessManager, agentHostStarter, process.platform);
 
@@ -1193,8 +1178,8 @@ export class CodeApplication extends Disposable {
 		return false;
 	}
 
-	private setupSharedProcess(machineId: string, sqmId: string, devDeviceId: string): { sharedProcessReady: Promise<MessagePortClient>; sharedProcessClient: Promise<MessagePortClient> } {
-		const sharedProcess = this._register(this.mainInstantiationService.createInstance(SharedProcess, machineId, sqmId, devDeviceId));
+	private setupSharedProcess(machineId: string): { sharedProcessReady: Promise<MessagePortClient>; sharedProcessClient: Promise<MessagePortClient> } {
+		const sharedProcess = this._register(this.mainInstantiationService.createInstance(SharedProcess, machineId));
 
 		this._register(sharedProcess.onDidCrash(() => this.windowsMainService?.sendToFocused('vscode:reportSharedProcessCrash')));
 
@@ -1217,7 +1202,7 @@ export class CodeApplication extends Disposable {
 		return { sharedProcessReady, sharedProcessClient };
 	}
 
-	private async initServices(machineId: string, sqmId: string, devDeviceId: string, sharedProcessReady: Promise<MessagePortClient>): Promise<IInstantiationService> {
+	private async initServices(machineId: string, sharedProcessReady: Promise<MessagePortClient>): Promise<IInstantiationService> {
 		const services = new ServiceCollection();
 
 		// Update
@@ -1240,7 +1225,7 @@ export class CodeApplication extends Disposable {
 		}
 
 		// Windows
-		services.set(IWindowsMainService, new SyncDescriptor(WindowsMainService, [machineId, sqmId, devDeviceId, this.userEnv], false));
+		services.set(IWindowsMainService, new SyncDescriptor(WindowsMainService, [machineId, this.userEnv], false));
 		services.set(IAuxiliaryWindowsMainService, new SyncDescriptor(AuxiliaryWindowsMainService, undefined, false));
 
 		// Dialogs
@@ -1330,19 +1315,7 @@ export class CodeApplication extends Disposable {
 		services.set(IURLService, new SyncDescriptor(NativeURLService, undefined, false /* proxied to other processes */));
 
 		// Telemetry
-		if (supportsTelemetry(this.productService, this.environmentMainService)) {
-			const isInternal = isInternalTelemetry(this.productService, this.configurationService);
-			const channel = getDelayedChannel(sharedProcessReady.then(client => client.getChannel('telemetryAppender')));
-			const appender = new TelemetryAppenderClient(channel);
-			const commonProperties = resolveCommonProperties(release(), hostname(), process.arch, this.productService.commit, this.productService.version, machineId, sqmId, devDeviceId, isInternal, this.productService.date);
-			const piiPaths = getPiiPathsFromEnvironment(this.environmentMainService);
-			const userContentPaths = getUserContentPathsFromEnvironment(this.environmentMainService);
-			const config: ITelemetryServiceConfig = { appenders: [appender], commonProperties, piiPaths, userContentPaths, sendErrorTelemetry: true };
-
-			services.set(ITelemetryService, new SyncDescriptor(TelemetryService, [config], false));
-		} else {
-			services.set(ITelemetryService, NullTelemetryService);
-		}
+		services.set(ITelemetryService, NullTelemetryService);
 
 		// Default Extensions Profile Init
 		services.set(IExtensionsProfileScannerService, new SyncDescriptor(ExtensionsProfileScannerService, undefined, true));
@@ -1695,7 +1668,6 @@ export class CodeApplication extends Disposable {
 		this.resolveShellEnvironment(this.environmentMainService.args, process.env, true);
 
 		// Crash reporter
-		this.updateCrashReporterEnablement();
 
 		// macOS: rosetta translation warning
 		if (isMacintosh && app.runningUnderARM64Translation) {
@@ -1828,57 +1800,8 @@ export class CodeApplication extends Disposable {
 		return {};
 	}
 
-	private async updateCrashReporterEnablement(): Promise<void> {
-
-		// If enable-crash-reporter argv is undefined then this is a fresh start,
-		// based on `telemetry.enableCrashreporter` settings, generate a UUID which
-		// will be used as crash reporter id and also update the json file.
-
-		try {
-			const argvContent = await this.fileService.readFile(this.environmentMainService.argvResource);
-			const argvString = argvContent.value.toString();
-			const argvJSON = parse<{ 'enable-crash-reporter'?: boolean }>(argvString);
-			const telemetryLevel = getTelemetryLevel(this.configurationService);
-			const enableCrashReporter = telemetryLevel >= TelemetryLevel.CRASH;
-
-			// Initial startup
-			if (argvJSON['enable-crash-reporter'] === undefined) {
-				const additionalArgvContent = [
-					'',
-					'	// Allows to disable crash reporting.',
-					'	// Should restart the app if the value is changed.',
-					`	"enable-crash-reporter": ${enableCrashReporter},`,
-					'',
-					'	// Unique id used for correlating crash reports sent from this instance.',
-					'	// Do not edit this value.',
-					`	"crash-reporter-id": "${generateUuid()}"`,
-					'}'
-				];
-				const newArgvString = argvString.substring(0, argvString.length - 2).concat(',\n', additionalArgvContent.join('\n'));
-
-				await this.fileService.writeFile(this.environmentMainService.argvResource, VSBuffer.fromString(newArgvString));
-			}
-
-			// Subsequent startup: update crash reporter value if changed
-			else {
-				const newArgvString = argvString.replace(/"enable-crash-reporter": .*,/, `"enable-crash-reporter": ${enableCrashReporter},`);
-				if (newArgvString !== argvString) {
-					await this.fileService.writeFile(this.environmentMainService.argvResource, VSBuffer.fromString(newArgvString));
-				}
-			}
-		} catch (error) {
-			this.logService.error(error);
-
-			// Inform the user via notification
-			this.windowsMainService?.sendToFocused('vscode:showArgvParseWarning');
-		}
-	}
-
 	private eventuallyAfterWindowOpen(instantiationService: IInstantiationService): void {
 
-		// Validate Device ID is up to date (delay this as it has shown significant perf impact)
-		// Refs: https://github.com/microsoft/vscode/issues/234064
-		validateDevDeviceId(this.stateService, this.logService);
 
 		instantiationService.invokeFunction(accessor => {
 			const telemetryService = accessor.get(ITelemetryService);

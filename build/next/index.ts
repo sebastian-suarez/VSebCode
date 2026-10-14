@@ -102,7 +102,6 @@ const desktopWorkerEntryPoints = [
 const desktopEntryPoints = [
 	'vs/workbench/workbench.desktop.main',
 	'vs/sessions/sessions.desktop.main',
-	'vs/workbench/contrib/debug/node/telemetryApp',
 	'vs/platform/files/node/watcher/watcherMain',
 	'vs/platform/localTranscription/node/localTranscriptionMain',
 	'vs/platform/terminal/node/ptyHostMain',

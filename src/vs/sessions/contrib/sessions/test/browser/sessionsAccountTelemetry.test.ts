@@ -12,9 +12,7 @@ import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/tes
 import { ICodexAccountInfo } from '../../../../../platform/agentHost/common/codexAccount.js';
 import { IDefaultAccountService } from '../../../../../platform/defaultAccount/common/defaultAccount.js';
 import { NullLogService } from '../../../../../platform/log/common/log.js';
-import product from '../../../../../platform/product/common/product.js';
-import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../../../platform/telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../../../platform/telemetry/common/telemetryService.js';
+import { ITelemetryData, ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
 import { NullTelemetryServiceShape } from '../../../../../platform/telemetry/common/telemetryUtils.js';
 import { ICodexAccountService } from '../../../../../workbench/services/agentHost/browser/codexAccountService.js';
 import { ChatEntitlement, IChatEntitlementService } from '../../../../../workbench/services/chat/common/chatEntitlementService.js';
@@ -548,27 +546,6 @@ suite('SessionsAccountTelemetryContribution', () => {
 				name: 'agents/accountState',
 				data: { copilotSku: 'copilot_for_individual_user', copilotAccountState: 'signedIn', copilotQuotaPercentRemaining: 75, chatgptAccountState: 'signedIn', chatgptQuotaPercentRemaining: 60 },
 			}]);
-		});
-	});
-
-	test('startup and change events honor the existing usage telemetry consent', async () => {
-		await runWithFakedTimers({ useFakeTimers: true }, async () => {
-			const results = [TelemetryLevel.NONE, TelemetryLevel.CRASH, TelemetryLevel.ERROR, TelemetryLevel.USAGE].map(level => {
-				const names: string[] = [];
-				const telemetryService = disposables.add(TelemetryService.createWithLevel({
-					telemetryLevel: level,
-					appenders: [{ log: name => names.push(name), flush: async () => { } }],
-				}, { ...product, _serviceBrand: undefined }));
-				return { names, harness: createHarness({ telemetryService }) };
-			});
-			await timeout(1);
-			for (const { harness } of results) {
-				harness.codexAccountService.account = { status: 'signedIn' };
-				harness.accountChanged.fire(harness.codexAccountService.account);
-			}
-			await timeout(0);
-
-			assert.deepStrictEqual(results.map(result => result.names), [[], [], [], ['agents/accountState', 'agents/accountStateChanged']]);
 		});
 	});
 

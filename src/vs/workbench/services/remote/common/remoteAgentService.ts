@@ -9,7 +9,6 @@ import { IChannel, IServerChannel } from '../../../../base/parts/ipc/common/ipc.
 import { IDiagnosticInfoOptions, IDiagnosticInfo } from '../../../../platform/diagnostics/common/diagnostics.js';
 import { Event } from '../../../../base/common/event.js';
 import { PersistentConnectionEvent } from '../../../../platform/remote/common/remoteAgentConnection.js';
-import { ITelemetryData, TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
 import { timeout } from '../../../../base/common/async.js';
 
 export const IRemoteAgentService = createDecorator<IRemoteAgentService>('remoteAgentService');
@@ -43,9 +42,6 @@ export interface IRemoteAgentService {
 	endConnection(): Promise<void>;
 
 	getDiagnosticInfo(options: IDiagnosticInfoOptions): Promise<IDiagnosticInfo | undefined>;
-	updateTelemetryLevel(telemetryLevel: TelemetryLevel): Promise<void>;
-	logTelemetry(eventName: string, data?: ITelemetryData): Promise<void>;
-	flushTelemetry(): Promise<void>;
 }
 
 export interface IExtensionHostExitInfo {

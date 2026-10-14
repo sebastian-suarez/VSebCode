@@ -342,14 +342,11 @@ src/vs/workbench/services/keybinding/common/keybindingEditing.ts
 # Telemetry, OTel, and performance (14 files)
 src/vs/platform/otel/test/node/otlp/otlpJsonDecode.test.ts
 src/vs/platform/otel/test/node/otlp/outboundForwarder.test.ts
-src/vs/platform/telemetry/common/1dsAppender.ts
 src/vs/platform/telemetry/common/commonProperties.ts
 src/vs/platform/telemetry/common/telemetryService.ts
-src/vs/platform/telemetry/test/browser/1dsAppender.test.ts
 src/vs/platform/telemetry/test/browser/telemetryService.test.ts
 src/vs/workbench/contrib/performance/browser/performance.contribution.ts
 src/vs/workbench/contrib/performance/test/browser/perfviewEditor.test.ts
-src/vs/workbench/contrib/telemetry/browser/telemetry.contribution.ts
 src/vs/workbench/services/telemetry/browser/workbenchCommonProperties.ts
 src/vs/workbench/services/telemetry/common/workbenchCommonProperties.ts
 src/vs/workbench/services/telemetry/test/browser/commonProperties.test.ts

@@ -203,10 +203,9 @@ import './services/policies/browser/accountPolicyGate.contribution.js';
 import './services/policies/browser/managedSettingsUpdate.contribution.js';
 
 // Policy Telemetry
-import './services/policies/browser/policyTelemetry.contribution.js';
 
 // Telemetry
-import './contrib/telemetry/browser/telemetry.contribution.js';
+import '../platform/telemetry/common/telemetryConfiguration.js';
 
 // Preferences
 import './contrib/preferences/browser/preferences.contribution.js';
@@ -455,7 +454,6 @@ import './contrib/list/browser/list.contribution.js';
 import './contrib/accessibilitySignals/browser/accessibilitySignal.contribution.js';
 
 // Bracket Pair Colorizer 2 Telemetry
-import './contrib/bracketPairColorizer2Telemetry/browser/bracketPairColorizer2Telemetry.contribution.js';
 
 // Accessibility
 import './contrib/accessibility/browser/accessibility.contribution.js';

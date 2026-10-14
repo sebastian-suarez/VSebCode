@@ -15,9 +15,8 @@ import { SyncDescriptor } from '../../../../../platform/instantiation/common/des
 import { getSingletonServiceDescriptors } from '../../../../../platform/instantiation/common/extensions.js';
 import { ServiceCollection } from '../../../../../platform/instantiation/common/serviceCollection.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../../platform/storage/common/storage.js';
-import { ITelemetryData, ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../../../platform/telemetry/common/telemetryService.js';
-import { ITelemetryAppender } from '../../../../../platform/telemetry/common/telemetryUtils.js';
+import { mock } from '../../../../../base/test/common/mock.js';
+import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../../../platform/telemetry/common/telemetry.js';
 import { ChatEntitlement, IChatEntitlementService, IChatSentiment, IQuotaSnapshot } from '../../../../services/chat/common/chatEntitlementService.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
 import { ChatQuotaNotificationContribution } from '../../browser/chatQuotaNotification.js';
@@ -30,16 +29,22 @@ interface ILoggedTelemetryEvent {
 	readonly data: ITelemetryData;
 }
 
-class TestTelemetryAppender implements ITelemetryAppender {
+class TestTelemetryAppender extends mock<ITelemetryService>() {
+	override telemetryLevel = TelemetryLevel.USAGE;
 	readonly events: ILoggedTelemetryEvent[] = [];
 
-	log(eventName: string, data: ITelemetryData): void {
-		this.events.push({ eventName, data });
+	override publicLog(eventName: string, data?: ITelemetryData): void {
+		this.events.push({ eventName, data: data ?? {} });
 	}
 
-	flush(): Promise<void> {
-		return Promise.resolve();
+	override publicLog2(eventName: string, data?: ITelemetryData): void {
+		this.publicLog(eventName, data);
 	}
+
+	override publicLogError(): void { }
+	override publicLogError2(): void { }
+	override setExperimentProperty(): void { }
+	override setCommonProperty(): void { }
 }
 
 class TestCommandService implements ICommandService {
@@ -115,13 +120,12 @@ suite('ChatQuotaNotificationContribution integration', () => {
 	function createHarness(opts?: Parameters<typeof createEntitlementService>[0]) {
 		const instantiationService = store.add(workbenchInstantiationService(undefined, store));
 		const telemetryAppender = new TestTelemetryAppender();
-		const telemetryService = store.add(instantiationService.createInstance(TelemetryService, { appenders: [telemetryAppender] }));
 		const entitlementService = createEntitlementService(opts);
 		const commandService = new TestCommandService();
 		const storageService = instantiationService.get(IStorageService);
 		storageService.store('chat.currentLanguageModel.panel', 'copilot/test-model', StorageScope.PROFILE, StorageTarget.USER);
 
-		instantiationService.stub(ITelemetryService, telemetryService);
+		instantiationService.stub(ITelemetryService, telemetryAppender);
 		instantiationService.stub(IChatEntitlementService, entitlementService.service);
 		instantiationService.stub(ICommandService, commandService);
 		instantiationService.stub(ILanguageModelsService, {

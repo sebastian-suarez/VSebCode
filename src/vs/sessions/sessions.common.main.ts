@@ -206,8 +206,7 @@ registerSingleton(ISessionsSetUpService, SessionsSetUpService, InstantiationType
 import '../workbench/services/accounts/browser/defaultAccount.js';
 
 // Telemetry
-import '../workbench/contrib/telemetry/browser/telemetry.contribution.js';
-import '../workbench/services/policies/browser/policyTelemetry.contribution.js';
+import '../platform/telemetry/common/telemetryConfiguration.js';
 
 // Preferences
 import '../workbench/contrib/preferences/browser/preferences.contribution.js';

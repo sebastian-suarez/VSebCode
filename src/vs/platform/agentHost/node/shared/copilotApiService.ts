@@ -7,7 +7,7 @@ import type Anthropic from '@anthropic-ai/sdk';
 import { CAPIClient, RequestType, type CCAModel, type IExtensionInformation } from '@vscode/copilot-api';
 import { generateUuid } from '../../../../base/common/uuid.js';
 import { Disposable, toDisposable } from '../../../../base/common/lifecycle.js';
-import { getDevDeviceId, getMachineId } from '../../../../base/node/id.js';
+import { getMachineId } from '../../../../base/node/id.js';
 import { getInternalOrg, isInternalAccount } from '../../../assignment/common/assignment.js';
 import { COPILOT_LICENSE_AGREEMENT } from '../../../endpoint/common/licenseAgreement.js';
 import { createDecorator } from '../../../instantiation/common/instantiation.js';
@@ -731,10 +731,8 @@ export class CopilotApiService extends Disposable implements ICopilotApiService 
 	}
 
 	private async _buildCapiBase(): Promise<ICapiBase> {
-		const [machineId, deviceId] = await Promise.all([
-			getMachineId(err => this._logService.warn('[CopilotApiService] getMachineId failed', err)),
-			getDevDeviceId(err => this._logService.warn('[CopilotApiService] getDevDeviceId failed', err)),
-		]);
+		const machineId = await getMachineId(err => this._logService.warn('[CopilotApiService] getMachineId failed', err));
+		const deviceId = machineId;
 
 		const extensionInfo: IExtensionInformation = {
 			name: 'agent-host',

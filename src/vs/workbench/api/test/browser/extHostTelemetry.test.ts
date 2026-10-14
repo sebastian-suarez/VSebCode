@@ -7,9 +7,9 @@ import assert from 'assert';
 import { URI } from '../../../../base/common/uri.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
 import { ExtensionIdentifier, IExtensionDescription, TargetPlatform } from '../../../../platform/extensions/common/extensions.js';
-import { DEFAULT_LOG_LEVEL, LogLevel } from '../../../../platform/log/common/log.js';
+import { AbstractLogger, DEFAULT_LOG_LEVEL, ILogger, ILoggerService, LogLevel } from '../../../../platform/log/common/log.js';
 import { TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
-import { TestTelemetryLoggerService } from '../../../../platform/telemetry/test/common/telemetryLogAppender.test.js';
+import { Event } from '../../../../base/common/event.js';
 import { IExtHostInitDataService } from '../../common/extHostInitDataService.js';
 import { ExtHostTelemetry, ExtHostTelemetryLogger } from '../../common/extHostTelemetry.js';
 import { IEnvironment } from '../../../services/extensions/common/extensionHostProtocol.js';
@@ -22,6 +22,86 @@ interface TelemetryLoggerSpy {
 	flushCalled: boolean;
 }
 
+class TestTelemetryLogger extends AbstractLogger implements ILogger {
+
+	public logs: string[] = [];
+
+	constructor(logLevel: LogLevel = DEFAULT_LOG_LEVEL) {
+		super();
+		this.setLevel(logLevel);
+	}
+
+	trace(message: string, ...args: unknown[]): void {
+		if (this.canLog(LogLevel.Trace)) {
+			this.logs.push(message + JSON.stringify(args));
+		}
+	}
+
+	debug(message: string, ...args: unknown[]): void {
+		if (this.canLog(LogLevel.Debug)) {
+			this.logs.push(message);
+		}
+	}
+
+	info(message: string, ...args: unknown[]): void {
+		if (this.canLog(LogLevel.Info)) {
+			this.logs.push(message);
+		}
+	}
+
+	warn(message: string | Error, ...args: unknown[]): void {
+		if (this.canLog(LogLevel.Warning)) {
+			this.logs.push(message.toString());
+		}
+	}
+
+	error(message: string, ...args: unknown[]): void {
+		if (this.canLog(LogLevel.Error)) {
+			this.logs.push(message);
+		}
+	}
+	flush(): void { }
+}
+
+class TestTelemetryLoggerService implements ILoggerService {
+	_serviceBrand: undefined;
+
+	logger?: TestTelemetryLogger;
+	loggerId?: string | URI;
+
+	constructor(private readonly logLevel: LogLevel) { }
+
+	getLogger(id?: string | URI) {
+		if (id) {
+			this.loggerId = id;
+		}
+		return this.logger;
+	}
+
+	createLogger(id?: string | URI) {
+		if (id) {
+			this.loggerId = id;
+		}
+		if (!this.logger) {
+			this.logger = new TestTelemetryLogger(this.logLevel);
+		}
+
+		return this.logger;
+	}
+
+	onDidChangeVisibility = Event.None;
+	onDidChangeLogLevel = Event.None;
+	onDidChangeLoggers = Event.None;
+	setLogLevel(): void { }
+	getLogLevel() { return LogLevel.Info; }
+	setVisibility(): void { }
+	getDefaultLogLevel() { return this.logLevel; }
+	registerLogger() { }
+	deregisterLogger(): void { }
+	getRegisteredLoggers() { return []; }
+	getRegisteredLogger() { return undefined; }
+}
+
 suite('ExtHostTelemetry', function () {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
 
@@ -31,7 +111,6 @@ suite('ExtHostTelemetry', function () {
 		extensionTestsLocationURI: undefined,
 		appRoot: undefined,
 		appName: 'test',
-		isExtensionTelemetryLoggingOnly: false,
 		appHost: 'test',
 		appLanguage: 'en',
 		globalStorageHome: URI.parse('fake'),

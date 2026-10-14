@@ -16,7 +16,6 @@ import { IDiagnosticInfoOptions, IDiagnosticInfo } from '../../../../platform/di
 import { Emitter } from '../../../../base/common/event.js';
 import { ISignService } from '../../../../platform/sign/common/sign.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { ITelemetryData, TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IUserDataProfileService } from '../../userDataProfile/common/userDataProfile.js';
 import { IRemoteSocketFactoryService } from '../../../../platform/remote/common/remoteSocketFactoryService.js';
@@ -88,29 +87,8 @@ export abstract class AbstractRemoteAgentService extends Disposable implements I
 		);
 	}
 
-	updateTelemetryLevel(telemetryLevel: TelemetryLevel): Promise<void> {
-		return this._withTelemetryChannel(
-			channel => RemoteExtensionEnvironmentChannelClient.updateTelemetryLevel(channel, telemetryLevel),
-			undefined
-		);
-	}
-
-	logTelemetry(eventName: string, data: ITelemetryData): Promise<void> {
-		return this._withTelemetryChannel(
-			channel => RemoteExtensionEnvironmentChannelClient.logTelemetry(channel, eventName, data),
-			undefined
-		);
-	}
-
-	flushTelemetry(): Promise<void> {
-		return this._withTelemetryChannel(
-			channel => RemoteExtensionEnvironmentChannelClient.flushTelemetry(channel),
-			undefined
-		);
-	}
-
 	getRoundTripTime(): Promise<number | undefined> {
-		return this._withTelemetryChannel(
+		return this._withChannel(
 			async channel => {
 				const start = Date.now();
 				await RemoteExtensionEnvironmentChannelClient.ping(channel);
@@ -135,13 +113,6 @@ export abstract class AbstractRemoteAgentService extends Disposable implements I
 		return connection.withChannel('remoteextensionsenvironment', (channel) => callback(channel, connection));
 	}
 
-	private _withTelemetryChannel<R>(callback: (channel: IChannel, connection: IRemoteAgentConnection) => Promise<R>, fallback: R): Promise<R> {
-		const connection = this.getConnection();
-		if (!connection) {
-			return Promise.resolve(fallback);
-		}
-		return connection.withChannel('telemetry', (channel) => callback(channel, connection));
-	}
 
 }
 

@@ -420,10 +420,6 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 		// namespace: env
 		const env: typeof vscode.env = {
 			get machineId() { return initData.telemetryInfo.machineId; },
-			get devDeviceId() {
-				checkProposedApiEnabled(extension, 'devDeviceId');
-				return initData.telemetryInfo.devDeviceId ?? initData.telemetryInfo.machineId;
-			},
 			get isAppPortable() { return initData.environment.isPortable ?? false; },
 			get sessionId() { return initData.telemetryInfo.sessionId; },
 			get language() { return initData.environment.appLanguage; },

@@ -12,14 +12,13 @@ import { URI } from '../../../../../base/common/uri.js';
 import { mock } from '../../../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { runWithFakedTimers } from '../../../../../base/test/common/timeTravelScheduler.js';
-import { IConfigurationChangeEvent } from '../../../../../platform/configuration/common/configuration.js';
 import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 import { IDefaultAccountService } from '../../../../../platform/defaultAccount/common/defaultAccount.js';
 import { COPILOT_INTEGRATION_ID } from '../../../../../platform/endpoint/common/licenseAgreement.js';
 import { NullLogService } from '../../../../../platform/log/common/log.js';
 import { IProductService } from '../../../../../platform/product/common/productService.js';
 import { NullTelemetryService } from '../../../../../platform/telemetry/common/telemetryUtils.js';
-import { ITelemetryService, TELEMETRY_SETTING_ID, TelemetryLevel } from '../../../../../platform/telemetry/common/telemetry.js';
+import { ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
 import { AuthenticationSession, AuthenticationSessionsChangeEvent, IAuthenticationGetSessionsOptions, IAuthenticationService } from '../../../authentication/common/authentication.js';
 import { WorkbenchGitHubService } from '../../browser/githubService.js';
 
@@ -36,7 +35,7 @@ suite('Workbench GitHub service', () => {
 	function setup(sessions: AuthenticationSession[] = [session()], telemetryService: ITelemetryService = NullTelemetryService, getSessions?: () => Promise<readonly AuthenticationSession[]>) {
 		const changed = store.add(new Emitter<{ providerId: string; label: string; event: AuthenticationSessionsChangeEvent }>());
 		const defaultChanged = store.add(new Emitter<IDefaultAccount | null>());
-		const configuration = new TestConfigurationService({ [TELEMETRY_SETTING_ID]: 'all' });
+		const configuration = new TestConfigurationService();
 		store.add(configuration.onDidChangeConfigurationEmitter);
 		const state: { account: IDefaultAccount | null; enterpriseUrl?: string; pendingDefaultAccount?: Promise<IDefaultAccount | null> } = {
 			account: { authenticationProvider: provider, accountName: 'account', sessionId: 'session', enterprise: false },
@@ -430,28 +429,5 @@ suite('Workbench GitHub service', () => {
 		const { service } = setup([enterprise]);
 		const client = store.add(await service.acquireSessionClient('github-enterprise', 'enterprise', signal())).object;
 		assert.strictEqual(client.endpoint.getApiBaseUri(), 'https://ghe.example.test/api/v3');
-	});
-
-	test('drops pending GitHub telemetry when configuration opts out and back in while idle', async () => {
-		const events: string[] = [];
-		const { service, configuration } = setup(undefined, new class extends mock<ITelemetryService>() {
-			override readonly telemetryLevel = TelemetryLevel.USAGE;
-			override publicLog2(name: string): void { events.push(name); }
-		}());
-		const client = store.add(await service.acquireDefaultAccountClient(signal())).object;
-		const controller = new AbortController();
-		const reason = new Error('cancelled');
-		controller.abort(reason);
-		await assert.rejects(client.transport.rest({ host: 'api.github.com', accountId: '1' }, 'token', {
-			method: 'GET', url: 'https://api.github.com/user',
-		}, controller.signal), error => error === reason);
-		for (const level of ['off', 'all']) {
-			await configuration.setUserConfiguration(TELEMETRY_SETTING_ID, level);
-			configuration.onDidChangeConfigurationEmitter.fire(new class extends mock<IConfigurationChangeEvent>() {
-				override affectsConfiguration(key: string): boolean { return key === TELEMETRY_SETTING_ID; }
-			}());
-		}
-		service.dispose();
-		assert.deepStrictEqual(events, []);
 	});
 });

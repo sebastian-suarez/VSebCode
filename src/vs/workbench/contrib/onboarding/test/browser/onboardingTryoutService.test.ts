@@ -16,9 +16,7 @@ import { IConfigurationService } from '../../../../../platform/configuration/com
 import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 import { ContextKeyService } from '../../../../../platform/contextkey/browser/contextKeyService.js';
 import { ContextKeyExpr } from '../../../../../platform/contextkey/common/contextkey.js';
-import { IProductService } from '../../../../../platform/product/common/productService.js';
-import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../../../platform/telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../../../platform/telemetry/common/telemetryService.js';
+import { ITelemetryData, ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
 import { NullTelemetryServiceShape } from '../../../../../platform/telemetry/common/telemetryUtils.js';
 import { ChatEntitlement, IChatEntitlementService, IChatSentiment } from '../../../../services/chat/common/chatEntitlementService.js';
 import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
@@ -213,18 +211,14 @@ suite('OnboardingTryoutService', () => {
 		test(`cleans up and allows another run when ${eventName} telemetry throws`, async () => {
 			const error = new Error('Telemetry appender failed');
 			let shouldThrow = true;
-			const telemetry = store.add(TelemetryService.createWithLevel({
-				telemetryLevel: TelemetryLevel.USAGE,
-				appenders: [{
-					log: name => {
-						if (shouldThrow && name === eventName) {
-							shouldThrow = false;
-							throw error;
-						}
-					},
-					flush: async () => { },
-				}],
-			}, upcastPartial<IProductService>({ enabledTelemetryLevels: { usage: true, error: true } })));
+			const telemetry = new class extends NullTelemetryServiceShape {
+				override publicLog2(name?: string): void {
+					if (shouldThrow && name === eventName) {
+						shouldThrow = false;
+						throw error;
+					}
+				}
+			}();
 			const { service } = createService(true, telemetry);
 			const contexts: IOnboardingTryoutRunContext[] = [];
 			let disposed = 0;
@@ -258,27 +252,6 @@ suite('OnboardingTryoutService', () => {
 			{ name: 'onboarding.tryoutOutcome', data: { tryoutId: 'test.tryout', source: 'direct', runId: true, result: 'cancelled', launchResult: 'none', guidanceOutcome: undefined, dismissReason: undefined, durationMs: true } },
 		]);
 	});
-
-	for (const { level, usageEnabled } of [
-		{ level: TelemetryLevel.NONE, usageEnabled: true },
-		{ level: TelemetryLevel.ERROR, usageEnabled: true },
-		{ level: TelemetryLevel.USAGE, usageEnabled: false },
-		{ level: TelemetryLevel.USAGE, usageEnabled: true },
-	]) {
-		test(`respects telemetry level ${level} with product usage telemetry ${usageEnabled}`, async () => {
-			const events: string[] = [];
-			const telemetry = store.add(TelemetryService.createWithLevel({
-				telemetryLevel: level,
-				appenders: [{ log: name => events.push(name), flush: async () => { } }],
-			}, upcastPartial<IProductService>({ enabledTelemetryLevels: { usage: usageEnabled, error: true } })));
-			const { service } = createService(true, telemetry);
-			registerTryout();
-			registerPresentation(async () => ({ kind: 'ready', run: async () => ({ kind: 'opened' }) }));
-			await service.run('test.tryout');
-
-			assert.deepStrictEqual(events, level === TelemetryLevel.USAGE && usageEnabled ? ['onboarding.tryoutStarted', 'onboarding.tryoutOutcome'] : []);
-		});
-	}
 
 	test('registering and reading an example do not prepare or run it', () => {
 		const { service } = createService();

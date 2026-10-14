@@ -40,8 +40,6 @@ export interface INativeWorkbenchEnvironmentService extends IBrowserWorkbenchEnv
 	readonly mainPid: number;
 	readonly os: IOSConfiguration;
 	readonly machineId: string;
-	readonly sqmId: string;
-	readonly devDeviceId: string;
 	readonly isPortable: boolean;
 
 	// --- Paths
@@ -50,7 +48,6 @@ export interface INativeWorkbenchEnvironmentService extends IBrowserWorkbenchEnv
 
 	// --- Development
 	readonly crashReporterDirectory?: string;
-	readonly crashReporterId?: string;
 
 	// --- Editors to --wait
 	readonly filesToWait?: IPathsToWaitFor;
@@ -64,11 +61,6 @@ export class NativeWorkbenchEnvironmentService extends AbstractNativeEnvironment
 	@memoize
 	get machineId() { return this.configuration.machineId; }
 
-	@memoize
-	get sqmId() { return this.configuration.sqmId; }
-
-	@memoize
-	get devDeviceId() { return this.configuration.devDeviceId; }
 
 	@memoize
 	get isPortable() { return this.configuration.isPortable; }

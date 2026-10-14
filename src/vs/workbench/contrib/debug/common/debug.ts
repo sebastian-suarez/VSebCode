@@ -20,7 +20,6 @@ import * as nls from '../../../../nls.js';
 import { ConfigurationTarget } from '../../../../platform/configuration/common/configuration.js';
 import { RawContextKey } from '../../../../platform/contextkey/common/contextkey.js';
 import { createDecorator } from '../../../../platform/instantiation/common/instantiation.js';
-import { ITelemetryEndpoint } from '../../../../platform/telemetry/common/telemetry.js';
 import { IWorkspaceFolder } from '../../../../platform/workspace/common/workspace.js';
 import { IEditorPane } from '../../../common/editor.js';
 import { DebugCompoundRoot } from './debugCompoundRoot.js';
@@ -203,7 +202,6 @@ export interface IDebugger {
 	createDebugAdapter(session: IDebugSession): Promise<IDebugAdapter>;
 	runInTerminal(args: DebugProtocol.RunInTerminalRequestArguments, sessionId: string): Promise<number | undefined>;
 	startDebugging(args: IConfig, parentSessionId: string): Promise<boolean>;
-	getCustomTelemetryEndpoint(): ITelemetryEndpoint | undefined;
 	getInitialConfigurationContent(initialConfigs?: IConfig[]): Promise<string>;
 }
 
@@ -969,9 +967,6 @@ export interface IDebuggerContribution extends IPlatformSpecificAdapterContribut
 	windows?: IPlatformSpecificAdapterContribution;
 	osx?: IPlatformSpecificAdapterContribution;
 	linux?: IPlatformSpecificAdapterContribution;
-
-	// internal
-	aiKey?: string;
 
 	// supported languages
 	languages?: string[];

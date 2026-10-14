@@ -6,16 +6,13 @@
 import assert from 'assert';
 import { timeout } from '../../../../../../base/common/async.js';
 import { DisposableStore } from '../../../../../../base/common/lifecycle.js';
-import { mock } from '../../../../../../base/test/common/mock.js';
 import { runWithFakedTimers } from '../../../../../../base/test/common/timeTravelScheduler.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../../base/test/common/utils.js';
 import { CloudSandboxRequestError } from '../../../../../../platform/agentHost/common/cloudSandboxAgentHost.js';
 import { IConnectionDiagnosticEvent, traceConnectionOperation } from '../../../../../../platform/agentHost/common/connectionDiagnostics.js';
 import { AhpErrorCodes, JsonRpcErrorCodes } from '../../../../../../platform/agentHost/common/state/protocol/errors.js';
 import { ProtocolError } from '../../../../../../platform/agentHost/common/state/sessionProtocol.js';
-import { IProductService } from '../../../../../../platform/product/common/productService.js';
 import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../../../../platform/telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../../../../platform/telemetry/common/telemetryService.js';
 import {
 	CloudSandboxConnectionHealthClassification,
 	CloudSandboxConnectionOutcomeClassification,
@@ -48,8 +45,6 @@ class TestTelemetryService implements ITelemetryService {
 	readonly sendErrorTelemetry = true;
 	readonly sessionId = 'sessionId';
 	readonly machineId = 'machineId';
-	readonly sqmId = 'sqmId';
-	readonly devDeviceId = 'devDeviceId';
 	readonly firstSessionDate = 'firstSessionDate';
 	readonly events: ICapturedEvent[] = [];
 
@@ -825,27 +820,6 @@ suite('cloudSandbox telemetry', () => {
 			{ eventName: 'cloudSandboxConnectionHealth', data: { environmentKind: 'cloud', connectedMs: 0, unexpectedDisconnects: 0, receivedFrames: 1 } },
 		]);
 	}));
-
-	for (const environmentKind of ['cloud', 'user-local'] as const) {
-		test(`${environmentKind} connection events use the standard telemetry level gate`, () => runWithFakedTimers({}, async () => {
-			const events: string[] = [];
-			const telemetry = store.add(TelemetryService.createWithLevel({
-				telemetryLevel: TelemetryLevel.NONE,
-				appenders: [{ log: event => events.push(event), flush: async () => { } }],
-			}, new class extends mock<IProductService>() { }()));
-			const service = store.add(new CloudSandboxTelemetryService(telemetry));
-			service.reportProvisioningOutcome('success', 1000);
-			const connection = store.add(service.trackConnection('connection', 'unknown', 'existing', { environmentKind: environmentKind === 'user-local' ? environmentKind : undefined }));
-			connection.onConnectionStateChange('connected');
-			await timeout(300_001);
-			connection.recordConnectionDiagnostic({ operationId: 'first', phase: 'protocol.firstSessionRequest', outcome: 'started', timestamp: Date.now() });
-			connection.recordConnectionDiagnostic({ operationId: 'first', phase: 'protocol.firstSessionRequest', outcome: 'succeeded', timestamp: Date.now() });
-			connection.onConnectionStateChange('reconnecting');
-			connection.onConnectionStateChange('failed');
-			service.dispose();
-			assert.deepStrictEqual(events, []);
-		}));
-	}
 
 	for (const environmentKind of ['cloud', 'user-local'] as const) {
 		test(`${environmentKind} classification marks every numeric payload field, and no string field, as a measurement`, () => runWithFakedTimers({}, async () => {

@@ -235,10 +235,6 @@
 			"project": "vscode-workbench"
 		},
 		{
-			"name": "vs/workbench/contrib/tags",
-			"project": "vscode-workbench"
-		},
-		{
 			"name": "vs/workbench/contrib/speech",
 			"project": "vscode-workbench"
 		},
@@ -360,10 +356,6 @@
 		},
 		{
 			"name": "vs/workbench/contrib/accessibilitySignals",
-			"project": "vscode-workbench"
-		},
-		{
-			"name": "vs/workbench/contrib/bracketPairColorizer2Telemetry",
 			"project": "vscode-workbench"
 		},
 		{
@@ -648,10 +640,6 @@
 		},
 		{
 			"name": "vs/workbench/contrib/remoteCodingAgents",
-			"project": "vscode-workbench"
-		},
-		{
-			"name": "vs/workbench/contrib/telemetry",
 			"project": "vscode-workbench"
 		},
 		{

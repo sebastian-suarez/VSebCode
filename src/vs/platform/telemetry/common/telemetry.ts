@@ -22,8 +22,6 @@ export interface ITelemetryService {
 
 	readonly sessionId: string;
 	readonly machineId: string;
-	readonly sqmId: string;
-	readonly devDeviceId: string;
 	readonly firstSessionDate: string;
 	readonly msftInternal?: boolean;
 
@@ -71,35 +69,20 @@ export function escapeModelIdForTelemetry(modelId: string | undefined): string |
 	return modelId?.replace(/[\/\\]/g, '|');
 }
 
-export interface ITelemetryEndpoint {
-	id: string;
-	aiKey: string;
-	sendErrorTelemetry: boolean;
-}
-
-export const ICustomEndpointTelemetryService = createDecorator<ICustomEndpointTelemetryService>('customEndpointTelemetryService');
-
-export interface ICustomEndpointTelemetryService {
-	readonly _serviceBrand: undefined;
-
-	publicLog(endpoint: ITelemetryEndpoint, eventName: string, data?: ITelemetryData): void;
-	publicLogError(endpoint: ITelemetryEndpoint, errorEventName: string, data?: ITelemetryData): void;
-}
-
 // Keys
 export const currentSessionDateStorageKey = 'telemetry.currentSessionDate';
 export const firstSessionDateStorageKey = 'telemetry.firstSessionDate';
 export const lastSessionDateStorageKey = 'telemetry.lastSessionDate';
 export const machineIdKey = 'telemetry.machineId';
-export const sqmIdKey = 'telemetry.sqmId';
-export const devDeviceIdKey = 'telemetry.devDeviceId';
 
 // Configuration Keys
 export const TELEMETRY_SECTION_ID = 'telemetry';
-export const TELEMETRY_SETTING_ID = 'telemetry.telemetryLevel';
-export const TELEMETRY_CRASH_REPORTER_SETTING_ID = 'telemetry.enableCrashReporter';
-export const TELEMETRY_OLD_SETTING_ID = 'telemetry.enableTelemetry';
 
+/**
+ * The product sends no telemetry: every telemetry service reports
+ * `TelemetryLevel.NONE`. The other levels remain for the code that
+ * compares against them.
+ */
 export const enum TelemetryLevel {
 	NONE = 0,
 	CRASH = 1,
@@ -107,6 +90,10 @@ export const enum TelemetryLevel {
 	USAGE = 3
 }
 
+/**
+ * The string form of a telemetry level, used where a level travels as a
+ * command line argument.
+ */
 export const enum TelemetryConfiguration {
 	OFF = 'off',
 	CRASH = 'crash',

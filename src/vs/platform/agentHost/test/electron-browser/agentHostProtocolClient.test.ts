@@ -43,7 +43,7 @@ import { mainWindow } from '../../../../base/browser/window.js';
 import { AUTOMATION_CATALOG_URI, buildChatUri, buildDefaultChatUri, createChatState, createSessionState, CustomizationType, MessageAttachmentKind, MessageKind, PendingMessageKind, readSessionExternal, readSessionWorkspaceless, ROOT_STATE_URI, SessionStatus, StateComponents, TurnState, customizationId, withSessionExternal, withSessionWorkspaceless, type ChatState, type SessionState } from '../../common/state/sessionState.js';
 import { AgentHostTransportFailureReason, NonReconnectableTransportError, type IClientTransport, type IProtocolTransport, type ITransportCloseDetails } from '../../common/state/sessionTransport.js';
 import { TestConfigurationService } from '../../../configuration/test/common/testConfigurationService.js';
-import { ITelemetryService, TelemetryConfiguration, TelemetryLevel, TELEMETRY_SETTING_ID } from '../../../telemetry/common/telemetry.js';
+import { ITelemetryService, TelemetryLevel } from '../../../telemetry/common/telemetry.js';
 import { NullTelemetryService } from '../../../telemetry/common/telemetryUtils.js';
 import { AgentHostDisableRepoInfoTelemetryConfigKey, AgentHostTelemetryLevelConfigKey, AgentHostTerminalAutoApproveEnabledConfigKey, AgentHostTerminalAutoApproveRulesConfigKey, AgentHostWorkspaceTrustConfigKey, DISABLE_REPO_INFO_TELEMETRY_SETTING_ID, ELIGIBLE_FOR_AUTO_APPROVAL_SETTING_ID, GLOBAL_AUTO_APPROVE_SETTING_ID, telemetryLevelToAgentHostConfigValue, TERMINAL_AUTO_APPROVE_ENABLED_SETTING_ID, TERMINAL_AUTO_APPROVE_SETTING_ID, TERMINAL_IGNORE_DEFAULT_AUTO_APPROVE_RULES_SETTING_ID, type AgentHostTerminalAutoApproveRules } from '../../common/agentHostSchema.js';
 import { AgentSandboxSettingId } from '../../../sandbox/common/settings.js';
@@ -107,8 +107,6 @@ class TestClientIdentityTelemetryService implements ITelemetryService {
 	readonly telemetryLevel = TelemetryLevel.USAGE;
 	readonly sessionId = 'client-session-id';
 	readonly machineId = 'client-machine-id';
-	readonly sqmId = 'client-sqm-id';
-	readonly devDeviceId = 'client-dev-device-id';
 	readonly firstSessionDate = '2026-08-14';
 	readonly sendErrorTelemetry = true;
 	publicLog(): void { }
@@ -944,7 +942,6 @@ suite('AgentHostProtocolClient', () => {
 			'vscode.clientConnectionKind': AgentHostClientConnectionKind.RemoteExtensionHost,
 			'vscode.telemetryLevel': 'all',
 			'vscode.clientMachineId': 'client-machine-id',
-			'vscode.clientDevDeviceId': 'client-dev-device-id',
 		});
 
 		transport.fireMessage({
@@ -2028,7 +2025,6 @@ suite('AgentHostProtocolClient', () => {
 				'vscode.clientConnectionKind': 'dev_tunnel',
 				'vscode.telemetryLevel': 'all',
 				'vscode.clientMachineId': 'client-machine-id',
-				'vscode.clientDevDeviceId': 'client-dev-device-id',
 			},
 		});
 		assert.strictEqual(params.protocolVersions[0], '1.0.0');
@@ -2106,29 +2102,6 @@ suite('AgentHostProtocolClient', () => {
 			findRootConfigValue(transport.sentMessages, AgentHostTelemetryLevelConfigKey),
 			'off',
 		);
-	});
-
-	test('forwards telemetry setting changes to the local agent host after initialization', async () => {
-		const transport = disposables.add(new TestProtocolTransport(AgentHostClientConnectionKind.Local));
-		const configurationService = new TestConfigurationService();
-		const { client } = createClientForIdentity(
-			LOCAL_AGENT_HOST_RESOURCE_IDENTITY,
-			transport,
-			createPermissionService(),
-			undefined,
-			new NullLogService(),
-			configurationService,
-			undefined,
-			editorWindowAgentHostClientInfo,
-			new TestClientIdentityTelemetryService(),
-		);
-		await connectClient(client, transport);
-		transport.sentMessages.length = 0;
-
-		await configurationService.setUserConfiguration(TELEMETRY_SETTING_ID, TelemetryConfiguration.OFF);
-		fireConfigurationChange(configurationService, TELEMETRY_SETTING_ID);
-
-		assert.strictEqual(findRootConfigValue(transport.sentMessages, AgentHostTelemetryLevelConfigKey), 'off');
 	});
 
 	test('forwards every setting declaring `agentHost` on connect and when one changes', async () => {
@@ -3643,8 +3616,6 @@ suite('AgentHostProtocolClient', () => {
 				await connecting;
 				await configurationService.setUserConfiguration(SYNC_SETTING_A, false);
 				fireConfigurationChange(configurationService, SYNC_SETTING_A);
-				await configurationService.setUserConfiguration(TELEMETRY_SETTING_ID, TelemetryConfiguration.OFF);
-				fireConfigurationChange(configurationService, TELEMETRY_SETTING_ID);
 				await configurationService.setUserConfiguration(GLOBAL_AUTO_APPROVE_SETTING_ID, false);
 				fireConfigurationChange(configurationService, GLOBAL_AUTO_APPROVE_SETTING_ID);
 				trustedFoldersChanged.fire();
@@ -4883,7 +4854,6 @@ suite('AgentHostProtocolClient', () => {
 					[AgentHostSessionUrisCapabilityMetaKey]: true,
 					'vscode.telemetryLevel': 'all',
 					'vscode.clientMachineId': 'client-machine-id',
-					'vscode.clientDevDeviceId': 'client-dev-device-id',
 				});
 				reconnectTransport.fireMessage({
 					jsonrpc: '2.0',
@@ -4903,7 +4873,6 @@ suite('AgentHostProtocolClient', () => {
 						[AgentHostSessionUrisCapabilityMetaKey]: true,
 						'vscode.telemetryLevel': 'all',
 						'vscode.clientMachineId': 'client-machine-id',
-						'vscode.clientDevDeviceId': 'client-dev-device-id',
 					},
 				});
 				reconnectTransport.fireMessage({

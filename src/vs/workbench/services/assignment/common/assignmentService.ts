@@ -29,7 +29,6 @@ import { IDefaultAccountService } from '../../../../platform/defaultAccount/comm
 import { AssignmentContextFilter } from './assignmentContextFilter.js';
 import { Disposable, DisposableStore, toDisposable } from '../../../../base/common/lifecycle.js';
 import { Emitter, Event } from '../../../../base/common/event.js';
-import { experimentsEnabled } from '../../telemetry/common/workbenchTelemetryUtils.js';
 import { CancellationError } from '../../../../base/common/errors.js';
 import { mapsStrictEqualIgnoreOrder } from '../../../../base/common/map.js';
 
@@ -280,7 +279,7 @@ export class WorkbenchAssignmentService extends Disposable implements IAssignmen
 	) {
 		super();
 
-		this.experimentsEnabled = experimentsEnabled(configurationService, productService, this.environmentService);
+		this.experimentsEnabled = false;
 
 		if (this.experimentsEnabled) {
 			this.tasClient = this.setupTASClient();
@@ -473,7 +472,7 @@ export class WorkbenchAssignmentService extends Disposable implements IAssignmen
 			this.productService.version,
 			this.productService.nameLong,
 			this.telemetryService.machineId,
-			this.telemetryService.devDeviceId,
+			this.telemetryService.machineId,
 			targetPopulation,
 			this.productService.date ?? '',
 			this.environmentService.isSessionsWindow ? WindowKind.Agents : WindowKind.Editor
@@ -493,7 +492,7 @@ export class WorkbenchAssignmentService extends Disposable implements IAssignmen
 			const coreAssignmentsFilterProvider = new VSCodeCoreAssignmentsFilterProvider(
 				this.productService.version,
 				this.productService.nameLong,
-				this.telemetryService.devDeviceId,
+				this.telemetryService.machineId,
 				targetPopulation,
 				this.productService.date ?? '',
 				this.environmentService.isSessionsWindow ? WindowKind.Agents : WindowKind.Editor

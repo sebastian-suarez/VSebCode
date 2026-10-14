@@ -9,7 +9,7 @@ import { Server as ChildProcessServer } from '../../../base/parts/ipc/node/ipc.c
 import { Server as UtilityProcessServer } from '../../../base/parts/ipc/node/ipc.mp.js';
 import { isUtilityProcess } from '../../../base/parts/sandbox/node/electronTypes.js';
 import { Emitter, type Event } from '../../../base/common/event.js';
-import { DisposableStore, IDisposable, MutableDisposable, toDisposable } from '../../../base/common/lifecycle.js';
+import { DisposableStore, IDisposable, toDisposable } from '../../../base/common/lifecycle.js';
 import { isWindows } from '../../../base/common/platform.js';
 import { URI } from '../../../base/common/uri.js';
 import { generateUuid } from '../../../base/common/uuid.js';
@@ -57,7 +57,6 @@ import { AGENT_CLIENT_SCHEME } from '../common/agentClientUri.js';
 import { AGENT_HOST_CLIENT_BYOK_LM_CHANNEL, createAgentHostClientByokLmConnection } from '../common/agentHostClientByokLmChannel.js';
 import { AGENT_HOST_CLIENT_PROXY_CHANNEL, createAgentHostClientProxyConnection } from '../common/agentHostClientProxyChannel.js';
 import { join } from '../../../base/common/path.js';
-import ErrorTelemetry from '../../telemetry/node/errorTelemetry.js';
 import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { AgentHostLaunchKindEnvVar, readAgentHostLaunchKind, type AgentHostLaunchKind } from '../common/agentHostTelemetry.js';
 import { markNodeCompileCacheReady } from '../../../base/node/nodeCompileCache.js';
@@ -84,7 +83,6 @@ async function startAgentHost(): Promise<void> {
 	const disposables = new DisposableStore();
 	const protocolIngressDisposables = disposables.add(new DisposableStore());
 	const protocolHandlers: ProtocolServerHandler[] = [];
-	const errorTelemetry = disposables.add(new MutableDisposable<ErrorTelemetry>());
 
 	// Services
 	const productService: IProductService = { _serviceBrand: undefined, ...product };
@@ -148,7 +146,6 @@ async function startAgentHost(): Promise<void> {
 		fileService = runtimeServices.fileService;
 		proxyResolver = runtimeServices.proxyResolver;
 		stateManager = runtimeServices.stateManager;
-		errorTelemetry.value = new ErrorTelemetry(runtimeServices.telemetryService);
 		const agentSdkDownloader = runtimeServices.agentSdkDownloader;
 		const providerService = runtimeServices.providerService;
 		sdkDownloadProgress = runtime.sdkDownloadProgress;

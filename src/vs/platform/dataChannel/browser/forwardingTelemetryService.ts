@@ -27,13 +27,6 @@ export class InterceptingTelemetryService implements ITelemetryService {
 		return this._baseService.machineId;
 	}
 
-	get sqmId(): string {
-		return this._baseService.sqmId;
-	}
-
-	get devDeviceId(): string {
-		return this._baseService.devDeviceId;
-	}
 
 	get firstSessionDate(): string {
 		return this._baseService.firstSessionDate;

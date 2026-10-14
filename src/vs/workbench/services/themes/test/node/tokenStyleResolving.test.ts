@@ -17,9 +17,6 @@ import { ExtensionResourceLoaderService } from '../../../../../platform/extensio
 import { ITokenStyle } from '../../../../../platform/theme/common/themeService.js';
 import { mock, TestProductService } from '../../../../test/common/workbenchTestServices.js';
 import { IRequestService } from '../../../../../platform/request/common/request.js';
-import { IStorageService } from '../../../../../platform/storage/common/storage.js';
-import { IEnvironmentService } from '../../../../../platform/environment/common/environment.js';
-import { IConfigurationService } from '../../../../../platform/configuration/common/configuration.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { ExtensionGalleryManifestService } from '../../../../../platform/extensionManagement/common/extensionGalleryManifestService.js';
 
@@ -86,11 +83,8 @@ function assertTokenStyles(themeData: ColorThemeData, expected: { [qualifiedClas
 suite('Themes - TokenStyleResolving', () => {
 	const fileService = new FileService(new NullLogService());
 	const requestService = new (mock<IRequestService>())();
-	const storageService = new (mock<IStorageService>())();
-	const environmentService = new (mock<IEnvironmentService>())();
-	const configurationService = new (mock<IConfigurationService>())();
 
-	const extensionResourceLoaderService = new ExtensionResourceLoaderService(fileService, storageService, TestProductService, environmentService, configurationService, new ExtensionGalleryManifestService(TestProductService), requestService, new NullLogService());
+	const extensionResourceLoaderService = new ExtensionResourceLoaderService(fileService, TestProductService, new ExtensionGalleryManifestService(TestProductService), requestService, new NullLogService());
 
 	const diskFileSystemProvider = new DiskFileSystemProvider(new NullLogService());
 	fileService.registerProvider(Schemas.file, diskFileSystemProvider);

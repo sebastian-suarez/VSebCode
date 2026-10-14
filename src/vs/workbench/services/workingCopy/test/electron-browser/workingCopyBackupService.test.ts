@@ -59,8 +59,6 @@ const NULL_PROFILE = {
 const TestNativeWindowConfiguration: INativeWindowConfiguration = {
 	windowId: 0,
 	machineId: 'testMachineId',
-	sqmId: 'testSqmId',
-	devDeviceId: 'testdevDeviceId',
 	isPortable: false,
 	logLevel: LogLevel.Error,
 	loggers: [],

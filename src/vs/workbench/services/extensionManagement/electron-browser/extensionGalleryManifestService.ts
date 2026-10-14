@@ -54,14 +54,7 @@ export class WorkbenchExtensionGalleryManifestService extends ExtensionGalleryMa
 		@IHostService private readonly hostService: IHostService,
 	) {
 		super(productService);
-		this.commonHeadersPromise = resolveMarketplaceHeaders(
-			productService.version,
-			productService,
-			environmentService,
-			configurationService,
-			fileService,
-			storageService,
-			telemetryService);
+		this.commonHeadersPromise = resolveMarketplaceHeaders(productService.version, productService);
 
 		const channels = [sharedProcessService.getChannel('extensionGalleryManifest')];
 		const remoteConnection = remoteAgentService.getConnection();

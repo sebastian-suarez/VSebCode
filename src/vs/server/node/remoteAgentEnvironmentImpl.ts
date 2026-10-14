@@ -54,6 +54,10 @@ export class RemoteAgentEnvironmentChannel implements IServerChannel {
 				return this._extensionHostStatusService.getExitInfo(args.reconnectionToken);
 			}
 
+			case 'ping': {
+				return;
+			}
+
 			case 'getDiagnosticInfo': {
 				const options = <IDiagnosticInfoOptions>arg;
 				const diagnosticInfo: IDiagnosticInfo = {

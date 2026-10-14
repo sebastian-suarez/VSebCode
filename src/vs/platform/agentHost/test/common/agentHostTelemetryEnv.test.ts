@@ -5,19 +5,17 @@
 
 import assert from 'assert';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
-import { AgentHostDevDeviceIdEnvKey, AgentHostMachineIdEnvKey, AgentHostSqmIdEnvKey, buildAgentHostTelemetryIdEnv } from '../../common/agentHostTelemetryEnv.js';
+import { AgentHostMachineIdEnvKey, buildAgentHostTelemetryIdEnv } from '../../common/agentHostTelemetryEnv.js';
 
 suite('agentHostTelemetryEnv', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
 
-	test('buildAgentHostTelemetryIdEnv forwards present ids and omits empty ones', () => {
+	test('buildAgentHostTelemetryIdEnv forwards a present machine id and omits an empty one', () => {
 		assert.deepStrictEqual([
-			buildAgentHostTelemetryIdEnv({ machineId: 'm1', sqmId: 's1', devDeviceId: 'd1' }),
-			buildAgentHostTelemetryIdEnv({ machineId: 'm1', sqmId: '', devDeviceId: 'd1' }),
-			buildAgentHostTelemetryIdEnv({ machineId: '', sqmId: '', devDeviceId: '' }),
+			buildAgentHostTelemetryIdEnv({ machineId: 'm1' }),
+			buildAgentHostTelemetryIdEnv({ machineId: '' }),
 		], [
-			{ [AgentHostMachineIdEnvKey]: 'm1', [AgentHostSqmIdEnvKey]: 's1', [AgentHostDevDeviceIdEnvKey]: 'd1' },
-			{ [AgentHostMachineIdEnvKey]: 'm1', [AgentHostDevDeviceIdEnvKey]: 'd1' },
+			{ [AgentHostMachineIdEnvKey]: 'm1' },
 			{},
 		]);
 	});

@@ -60,7 +60,6 @@ const RELAUNCH_FLAG_ARGUMENTS: readonly (keyof NativeParsedArgs)[] = [
 	'ignore-certificate-errors',
 	'allow-insecure-localhost',
 	// Persistent opt-outs / environment
-	'disable-crash-reporter',
 	'disable-telemetry',
 	'disable-updates',
 	'disable-workspace-trust',

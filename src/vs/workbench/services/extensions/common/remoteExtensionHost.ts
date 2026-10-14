@@ -20,7 +20,6 @@ import { IRemoteAuthorityResolverService, IRemoteConnectionData } from '../../..
 import { IRemoteSocketFactoryService } from '../../../../platform/remote/common/remoteSocketFactoryService.js';
 import { ISignService } from '../../../../platform/sign/common/sign.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { isLoggingOnly } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { IWorkspaceContextService, WorkbenchState } from '../../../../platform/workspace/common/workspace.js';
 import { IWorkbenchEnvironmentService } from '../../environment/common/environmentService.js';
 import { IDefaultLogLevelsService } from '../../log/common/defaultLogLevels.js';
@@ -219,7 +218,6 @@ export class RemoteExtensionHost extends Disposable implements IExtensionHost {
 				appName: this._productService.nameLong,
 				appHost: this._productService.embedderIdentifier || 'desktop',
 				appUriScheme: this._productService.urlProtocol,
-				isExtensionTelemetryLoggingOnly: isLoggingOnly(this._productService, this._environmentService),
 				appLanguage: platform.language,
 				extensionDevelopmentLocationURI: this._environmentService.extensionDevelopmentLocationURI,
 				extensionTestsLocationURI: this._environmentService.extensionTestsLocationURI,
@@ -247,8 +245,6 @@ export class RemoteExtensionHost extends Disposable implements IExtensionHost {
 			telemetryInfo: {
 				sessionId: this._telemetryService.sessionId,
 				machineId: this._telemetryService.machineId,
-				sqmId: this._telemetryService.sqmId,
-				devDeviceId: this._telemetryService.devDeviceId ?? this._telemetryService.machineId,
 				firstSessionDate: this._telemetryService.firstSessionDate,
 				msftInternal: this._telemetryService.msftInternal
 			},

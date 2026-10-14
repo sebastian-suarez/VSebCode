@@ -35,7 +35,6 @@ export class ExtHostTelemetry extends Disposable implements ExtHostTelemetryShap
 	private _productConfig: { usage: boolean; error: boolean } = { usage: true, error: true };
 	private _level: TelemetryLevel = TelemetryLevel.NONE;
 	private _oldTelemetryEnablement: boolean | undefined;
-	private readonly _inLoggingOnlyMode: boolean = false;
 	private readonly _outputLogger: ILogger;
 	private readonly _telemetryLoggers = new Map<string, ExtHostTelemetryLogger[]>();
 
@@ -45,11 +44,10 @@ export class ExtHostTelemetry extends Disposable implements ExtHostTelemetryShap
 		@ILoggerService loggerService: ILoggerService,
 	) {
 		super();
-		this._inLoggingOnlyMode = this.initData.environment.isExtensionTelemetryLoggingOnly;
 		const id = initData.remote.isRemote ? 'remoteExtHostTelemetry' : isWorker ? 'workerExtHostTelemetry' : 'extHostTelemetry';
 		this._outputLogger = this._register(loggerService.createLogger(id,
 			{
-				name: localize('extensionTelemetryLog', "Extension Telemetry{0}", this._inLoggingOnlyMode ? ' (Not Sent)' : ''),
+				name: localize('extensionTelemetryLog', "Extension Telemetry"),
 				hidden: true,
 				group: TelemetryLogGroup,
 			}));
@@ -75,7 +73,6 @@ export class ExtHostTelemetry extends Disposable implements ExtHostTelemetryShap
 			options,
 			extension,
 			this._outputLogger,
-			this._inLoggingOnlyMode,
 			this.getBuiltInCommonProperties(extension),
 			{ isUsageEnabled: telemetryDetails.isUsageEnabled, isErrorsEnabled: telemetryDetails.isErrorsEnabled },
 			logger => this.removeTelemetryLogger(extensionId, logger)
@@ -113,8 +110,6 @@ export class ExtHostTelemetry extends Disposable implements ExtHostTelemetryShap
 		commonProperties['common.vscodemachineid'] = this.initData.telemetryInfo.machineId;
 		commonProperties['common.vscodesessionid'] = this.initData.telemetryInfo.sessionId;
 		commonProperties['common.vscodecommithash'] = this.initData.commit;
-		commonProperties['common.sqmid'] = this.initData.telemetryInfo.sqmId;
-		commonProperties['common.devDeviceId'] = this.initData.telemetryInfo.devDeviceId ?? this.initData.telemetryInfo.machineId;
 		commonProperties['common.vscodeversion'] = this.initData.version;
 		commonProperties['common.vscodereleasedate'] = this.initData.date;
 		commonProperties['common.isnewappinstall'] = isNewAppInstall(this.initData.telemetryInfo.firstSessionDate);
@@ -217,7 +212,6 @@ export class ExtHostTelemetryLogger {
 		options: vscode.TelemetryLoggerOptions | undefined,
 		private readonly _extension: IExtensionDescription,
 		private readonly _logger: ILogger,
-		private readonly _inLoggingOnlyMode: boolean,
 		private readonly _commonProperties: Record<string, any>,
 		telemetryEnablements: { isUsageEnabled: boolean; isErrorsEnabled: boolean },
 		private readonly _onDidDispose: (logger: ExtHostTelemetryLogger) => void
@@ -273,9 +267,7 @@ export class ExtHostTelemetryLogger {
 			eventName = this._extension.identifier.value + '/' + eventName;
 		}
 		data = this.mixInCommonPropsAndCleanData(data || {});
-		if (!this._inLoggingOnlyMode) {
-			this._sender?.sendEventData(eventName, data);
-		}
+		this._sender?.sendEventData(eventName, data);
 		this._logger.trace(eventName, data);
 	}
 
@@ -307,9 +299,7 @@ export class ExtHostTelemetryLogger {
 			cleanedError.stack = typeof cleanedErrorData.stack === 'string' ? cleanedErrorData.stack : undefined;
 			cleanedError.name = typeof cleanedErrorData.name === 'string' ? cleanedErrorData.name : 'unknown';
 			data = this.mixInCommonPropsAndCleanData(data || {});
-			if (!this._inLoggingOnlyMode) {
-				this._sender.sendErrorData(cleanedError, data);
-			}
+			this._sender.sendErrorData(cleanedError, data);
 			this._logger.trace('exception', data);
 		}
 	}

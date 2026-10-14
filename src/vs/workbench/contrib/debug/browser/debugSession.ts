@@ -30,7 +30,6 @@ import { ILogService } from '../../../../platform/log/common/log.js';
 import { FocusMode } from '../../../../platform/native/common/native.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
-import { ICustomEndpointTelemetryService, ITelemetryService, TelemetryLevel } from '../../../../platform/telemetry/common/telemetry.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 import { IWorkspaceContextService, IWorkspaceFolder } from '../../../../platform/workspace/common/workspace.js';
 import { ViewContainerLocation } from '../../../common/views.js';
@@ -45,7 +44,6 @@ import { AdapterEndEvent, IBreakpoint, IConfig, IDataBreakpoint, IDataBreakpoint
 import { DebugCompoundRoot } from '../common/debugCompoundRoot.js';
 import { DebugModel, ExpressionContainer, MemoryRegion, Thread } from '../common/debugModel.js';
 import { Source } from '../common/debugSource.js';
-import { filterExceptionsFromTelemetry } from '../common/debugUtils.js';
 import { INewReplElementData, ReplModel } from '../common/replModel.js';
 import { RawDebugSession } from './rawDebugSession.js';
 
@@ -112,7 +110,6 @@ export class DebugSession implements IDebugSession {
 		private model: DebugModel,
 		options: IDebugSessionOptions | undefined,
 		@IDebugService private readonly debugService: IDebugService,
-		@ITelemetryService private readonly telemetryService: ITelemetryService,
 		@IHostService private readonly hostService: IHostService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IPaneCompositePartService private readonly paneCompositeService: IPaneCompositePartService,
@@ -122,7 +119,6 @@ export class DebugSession implements IDebugSession {
 		@ILifecycleService lifecycleService: ILifecycleService,
 		@IUriIdentityService private readonly uriIdentityService: IUriIdentityService,
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
-		@ICustomEndpointTelemetryService private readonly customEndpointTelemetryService: ICustomEndpointTelemetryService,
 		@IWorkbenchEnvironmentService private readonly workbenchEnvironmentService: IWorkbenchEnvironmentService,
 		@ILogService private readonly logService: ILogService,
 		@ITestService private readonly testService: ITestService,
@@ -1203,19 +1199,7 @@ export class DebugSession implements IDebugSession {
 				}
 
 				if (event.body.category === 'telemetry') {
-					// only log telemetry events from debug adapter if the debug extension provided the telemetry key
-					// and the user opted in telemetry
-					const telemetryEndpoint = this.raw.dbgr.getCustomTelemetryEndpoint();
-					if (telemetryEndpoint && this.telemetryService.telemetryLevel !== TelemetryLevel.NONE) {
-						// __GDPR__TODO__ We're sending events in the name of the debug extension and we can not ensure that those are declared correctly.
-						let data = event.body.data;
-						if (!telemetryEndpoint.sendErrorTelemetry && event.body.data) {
-							data = filterExceptionsFromTelemetry(event.body.data);
-						}
-
-						this.customEndpointTelemetryService.publicLog(telemetryEndpoint, event.body.output, data);
-					}
-
+					// Telemetry output of the debug adapter is dropped: nothing sends it
 					return;
 				}
 

@@ -51,8 +51,7 @@ import { decodeBase64, encodeBase64 } from '../../../base/common/buffer.js';
 import { getExpirationTime, getRemainingTimeInSeconds, isExpired } from '../../../base/common/date.js';
 import type { FetchAutomationRunsParams, FetchAutomationRunsResult, ListAutomationTriggerDefinitionsParams, ListAutomationTriggerDefinitionsResult, RunAutomationParams, RunAutomationResult } from '../common/state/protocol/channels-automation/commands.js';
 import { ILoadEstimator, LoadEstimator } from '../../../base/parts/ipc/common/ipc.net.js';
-import { ITelemetryService, TelemetryLevel, TELEMETRY_CRASH_REPORTER_SETTING_ID, TELEMETRY_OLD_SETTING_ID, TELEMETRY_SETTING_ID } from '../../telemetry/common/telemetry.js';
-import { getTelemetryLevel } from '../../telemetry/common/telemetryUtils.js';
+import { ITelemetryService, TelemetryLevel } from '../../telemetry/common/telemetry.js';
 import { AgentHostAutoApprovePolicyRestrictedConfigKey, AgentHostTelemetryLevelConfigKey, AgentHostTerminalAutoApproveEnabledConfigKey, AgentHostTerminalAutoApproveRulesConfigKey, AgentHostDisableRepoInfoTelemetryConfigKey, AgentHostWorkspaceTrustConfigKey, getAgentHostTerminalAutoApproveRulesConfig, GLOBAL_AUTO_APPROVE_SETTING_ID, TERMINAL_AUTO_APPROVE_ENABLED_SETTING_ID, TERMINAL_AUTO_APPROVE_SETTING_ID, TERMINAL_IGNORE_DEFAULT_AUTO_APPROVE_RULES_SETTING_ID, DISABLE_REPO_INFO_TELEMETRY_SETTING_ID, telemetryLevelToAgentHostConfigValue } from '../common/agentHostSchema.js';
 import { addAgentHostConfigurationSyncValue, formatAgentHostConfigurationSyncValueForLog, getAgentHostConfigurationSyncEntries, getAgentHostConfigurationSyncTarget, resolveAgentHostConfigurationSyncPatch, resolveAgentHostConfigurationSyncValue } from '../common/agentHostConfigurationSync.js';
 import { managedPermissionsConfigurationIds, resolveManagedSettingsPermissions, type IAgentHostManagedSettingsPermissions } from '../common/agentHostManagedSettings.js';
@@ -537,9 +536,6 @@ export class AgentHostProtocolClient extends Disposable implements IAgentConnect
 			}
 			if (e.affectsConfiguration(GLOBAL_AUTO_APPROVE_SETTING_ID)) {
 				this._updateAutoApprovePolicyRestriction();
-			}
-			if (e.affectsConfiguration(TELEMETRY_SETTING_ID) || e.affectsConfiguration(TELEMETRY_OLD_SETTING_ID) || e.affectsConfiguration(TELEMETRY_CRASH_REPORTER_SETTING_ID)) {
-				this._updateTelemetryLevel();
 			}
 			if (e.affectsConfiguration(TERMINAL_AUTO_APPROVE_ENABLED_SETTING_ID)) {
 				this._updateTerminalAutoApproveEnabled();
@@ -1298,7 +1294,7 @@ export class AgentHostProtocolClient extends Disposable implements IAgentConnect
 				this._transport.clientConnectionKind,
 				telemetryLevel,
 				sendIdentity ? this._telemetryService.machineId : undefined,
-				sendIdentity ? this._telemetryService.devDeviceId : undefined,
+				undefined,
 			), [AgentHostSessionUrisCapabilityMetaKey]: true
 		};
 	}
@@ -2561,7 +2557,7 @@ export class AgentHostProtocolClient extends Disposable implements IAgentConnect
 	}
 
 	private _effectiveTelemetryLevel(): TelemetryLevel {
-		return Math.min(getTelemetryLevel(this._configurationService), this._telemetryService.telemetryLevel);
+		return this._telemetryService.telemetryLevel;
 	}
 
 	/** Merge a patch into the agent host's root configuration. */

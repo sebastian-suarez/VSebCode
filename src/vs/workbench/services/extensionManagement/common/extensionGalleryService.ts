@@ -11,7 +11,6 @@ import { ILogService } from '../../../../platform/log/common/log.js';
 import { IStorageService } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
 import { IRequestService } from '../../../../platform/request/common/request.js';
-import { IEnvironmentService } from '../../../../platform/environment/common/environment.js';
 import { AbstractExtensionGalleryService } from '../../../../platform/extensionManagement/common/extensionGalleryService.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IExtensionGalleryManifestService } from '../../../../platform/extensionManagement/common/extensionGalleryManifest.js';
@@ -21,7 +20,6 @@ export class WorkbenchExtensionGalleryService extends AbstractExtensionGallerySe
 		@IStorageService storageService: IStorageService,
 		@IRequestService requestService: IRequestService,
 		@ILogService logService: ILogService,
-		@IEnvironmentService environmentService: IEnvironmentService,
 		@ITelemetryService telemetryService: ITelemetryService,
 		@IFileService fileService: IFileService,
 		@IProductService productService: IProductService,
@@ -29,7 +27,7 @@ export class WorkbenchExtensionGalleryService extends AbstractExtensionGallerySe
 		@IAllowedExtensionsService allowedExtensionsService: IAllowedExtensionsService,
 		@IExtensionGalleryManifestService extensionGalleryManifestService: IExtensionGalleryManifestService,
 	) {
-		super(storageService, requestService, logService, environmentService, telemetryService, fileService, productService, configurationService, allowedExtensionsService, extensionGalleryManifestService);
+		super(storageService, requestService, logService, telemetryService, fileService, productService, configurationService, allowedExtensionsService, extensionGalleryManifestService);
 	}
 }
 

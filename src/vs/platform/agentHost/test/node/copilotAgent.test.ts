@@ -41,8 +41,8 @@ import { IAgentHostProxyResolver } from '../../node/agentHostProxyResolver.js';
 import { AgentHostCustomizationEnablementService, IAgentHostCustomizationEnablementService, type IAgentHostCustomizationEnablementService as ICustomizationEnablementService } from '../../node/agentHostCustomizationEnablementService.js';
 import type { IAgentHostClientProxyConnection } from '../../common/agentHostClientProxyChannel.js';
 import type { IByokLmBridgeConnection, IByokLmModelInfo } from '../../common/agentHostByokLm.js';
-import { ITelemetryData, ITelemetryService, TelemetryLevel } from '../../../telemetry/common/telemetry.js';
-import { TelemetryService } from '../../../telemetry/common/telemetryService.js';
+import { ITelemetryData, ITelemetryService } from '../../../telemetry/common/telemetry.js';
+import { AppenderTelemetryService } from './appenderTelemetryService.js';
 import { NullTelemetryService, NullTelemetryServiceShape } from '../../../telemetry/common/telemetryUtils.js';
 import { AgentHostTelemetryService } from '../../node/agentHostTelemetryService.js';
 import { AgentHostTelemetryReporter } from '../../node/agentHostTelemetryReporter.js';
@@ -3971,19 +3971,13 @@ suite('CopilotAgent', () => {
 		}, new NullLogService(), TEST_PRODUCT_SERVICE, endpoints));
 		const events: ITelemetryData[] = [];
 		const sdkEvents: ITelemetryData[] = [];
-		const telemetryService = disposables.add(new AgentHostTelemetryService(TelemetryService.createWithLevel({
-			telemetryLevel: TelemetryLevel.USAGE,
-			appenders: [{
-				log: (name, data) => {
-					if (name === 'agentHost.executionModeChanged') {
-						events.push({ provider: data.provider, copilotSku: data.copilotSku, trackingId: data['common.copilotTrackingId'] });
-					} else if (name === 'copilotSdk/response.success') {
-						sdkEvents.push(data);
-					}
-				},
-				flush: async () => { },
-			}],
-		}, TEST_PRODUCT_SERVICE)));
+		const telemetryService = disposables.add(new AgentHostTelemetryService(new AppenderTelemetryService((name, data) => {
+			if (name === 'agentHost.executionModeChanged') {
+				events.push({ provider: data.provider, copilotSku: data.copilotSku, trackingId: data['common.copilotTrackingId'] });
+			} else if (name === 'copilotSdk/response.success') {
+				sdkEvents.push(data);
+			}
+		})));
 		const { agent, instantiationService } = createTestAgentContext(disposables, {
 			copilotClient: new TestCopilotClient([]), copilotApiService, telemetryService, gitHubEndpointService: endpoints,
 		});
@@ -4054,10 +4048,7 @@ suite('CopilotAgent', () => {
 			return Response.json({ endpoints: { api: 'https://api.githubcopilot.com' }, access_type_sku: 'enterprise-sku' });
 		}, logService, TEST_PRODUCT_SERVICE, endpoints));
 		const skus: ITelemetryData[] = [];
-		const telemetryService = disposables.add(new AgentHostTelemetryService(TelemetryService.createWithLevel({
-			telemetryLevel: TelemetryLevel.USAGE,
-			appenders: [{ log: (name, data) => { if (name === 'agentHost.executionModeChanged') { skus.push({ copilotSku: data.copilotSku }); } }, flush: async () => { } }],
-		}, TEST_PRODUCT_SERVICE)));
+		const telemetryService = disposables.add(new AgentHostTelemetryService(new AppenderTelemetryService((name, data) => { if (name === 'agentHost.executionModeChanged') { skus.push({ copilotSku: data.copilotSku }); } })));
 		const agent = createTestAgent(disposables, { copilotClient: new TestCopilotClient([]), copilotApiService: apiService, gitHubEndpointService: endpoints, telemetryService });
 		try {
 			const oldAuthentication = agent.authenticate(endpoints.getCopilotResource().resource, 'test-token-a');
