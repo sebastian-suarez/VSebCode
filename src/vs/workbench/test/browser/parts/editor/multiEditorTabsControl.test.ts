@@ -1018,7 +1018,6 @@ suite('MultiEditorTabsControl', () => {
 
 	test('reveals the terminal Connected editor Close action and shoulder before Add Tab', async () => {
 		const group = connectedGroup();
-		group.closest<HTMLElement>('.monaco-workbench')!.classList.add('agent-sessions-workbench', 'dock-detail-panel');
 		control.dispose();
 		reset(container);
 		const oldOptions = partOptions;

@@ -11,7 +11,7 @@ suite('DataChannelService', () => {
 
 	ensureNoDisposablesAreLeakedInTestSuite();
 
-	test('link presentation contribution supports chat kind', () => {
-		assert.ok(linkPresentationProviderKinds.includes('chat'));
+	test('link presentation contribution supports the pull request kind', () => {
+		assert.ok(linkPresentationProviderKinds.includes('pullRequest'));
 	});
 });

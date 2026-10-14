@@ -47,13 +47,9 @@ const NULL_PROFILE = {
 	globalStorageHome: joinPath(homeDir, 'globalStorage'),
 	keybindingsResource: joinPath(homeDir, 'keybindings.json'),
 	tasksResource: joinPath(homeDir, 'tasks.json'),
-	mcpResource: joinPath(homeDir, 'mcp.json'),
-	languageModelsResource: joinPath(homeDir, 'chatLanguageModels.json'),
 	snippetsHome: joinPath(homeDir, 'snippets'),
-	promptsHome: joinPath(homeDir, 'prompts'),
 	extensionsResource: joinPath(homeDir, 'extensions.json'),
 	cacheHome: joinPath(homeDir, 'cache'),
-	agentPluginsHome: joinPath(homeDir, 'agentPluginsHome'),
 };
 
 const TestNativeWindowConfiguration: INativeWindowConfiguration = {

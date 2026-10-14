@@ -114,7 +114,7 @@ suite('ProgressService notification messages', () => {
 	test('delayed progress that completes before its delay never creates a notification', () => runWithFakedTimers({}, async () => {
 		const { notifications, progressService, telemetry } = createServices();
 		const options = {
-			location: ProgressLocation.Notification, telemetry: NotificationTelemetryId.PluginRepositoryClone, title: 'Private repository', delay: 500, cancellable: true
+			location: ProgressLocation.Notification, telemetry: NotificationTelemetryId.ExtensionInstall, title: 'Private repository', delay: 500, cancellable: true
 		};
 		const promise = progressService.withProgress(options, () => timeout(100));
 		await promise;

@@ -81,7 +81,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				],
 				'markdownDescription': localize('editorActionsLocation', "Controls where the editor actions are shown."),
 				'default': 'default',
-				agentsWindow: { default: 'default', readOnly: true },
 			},
 			'workbench.editor.alwaysShowEditorActions': {
 				'type': 'boolean',
@@ -381,9 +380,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				],
 				'description': localize('useModal', "Controls whether editors open in a modal overlay."),
 				'default': 'some',
-				experiment: {
-					mode: 'startup'
-				}
 			},
 			'workbench.editor.swipeToNavigate': {
 				'type': 'boolean',
@@ -422,7 +418,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'type': 'boolean',
 				'description': localize('restoreOnStartup', "Controls whether editors are restored on startup. When disabled, only dirty editors will be restored from the previous session."),
 				'default': true,
-				agentsWindow: { default: false, readOnly: true },
 			},
 			'workbench.editor.splitInGroupLayout': {
 				'type': 'string',
@@ -454,7 +449,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.editor.doubleClickTabToToggleEditorGroupSizes.expand', "The editor group takes as much space as possible by making all other editor groups as small as possible."),
 					localize('workbench.editor.doubleClickTabToToggleEditorGroupSizes.off', "No editor group is resized when double clicking on a tab.")
 				],
-				agentsWindow: { default: 'maximize', readOnly: true },
 			},
 			'workbench.editor.limit.enabled': {
 				'type': 'boolean',
@@ -587,7 +581,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'enum': ['left', 'right'],
 				'default': 'left',
 				'description': localize('sideBarLocation', "Controls the location of the primary side bar and activity bar. They can either show on the left or right of the workbench. The secondary side bar will show on the opposite side of the workbench."),
-				agentsWindow: { default: 'left', readOnly: true },
 			},
 			'workbench.panel.showLabels': {
 				'type': 'boolean',
@@ -599,7 +592,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'enum': ['left', 'bottom', 'top', 'right'],
 				'default': 'bottom',
 				'description': localize('panelDefaultLocation', "Controls the default location of the panel (Terminal, Debug Console, Output, Problems) in a new workspace. It can either show at the bottom, top, right, or left of the editor area."),
-				agentsWindow: { default: 'bottom', readOnly: true },
 			},
 			'workbench.panel.opensMaximized': {
 				'type': 'string',
@@ -611,7 +603,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.panel.opensMaximized.never', "Never maximize the panel when opening it."),
 					localize('workbench.panel.opensMaximized.preserve', "Open the panel to the state that it was in, before it was closed.")
 				],
-				agentsWindow: { default: 'never', readOnly: true },
 			},
 			'workbench.secondarySideBar.defaultVisibility': {
 				'type': 'string',
@@ -625,26 +616,22 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.secondarySideBar.defaultVisibility.maximizedInWorkspace', "The secondary side bar is visible and maximized by default if a workspace is opened."),
 					localize('workbench.secondarySideBar.defaultVisibility.maximized', "The secondary side bar is visible and maximized by default.")
 				],
-				agentsWindow: { default: 'visibleInWorkspace', readOnly: true },
 			},
 			'workbench.secondarySideBar.forceMaximized': {
 				'type': 'boolean',
 				'default': false,
 				tags: ['experimental'],
 				'description': localize('secondarySideBarForceMaximized', "Controls whether the secondary side bar is enforced to always show maximized on startup and when there are no open editors, in layouts that support a maximized secondary side bar."),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			'workbench.secondarySideBar.showLabels': {
 				'type': 'boolean',
 				'default': true,
 				'markdownDescription': localize('secondarySideBarShowLabels', "Controls whether activity items in the secondary side bar title are shown as label or icon. This setting only has an effect when {0} is not set to {1}.", '`#workbench.activityBar.location#`', '`top`'),
-				agentsWindow: { default: true, readOnly: true },
 			},
 			'workbench.statusBar.visible': {
 				'type': 'boolean',
 				'default': true,
 				'description': localize('statusBarVisibility', "Controls the visibility of the status bar at the bottom of the workbench."),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			[NotificationsSettings.NOTIFICATIONS_POSITION]: {
 				'type': 'string',
@@ -657,9 +644,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.notifications.position.top-right', "Show notifications in the top right corner, similar to OS-level notifications.")
 				],
 				'tags': ['experimental'],
-				'experiment': {
-					'mode': 'auto'
-				}
 			},
 			[NotificationsSettings.NOTIFICATIONS_BUTTON]: {
 				'type': 'boolean',
@@ -682,19 +666,16 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.activityBar.location.bottom', "Show the Activity Bar at the bottom of the Primary and Secondary Side Bars."),
 					localize('workbench.activityBar.location.hide', "Hide the Activity Bar in the Primary and Secondary Side Bars.")
 				],
-				agentsWindow: { default: 'default', readOnly: true },
 			},
 			[LayoutSettings.ACTIVITY_BAR_AUTO_HIDE]: {
 				'type': 'boolean',
 				'default': false,
 				'markdownDescription': localize({ comment: ['This is the description for a setting'], key: 'activityBarAutoHide' }, "Controls whether the Activity Bar is automatically hidden when there is only one view container to show. This applies to the Primary and Secondary Side Bars when {0} is set to {1} or {2}.", '`#workbench.activityBar.location#`', '`top`', '`bottom`'),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			[LayoutSettings.ACTIVITY_BAR_COMPACT]: {
 				'type': 'boolean',
 				'default': false,
 				'markdownDescription': localize({ comment: ['This is the description for a setting'], key: 'activityBarCompact' }, "Controls whether the Activity Bar uses a compact layout with smaller icons and reduced width. This setting only applies when {0} is set to {1}.", '`#workbench.activityBar.location#`', '`default`'),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			'workbench.activityBar.iconClickBehavior': {
 				'type': 'string',
@@ -705,7 +686,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 					localize('workbench.activityBar.iconClickBehavior.toggle', "Hide the Primary Side Bar if the clicked item is already visible."),
 					localize('workbench.activityBar.iconClickBehavior.focus', "Focus the Primary Side Bar if the clicked item is already visible.")
 				],
-				agentsWindow: { default: 'toggle', readOnly: true },
 			},
 			'workbench.view.alwaysShowHeaderActions': {
 				'type': 'boolean',
@@ -748,11 +728,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'description': localize('settings.editor.desc', "Determines which Settings editor to use by default."),
 				'default': 'ui',
 				'scope': ConfigurationScope.WINDOW
-			},
-			'workbench.settings.showAISearchToggle': {
-				'type': 'boolean',
-				'default': true,
-				'description': localize('settings.showAISearchToggle', "Controls whether the AI search results toggle is shown in the search bar in the Settings editor after doing a search and once AI search results are available."),
 			},
 			'workbench.hover.delay': {
 				'type': 'number',
@@ -798,7 +773,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'markdownDescription': isWeb ?
 					localize('navigationControlEnabledWeb', "Controls whether the navigation control in the title bar is shown.") :
 					localize({ key: 'navigationControlEnabled', comment: ['{0}, {1} is a placeholder for a setting identifier.'] }, "Controls whether the navigation control is shown in the custom title bar. This setting only has an effect when {0} is not set to {1}.", '`#window.customTitleBarVisibility#`', '`never`'),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			[LayoutSettings.LAYOUT_ACTIONS]: {
 				'type': 'boolean',
@@ -806,7 +780,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'markdownDescription': isWeb ?
 					localize('layoutControlEnabledWeb', "Controls whether the layout control in the title bar is shown.") :
 					localize({ key: 'layoutControlEnabled', comment: ['{0}, {1} is a placeholder for a setting identifier.'] }, "Controls whether the layout control is shown in the custom title bar. This setting only has an effect when {0} is not set to {1}.", '`#window.customTitleBarVisibility#`', '`never`'),
-				agentsWindow: { default: true, readOnly: true },
 			},
 			'workbench.layoutControl.type': {
 				'type': 'string',
@@ -818,13 +791,11 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				],
 				'default': 'both',
 				'description': localize('layoutControlType', "Controls whether the layout control in the custom title bar is displayed as a single menu button or with multiple UI toggles."),
-				agentsWindow: { default: 'both', readOnly: true },
 			},
 			'workbench.tips.enabled': {
 				'type': 'boolean',
 				'default': true,
 				'description': localize('tips.enabled', "When enabled, will show the watermark tips when no editor is open."),
-				agentsWindow: { default: false },
 			},
 			[LayoutSettings.SHADOWS]: {
 				'type': 'boolean',
@@ -835,7 +806,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'type': 'boolean',
 				'default': true,
 				'description': localize('modernUI', "Controls whether the Modern UI Update is enabled. When on, the side bars and bottom panel are shown as floating cards with rounded corners and gaps, and a set of refreshed workbench styles is applied, matching the Agents window design."),
-				experiment: { mode: 'auto' },
 			},
 			[LayoutSettings.MODERN_UI_UPPERCASE_VIEW_HEADERS]: {
 				'type': 'boolean',
@@ -907,7 +877,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'type': 'string',
 				'default': defaultWindowTitle,
 				'markdownDescription': windowTitleDescription,
-				agentsWindow: { default: '${appName}', readOnly: true },
 			},
 			'window.titleSeparator': {
 				'type': 'string',
@@ -920,7 +889,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				markdownDescription: isWeb ?
 					localize('window.commandCenterWeb', "Show command launcher together with the window title.") :
 					localize({ key: 'window.commandCenter', comment: ['{0}, {1} is a placeholder for a setting identifier.'] }, "Show command launcher together with the window title. This setting only has an effect when {0} is not set to {1}.", '`#window.customTitleBarVisibility#`', '`never`'),
-				agentsWindow: { default: false, readOnly: true },
 			},
 			'window.menuBarVisibility': {
 				'type': 'string',
@@ -956,7 +924,6 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				'scope': ConfigurationScope.APPLICATION,
 				'markdownDescription': localize('customMenuBarAltFocus', "Controls whether the menu bar will be focused by pressing the Alt-key. This setting has no effect on toggling the menu bar with the Alt-key."),
 				'included': isWindows || isLinux,
-				agentsWindow: { default: false, readOnly: true },
 			},
 			'window.openFilesInNewWindow': {
 				'type': 'string',

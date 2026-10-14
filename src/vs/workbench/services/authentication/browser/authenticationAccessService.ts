@@ -8,7 +8,6 @@ import { Disposable } from '../../../../base/common/lifecycle.js';
 import { ExtensionIdentifier } from '../../../../platform/extensions/common/extensions.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { createDecorator } from '../../../../platform/instantiation/common/instantiation.js';
-import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { AllowedExtension } from '../common/authentication.js';
 
@@ -41,23 +40,13 @@ export class AuthenticationAccessService extends Disposable implements IAuthenti
 	readonly onDidChangeExtensionSessionAccess: Event<{ providerId: string; accountName: string }> = this._onDidChangeExtensionSessionAccess.event;
 
 	constructor(
-		@IStorageService private readonly _storageService: IStorageService,
-		@IProductService private readonly _productService: IProductService
+		@IStorageService private readonly _storageService: IStorageService
 	) {
 		super();
 	}
 
 	isAccessAllowed(providerId: string, accountName: string, extensionId: string): boolean | undefined {
-		const trustedExtensionAuthAccess = this._productService.trustedExtensionAuthAccess;
 		const extensionKey = ExtensionIdentifier.toKey(extensionId);
-		if (Array.isArray(trustedExtensionAuthAccess)) {
-			if (trustedExtensionAuthAccess.includes(extensionKey)) {
-				return true;
-			}
-		} else if (trustedExtensionAuthAccess?.[providerId]?.includes(extensionKey)) {
-			return true;
-		}
-
 		const allowList = this.readAllowedExtensions(providerId, accountName);
 		const extensionData = allowList.find(extension => extension.id === extensionKey);
 		if (!extensionData) {
@@ -70,44 +59,15 @@ export class AuthenticationAccessService extends Disposable implements IAuthenti
 	}
 
 	readAllowedExtensions(providerId: string, accountName: string): AllowedExtension[] {
-		let trustedExtensions: AllowedExtension[] = [];
+		let allowedExtensions: AllowedExtension[] = [];
 		try {
-			const trustedExtensionSrc = this._storageService.get(`${providerId}-${accountName}`, StorageScope.APPLICATION);
-			if (trustedExtensionSrc) {
-				trustedExtensions = JSON.parse(trustedExtensionSrc);
+			const allowedExtensionsSrc = this._storageService.get(`${providerId}-${accountName}`, StorageScope.APPLICATION);
+			if (allowedExtensionsSrc) {
+				allowedExtensions = JSON.parse(allowedExtensionsSrc);
 			}
 		} catch (err) { }
 
-		// Add trusted extensions from product.json if they're not already in the list
-		const trustedExtensionAuthAccess = this._productService.trustedExtensionAuthAccess;
-		const trustedExtensionIds =
-			// Case 1: trustedExtensionAuthAccess is an array
-			Array.isArray(trustedExtensionAuthAccess)
-				? trustedExtensionAuthAccess
-				// Case 2: trustedExtensionAuthAccess is an object
-				: typeof trustedExtensionAuthAccess === 'object'
-					? trustedExtensionAuthAccess[providerId] ?? []
-					: [];
-
-		for (const extensionId of trustedExtensionIds) {
-			const extensionKey = ExtensionIdentifier.toKey(extensionId);
-			const existingExtension = trustedExtensions.find(extension => extension.id === extensionKey);
-			if (!existingExtension) {
-				// Add new trusted extension (name will be set by caller if they have extension info)
-				trustedExtensions.push({
-					id: extensionKey,
-					name: extensionId, // Use original casing for display name
-					allowed: true,
-					trusted: true
-				});
-			} else {
-				// Update existing extension to be trusted
-				existingExtension.allowed = true;
-				existingExtension.trusted = true;
-			}
-		}
-
-		return trustedExtensions;
+		return allowedExtensions;
 	}
 
 	updateAllowedExtensions(providerId: string, accountName: string, extensions: AllowedExtension[]): void {
@@ -129,9 +89,7 @@ export class AuthenticationAccessService extends Disposable implements IAuthenti
 			}
 		}
 
-		// Filter out trusted extensions before storing - they should only come from product.json, not user storage
-		const userManagedExtensions = allowList.filter(extension => !extension.trusted);
-		this._storageService.store(`${providerId}-${accountName}`, JSON.stringify(userManagedExtensions), StorageScope.APPLICATION, StorageTarget.USER);
+		this._storageService.store(`${providerId}-${accountName}`, JSON.stringify(allowList), StorageScope.APPLICATION, StorageTarget.USER);
 		this._onDidChangeExtensionSessionAccess.fire({ providerId, accountName });
 	}
 

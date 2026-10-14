@@ -12,7 +12,7 @@ import {
 	EditorPartMultipleEditorGroupsContext, ActiveEditorDirtyContext, ActiveEditorGroupLockedContext, ActiveEditorCanSplitInGroupContext, SideBySideEditorActiveContext,
 	EditorTabsVisibleContext, ActiveEditorLastInGroupContext, EditorPartMaximizedEditorGroupContext, MultipleEditorGroupsContext, InEditorZenModeContext,
 	IsAuxiliaryWindowContext, ActiveCompareEditorCanSwapContext, MultipleEditorsSelectedInGroupContext, SplitEditorsVertically, ActiveEditorCannotCloseContext,
-	IsSessionsWindowContext, ActiveCustomEditorDiffCanToggleLayoutContext, ActiveCustomEditorTextDiffContext, EditorPartModalContext
+	ActiveCustomEditorDiffCanToggleLayoutContext, ActiveCustomEditorTextDiffContext, EditorPartModalContext
 } from '../../../common/contextkeys.js';
 import { SideBySideEditorInput, SideBySideEditorInputSerializer } from '../../../common/editor/sideBySideEditorInput.js';
 import { TextResourceEditor } from './textResourceEditor.js';
@@ -425,7 +425,7 @@ MenuRegistry.appendMenuItem(MenuId.EditorTitle, {
 	title: localize('diffView', "Diff View"),
 	group: '1_diff',
 	order: 10,
-	when: ContextKeyExpr.and(ContextKeyExpr.has('isInDiffEditor'), IsSessionsWindowContext.toNegated()),
+	when: ContextKeyExpr.and(ContextKeyExpr.has('isInDiffEditor')),
 });
 MenuRegistry.appendMenuItem(MenuId.EditorTitle, {
 	command: { id: TOGGLE_DIFF_SIDE_BY_SIDE, title: localize('inlineView', "Inline View"), toggled: ContextKeyExpr.equals('config.diffEditor.renderSideBySide', false) },
@@ -528,15 +528,13 @@ const SPLIT_ORDER = 100000;  // towards the end
 const CLOSE_ORDER = 1000000; // towards the far end
 
 // Editor Title Menu: Split Editor
-// In the agents window the split editor action is moved into the overflow (...)
-// menu (see below) rather than being shown as a primary toolbar icon.
 appendEditorToolItem(
 	{
 		id: SPLIT_EDITOR,
 		title: localize('splitEditorRight', "Split Editor Right"),
 		icon: Codicon.splitHorizontal
 	},
-	ContextKeyExpr.and(SplitEditorsVertically.negate(), IsSessionsWindowContext.toNegated()),
+	SplitEditorsVertically.negate(),
 	SPLIT_ORDER,
 	{
 		id: SPLIT_EDITOR_DOWN,
@@ -551,7 +549,7 @@ appendEditorToolItem(
 		title: localize('splitEditorDown', "Split Editor Down"),
 		icon: Codicon.splitVertical
 	},
-	ContextKeyExpr.and(SplitEditorsVertically, IsSessionsWindowContext.toNegated()),
+	SplitEditorsVertically,
 	SPLIT_ORDER,
 	{
 		id: SPLIT_EDITOR_RIGHT,
@@ -559,30 +557,6 @@ appendEditorToolItem(
 		icon: Codicon.splitHorizontal
 	}
 );
-
-// Agents window: show Split Editor in the editor title overflow (...) menu
-// instead of as a primary toolbar icon. Mirror the orientation handling of the
-// primary toolbar items so the label/icon match the configured split direction.
-MenuRegistry.appendMenuItem(MenuId.EditorTitle, {
-	command: {
-		id: SPLIT_EDITOR,
-		title: localize('splitEditorRight', "Split Editor Right"),
-		icon: Codicon.splitHorizontal
-	},
-	group: '4_split',
-	order: 10,
-	when: ContextKeyExpr.and(IsSessionsWindowContext, SplitEditorsVertically.negate())
-});
-MenuRegistry.appendMenuItem(MenuId.EditorTitle, {
-	command: {
-		id: SPLIT_EDITOR,
-		title: localize('splitEditorDown', "Split Editor Down"),
-		icon: Codicon.splitVertical
-	},
-	group: '4_split',
-	order: 10,
-	when: ContextKeyExpr.and(IsSessionsWindowContext, SplitEditorsVertically)
-});
 
 // Side by side: layout
 appendEditorToolItem(
@@ -794,7 +768,6 @@ MenuRegistry.appendMenuItem(MenuId.MenubarFileMenu, {
 	submenu: MenuId.MenubarShare,
 	group: '45_share',
 	order: 1,
-	when: IsSessionsWindowContext.negate()
 });
 
 // Layout menu
@@ -803,7 +776,6 @@ MenuRegistry.appendMenuItem(MenuId.MenubarViewMenu, {
 	title: localize({ key: 'miEditorLayout', comment: ['&& denotes a mnemonic'] }, "Editor &&Layout"),
 	submenu: MenuId.MenubarLayoutMenu,
 	order: 2,
-	when: IsSessionsWindowContext.negate()
 });
 
 MenuRegistry.appendMenuItem(MenuId.MenubarLayoutMenu, {

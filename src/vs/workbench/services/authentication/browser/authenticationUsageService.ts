@@ -8,7 +8,6 @@ import { Disposable, toDisposable } from '../../../../base/common/lifecycle.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { createDecorator } from '../../../../platform/instantiation/common/instantiation.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { IAuthenticationService } from '../common/authentication.js';
 
@@ -65,23 +64,9 @@ export class AuthenticationUsageService extends Disposable implements IAuthentic
 		@IStorageService private readonly _storageService: IStorageService,
 		@IAuthenticationService private readonly _authenticationService: IAuthenticationService,
 		@ILogService private readonly _logService: ILogService,
-		@IProductService productService: IProductService,
 	) {
 		super();
 		this._register(toDisposable(() => this._disposed = true));
-		// If an extension is listed in `trustedExtensionAuthAccess` we should consider it as using auth
-		const trustedExtensionAuthAccess = productService.trustedExtensionAuthAccess;
-		if (Array.isArray(trustedExtensionAuthAccess)) {
-			for (const extensionId of trustedExtensionAuthAccess) {
-				this._extensionsUsingAuth.add(extensionId);
-			}
-		} else if (trustedExtensionAuthAccess) {
-			for (const extensions of Object.values(trustedExtensionAuthAccess)) {
-				for (const extensionId of extensions) {
-					this._extensionsUsingAuth.add(extensionId);
-				}
-			}
-		}
 
 		this._register(this._authenticationService.onDidRegisterAuthenticationProvider(
 			provider => this._queue.queue(

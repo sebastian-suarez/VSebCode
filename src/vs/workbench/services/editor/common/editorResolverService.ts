@@ -8,7 +8,6 @@ import { Event } from '../../../../base/common/event.js';
 import { IDisposable } from '../../../../base/common/lifecycle.js';
 import { Schemas } from '../../../../base/common/network.js';
 import { posix } from '../../../../base/common/path.js';
-import { isWeb } from '../../../../base/common/platform.js';
 import { basename } from '../../../../base/common/resources.js';
 import { URI } from '../../../../base/common/uri.js';
 import { localize } from '../../../../nls.js';
@@ -39,59 +38,17 @@ export const editorsAssociationsSettingId = 'workbench.editorAssociations';
 export const diffEditorsAssociationsSettingId = 'workbench.diffEditorAssociations';
 export const hiddenEditorTypesSettingId = 'workbench.editor.hiddenEditorTypes';
 
-/**
- * Setting that controls whether the Markdown editor is the default editor for
- * `*.md` files in the Agents window. Gated behind an experiment so it can be
- * rolled out gradually. Defaults to on.
- */
-export const markdownDefaultEditorAgentsWindowSettingId = 'workbench.editor.markdownDefaultEditorInAgentsWindow';
-
-function markdownEditorAgentsWindowDefault(markdownDefaultEditor?: boolean): string {
-	return markdownDefaultEditor === true ? 'vscode.markdown.editor' : 'vscode.markdown.preview.editor';
-}
-
-/**
- * Builds the default value for `workbench.editorAssociations` in the Agents window.
- * Shared so that dynamic re-registrations of the setting preserve the override.
- *
- * Pass `false` to use the Markdown preview editor for `*.md` files.
- */
-export function editorsAssociationsAgentsWindowDefault(options?: { markdownDefaultEditor?: boolean; integratedBrowserAvailable?: boolean }): Record<string, string> {
-	const associations: Record<string, string> = {};
-	if (options?.integratedBrowserAvailable ?? !isWeb) {
-		associations['*.html'] = 'workbench.editor.browser';
-	}
-	associations['*.md'] = markdownEditorAgentsWindowDefault(options?.markdownDefaultEditor);
-	return associations;
-}
-
-export function diffEditorsAssociationsAgentsWindowDefault(options?: { markdownDefaultEditor?: boolean }): Record<string, string> {
-	return {
-		'*.md': markdownEditorAgentsWindowDefault(options?.markdownDefaultEditor)
-	};
-}
-
 const configurationRegistry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration);
 
 const editorAssociationsConfigurationNode: IConfigurationNode = {
 	...workbenchConfigurationNodeBase,
 	properties: {
-		[markdownDefaultEditorAgentsWindowSettingId]: {
-			type: 'boolean',
-			default: true,
-			tags: ['experimental'],
-			experiment: { mode: 'startup' },
-			markdownDescription: localize('editor.markdownDefaultEditorInAgentsWindow', "Controls whether the Markdown editor is used as the default editor for Markdown files in the Agents window."),
-		},
 		[editorsAssociationsSettingId]: {
 			type: 'object',
 			markdownDescription: localize('editor.editorAssociations', "Configure [glob patterns](https://aka.ms/vscode-glob-patterns) to editors (for example `\"*.hex\": \"hexEditor.hexedit\"`). These have precedence over the default behavior."),
 			additionalProperties: {
 				type: 'string'
 			},
-			agentsWindow: {
-				default: editorsAssociationsAgentsWindowDefault()
-			}
 		},
 		[diffEditorsAssociationsSettingId]: {
 			type: 'object',
@@ -99,9 +56,6 @@ const editorAssociationsConfigurationNode: IConfigurationNode = {
 			additionalProperties: {
 				type: 'string'
 			},
-			agentsWindow: {
-				default: diffEditorsAssociationsAgentsWindowDefault()
-			}
 		},
 		[hiddenEditorTypesSettingId]: {
 			type: 'array',
@@ -110,9 +64,6 @@ const editorAssociationsConfigurationNode: IConfigurationNode = {
 				type: 'string'
 			},
 			markdownDescription: localize('editor.hiddenEditorTypes', "Configure editor types that are hidden from the editor type picker. The active editor type remains visible."),
-			agentsWindow: {
-				default: ['vscode.markdown.preview.editor']
-			}
 		}
 	}
 };

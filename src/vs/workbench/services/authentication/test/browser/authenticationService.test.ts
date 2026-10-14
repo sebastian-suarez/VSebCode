@@ -11,7 +11,7 @@ import { AuthenticationAccessService } from '../../browser/authenticationAccessS
 import { AuthenticationService } from '../../browser/authenticationService.js';
 import { AuthenticationProviderInformation, AuthenticationSessionsChangeEvent, IAuthenticationProvider } from '../../common/authentication.js';
 import { TestEnvironmentService } from '../../../../test/browser/workbenchTestServices.js';
-import { TestExtensionService, TestProductService, TestStorageService } from '../../../../test/common/workbenchTestServices.js';
+import { TestExtensionService, TestStorageService } from '../../../../test/common/workbenchTestServices.js';
 import { NullLogService } from '../../../../../platform/log/common/log.js';
 import { ActivationKind } from '../../../extensions/common/extensions.js';
 
@@ -39,7 +39,7 @@ suite('AuthenticationService', () => {
 
 	setup(() => {
 		const storageService = disposables.add(new TestStorageService());
-		const authenticationAccessService = disposables.add(new AuthenticationAccessService(storageService, TestProductService));
+		const authenticationAccessService = disposables.add(new AuthenticationAccessService(storageService));
 		authenticationService = disposables.add(new AuthenticationService(new TestExtensionService(), authenticationAccessService, TestEnvironmentService, new NullLogService()));
 	});
 
@@ -477,7 +477,7 @@ suite('AuthenticationService - tryActivateProvider', () => {
 
 	setup(() => {
 		const storageService = disposables.add(new TestStorageService());
-		const authenticationAccessService = disposables.add(new AuthenticationAccessService(storageService, TestProductService));
+		const authenticationAccessService = disposables.add(new AuthenticationAccessService(storageService));
 		authenticationService = disposables.add(new AuthenticationService(new TestExtensionService(), authenticationAccessService, TestEnvironmentService, new NullLogService()));
 	});
 
@@ -491,7 +491,7 @@ suite('AuthenticationService - tryActivateProvider', () => {
 		authenticationService.dispose();
 
 		const storageService = disposables.add(new TestStorageService());
-		const authAccessService = disposables.add(new AuthenticationAccessService(storageService, TestProductService));
+		const authAccessService = disposables.add(new AuthenticationAccessService(storageService));
 		// Simulate a deadlocked extension host: activateByEvent never resolves.
 		const hangingExtService = new class extends TestExtensionService {
 			override activateByEvent(_activationEvent: string, _activationKind?: ActivationKind): Promise<void> {

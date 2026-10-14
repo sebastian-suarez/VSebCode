@@ -45,9 +45,6 @@ import './services/title/electron-browser/titleService.js';
 import './services/host/electron-browser/nativeHostService.js';
 import '../platform/meteredConnection/electron-browser/meteredConnectionService.js';
 import './services/request/electron-browser/requestService.js';
-import '../platform/github/electron-browser/githubService.js';
-import '../platform/copilotConnectors/electron-browser/copilotConnectorsRequestService.js';
-import '../platform/customizationMarketplace/electron-browser/customizationMarketplaceService.js';
 import './services/clipboard/electron-browser/clipboardService.js';
 import './services/contextmenu/electron-browser/contextmenuService.js';
 import './services/workspaces/electron-browser/workspaceEditingService.js';
@@ -57,11 +54,8 @@ import './services/keybinding/electron-browser/nativeKeyboardLayout.js';
 import './services/path/electron-browser/pathService.js';
 import './services/themes/electron-browser/nativeHostColorSchemeService.js';
 import './services/extensionManagement/electron-browser/extensionManagementService.js';
-import './services/mcp/electron-browser/mcpGalleryManifestService.js';
-import './services/mcp/electron-browser/mcpWorkbenchManagementService.js';
 import './services/encryption/electron-browser/encryptionService.js';
 import './services/imageResize/electron-browser/imageResizeService.js';
-import './services/localTranscription/electron-browser/localTranscriptionService.js';
 import './services/secrets/electron-browser/secretStorageService.js';
 import './services/localization/electron-browser/languagePackService.js';
 import './services/telemetry/electron-browser/telemetryService.js';
@@ -71,7 +65,6 @@ import './services/localization/electron-browser/localeService.js';
 import './services/extensions/electron-browser/extensionsScannerService.js';
 import './services/extensionManagement/electron-browser/extensionManagementServerService.js';
 import './services/extensionManagement/electron-browser/extensionGalleryManifestService.js';
-import './services/extensionManagement/electron-browser/extensionGalleryAccountService.js';
 import './services/extensionManagement/electron-browser/extensionTipsService.js';
 import './services/timer/electron-browser/timerService.js';
 import './services/environment/electron-browser/shellEnvironmentService.js';
@@ -82,7 +75,6 @@ import '../platform/remote/electron-browser/sharedProcessTunnelService.js';
 import './services/tunnel/electron-browser/tunnelService.js';
 import '../platform/diagnostics/electron-browser/diagnosticsService.js';
 import '../platform/profiling/electron-browser/profilingService.js';
-import '../platform/remoteTunnel/browser/remoteTunnelService.js';
 import './services/files/electron-browser/elevatedFileService.js';
 import './services/search/electron-browser/searchService.js';
 import './services/workingCopy/electron-browser/workingCopyHistoryService.js';
@@ -90,12 +82,6 @@ import './services/extensions/electron-browser/nativeExtensionService.js';
 import '../platform/userDataProfile/electron-browser/userDataProfileStorageService.js';
 import './services/auxiliaryWindow/electron-browser/auxiliaryWindowService.js';
 import '../platform/extensionManagement/electron-browser/extensionsProfileScannerService.js';
-import '../platform/sandbox/electron-browser/sandboxHelperService.js';
-import '../platform/webContentExtractor/electron-browser/webContentExtractorService.js';
-import './services/agentHost/electron-browser/agentHostService.js';
-import '../platform/agentHost/electron-browser/remoteAgentHostService.js';
-import '../platform/agentHost/browser/agentHostEnablementService.js';
-import './services/browserView/electron-browser/playwrightWorkbenchService.js';
 import './services/process/electron-browser/processService.js';
 import './services/power/electron-browser/powerService.js';
 
@@ -104,15 +90,6 @@ import { IUserDataInitializationService, UserDataInitializationService } from '.
 import { SyncDescriptor } from '../platform/instantiation/common/descriptors.js';
 
 registerSingleton(IUserDataInitializationService, new SyncDescriptor(UserDataInitializationService, [[]], true));
-
-
-//#endregion
-
-
-//#region --- workbench contributions
-
-// Onboarding
-import './contrib/onboarding/electron-browser/onboardingTryout.contribution.js';
 
 // Logs
 import './contrib/logs/electron-browser/logs.contribution.js';
@@ -166,7 +143,6 @@ import './contrib/webview/electron-browser/webview.contribution.js';
 
 // Browser
 import './contrib/browserView/electron-browser/browserView.contribution.js';
-import './contrib/canvases/electron-browser/editorCanvases.contribution.js';
 
 // Splash
 import './contrib/splash/electron-browser/splash.contribution.js';
@@ -180,13 +156,6 @@ import './contrib/mergeEditor/electron-browser/mergeEditor.contribution.js';
 // Multi Diff Editor
 import './contrib/multiDiffEditor/browser/multiDiffEditor.contribution.js';
 
-// Chat
-import './contrib/chat/electron-browser/chat.contribution.js';
-import './contrib/chat/electron-browser/tunnelHost.contribution.js';
-
-// Copilot Voice
-import './contrib/agentsVoice/electron-browser/agentsVoiceNativeCommands.js';
-
 // Encryption
 import './contrib/encryption/electron-browser/encryption.contribution.js';
 
@@ -194,10 +163,6 @@ import './contrib/encryption/electron-browser/encryption.contribution.js';
 import './contrib/modernUI/electron-browser/frostedGlass.contribution.js';
 
 // Emergency Alert
-import './contrib/emergencyAlert/electron-browser/emergencyAlert.contribution.js';
-
-// MCP
-import './contrib/mcp/electron-browser/mcp.contribution.js';
 
 // Policy Export
 import './contrib/policyExport/electron-browser/policyExport.contribution.js';

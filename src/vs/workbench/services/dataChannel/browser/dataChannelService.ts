@@ -68,7 +68,6 @@ export const linkPresentationProviderKinds: LinkPresentationKind[] = [
 	'file',
 	'folder',
 	'session',
-	'chat',
 	'repository',
 	'branch',
 ];

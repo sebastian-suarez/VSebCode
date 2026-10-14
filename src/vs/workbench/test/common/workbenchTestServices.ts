@@ -12,10 +12,9 @@ import { Iterable } from '../../../base/common/iterator.js';
 import { Disposable, IDisposable, toDisposable } from '../../../base/common/lifecycle.js';
 import { ResourceMap, ResourceSet } from '../../../base/common/map.js';
 import { Schemas } from '../../../base/common/network.js';
-import { observableValue } from '../../../base/common/observable.js';
 import { join } from '../../../base/common/path.js';
 import { isLinux, isMacintosh } from '../../../base/common/platform.js';
-import { basename, isEqual, isEqualAuthority, isEqualOrParent } from '../../../base/common/resources.js';
+import { basename, isEqual, isEqualOrParent } from '../../../base/common/resources.js';
 import { URI } from '../../../base/common/uri.js';
 import { ITextResourcePropertiesService } from '../../../editor/common/services/textResourceConfiguration.js';
 import { IConfigurationService } from '../../../platform/configuration/common/configuration.js';
@@ -33,8 +32,6 @@ import { TestWorkspace } from '../../../platform/workspace/test/common/testWorks
 import { GroupIdentifier, IRevertOptions, ISaveOptions, SaveReason } from '../../common/editor.js';
 import { EditorInput } from '../../common/editor/editorInput.js';
 import { IActivity, IActivityService } from '../../services/activity/common/activity.js';
-import { ChatEntitlement, ChatEntitlementContext, IChatEntitlementService } from '../../services/chat/common/chatEntitlementService.js';
-import { Lazy } from '../../../base/common/lazy.js';
 import { NullExtensionService } from '../../services/extensions/common/extensions.js';
 import { IAutoSaveConfiguration, IAutoSaveMode, IFilesConfigurationService } from '../../services/filesConfiguration/common/filesConfigurationService.js';
 import { IHistoryService } from '../../services/history/common/history.js';
@@ -370,7 +367,6 @@ export class TestWorkspaceTrustEnablementService implements IWorkspaceTrustEnabl
 
 export class TestWorkspaceTrustManagementService extends Disposable implements IWorkspaceTrustManagementService {
 	_serviceBrand: undefined;
-	private readonly trustedAuthorities = new Set<{ readonly scheme: string; readonly authority: string }>();
 
 	private _onDidChangeTrust = this._register(new Emitter<boolean>());
 	onDidChangeTrust = this._onDidChangeTrust.event;
@@ -410,14 +406,7 @@ export class TestWorkspaceTrustManagementService extends Disposable implements I
 	}
 
 	getUriTrustInfo(uri: URI): Promise<IWorkspaceTrustUriInfo> {
-		const authorityTrusted = Array.from(this.trustedAuthorities).some(entry => entry.scheme === uri.scheme && isEqualAuthority(entry.authority, uri.authority));
-		return Promise.resolve({ trusted: authorityTrusted || this.trustedUris.has(uri), uri });
-	}
-
-	registerTrustedAuthority(scheme: string, authority: string): IDisposable {
-		const entry = { scheme, authority };
-		this.trustedAuthorities.add(entry);
-		return toDisposable(() => this.trustedAuthorities.delete(entry));
+		return Promise.resolve({ trusted: this.trustedUris.has(uri), uri });
 	}
 
 	async setTrustedUris(folders: URI[]): Promise<void> {
@@ -790,48 +779,6 @@ export class InMemoryTestFileService extends TestFileService {
 
 		return super.exists(resource);
 	}
-}
-
-export class TestChatEntitlementService implements IChatEntitlementService {
-
-	_serviceBrand: undefined;
-
-	context: Lazy<ChatEntitlementContext> | undefined;
-
-	readonly organisations: undefined;
-	readonly isInternal: boolean = false;
-	readonly sku = undefined;
-	readonly copilotTrackingId = undefined;
-
-	readonly onDidChangeQuotaExceeded = Event.None;
-	readonly onDidChangeQuotaRemaining = Event.None;
-	readonly onDidChangeUsageBasedBilling = Event.None;
-	readonly quotas = {};
-
-	update(token: CancellationToken): Promise<void> {
-		throw new Error('Method not implemented.');
-	}
-
-	readonly onDidChangeSentiment = Event.None;
-	readonly sentimentObs = observableValue({}, {});
-	readonly sentiment = {};
-
-	readonly onDidChangeEntitlement = Event.None;
-	entitlement: ChatEntitlement = ChatEntitlement.Unknown;
-	readonly entitlementObs = observableValue({}, ChatEntitlement.Unknown);
-
-	readonly anonymous = false;
-	onDidChangeAnonymous = Event.None;
-	readonly anonymousObs = observableValue({}, false);
-
-	acceptQuotas(): void { }
-	clearQuotas(): void { }
-	markAnonymousRateLimited(): void { }
-	markSetupCompleted(): void { }
-	setForceHidden(_hidden: boolean): void { }
-
-	readonly clientByokEnabled = false;
-	readonly hasByokModels = false;
 }
 
 export class TestLifecycleService extends Disposable implements ILifecycleService {

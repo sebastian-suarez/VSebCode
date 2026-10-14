@@ -382,7 +382,7 @@ function renderGutterMenu({ container, disposableStore, theme, focus }: Componen
 	const editorObs = observableCodeEditor(editor);
 	const menuData = new InlineSuggestionGutterMenuData(
 		undefined,
-		'Copilot',
+		'Test Provider',
 		[],
 		undefined,
 		undefined,

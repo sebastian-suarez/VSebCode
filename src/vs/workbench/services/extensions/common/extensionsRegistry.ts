@@ -390,26 +390,6 @@ export const schema: IJSONSchema = {
 						description: nls.localize('vscode.extension.activationEvents.onIssueReporterOpened', 'An activation event emitted when the issue reporter is opened.'),
 					},
 					{
-						label: 'onChatParticipant',
-						body: 'onChatParticipant:${1:participantId}',
-						description: nls.localize('vscode.extension.activationEvents.onChatParticipant', 'An activation event emitted when the specified chat participant is invoked.'),
-					},
-					{
-						label: 'onChatContextProvider',
-						body: 'onChatContextProvider:${1:contextProviderId}',
-						description: nls.localize('vscode.extension.activationEvents.onChatContextProvider', 'An activation event emitted when the specified chat context provider is invoked.'),
-					},
-					{
-						label: 'onLanguageModelChatProvider',
-						body: 'onLanguageModelChatProvider:${1:vendor}',
-						description: nls.localize('vscode.extension.activationEvents.onLanguageModelChatProvider', 'An activation event emitted when a chat model provider for the given vendor is requested.'),
-					},
-					{
-						label: 'onLanguageModelTool',
-						body: 'onLanguageModelTool:${1:toolId}',
-						description: nls.localize('vscode.extension.activationEvents.onLanguageModelTool', 'An activation event emitted when the specified language model tool is invoked.'),
-					},
-					{
 						label: 'onTerminal',
 						body: 'onTerminal:{1:shellType}',
 						description: nls.localize('vscode.extension.activationEvents.onTerminal', 'An activation event emitted when a terminal of the given shell type is opened.'),
@@ -585,20 +565,6 @@ export const schema: IJSONSchema = {
 						description: {
 							type: 'string',
 							markdownDescription: nls.localize('vscode.extension.capabilities.untrustedWorkspaces.description', "A description of how workspace trust affects the extensions behavior and why it is needed. This only applies when `supported` is not `true`."),
-						}
-					}
-				},
-				agentsWindow: {
-					description: nls.localize('vscode.extension.capabilities.agentsWindow', "Declares whether the extension should be enabled in the Agents window. Requires the `agentsWindowActivation` API proposal. Non-built-in extensions also require the experimental Agents window capability setting."),
-					type: 'object',
-					required: ['supported'],
-					defaultSnippets: [
-						{ body: { supported: true } },
-					],
-					properties: {
-						supported: {
-							markdownDescription: nls.localize('vscode.extension.capabilities.agentsWindow.supported', "Declares whether the extension supports running in the Agents window. The extension must enable the `agentsWindowActivation` API proposal. Non-built-in extensions also require the `extensions.experimental.enableAgentsWindowCapability` setting for this property to take effect."),
-							type: 'boolean'
 						}
 					}
 				}

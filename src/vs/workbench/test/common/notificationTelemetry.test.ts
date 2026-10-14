@@ -43,12 +43,12 @@ suite('Notification telemetry contract', () => {
 		assert.deepStrictEqual({
 			unique: new Set(ids).size,
 			sources,
-			representative: [NotificationTelemetryId.AuthenticationSignIn, NotificationTelemetryId.AgentHostProgress, NotificationTelemetryId.PluginRepositoryClone],
+			representative: [NotificationTelemetryId.AuthenticationSignIn, NotificationTelemetryId.ExtensionInstall, NotificationTelemetryId.FileSaveParticipants],
 			events: telemetry.events
 		}, {
 			unique: ids.length,
 			sources: ids.map(notificationId => ({ origin: 'core', notificationId, extensionId: 'none' })),
-			representative: ['authentication.signIn', 'agentHost.progress', 'plugins.repository.clone'],
+			representative: ['authentication.signIn', 'extensions.install', 'files.saveParticipants'],
 			events: []
 		});
 	});

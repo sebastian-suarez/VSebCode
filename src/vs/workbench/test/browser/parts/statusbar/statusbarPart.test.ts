@@ -38,7 +38,7 @@ suite('StatusbarPart', () => {
 			},
 		});
 		const onDidShow = () => { };
-		const entry = { name: 'Status', text: '$(copilot)', ariaLabel: 'Status', command: ShowTooltipCommand };
+		const entry = { name: 'Status', text: '$(info)', ariaLabel: 'Status', command: ShowTooltipCommand };
 		const item = store.add(instantiationService.createInstance(StatusbarEntryItem, $('div'), {
 			...entry, tooltip: { content: 'Sale', commands: [], onDidShow },
 		}, { delay: 0, showHover: () => undefined }));

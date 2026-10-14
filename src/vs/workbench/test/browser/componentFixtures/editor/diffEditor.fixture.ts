@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Dimension } from '../../../../../base/browser/dom.js';
-// eslint-disable-next-line local/code-import-patterns, local/code-amd-node-module
+// eslint-disable-next-line local/code-import-patterns
 import { z } from 'zod';
 import { toDisposable } from '../../../../../base/common/lifecycle.js';
 import { URI } from '../../../../../base/common/uri.js';

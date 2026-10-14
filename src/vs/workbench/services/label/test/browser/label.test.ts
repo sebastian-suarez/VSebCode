@@ -198,13 +198,13 @@ suite('URI Label', () => {
 			store.add(new TestLifecycleService()),
 			{ _serviceBrand: undefined, extUri: resources.extUriIgnorePathCase, asCanonicalUri: uri => uri }
 		));
-		const home = URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.copilot/session-state/session-id' });
+		const home = URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.sessions/state/session-id' });
 		store.add(caseInsensitiveLabelService.registerFormatter({
 			scheme: home.scheme,
 			home: home.path,
 			formatting: { label: 'Session', separator: '/' },
 		}));
-		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.copilot/session-state/session-id/files/result.html' });
+		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.sessions/state/session-id/files/result.html' });
 
 		assert.deepStrictEqual({
 			home: caseInsensitiveLabelService.getUriHome(resource)?.toString(),
@@ -229,17 +229,17 @@ suite('URI Label', () => {
 			{ _serviceBrand: undefined, extUri: resources.extUriIgnorePathCase, asCanonicalUri: uri => uri }
 		));
 		store.add(caseInsensitiveLabelService.registerFormatter({
-			home: URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.copilot/session-state/${sessionId}' }),
+			home: URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.sessions/state/${sessionId}' }),
 			onDidChangeFormatting: Event.None,
 			formatting: () => ({ label: 'Session', separator: '/' }),
 		}));
-		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.copilot/session-state/session-id/files/result.html' });
+		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.sessions/state/session-id/files/result.html' });
 
 		assert.deepStrictEqual({
 			home: caseInsensitiveLabelService.getUriHome(resource)?.toString(),
 			label: caseInsensitiveLabelService.getUriLabel(resource),
 		}, {
-			home: URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.copilot/session-state/session-id' }).toString(),
+			home: URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.sessions/state/session-id' }).toString(),
 			label: 'Session/files/result.html',
 		});
 
@@ -774,7 +774,7 @@ suite('multi-root workspace', () => {
 
 	test('stripPathSegments strips leading path segments', () => {
 		labelService.registerFormatter({
-			scheme: 'vscode-agent-host',
+			scheme: 'vscode-test-remote',
 			formatting: {
 				label: '${path}',
 				separator: '/',
@@ -782,14 +782,14 @@ suite('multi-root workspace', () => {
 			}
 		});
 
-		const uri = URI.from({ scheme: 'vscode-agent-host', authority: 'my-server', path: '/file//home/user/project/file.ts' });
+		const uri = URI.from({ scheme: 'vscode-test-remote', authority: 'my-server', path: '/file//home/user/project/file.ts' });
 		const generated = labelService.getUriLabel(uri, { relative: false });
 		assert.strictEqual(generated, '/home/user/project/file.ts');
 	});
 
 	test('stripPathSegments combined with stripPathStartingSeparator', () => {
 		labelService.registerFormatter({
-			scheme: 'vscode-agent-host',
+			scheme: 'vscode-test-remote',
 			formatting: {
 				label: '${path}',
 				separator: '/',
@@ -798,7 +798,7 @@ suite('multi-root workspace', () => {
 			}
 		});
 
-		const uri = URI.from({ scheme: 'vscode-agent-host', authority: 'my-server', path: '/file//home/user/file.ts' });
+		const uri = URI.from({ scheme: 'vscode-test-remote', authority: 'my-server', path: '/file//home/user/file.ts' });
 		const generated = labelService.getUriLabel(uri, { relative: false });
 		assert.strictEqual(generated, 'home/user/file.ts');
 	});

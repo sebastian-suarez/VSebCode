@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Dimension } from '../../../../../base/browser/dom.js';
-// eslint-disable-next-line local/code-import-patterns, local/code-amd-node-module
+// eslint-disable-next-line local/code-import-patterns
 import { z } from 'zod';
 import { CancellationToken } from '../../../../../base/common/cancellation.js';
 import { ValueWithChangeEvent } from '../../../../../base/common/event.js';
@@ -22,7 +22,7 @@ import { TestDiffProviderFactoryService } from '../../../../../editor/test/brows
 import { ComponentFixtureContext, defineComponentFixture, defineThemedFixtureGroup } from '../fixtureUtils.js';
 import { createMultiDiffEditorFixtureDocument, createMultiDiffEditorFixtureDocuments, createMultiDiffEditorFixtureServices, createMultiDiffEditorFixtureWidget } from './multiDiffEditorFixtureUtils.js';
 // eslint-disable-next-line local/code-import-patterns
-import chatInputChanges from './multiDiffEditorChatChanges.json' with { type: 'json' };
+import multiDiffChanges from './multiDiffEditorChanges.json' with { type: 'json' };
 
 import '../../../../../editor/contrib/diffEditorBreadcrumbs/browser/contribution.js';
 
@@ -31,7 +31,7 @@ const breadcrumbRangeSchema = z.object({
 	endLineNumber: z.number().int().positive(),
 });
 
-const chatInputChangeData = z.object({
+const multiDiffChangeData = z.object({
 	files: z.array(z.object({
 		order: z.number(),
 		path: z.string(),
@@ -45,7 +45,7 @@ const chatInputChangeData = z.object({
 		before: z.string(),
 		after: z.string(),
 	})),
-}).parse(typeof chatInputChanges === 'string' ? JSON.parse(chatInputChanges) : chatInputChanges);
+}).parse(typeof multiDiffChanges === 'string' ? JSON.parse(multiDiffChanges) : multiDiffChanges);
 
 interface IMultiDiffVisualFixtureOptions {
 	readonly width?: number;
@@ -120,11 +120,11 @@ function createStandardDocuments(
 	return [doc1, doc2, doc3];
 }
 
-function createChatInputChangeDocuments(
+function createMultiDiffChangeDocuments(
 	instantiationService: ReturnType<typeof createMultiDiffEditorFixtureServices>,
 	textModels: DisposableStore
 ): readonly RefCounted<IDocumentDiffItem>[] {
-	const filesByPath = new Map(chatInputChangeData.files.map(file => [file.path, file]));
+	const filesByPath = new Map(multiDiffChangeData.files.map(file => [file.path, file]));
 	const languageFeaturesService = instantiationService.get(ILanguageFeaturesService);
 	textModels.add(languageFeaturesService.documentSymbolProvider.register(
 		{ scheme: 'inmemory' },
@@ -135,7 +135,7 @@ function createChatInputChangeDocuments(
 			}
 		}
 	));
-	return chatInputChangeData.files.toSorted((a, b) => a.order - b.order).map(file => createMultiDiffEditorFixtureDocument(instantiationService, textModels, {
+	return multiDiffChangeData.files.toSorted((a, b) => a.order - b.order).map(file => createMultiDiffEditorFixtureDocument(instantiationService, textModels, {
 		original: {
 			uri: `inmemory://original/${file.path}`,
 			text: file.before,
@@ -150,7 +150,7 @@ function createChatInputChangeDocuments(
 
 function createBreadcrumbSymbols(
 	model: ITextModel,
-	breadcrumbs: typeof chatInputChangeData.files[number]['breadcrumbs']
+	breadcrumbs: typeof multiDiffChangeData.files[number]['breadcrumbs']
 ): DocumentSymbol[] {
 	const kindMap = {
 		class: SymbolKind.Class,
@@ -452,7 +452,7 @@ function createVariantFixtures(variant: 'cards' | 'noCards') {
 		? 'Inset cards with aligned header and editor side borders.'
 		: 'Headers and editors flush to both viewport edges.';
 	return defineThemedFixtureGroup({
-		ChatInputChanges: defineComponentFixture({
+		MultiDiffChanges: defineComponentFixture({
 			...representativeThemeOptions,
 			labels: { kind: 'screenshot' },
 			expectedVisualDescriptions: [treatment, 'Five realistic VS Code source changes match the Git changes editor order and breadcrumb treatment.'],
@@ -464,7 +464,7 @@ function createVariantFixtures(variant: 'cards' | 'noCards') {
 					hideUnchangedRegions: { enabled: true },
 				},
 				waitForDocumentSymbols: true,
-				createDocuments: createChatInputChangeDocuments,
+				createDocuments: createMultiDiffChangeDocuments,
 			}),
 		}),
 		MultiFile: defineComponentFixture({

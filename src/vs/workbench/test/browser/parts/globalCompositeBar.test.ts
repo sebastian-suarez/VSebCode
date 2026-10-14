@@ -6,14 +6,12 @@
 import assert from 'assert';
 import { URI } from '../../../../base/common/uri.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
-import { IDefaultAccount } from '../../../../base/common/defaultAccount.js';
 import { AccountsActivityActionViewItem, GlobalCompositeBar } from '../../../browser/parts/globalCompositeBar.js';
 import { AuthenticationSession, AuthenticationSessionAccount } from '../../../services/authentication/common/authentication.js';
 import { ActionBar } from '../../../../base/browser/ui/actionbar/actionbar.js';
-import { Action, IAction, Separator } from '../../../../base/common/actions.js';
-import { Emitter, Event } from '../../../../base/common/event.js';
-import { DisposableStore } from '../../../../base/common/lifecycle.js';
-import { ACCOUNTS_ACTIVITY_ID, ACCOUNTS_SHARED_SIGN_IN_GROUP, GLOBAL_ACTIVITY_ID } from '../../../common/activity.js';
+import { Action } from '../../../../base/common/actions.js';
+import { Emitter } from '../../../../base/common/event.js';
+import { ACCOUNTS_ACTIVITY_ID, GLOBAL_ACTIVITY_ID } from '../../../common/activity.js';
 
 interface IGlobalCompositeBarTestHarness {
 	globalActivityActionBar: ActionBar;
@@ -89,8 +87,6 @@ interface IUpdateAvatarTestHarness {
 	label: HTMLElement;
 	configurationService: { getValue(): boolean };
 	groupedAccounts: Map<string, (AuthenticationSessionAccount & { canSignOut: boolean })[]>;
-	defaultAccountService: { currentDefaultAccount: IDefaultAccount | null };
-	getDefaultAccountAvatarIcon(): URI | undefined;
 }
 
 interface IAddOrUpdateAccountTestHarness {
@@ -100,27 +96,14 @@ interface IAddOrUpdateAccountTestHarness {
 }
 
 const updateAvatar = Reflect.get(AccountsActivityActionViewItem.prototype, 'updateAvatar') as (this: IUpdateAvatarTestHarness) => void;
-const getDefaultAccountAvatarIcon = Reflect.get(AccountsActivityActionViewItem.prototype, 'getDefaultAccountAvatarIcon') as (this: IUpdateAvatarTestHarness) => URI | undefined;
 const addOrUpdateAccount = Reflect.get(AccountsActivityActionViewItem.prototype, 'addOrUpdateAccount') as (this: IAddOrUpdateAccountTestHarness, providerId: string, account: AuthenticationSessionAccount) => Promise<void>;
-const resolveMainMenuActions = Reflect.get(AccountsActivityActionViewItem.prototype, 'resolveMainMenuActions') as (this: object, menu: object, disposables: DisposableStore) => Promise<IAction[]>;
 
-function createDefaultAccount(providerId: string, accountName: string): IDefaultAccount {
-	return {
-		authenticationProvider: { id: providerId, name: providerId, enterprise: false },
-		accountName,
-		sessionId: 'test-session',
-		enterprise: false,
-	};
-}
-
-function createHarness(groupedAccounts: Map<string, (AuthenticationSessionAccount & { canSignOut: boolean })[]>, currentDefaultAccount: IDefaultAccount | null): IUpdateAvatarTestHarness {
+function createHarness(groupedAccounts: Map<string, (AuthenticationSessionAccount & { canSignOut: boolean })[]>): IUpdateAvatarTestHarness {
 	return {
 		avatarImg: document.createElement('img'),
 		label: document.createElement('div'),
 		configurationService: { getValue: () => true },
 		groupedAccounts,
-		defaultAccountService: { currentDefaultAccount },
-		getDefaultAccountAvatarIcon,
 	};
 }
 
@@ -129,28 +112,16 @@ suite('AccountsActivityActionViewItem - updateAvatar', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
 
 	const firstIcon = URI.parse('https://example.com/first.png');
-	const defaultIcon = URI.parse('https://example.com/default.png');
 
 	function createGroupedAccounts(): Map<string, (AuthenticationSessionAccount & { canSignOut: boolean })[]> {
 		const groupedAccounts = new Map<string, (AuthenticationSessionAccount & { canSignOut: boolean })[]>();
 		groupedAccounts.set('github', [{ id: 'first-id', label: 'first-account', icon: firstIcon, canSignOut: true }]);
-		groupedAccounts.set('microsoft', [{ id: 'default-id', label: 'default-account', icon: defaultIcon, canSignOut: true }]);
+		groupedAccounts.set('other', [{ id: 'other-id', label: 'other-account', icon: URI.parse('https://example.com/other.png'), canSignOut: true }]);
 		return groupedAccounts;
 	}
 
-	test('prefers the current default account avatar over the first account with an icon', () => {
-		const harness = createHarness(createGroupedAccounts(), createDefaultAccount('microsoft', 'default-account'));
-
-		updateAvatar.call(harness);
-
-		assert.deepStrictEqual(
-			{ src: harness.avatarImg.src, hasAvatarClass: harness.label.classList.contains('has-avatar') },
-			{ src: defaultIcon.toString(true), hasAvatarClass: true }
-		);
-	});
-
-	test('falls back to the first account with an icon when there is no default account', () => {
-		const harness = createHarness(createGroupedAccounts(), null);
+	test('uses the first account with an icon', () => {
+		const harness = createHarness(createGroupedAccounts());
 
 		updateAvatar.call(harness);
 
@@ -160,18 +131,6 @@ suite('AccountsActivityActionViewItem - updateAvatar', () => {
 		);
 	});
 
-	test('falls back to the first account with an icon when the matching default account has no icon', () => {
-		const groupedAccounts = createGroupedAccounts();
-		groupedAccounts.set('microsoft', [{ id: 'default-id', label: 'default-account', icon: undefined, canSignOut: true }]);
-		const harness = createHarness(groupedAccounts, createDefaultAccount('microsoft', 'default-account'));
-
-		updateAvatar.call(harness);
-
-		assert.deepStrictEqual(
-			{ src: harness.avatarImg.src, hasAvatarClass: harness.label.classList.contains('has-avatar') },
-			{ src: firstIcon.toString(true), hasAvatarClass: true }
-		);
-	});
 });
 
 suite('AccountsActivityActionViewItem - addOrUpdateAccount', () => {
@@ -199,66 +158,5 @@ suite('AccountsActivityActionViewItem - addOrUpdateAccount', () => {
 			[updated, cleared],
 			[URI.parse('https://example.com/fresh.png'), undefined]
 		);
-	});
-});
-
-suite('AccountsActivityActionViewItem - account tiers', () => {
-
-	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
-
-	function createHarness(initialized: boolean) {
-		return {
-			initialized,
-			authenticationService: {
-				getProviderIds: () => [],
-				isDynamicAuthenticationProvider: () => false,
-			},
-			groupedAccounts: new Map(),
-			problematicProviders: new Set(),
-			codexAccountService: {
-				_serviceBrand: undefined,
-				agent: 'codex',
-				account: { status: 'signedOut' },
-				onDidChangeAccount: Event.None,
-				signIn() { },
-				signOut() { },
-			},
-			configurationService: {
-				getValue: (key: string) => key === 'chat.disableAIFeatures' ? false : true,
-			},
-			addAccountsFromProvider: async () => { },
-		};
-	}
-
-	test('delays ChatGPT without hiding other account commands while shared accounts resolve', async () => {
-		const actionDisposables = disposables.add(new DisposableStore());
-		const github = disposables.add(new Action('github', 'Sign in with GitHub'));
-		const manage = disposables.add(new Action('manage', 'Manage Language Model Access'));
-		const menu = { getActions: () => [[ACCOUNTS_SHARED_SIGN_IN_GROUP, [github]], ['z_manage', [manage]]] };
-		const actions = await resolveMainMenuActions.call(createHarness(false), menu, actionDisposables);
-
-		assert.deepStrictEqual(actions.map(action => action instanceof Separator ? 'separator' : action.label), [
-			'Loading...',
-			'separator',
-			'Sign in with GitHub',
-			'separator',
-			'Manage Language Model Access',
-		]);
-	});
-
-	test('places shared sign-in before ChatGPT and unrelated account commands', async () => {
-		const actionDisposables = disposables.add(new DisposableStore());
-		const github = disposables.add(new Action('github', 'Sign in with GitHub'));
-		const manage = disposables.add(new Action('manage', 'Manage Language Model Access'));
-		const menu = { getActions: () => [[ACCOUNTS_SHARED_SIGN_IN_GROUP, [github]], ['z_manage', [manage]]] };
-		const actions = await resolveMainMenuActions.call(createHarness(true), menu, actionDisposables);
-
-		assert.deepStrictEqual(actions.map(action => action instanceof Separator ? 'separator' : action.label), [
-			'Sign in with GitHub',
-			'separator',
-			'Sign in to ChatGPT',
-			'separator',
-			'Manage Language Model Access',
-		]);
 	});
 });

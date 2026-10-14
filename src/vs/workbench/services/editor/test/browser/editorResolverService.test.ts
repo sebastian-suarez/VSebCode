@@ -13,34 +13,11 @@ import { DEFAULT_EDITOR_ASSOCIATION } from '../../../../common/editor.js';
 import { DiffEditorInput } from '../../../../common/editor/diffEditorInput.js';
 import { EditorResolverService } from '../../browser/editorResolverService.js';
 import { IEditorGroupsService } from '../../common/editorGroupsService.js';
-import { diffEditorsAssociationsAgentsWindowDefault, EditorInputFactoryObject, EditorMatchRuleSource, EditorMatches, IEditorResolverService, ResolvedStatus, RegisteredEditorPriority, diffEditorsAssociationsSettingId, editorsAssociationsAgentsWindowDefault, editorsAssociationsSettingId } from '../../common/editorResolverService.js';
+import { EditorInputFactoryObject, EditorMatchRuleSource, EditorMatches, IEditorResolverService, ResolvedStatus, RegisteredEditorPriority, diffEditorsAssociationsSettingId, editorsAssociationsSettingId } from '../../common/editorResolverService.js';
 import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 import { createEditorPart, ITestInstantiationService, TestFileEditorInput, TestServiceAccessor, workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
 
 suite('EditorResolverService', () => {
-	test('Agents window editor defaults use the Integrated Browser for HTML when available and follow the Markdown editor setting', () => {
-		assert.deepStrictEqual({
-			enabled: editorsAssociationsAgentsWindowDefault({ markdownDefaultEditor: true, integratedBrowserAvailable: true }),
-			disabled: editorsAssociationsAgentsWindowDefault({ markdownDefaultEditor: false, integratedBrowserAvailable: true }),
-			unavailable: editorsAssociationsAgentsWindowDefault({ markdownDefaultEditor: true, integratedBrowserAvailable: false }),
-		}, {
-			enabled: { '*.html': 'workbench.editor.browser', '*.md': 'vscode.markdown.editor' },
-			disabled: { '*.html': 'workbench.editor.browser', '*.md': 'vscode.markdown.preview.editor' },
-			unavailable: { '*.md': 'vscode.markdown.editor' },
-		});
-	});
-
-	test('Agents window diff editor default follows the Markdown editor setting', () => {
-		assert.deepStrictEqual({
-			enabled: diffEditorsAssociationsAgentsWindowDefault({ markdownDefaultEditor: true }),
-			disabled: diffEditorsAssociationsAgentsWindowDefault({ markdownDefaultEditor: false }),
-		}, {
-			enabled: { '*.md': 'vscode.markdown.editor' },
-			disabled: { '*.md': 'vscode.markdown.preview.editor' },
-		});
-	});
-
-
 	const TEST_EDITOR_INPUT_ID = 'testEditorInputForEditorResolverService';
 	const disposables = new DisposableStore();
 

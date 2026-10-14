@@ -117,9 +117,9 @@ suite('Breadcrumb Model', function () {
 	});
 
 	test('shows only the path relative to a contributed resource label home', function () {
-		const root = URI.file('/Users/test/.copilot/session-state/5ec17bb7-5596-41c5-9d24-4787d8b0a698');
-		const registration = labelService.registerFormatter({ scheme: root.scheme, home: root.path, formatting: { label: 'Copilot/Session', separator: '/' } });
-		const resource = URI.file('/Users/test/.copilot/session-state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/folder/file.md');
+		const root = URI.file('/Users/test/.sessions/state/5ec17bb7-5596-41c5-9d24-4787d8b0a698');
+		const registration = labelService.registerFormatter({ scheme: root.scheme, home: root.path, formatting: { label: 'Sessions/Session', separator: '/' } });
+		const resource = URI.file('/Users/test/.sessions/state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/folder/file.md');
 		model = createModel(resource);
 
 		assert.deepStrictEqual({
@@ -131,7 +131,7 @@ suite('Breadcrumb Model', function () {
 		}, {
 			isRelative: true,
 			elements: [
-				{ name: 'Copilot', kind: FileKind.ROOT_FOLDER },
+				{ name: 'Sessions', kind: FileKind.ROOT_FOLDER },
 				{ name: 'Session', kind: FileKind.FOLDER },
 				{ name: 'folder', kind: FileKind.FOLDER },
 				{ name: 'file.md', kind: FileKind.FILE },
@@ -145,13 +145,13 @@ suite('Breadcrumb Model', function () {
 			override readonly extUri = new ExtUri(uri => uri.scheme === Schemas.file);
 		};
 		const windowsLabelService = new MockLabelService(windowsUriIdentityService.extUri);
-		const home = URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.copilot/session-state/session-id' });
-		const registration = windowsLabelService.registerFormatter({ scheme: home.scheme, home: home.path, formatting: { label: 'Copilot/Session', separator: '/' } });
-		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.copilot/session-state/session-id/files/result.html' });
+		const home = URI.from({ scheme: Schemas.file, path: '/c:/Users/test/.sessions/state/session-id' });
+		const registration = windowsLabelService.registerFormatter({ scheme: home.scheme, home: home.path, formatting: { label: 'Sessions/Session', separator: '/' } });
+		const resource = URI.from({ scheme: Schemas.file, path: '/C:/Users/Test/.sessions/state/session-id/files/result.html' });
 		model = createModel(resource, workspaceService, windowsLabelService, windowsUriIdentityService);
 
 		assert.deepStrictEqual((model.getElements() as FileElement[]).map(element => element.label ?? element.uri.path.split('/').at(-1)), [
-			'Copilot',
+			'Sessions',
 			'Session',
 			'files',
 			'result.html',
@@ -176,16 +176,16 @@ suite('Breadcrumb Model', function () {
 	});
 
 	test('updates when a resource label home is contributed after model creation', function () {
-		const resource = URI.file('/Users/test/.copilot/session-state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/file.md');
+		const resource = URI.file('/Users/test/.sessions/state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/file.md');
 		model = createModel(resource);
-		const root = URI.file('/Users/test/.copilot/session-state/5ec17bb7-5596-41c5-9d24-4787d8b0a698');
-		const registration = labelService.registerFormatter({ scheme: root.scheme, home: root.path, formatting: { label: 'Copilot/Session', separator: '/' } });
+		const root = URI.file('/Users/test/.sessions/state/5ec17bb7-5596-41c5-9d24-4787d8b0a698');
+		const registration = labelService.registerFormatter({ scheme: root.scheme, home: root.path, formatting: { label: 'Sessions/Session', separator: '/' } });
 
 		assert.deepStrictEqual((model.getElements() as FileElement[]).map(element => ({
 			name: element.label ?? element.uri.path.slice(element.uri.path.lastIndexOf('/') + 1),
 			kind: element.kind,
 		})), [
-			{ name: 'Copilot', kind: FileKind.ROOT_FOLDER },
+			{ name: 'Sessions', kind: FileKind.ROOT_FOLDER },
 			{ name: 'Session', kind: FileKind.FOLDER },
 			{ name: 'file.md', kind: FileKind.FILE },
 		]);
@@ -193,13 +193,13 @@ suite('Breadcrumb Model', function () {
 	});
 
 	test('stops at a resource label home when the resource has a query', function () {
-		const home = URI.from({ scheme: 'vscode-agent-host', authority: 'remote', path: '/home/.copilot/session-state/session' });
+		const home = URI.from({ scheme: 'vscode-test-remote', authority: 'remote', path: '/home/.sessions/state/session' });
 		const resource = URI.from({ scheme: home.scheme, authority: home.authority, path: `${home.path}/file.md`, query: '_ah=metadata' });
-		const registration = labelService.registerFormatter({ scheme: home.scheme, authority: home.authority, home: home.path, formatting: { label: 'Copilot/Session', separator: '/' } });
+		const registration = labelService.registerFormatter({ scheme: home.scheme, authority: home.authority, home: home.path, formatting: { label: 'Sessions/Session', separator: '/' } });
 		model = createModel(resource);
 
 		assert.deepStrictEqual((model.getElements() as FileElement[]).map(element => element.label ?? element.uri.path.split('/').at(-1)), [
-			'Copilot',
+			'Sessions',
 			'Session',
 			'file.md',
 		]);
@@ -207,7 +207,7 @@ suite('Breadcrumb Model', function () {
 	});
 
 	test('keeps the full path without a contributed resource label home', function () {
-		const resource = URI.file('/Users/test/.copilot/session-state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/file.md');
+		const resource = URI.file('/Users/test/.sessions/state/5ec17bb7-5596-41c5-9d24-4787d8b0a698/file.md');
 		model = createModel(resource);
 
 		assert.deepStrictEqual({
@@ -215,7 +215,7 @@ suite('Breadcrumb Model', function () {
 			names: (model.getElements() as FileElement[]).map(element => element.uri.path.slice(element.uri.path.lastIndexOf('/') + 1))
 		}, {
 			isRelative: false,
-			names: ['Users', 'test', '.copilot', 'session-state', '5ec17bb7-5596-41c5-9d24-4787d8b0a698', 'file.md']
+			names: ['Users', 'test', '.sessions', 'state', '5ec17bb7-5596-41c5-9d24-4787d8b0a698', 'file.md']
 		});
 	});
 
