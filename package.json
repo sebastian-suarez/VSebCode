@@ -1,8 +1,8 @@
 {
-  "name": "code-oss-dev",
+  "name": "vsebcode-dev",
   "version": "1.143.0",
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Sebastian Suarez"
   },
   "license": "MIT",
   "main": "./out/main.js",

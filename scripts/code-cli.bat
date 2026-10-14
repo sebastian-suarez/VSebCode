@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-title VSCode Dev
+title VSebCode Dev
 
 pushd %~dp0..
 
