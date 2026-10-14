@@ -7203,8 +7203,8 @@ suite('ProtocolServerHandler', () => {
 			const peerChat = buildChatUri(sessionUri, 'peer');
 			const siblingChat = buildChatUri(sessionUri, 'sibling');
 			stateManager.createSession(makeSessionSummary());
-			stateManager.addChat(sessionUri, peerChat, creationTimeChatStorageResource(sessionUri, peerChat));
-			stateManager.addChat(sessionUri, siblingChat, creationTimeChatStorageResource(sessionUri, siblingChat));
+			stateManager.addChat(sessionUri, peerChat);
+			stateManager.addChat(sessionUri, siblingChat);
 			stateManager.dispatchServerAction(sessionUri, {
 				type: ActionType.SessionActiveClientSet,
 				activeClient: {
@@ -7234,7 +7234,7 @@ suite('ProtocolServerHandler', () => {
 	test('unsubscribe from the last nested session removes the active client and fails owned tool calls', async () => {
 		const peerChat = buildChatUri(sessionUri, 'peer');
 		stateManager.createSession(makeSessionSummary());
-		stateManager.addChat(sessionUri, peerChat, creationTimeChatStorageResource(sessionUri, peerChat));
+		stateManager.addChat(sessionUri, peerChat);
 		stateManager.dispatchServerAction(sessionUri, {
 			type: ActionType.SessionActiveClientSet,
 			activeClient: {

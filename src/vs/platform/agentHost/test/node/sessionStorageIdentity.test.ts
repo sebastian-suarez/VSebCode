@@ -19,8 +19,9 @@ import { createFileSystemProviderError, FileSystemProviderErrorCode } from '../.
 import { DiskFileSystemProvider } from '../../../files/node/diskFileSystemProvider.js';
 import { NullLogService } from '../../../log/common/log.js';
 import type { IProductService } from '../../../product/common/productService.js';
+import { AgentHostSessionCatalogEnabledConfigKey } from '../../common/agentHostSchema.js';
 import { createNoopGitService } from '../common/sessionTestHelpers.js';
-import { createTestAgentService, getTestAgentStateManager, registerTestAgentProvider } from './agentServiceTestUtils.js';
+import { createTestAgentService, getTestAgentServiceComposition, getTestAgentStateManager, registerTestAgentProvider } from './agentServiceTestUtils.js';
 import { MockAgent } from './mockAgent.js';
 import { AgentHostDatabase } from '../../node/agentHostDatabase.js';
 import { CompatibleAgentHostDatabase } from '../../node/compatibleAgentHostDatabase.js';
@@ -32,7 +33,6 @@ import { AgentHostPeerChatStore } from '../../node/agentHostPeerChatStore.js';
 import { AgentSessionRegistry } from '../../node/agentSessionRegistry.js';
 import { readAgentMessageDelegationMeta, toAgentMessageDelegationMeta } from '../../common/meta/agentMessageDelegationMeta.js';
 import { AgentHostCatalogSyncService, matchesAcknowledgedCatalogReceipt } from '../../node/agentHostCatalogSyncService.js';
-import { createLiveChatOwnership } from './chatOwnershipTestUtils.js';
 
 suite('Session storage identity compatibility', () => {
 	const store = new DisposableStore();
@@ -82,31 +82,6 @@ suite('Session storage identity compatibility', () => {
 			decoded: resources,
 			opaque: ['ahp-session://tenant/new?revision=1', 'conversation://tenant/chat', 'codex:/new', 'copilotcli:/historical'],
 			message: { text: 'ahp-session:/new', providerData: '{"uri":"ahp-session:/new"}' },
-		});
-	});
-
-	test('translates the session a chat URI was minted for and keeps its chat id and suffix', () => {
-		const codec = new SessionStorageIdentity();
-		codec.add({ runtime: 'ahp-session:/translated', storage: 'claude:/translated', provider: 'claude' });
-		const chats = (session: string) => [
-			buildDefaultChatUri(session),
-			buildChatUri(session, 'peer'),
-			buildSubagentChatUri(session, 'call/1'),
-			`${buildChatUri(session, 'peer')}?revision=2#turn-1`,
-		];
-		const unknown = [buildChatUri('ahp-session:/unregistered', 'peer'), buildSubagentChatUri('claude:/unregistered', 'call/1')];
-		const storage = chats('ahp-session:/translated').map(chat => codec.toStorage(chat));
-
-		assert.deepStrictEqual({
-			storage,
-			runtime: storage.map(chat => codec.toRuntime(chat)),
-			roundTrip: storage.map(chat => codec.toStorage(codec.toRuntime(chat))),
-			unknown: unknown.map(chat => [codec.toStorage(chat), codec.toRuntime(chat)]),
-		}, {
-			storage: chats('claude:/translated'),
-			runtime: chats('ahp-session:/translated'),
-			roundTrip: chats('claude:/translated'),
-			unknown: unknown.map(chat => [chat, chat]),
 		});
 	});
 
@@ -248,7 +223,7 @@ suite('Session storage identity compatibility', () => {
 		await raw.close();
 		const db = await database();
 		const modern = new SessionDataService(URI.file(directory), files(), new NullLogService(), undefined, db.identity);
-		const peers = new AgentHostPeerChatStore(db, modern, new NullLogService(), createLiveChatOwnership(() => undefined));
+		const peers = new AgentHostPeerChatStore(db, modern, new NullLogService());
 		const peer = buildChatUri(session, 'first');
 		await peers.replace(session, [{ uri: peer }]);
 		const normalized = await db.registerChatCatalogV2(session.toString(), {
@@ -513,7 +488,7 @@ suite('Session storage identity compatibility', () => {
 		await db.prepareSessionStorage(session.toString(), 'copilotcli');
 		await db.registerRuntimeSession(session.toString(), { provider: 'copilotcli', startTime: 1, source: 'explicit' }, { checkTombstone: false });
 		const modern = new SessionDataService(URI.file(directory), files(), new NullLogService(), undefined, db.identity);
-		const peers = new AgentHostPeerChatStore(db, modern, new NullLogService(), createLiveChatOwnership(() => undefined));
+		const peers = new AgentHostPeerChatStore(db, modern, new NullLogService());
 		const first = buildChatUri(session, 'first');
 		await peers.replace(session, [{ uri: first, providerData: 'sdk-first' }]);
 		const old = new SessionDataService(URI.file(directory), files(), new NullLogService());
@@ -787,6 +762,7 @@ suite('Session storage identity compatibility', () => {
 					undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, database,
 				));
 				const creating = createService(db, modern);
+				getTestAgentServiceComposition(creating).configurationService.updateRootConfig({ [AgentHostSessionCatalogEnabledConfigKey]: true });
 				const agent = store.add(new class extends MockAgent {
 					override async createChat() { return { providerData: 'peer-backing' }; }
 				}(provider));

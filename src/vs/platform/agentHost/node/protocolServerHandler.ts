@@ -1512,7 +1512,7 @@ export class ProtocolServerHandler extends Disposable implements IAgentHostClien
 				if (subscription.kind === ChannelKind.State
 					&& subscription.active
 					&& (subscription.uri === session
-						|| this._chatOwnership.getChatOwner(subscription.uri) === session)) {
+						|| parseChatUri(subscription.uri)?.session === session)) {
 					return true;
 				}
 			}
