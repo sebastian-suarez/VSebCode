@@ -49,13 +49,13 @@ grep -l "serverLicense" out-vscode-reh-web-test/vs/code/browser/workbench/workbe
 
 - The npm script enters `build-fast.ts` directly so warm builds do not load the bundler, localization plugins, or other full-build tooling.
 - Client changes are transpiled/copied/deleted at file granularity.
-- Built-in extension/media and Copilot builds run only when their inputs change. The extension lane uses the existing `transpile-extensions` task instead of type-checking every extension; Copilot's `compile` script is already an esbuild development bundle.
+- Built-in extension/media builds run only when their inputs change. The extension lane uses the existing `transpile-extensions` task instead of type-checking every extension.
 - Extension transpilation follows each project's module setting and NodeNext package scope rather than assuming CommonJS; ESM language servers and extensions must remain loadable.
 - Extension outputs use the configured `outDir` and omit declaration-only inputs, matching the conventional compiler's output paths.
-- `npm run build-fast -- --client-only` refreshes only client output, including on a cold worktree. It runs the client prerequisites but never builds extensions or Copilot.
+- `npm run build-fast -- --client-only` refreshes only client output, including on a cold worktree. It runs the client prerequisites but never builds extensions.
 - Missing, incompatible, or invalid state falls back to a full build of the selected lanes.
 - `npm run build-fast -- --force` forces all selected lanes to rebuild and refreshes state; it can be combined with `--client-only`.
-- Each lane retains its own successful input snapshot. A client-only invocation does not advance extension or Copilot state, so a later default invocation still builds their pending changes.
+- Each lane retains its own successful input snapshot. A client-only invocation does not advance extension state, so a later default invocation still builds its pending changes.
 - State is invalidated before outputs change and published only after every selected lane succeeds. If inputs change during the build, the pre-build snapshot is saved so late changes are rebuilt on the next run.
 - The fast client and extension JavaScript lanes do not type-check. Extension media retains its existing type checks; keep explicit compile/type-check and CI workflows for validating the other projects.
 

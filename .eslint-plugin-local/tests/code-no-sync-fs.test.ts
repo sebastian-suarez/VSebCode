@@ -82,7 +82,7 @@ new RuleTester({ languageOptions: { parser: tseslint.parser } }).run('code-no-sy
 });
 
 suite('code-no-sync-fs production configuration', () => {
-	const eslint = new ESLint({ overrideConfig: [{ rules: { 'copilot-local/no-funny-filename': 'off' } }] });
+	const eslint = new ESLint();
 	const root = resolve(import.meta.dirname, '../..');
 
 	test('reports an error warning against disabling the rule', async () => {
@@ -96,7 +96,7 @@ suite('code-no-sync-fs production configuration', () => {
 	});
 
 	test('enforces core and built-in extension production code', async () => {
-		const files = ['src/vs/platform/agentHost/node/example.ts', 'src/vs/base/node/example.ts', 'extensions/git/src/example.ts', 'extensions/copilot/src/platform/example.ts'];
+		const files = ['src/vs/platform/agentHost/node/example.ts', 'src/vs/base/node/example.ts', 'extensions/git/src/example.ts'];
 		assert.deepStrictEqual(await Promise.all(files.map(async file => {
 			const results = await eslint.lintText(`import { statSync } from 'fs'; statSync('file');`, { filePath: resolve(root, file) });
 			return results.flatMap(result => result.messages.filter(message => message.ruleId === 'local/code-no-sync-fs').map(message => message.severity));
@@ -104,7 +104,7 @@ suite('code-no-sync-fs production configuration', () => {
 	});
 
 	test('allows tests and development scripts', async () => {
-		const files = ['src/vs/base/test/node/example.test.ts', 'extensions/git/src/test/example.ts', 'extensions/copilot/src/platform/example.spec.ts', 'extensions/copilot/src/platform/example.spec.tsx', 'extensions/copilot/script/example.ts', 'scripts/example.ts', 'build/example.ts', 'src/vs/code/node/cli.ts', 'src/vs/server/node/server.cli.ts'];
+		const files = ['src/vs/base/test/node/example.test.ts', 'extensions/git/src/test/example.ts', 'scripts/example.ts', 'build/example.ts', 'src/vs/code/node/cli.ts', 'src/vs/server/node/server.cli.ts'];
 		assert.deepStrictEqual(await Promise.all(files.map(async file => {
 			const results = await eslint.lintText(`import { statSync } from 'fs'; statSync('file');`, { filePath: resolve(root, file) });
 			return results.flatMap(result => result.messages.filter(message => message.ruleId === 'local/code-no-sync-fs'));

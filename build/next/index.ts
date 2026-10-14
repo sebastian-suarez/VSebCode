@@ -826,7 +826,7 @@ Commands:
 
 Options for 'build-fast':
 	--force            Ignore incremental state and rebuild selected lanes
-	--client-only      Only refresh client output; skip extensions and Copilot
+	--client-only      Only refresh client output; skip extensions
 
 Options for 'transpile':
 	--watch            Watch for changes and rebuild incrementally
