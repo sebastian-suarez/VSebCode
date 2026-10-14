@@ -20,7 +20,7 @@ Maintainer rule: when it is unclear whether something counts as "Microsoft" or "
 
 ### Status
 
-Source code is still untouched: `main` is upstream commit `2b0c23ebbd8` (version 1.143.0-dev, 2026-10-13) plus the repository changes listed here. The `upstream` remote exists and fetches only `main`, `release/*` and tags (latest release tag at the time of writing: 1.141.1). Done so far: the upstream CI workflows and Dependabot config were removed from `.github`; the vendor-neutral engineering notes were moved from `.github/instructions` and the design-philosophy skill to `docs/guidelines/`. Update this section as surfaces are removed so later sessions do not re-discover the state.
+Source code is still untouched: `main` is upstream commit `2b0c23ebbd8` (version 1.143.0-dev, 2026-10-13) plus the repository changes listed here. The `upstream` remote exists and fetches only `main`, `release/*` and tags (latest release tag at the time of writing: 1.141.1). Done so far (two commits on `main`): the upstream CI workflows, composite actions and Dependabot config were removed from `.github`, together with the build-script test that read the workflow files; the vendor-neutral engineering notes were moved from `.github/instructions` and the design-philosophy skill to `docs/guidelines/`. Next: execute `docs/plans/phase-1-repo-tooling.md` in a fresh session. Update this section as surfaces are removed so later sessions do not re-discover the state.
 
 ## Commands
 
@@ -131,10 +131,10 @@ The identity fields of `product.json` (`nameShort`, `nameLong`, `applicationName
 
 ## Removal plan (adopted 2026-10-14)
 
-Work through the groups in this order. Each phase must leave `npm run compile-client` and the checks green before the next one starts.
+Work through the groups in this order. Each phase must leave `npm run compile-client` and the checks green before the next one starts. Phase plans live in `docs/plans/`; write the next one at the end of each phase.
 
-1. Repo tooling and `product.json` endpoints: the rest of `.github`, `AGENTS.md`, `build/azure-pipelines`, `.config`, `.devcontainer`, `.agents`, `.mcp.json`, the `distro` and feed scripts, the postinstall symlink block, and the Microsoft endpoints and Copilot fields of `product.json` together with their `IProductConfiguration` counterparts. Cheap, and equivalent to what VSCodium does.
-2. Self-contained AI packages: `extensions/copilot` with its build lane and dependencies, `src/vs/sessions` with the `--agents` window and its scripts, the agent-host platform and services, `test/mcp`, `test/integration/agentHost`, `scripts/chat-simulation`.
+1. Repo tooling and `product.json` endpoints: the rest of `.github`, `AGENTS.md`, `build/azure-pipelines`, `.config`, `.devcontainer`, `.agents`, the `distro` and feed scripts, the postinstall symlink block, and the Microsoft endpoints and Copilot values of `product.json`. Cheap, and equivalent to what VSCodium does. Step-by-step plan: `docs/plans/phase-1-repo-tooling.md`.
+2. Self-contained AI packages: `extensions/copilot` with its build lane and dependencies, `src/vs/sessions` with the `--agents` window and its scripts, the agent-host platform and services, `test/mcp` with the `vscode-automation-mcp` entry of `.mcp.json`, `test/integration/agentHost`, `scripts/chat-simulation`, `scripts/mock-policy-server`, and the Copilot entries of `.vscode/tasks.json` and `.vscode/launch.json`.
 3. Microsoft services: bind `NullTelemetryService`, delete the 1DS appenders and endpoint services, the telemetry contribs, the assignment service and `tas-client`, and the extensions' `aiKey` / `@vscode/extension-telemetry`; then surveys, update, Settings Sync, Cloud Changes, tunnels, and the account extensions.
 4. Chat core and extension API: `contrib/chat` with every dependent in the removal map, the `chat` / `lm` namespaces, their proposals and `extHost` / `mainThread` pairs, and the long tail found by `grep -rli copilot src/vs`.
 5. Branding, once the product no longer references Microsoft services.
