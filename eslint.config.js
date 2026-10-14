@@ -310,7 +310,6 @@ export default defineConfig(
 			'extensions/debug-auto-launch/src/extension.ts',
 			'extensions/emmet/src/updateImageSize.ts',
 			'extensions/emmet/src/util.ts',
-			'extensions/github-authentication/src/node/fetch.ts',
 			'extensions/typescript-language-features/src/utils/platform.ts',
 			'extensions/typescript-language-features/web/src/webServer.ts',
 			'src/vs/base/browser/broadcast.ts',
@@ -480,7 +479,6 @@ export default defineConfig(
 			// Extensions
 			'extensions/git/src/**/*.ts',
 			'extensions/git-base/src/**/*.ts',
-			'extensions/github/src/**/*.ts',
 			// vscode
 			'src/**/*.ts',
 		],
@@ -491,7 +489,6 @@ export default defineConfig(
 			'extensions/git/src/git.ts',
 			'extensions/git/src/util.ts',
 			'extensions/git-base/src/decorators.ts',
-			'extensions/github/src/util.ts',
 			// vscode d.ts
 			'src/vs/amdX.ts',
 			'src/vs/monaco.d.ts',

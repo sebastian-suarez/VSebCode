@@ -17,11 +17,6 @@ import { extensionNotificationTelemetry, NotificationActionTelemetryId, withNoti
 @extHostNamedCustomer(MainContext.MainThreadProgress)
 export class MainThreadProgress implements MainThreadProgressShape {
 
-	private static readonly URGENT_PROGRESS_SOURCES = [
-		'vscode.github-authentication',
-		'vscode.microsoft-authentication'
-	];
-
 	private readonly _progressService: IProgressService;
 	private _progress = new Map<number, { resolve: () => void; progress: IProgress<IProgressStep> }>();
 	private readonly _proxy: ExtHostProgressShape;
@@ -45,10 +40,9 @@ export class MainThreadProgress implements MainThreadProgressShape {
 		let progressOptions: IProgressOptions = { ...options, legacyExtensionLinkParsing, telemetry: options.telemetryId ?? extensionNotificationTelemetry(extensionId, 'progress') };
 
 		if (options.location === ProgressLocation.Notification && extensionId) {
-			const sourceIsUrgent = MainThreadProgress.URGENT_PROGRESS_SOURCES.includes(extensionId);
 			const notificationOptions: IProgressNotificationOptions = {
 				...progressOptions,
-				priority: sourceIsUrgent ? NotificationPriority.URGENT : NotificationPriority.DEFAULT,
+				priority: NotificationPriority.DEFAULT,
 				location: ProgressLocation.Notification,
 				secondaryActions: [withNotificationActionTelemetry(toAction({
 					id: extensionId,

@@ -191,7 +191,6 @@ registerSingleton(IAllowedMcpServersService, AllowedMcpServersService, Instantia
 import './services/accounts/browser/defaultAccount.js';
 
 // Account Policy Gate
-import './services/policies/browser/accountPolicyGate.contribution.js';
 import './services/policies/browser/managedSettingsUpdate.contribution.js';
 
 // Policy Telemetry
@@ -268,7 +267,6 @@ import './contrib/sash/browser/sash.contribution.js';
 
 // Git
 import './contrib/git/browser/git.contributions.js';
-import './contrib/github/browser/githubLinkPresentation.contribution.js';
 
 // SCM
 import './contrib/scm/browser/scm.contribution.js';

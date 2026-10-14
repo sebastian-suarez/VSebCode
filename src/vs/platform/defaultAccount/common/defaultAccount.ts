@@ -106,4 +106,43 @@ export interface IDefaultAccountService {
 	resolveGitHubUrl(path: string): string | undefined;
 }
 
+/**
+ * A default account provider that never has an account: there is no account service to sign in to.
+ */
+export class NullDefaultAccountProvider implements IDefaultAccountProvider {
+	readonly defaultAccount = null;
+	readonly onDidChangeDefaultAccount = Event.None;
+	readonly policyData = null;
+	readonly onDidChangePolicyData = Event.None;
+	readonly copilotTokenInfo = null;
+	readonly onDidChangeCopilotTokenInfo = Event.None;
+	readonly managedSettingsFetchStatus = null;
+	readonly managedSettingsFetchedAt = null;
+	readonly managedSettingsRawResponse = null;
+	readonly managedSettingsCompatibilityError = null;
+	readonly onDidChangeManagedSettingsCompatibilityError = Event.None;
+	readonly managedSettingsFreshness = MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED;
+	readonly onDidChangeManagedSettingsFreshness = Event.None;
+
+	constructor(private readonly authenticationProvider: IDefaultAccountAuthenticationProvider) { }
+
+	getDefaultAccountAuthenticationProvider(): IDefaultAccountAuthenticationProvider {
+		return this.authenticationProvider;
+	}
+
+	resolveGitHubUrl(path: string): string {
+		return `https://github.com/${path}`;
+	}
+
+	async refresh(): Promise<IDefaultAccount | null> {
+		return null;
+	}
+
+	async signIn(): Promise<IDefaultAccount | null> {
+		return null;
+	}
+
+	async signOut(): Promise<void> { }
+}
+
 export { MANAGED_SETTINGS_FRESHNESS_NOT_REQUIRED };
