@@ -66,6 +66,28 @@ export function findRemovedSurfaces(repoRoot: string, paths?: readonly string[],
 }
 
 /**
+ * Splits the output of `git diff --cached --name-status` into every staged path and the paths that
+ * are still present afterwards (a staged deletion of a removed surface is the right thing to do,
+ * not a re-introduction). A rename or copy names the new path.
+ */
+export function parseStagedPaths(nameStatusOutput: string): { all: string[]; present: string[] } {
+	const all: string[] = [];
+	const present: string[] = [];
+	for (const line of nameStatusOutput.split(/\r?\n/)) {
+		if (!line) {
+			continue;
+		}
+		const fields = line.split('\t');
+		const filePath = fields[fields.length - 1];
+		all.push(filePath);
+		if (!fields[0].startsWith('D')) {
+			present.push(filePath);
+		}
+	}
+	return { all, present };
+}
+
+/**
  * The hygiene check: an error message naming the removed surfaces among the given paths, or in the
  * whole tree when no paths are given, or undefined when there are none.
  */

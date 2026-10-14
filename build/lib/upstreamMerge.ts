@@ -192,8 +192,10 @@ export function describeUpstreamDelta(repoRoot: string, oldBase: string, newBase
 }
 
 /**
- * Runs the whole sync: the preconditions, the audit, the base, the merge and the deletions. The
- * merge is left staged for the human steps that follow.
+ * Runs the whole sync: the preconditions, the audit, the merge, the deletions and the base. The
+ * merge is left staged for the human steps that follow. The base is advanced only once the merge
+ * is in the index, and a failure after the merge aborts it, so that a failed run leaves the
+ * repository as it was; a base advanced by an earlier run that was aborted afterwards is reused.
  */
 export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstreamMergeOptions): IUpstreamMergeReport {
 	if (git(repoRoot, ['status', '--porcelain']) !== '') {
@@ -205,22 +207,40 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 	if (gitResult(repoRoot, ['rev-parse', '--verify', '--quiet', `${tag}^{commit}`]).status !== 0) {
 		throw new Error(`The tag ${tag} does not exist; run git fetch ${upstreamRemote} --tags.`);
 	}
+	const tagCommit = git(repoRoot, ['rev-parse', '--verify', `${tag}^{commit}`]);
 	const preMergeHead = git(repoRoot, ['rev-parse', 'HEAD']);
-	if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tag, preMergeHead]).status === 0) {
+	if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tagCommit, preMergeHead]).status === 0) {
 		throw new Error(`The tag ${tag} is already merged.`);
 	}
 	if (gitResult(repoRoot, ['rev-parse', '--verify', '--quiet', `refs/heads/${upstreamBaseBranch}`]).status !== 0) {
 		throw new Error(`The branch ${upstreamBaseBranch} does not exist; it holds the upstream content the fork contains.`);
 	}
 	const surfaces = readRemovedSurfaces(repoRoot);
-	const oldBase = git(repoRoot, ['rev-parse', `refs/heads/${upstreamBaseBranch}`]);
-	const audit = auditUpstreamSides(repoRoot, oldBase, tag, surfaces);
-	if (audit.length > 0) {
-		throw new Error(`The upstream base and ${tag} conflict in surviving files, which -X theirs would resolve silently; build the base by hand in a scratch worktree:\n${audit.map(file => `  ${file}`).join('\n')}`);
+	let oldBase = git(repoRoot, ['rev-parse', `refs/heads/${upstreamBaseBranch}`]);
+	let baseAlreadyAdvanced = false;
+	if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tagCommit, oldBase]).status === 0) {
+		if (gitResult(repoRoot, ['rev-parse', '--verify', '--quiet', `${upstreamBaseBranch}^2`]).stdout.trim() !== tagCommit) {
+			throw new Error(`The branch ${upstreamBaseBranch} already contains ${tag}; merge a newer tag.`);
+		}
+		// An earlier run advanced the base and its merge was aborted: report against the base before it
+		oldBase = git(repoRoot, ['rev-parse', `${upstreamBaseBranch}^1`]);
+		baseAlreadyAdvanced = true;
+	} else {
+		const audit = auditUpstreamSides(repoRoot, oldBase, tagCommit, surfaces);
+		if (audit.length > 0) {
+			throw new Error(`The upstream base and ${tag} conflict in surviving files, which -X theirs would resolve silently; build the base by hand in a scratch worktree:\n${audit.map(file => `  ${file}`).join('\n')}`);
+		}
 	}
-	const newBase = advanceUpstreamBase(repoRoot, tag, options.sign);
 	const { conflicted, added } = mergeTag(repoRoot, tag);
-	const removed = deleteRemovedSurfaces(repoRoot, [...conflicted, ...added], surfaces);
+	let removed: string[];
+	let newBase: string;
+	try {
+		removed = deleteRemovedSurfaces(repoRoot, [...conflicted, ...added], surfaces);
+		newBase = baseAlreadyAdvanced ? git(repoRoot, ['rev-parse', `refs/heads/${upstreamBaseBranch}`]) : advanceUpstreamBase(repoRoot, tag, options.sign);
+	} catch (error) {
+		gitResult(repoRoot, ['merge', '--abort']);
+		throw new Error(`${error instanceof Error ? error.message : String(error)}\nThe merge was aborted; the working tree is back at ${preMergeHead.slice(0, 11)} and ${upstreamBaseBranch} is unchanged.`);
+	}
 	const removedSet = new Set(removed);
 	return {
 		tag,

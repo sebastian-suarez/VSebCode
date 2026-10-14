@@ -15,7 +15,7 @@ import vfs from 'vinyl-fs';
 import { all, copyrightFilter, eslintFilter, indentationFilter, stylelintFilter, tsFormattingFilter, unicodeFilter } from './filters.ts';
 import eslint from './gulp-eslint.ts';
 import { copyrightHeaders } from './lib/forkHeader.ts';
-import { checkRemovedSurfaces } from './lib/removedSurfaces.ts';
+import { checkRemovedSurfaces, parseStagedPaths } from './lib/removedSurfaces.ts';
 import * as formatter from './lib/formatter.ts';
 import gulpstylelint from './stylelint.ts';
 
@@ -309,7 +309,7 @@ if (import.meta.main) {
 		});
 	} else {
 		cp.exec(
-			'git diff --cached --name-only',
+			'git diff --cached --name-status',
 			{ maxBuffer: 2000 * 1024 },
 			(err, out) => {
 				if (err) {
@@ -318,7 +318,8 @@ if (import.meta.main) {
 					process.exit(1);
 				}
 
-				const some = out.split(/\r?\n/).filter((l) => !!l);
+				const staged = parseStagedPaths(out);
+				const some = staged.all;
 
 				if (some.length > 0) {
 					// Check that no new .js/.cjs/.mjs files are being added outside of the allowlist
@@ -331,7 +332,7 @@ if (import.meta.main) {
 					}
 
 					// Check that no removed surface comes back
-					const removedSurfacesError = checkRemovedSurfaces(process.cwd(), some);
+					const removedSurfacesError = checkRemovedSurfaces(process.cwd(), staged.present);
 					if (removedSurfacesError) {
 						console.error(removedSurfacesError);
 						process.exit(1);

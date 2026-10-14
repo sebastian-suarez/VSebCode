@@ -10,7 +10,7 @@ import os from 'os';
 import path from 'path';
 import { suite, test } from 'node:test';
 import { removedSurfacesFile } from '../removedSurfaces.ts';
-import { runUpstreamMerge, upstreamBaseBranch } from '../upstreamMerge.ts';
+import { advanceUpstreamBase, runUpstreamMerge, upstreamBaseBranch } from '../upstreamMerge.ts';
 
 interface IRepo {
 	readonly root: string;
@@ -166,6 +166,93 @@ suite('upstream merge', () => {
 				treeClean: '',
 				baseUnchanged: true,
 				notMerged: false,
+			});
+		} finally {
+			fs.rmSync(repo.root, { recursive: true, force: true });
+		}
+	});
+
+	test('aborts the merge and keeps the base when a step after the merge fails', () => {
+		const repo = createRepo();
+		try {
+			const { base } = createHistory(repo);
+			const head = repo.git('rev-parse', 'HEAD');
+			// Signing fails, so advancing the base fails after the tag is merged into the index
+			repo.git('config', 'gpg.format', 'openpgp');
+			repo.git('config', 'gpg.program', 'false');
+			let message = '';
+			try {
+				runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: true });
+			} catch (error) {
+				message = error instanceof Error ? error.message : String(error);
+			}
+			assert.deepStrictEqual({
+				aborted: message.includes('The merge was aborted'),
+				treeClean: repo.git('status', '--porcelain'),
+				headUnchanged: repo.git('rev-parse', 'HEAD') === head,
+				baseUnchanged: repo.git('rev-parse', upstreamBaseBranch) === base,
+				removedFolderStillAbsent: repo.git('ls-files', 'src/vs/platform/removed'),
+			}, {
+				aborted: true,
+				treeClean: '',
+				headUnchanged: true,
+				baseUnchanged: true,
+				removedFolderStillAbsent: '',
+			});
+		} finally {
+			fs.rmSync(repo.root, { recursive: true, force: true });
+		}
+	});
+
+	test('reuses a base advanced by an earlier run whose merge was aborted', () => {
+		const repo = createRepo();
+		try {
+			const { base } = createHistory(repo);
+			const advanced = advanceUpstreamBase(repo.root, '1.1.0', false);
+			const report = runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: false });
+			assert.deepStrictEqual({
+				oldBase: report.oldBase,
+				newBase: report.newBase,
+				baseKept: repo.git('rev-parse', upstreamBaseBranch) === advanced,
+				delta: { ...report.delta },
+				removed: report.removed,
+			}, {
+				oldBase: base,
+				newBase: advanced,
+				baseKept: true,
+				delta: {
+					newFolders: ['src/vs/platform/newFeature/'],
+					newProductFields: ['newField'],
+					newDependencies: ['y (package.json)'],
+					newApiProposals: ['foo'],
+				},
+				removed: ['src/vs/platform/removed/n.ts', 'src/vs/platform/removed/r.ts'],
+			});
+		} finally {
+			fs.rmSync(repo.root, { recursive: true, force: true });
+		}
+	});
+
+	test('refuses a tag the base already contains from a later sync', () => {
+		const repo = createRepo();
+		try {
+			createHistory(repo);
+			// A later tag on top of 1.1.0 was already synced into the base
+			repo.git('checkout', '-q', 'release');
+			repo.write({ 'src/vs/platform/keep/later.ts': 'export const later = 1;\n' });
+			repo.commit('later release work');
+			repo.git('tag', '1.2.0');
+			repo.git('checkout', '-q', 'main');
+			advanceUpstreamBase(repo.root, '1.2.0', false);
+			let message = '';
+			try {
+				runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: false });
+			} catch (error) {
+				message = error instanceof Error ? error.message : String(error);
+			}
+			assert.deepStrictEqual({ message, treeClean: repo.git('status', '--porcelain') }, {
+				message: `The branch ${upstreamBaseBranch} already contains 1.1.0; merge a newer tag.`,
+				treeClean: '',
 			});
 		} finally {
 			fs.rmSync(repo.root, { recursive: true, force: true });

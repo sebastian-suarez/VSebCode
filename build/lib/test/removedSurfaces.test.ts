@@ -9,7 +9,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { suite, test } from 'node:test';
-import { checkRemovedSurfaces, isRemovedSurface, parseRemovedSurfaces, removedSurfacesFile } from '../removedSurfaces.ts';
+import { checkRemovedSurfaces, isRemovedSurface, parseRemovedSurfaces, parseStagedPaths, removedSurfacesFile } from '../removedSurfaces.ts';
 
 suite('removed surfaces', () => {
 
@@ -31,6 +31,13 @@ suite('removed surfaces', () => {
 			'src/vs/base/common/managedSettings.test.ts',
 			'src/vs/base/common/other.ts',
 		].map(filePath => isRemovedSurface(surfaces, filePath)), [true, true, false, true, false, false]);
+	});
+
+	test('separates staged deletions from the paths still present', () => {
+		assert.deepStrictEqual(parseStagedPaths('M\tbuild/removed-surfaces.txt\nD\tsrc/vs/platform/chat/common/chatSettings.ts\nA\tsrc/new.ts\nR100\told.ts\tnew.ts\n'), {
+			all: ['build/removed-surfaces.txt', 'src/vs/platform/chat/common/chatSettings.ts', 'src/new.ts', 'new.ts'],
+			present: ['build/removed-surfaces.txt', 'src/new.ts', 'new.ts'],
+		});
 	});
 
 	test('reports the removed surfaces among tracked files and among given paths', () => {
