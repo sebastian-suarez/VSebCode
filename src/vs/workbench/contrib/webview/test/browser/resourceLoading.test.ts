@@ -129,13 +129,13 @@ suite('Webview Resource Loading - getResourceToLoad', () => {
 			const cases = [
 				{
 					source: 'encoded webview URL',
-					raw: 'https://file+.vscode-resource.vscode-cdn.net/c:/Users/alice/project/..%20/.ssh/id_rsa',
-					path: decodeURIComponent(new URL('https://file+.vscode-resource.vscode-cdn.net/c:/Users/alice/project/..%20/.ssh/id_rsa').pathname)
+					raw: 'https://file+.vscode-resource.vsebcode.sebastiansuarez.dev/c:/Users/alice/project/..%20/.ssh/id_rsa',
+					path: decodeURIComponent(new URL('https://file+.vscode-resource.vsebcode.sebastiansuarez.dev/c:/Users/alice/project/..%20/.ssh/id_rsa').pathname)
 				},
 				{
 					source: 'literal-space webview URL',
-					raw: 'https://file+.vscode-resource.vscode-cdn.net/c:/Users/alice/project/.. /.ssh/id_rsa',
-					path: decodeURIComponent(new URL('https://file+.vscode-resource.vscode-cdn.net/c:/Users/alice/project/.. /.ssh/id_rsa').pathname)
+					raw: 'https://file+.vscode-resource.vsebcode.sebastiansuarez.dev/c:/Users/alice/project/.. /.ssh/id_rsa',
+					path: decodeURIComponent(new URL('https://file+.vscode-resource.vsebcode.sebastiansuarez.dev/c:/Users/alice/project/.. /.ssh/id_rsa').pathname)
 				},
 				{
 					source: 'load-resource message',

@@ -11,7 +11,7 @@ suite('Remote resource response', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
 
 	test('allows trusted workbench and configured web endpoint origins', () => {
-		const allowedWebEndpointOrigin = 'https://example.vscode-cdn.net';
+		const allowedWebEndpointOrigin = 'https://webview.example.test';
 		const getHeaders = (origin: string | undefined) => getRemoteResourceResponseHeaders(origin, candidate => candidate === allowedWebEndpointOrigin);
 
 		assert.deepStrictEqual({
