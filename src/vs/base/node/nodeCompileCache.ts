@@ -16,7 +16,7 @@ declare module 'node:module' {
 	}
 }
 
-export const nodeCompileCacheKinds = ['main', 'extension-host', 'shared-process', 'pty-host', 'agent-host'] as const;
+export const nodeCompileCacheKinds = ['main', 'extension-host', 'shared-process', 'pty-host'] as const;
 export type NodeCompileCacheKind = typeof nodeCompileCacheKinds[number];
 
 let enabledKind: NodeCompileCacheKind | undefined;
@@ -38,8 +38,7 @@ const processWithNodeCompileCacheStatus = process as NodeJS.Process & {
 const utilityProcessCacheKinds: Readonly<Record<string, NodeCompileCacheKind | undefined>> = {
 	extensionHost: 'extension-host',
 	'shared-process': 'shared-process',
-	ptyHost: 'pty-host',
-	agentHost: 'agent-host'
+	ptyHost: 'pty-host'
 };
 
 export function getNodeCompileCacheKindForUtilityProcess(type: string): NodeCompileCacheKind | undefined {

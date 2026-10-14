@@ -182,11 +182,6 @@ export class ExtensionManagementCLI {
 			const { id, version, installOptions } = installExtensionInfo;
 			const installedExtension = installed.find(i => areSameExtensions(i.identifier, { id }));
 			if (installedExtension) {
-				const builtinAutoUpdateMessage = this.validateBuiltinExtensionEnabledWithAutoUpdates(installedExtension);
-				if (builtinAutoUpdateMessage) {
-					this.logger.info(builtinAutoUpdateMessage);
-					return false;
-				}
 				if (!force && (!version || (version === 'prerelease' && installedExtension.preRelease))) {
 					this.logger.info(localize('alreadyInstalled-checkAndUpdate', "Extension '{0}' v{1} is already installed. Use '--force' option to update to latest version or provide '@<version>' to install a specific version, for example: '{2}@1.2.3'.", id, installedExtension.manifest.version, id));
 					return false;
@@ -310,12 +305,6 @@ export class ExtensionManagementCLI {
 		const existingExtension = installedExtensions.find(local => areSameExtensions(extensionIdentifier, local.identifier));
 
 		if (existingExtension) {
-			const builtinAutoUpdateMessage = this.validateBuiltinExtensionEnabledWithAutoUpdates(existingExtension);
-			if (builtinAutoUpdateMessage) {
-				this.logger.info(builtinAutoUpdateMessage);
-				return false;
-			}
-
 			if (!force) {
 				if (gt(existingExtension.manifest.version, manifest.version)) {
 					this.logger.info(localize('forceDowngrade', "A newer version of extension '{0}' v{1} is already installed. Use '--force' option to downgrade to older version.", existingExtension.identifier.id, existingExtension.manifest.version, manifest.version));
@@ -385,11 +374,5 @@ export class ExtensionManagementCLI {
 		return this.location ? localize('notInstalleddOnLocation', "Extension '{0}' is not installed on {1}.", id, this.location) : localize('notInstalled', "Extension '{0}' is not installed.", id);
 	}
 
-	private validateBuiltinExtensionEnabledWithAutoUpdates(extension: ILocalExtension): string | undefined {
-		if (extension.isBuiltin && this.productService.builtInExtensionsEnabledWithAutoUpdates.some(e => e.toLowerCase() === extension.identifier.id.toLowerCase()) && !extension.forceAutoUpdate) {
-			return localize('builtinAutoUpdate', "Extension '{0}' is a built-in extension and not allowed to be updated in the current product quality '{1}'.", extension.identifier.id, this.productService.quality);
-		}
-		return undefined;
-	}
 
 }

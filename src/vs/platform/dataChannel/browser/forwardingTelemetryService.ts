@@ -80,31 +80,7 @@ export class DataChannelForwardingTelemetryService extends InterceptingTelemetry
 		@IDataChannelService dataChannelService: IDataChannelService,
 	) {
 		super(telemetryService, (eventName, data) => {
-			// filter for extension
-			let forward = true;
-			if (data && shouldForwardToChannel in data) {
-				forward = Boolean(data[shouldForwardToChannel]);
-			}
-
-			if (forward) {
-				dataChannelService.getDataChannel<IEditTelemetryData>('editTelemetry').sendData({ eventName, data: data ?? {} });
-			}
+			dataChannelService.getDataChannel<IEditTelemetryData>('editTelemetry').sendData({ eventName, data: data ?? {} });
 		});
 	}
-}
-
-const shouldForwardToChannel = Symbol('shouldForwardToChannel');
-export function forwardToChannelIf(value: boolean): Record<string, unknown> {
-	return {
-		// This will not be sent via telemetry, it is just a marker
-		[shouldForwardToChannel]: value
-	};
-}
-
-export function isCopilotLikeExtension(extensionId: string | undefined): boolean {
-	if (!extensionId) {
-		return false;
-	}
-	const extIdLowerCase = extensionId.toLowerCase();
-	return extIdLowerCase === 'github.copilot' || extIdLowerCase === 'github.copilot-chat';
 }

@@ -7,15 +7,15 @@ import assert from 'assert';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
 import { IStringDictionary } from '../../../../base/common/collections.js';
 import { PolicyName } from '../../../../base/common/policy.js';
-import { AbstractPolicyService, PolicyDefinition, PolicyValue, PolicyValueSource } from '../../common/policy.js';
+import { AbstractPolicyService, PolicyDefinition, PolicyValue } from '../../common/policy.js';
 
 class TestPolicyService extends AbstractPolicyService {
-	update(name: PolicyName, value: PolicyValue | undefined, source: PolicyValueSource | undefined): boolean {
-		return this.updatePolicyValue(name, value, source);
+	update(name: PolicyName, value: PolicyValue | undefined): boolean {
+		return this.updatePolicyValue(name, value);
 	}
 
 	protected async _updatePolicyDefinitions(_policyDefinitions: IStringDictionary<PolicyDefinition>): Promise<void> {
-		// no-op: the OS/file watcher is irrelevant for serialization tests
+		// no-op: the OS/file watcher is irrelevant for these tests
 	}
 }
 
@@ -23,29 +23,21 @@ suite('AbstractPolicyService', () => {
 
 	ensureNoDisposablesAreLeakedInTestSuite();
 
-	test('serialize() omits the non-cloneable value callback so policiesData can be sent over IPC', async () => {
+	test('serialize() returns the definitions with their values so policiesData can be sent over IPC', async () => {
 		const service = new TestPolicyService();
 
 		await service.updatePolicyDefinitions({
-			'WithCallback': {
-				type: 'boolean',
-				value: (policyData) => policyData.chat_preview_features_enabled === false ? false : undefined,
-				restrictedValue: false,
-			},
-			'PlainDefinition': {
-				type: 'string',
-			}
+			'BooleanDefinition': { type: 'boolean' },
+			'StringDefinition': { type: 'string' }
 		});
+		service.update('BooleanDefinition', false);
 
 		const serialized = service.serialize();
 
-		// The callback must not survive serialization...
-		assert.strictEqual(typeof serialized['WithCallback'].definition.value, 'undefined');
-		// ...while the structured-clone-safe metadata is preserved.
-		assert.strictEqual(serialized['WithCallback'].definition.type, 'boolean');
-		assert.strictEqual(serialized['WithCallback'].definition.restrictedValue, false);
-		assert.strictEqual(serialized['PlainDefinition'].definition.type, 'string');
-
+		assert.deepStrictEqual(serialized, {
+			'BooleanDefinition': { definition: { type: 'boolean' }, value: false },
+			'StringDefinition': { definition: { type: 'string' }, value: undefined }
+		});
 		// The whole payload must be structured-clone-safe (this is how it is delivered to the
 		// renderer as part of the window configuration's policiesData).
 		assert.doesNotThrow(() => structuredClone(serialized));
@@ -53,30 +45,25 @@ suite('AbstractPolicyService', () => {
 		service.dispose();
 	});
 
-	test('tracks value and source changes together', () => {
+	test('tracks value changes', () => {
 		const service = new TestPolicyService();
-		const states: { changed: boolean; value: PolicyValue | undefined; source: PolicyValueSource | undefined }[] = [];
-		const update = (value: PolicyValue | undefined, source: PolicyValueSource | undefined) => {
-			const changed = service.update('Policy', value, source);
-			states.push({
-				changed,
-				value: service.getPolicyValue('Policy'),
-				source: service.getPolicyValueSource('Policy'),
-			});
+		const states: { changed: boolean; value: PolicyValue | undefined }[] = [];
+		const update = (value: PolicyValue | undefined) => {
+			states.push({ changed: service.update('Policy', value), value: service.getPolicyValue('Policy') });
 		};
 
-		update(false, undefined);
-		update(false, PolicyValueSource.Account);
-		update(false, PolicyValueSource.AccountGate);
-		update(false, PolicyValueSource.AccountGate);
-		update(undefined, undefined);
+		update(false);
+		update(false);
+		update(true);
+		update(undefined);
+		update(undefined);
 
 		assert.deepStrictEqual(states, [
-			{ changed: true, value: false, source: PolicyValueSource.Device },
-			{ changed: true, value: false, source: PolicyValueSource.Account },
-			{ changed: true, value: false, source: PolicyValueSource.AccountGate },
-			{ changed: false, value: false, source: PolicyValueSource.AccountGate },
-			{ changed: true, value: undefined, source: undefined },
+			{ changed: true, value: false },
+			{ changed: false, value: false },
+			{ changed: true, value: true },
+			{ changed: true, value: undefined },
+			{ changed: false, value: undefined },
 		]);
 
 		service.dispose();

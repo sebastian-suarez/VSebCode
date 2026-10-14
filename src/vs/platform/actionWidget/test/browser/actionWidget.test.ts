@@ -173,9 +173,6 @@ suite('ActionWidgetService', () => {
 
 	for (const { name, classes, animate } of [
 		{ name: 'Editor motion', classes: 'modern-ui monaco-enable-motion', animate: true },
-		{ name: 'Agents glass motion', classes: 'agent-sessions-workbench modern-ui-frosted-glass monaco-enable-motion', animate: true },
-		{ name: 'Agents without glass', classes: 'agent-sessions-workbench monaco-enable-motion', animate: false },
-		{ name: 'Agents reduced motion', classes: 'agent-sessions-workbench modern-ui-frosted-glass monaco-reduce-motion', animate: false },
 		{ name: 'Editor reduced motion', classes: 'modern-ui monaco-reduce-motion', animate: false },
 		{ name: 'legacy motion', classes: 'monaco-enable-motion', animate: false },
 	]) {

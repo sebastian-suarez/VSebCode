@@ -8,7 +8,6 @@ import { VSBuffer } from '../../../base/common/buffer.js';
 import { extUriBiasedIgnorePathCase } from '../../../base/common/resources.js';
 import { URI, UriComponents } from '../../../base/common/uri.js';
 import { localize } from '../../../nls.js';
-import { ISandboxNetworkRestrictions } from '../../sandbox/common/sandboxSettingsResolutionHelper.js';
 import { ITunnelProxyInfo } from '../../tunnel/common/tunnelProxy.js';
 import { IPermissionCategoryState, ISerializedBrowserPermissionsSnapshot, IBrowserDeviceCandidate, BrowserDeviceType, PermissionCategory } from './browserPermissions.js';
 import type { IntegratedBrowserOpenSource } from './browserViewTelemetry.js';
@@ -44,14 +43,6 @@ export enum BrowserViewCommandId {
 	// Permissions
 	ManagePermissions = `${commandPrefix}.managePermissions`,
 
-	// Chat actions
-	AddElementToChat = `${commandPrefix}.addElementToChat`,
-	AddElementCommentToChat = `${commandPrefix}.addElementCommentToChat`,
-	AddConsoleLogsToChat = `${commandPrefix}.addConsoleLogsToChat`,
-	AddScreenshotToChat = `${commandPrefix}.addScreenshotToChat`,
-	AddAreaScreenshotToChat = `${commandPrefix}.addAreaScreenshotToChat`,
-	AddFullPageScreenshotToChat = `${commandPrefix}.addFullPageScreenshotToChat`,
-
 	// Dev Tools
 	ToggleDevTools = `${commandPrefix}.toggleDevTools`,
 
@@ -59,59 +50,12 @@ export enum BrowserViewCommandId {
 	ClearGlobalStorage = `${commandPrefix}.clearGlobalStorage`,
 	ClearWorkspaceStorage = `${commandPrefix}.clearWorkspaceStorage`,
 	ClearEphemeralStorage = `${commandPrefix}.clearEphemeralStorage`,
-	ClearAgentStorage = `${commandPrefix}.clearAgentStorage`,
 
 	// Find in page
 	ShowFind = `${commandPrefix}.showFind`,
 	HideFind = `${commandPrefix}.hideFind`,
 	FindNext = `${commandPrefix}.findNext`,
 	FindPrevious = `${commandPrefix}.findPrevious`,
-}
-
-export interface IElementAncestor {
-	readonly tagName: string;
-	readonly id?: string;
-	readonly classNames?: string[];
-}
-
-export enum BrowserElementSelectionMode {
-	Select = 'select',
-	Comment = 'comment'
-}
-
-export interface IBrowserElementSelectionOptions {
-	readonly highlightFocusedElement?: boolean;
-	readonly continuous?: boolean;
-	readonly mode?: BrowserElementSelectionMode;
-}
-
-export interface IBrowserElementSelectionState {
-	readonly active: boolean;
-	readonly options: IBrowserElementSelectionOptions;
-}
-
-export interface IElementData {
-	readonly url?: string;
-	readonly elementId?: string;
-	readonly comment?: string;
-	readonly outerHTML: string;
-	readonly computedStyle: string;
-	readonly bounds: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
-	readonly ancestors?: IElementAncestor[];
-	readonly attributes?: Record<string, string>;
-	readonly computedStyles?: Record<string, string>;
-	readonly dimensions?: { readonly top: number; readonly left: number; readonly width: number; readonly height: number };
-	readonly innerText?: string;
-}
-
-export interface IBrowserElementComment {
-	readonly elementId: string;
-	readonly body: string;
-}
-
-export interface IBrowserElementCommentsUpdate {
-	readonly comments?: readonly IBrowserElementComment[];
-	readonly pendingCommentIdsToDiscard?: readonly string[];
 }
 
 export interface IBrowserViewRect {
@@ -121,45 +65,14 @@ export interface IBrowserViewRect {
 	readonly height: number;
 }
 
-export interface IBrowserViewPreloadLocalizedStrings {
-	readonly addComment: string;
-	readonly addCommentPlaceholder: string;
-	readonly commentOnSelectedElement: string;
-	readonly elementComment: string;
-	readonly elementCommentWithBody: string;
-	readonly emptyElementComment: string;
-	readonly removeComment: string;
-	readonly removeElementComment: string;
-}
-
-export interface IBrowserViewTheme {
-	readonly focusBorder?: string;
-	readonly buttonBackground?: string;
-	readonly buttonForeground?: string;
-	readonly widgetBackground?: string;
-	readonly widgetForeground?: string;
-	readonly widgetBorder?: string;
-	readonly widgetShadow?: string;
-	readonly contrastBorder?: string;
-	readonly descriptionForeground?: string;
-	readonly inputPlaceholderForeground?: string;
-	readonly toolbarHoverBackground?: string;
-	readonly font?: string;
-	readonly reducedMotion?: boolean;
-}
-
 /**
  * The full set of configuration a window contributes for the browser views it
  * owns. Sent as a single unit by the owning window.
  */
 export interface IBrowserViewWindowConfiguration {
-	/** Theme variables for injected UI. */
-	readonly theme: IBrowserViewTheme;
 	/** Map of command ID to accelerator label for context menus. */
 	readonly keybindings: { [commandId: string]: string };
 
-	/** Whether AI features are disabled for this window. */
-	readonly aiFeaturesDisabled?: boolean;
 	/** Maximum number of entries to retain per browser session history. */
 	readonly maxHistoryEntries?: number;
 	/**
@@ -219,9 +132,8 @@ export interface IBrowserViewCaptureScreenshotOptions {
 	fullPage?: boolean;
 	/**
 	 * When true, wait for the next compositor frame to be presented before capturing.
-	 * Use this when the caller has just torn down an in-page overlay (e.g. the area
-	 * picker's dashed selection rectangle) that would otherwise still be present in
-	 * the GPU surface that `capturePage` reads.
+	 * Use this when the caller has just torn down an in-page overlay that would
+	 * otherwise still be present in the GPU surface that `capturePage` reads.
 	 *
 	 * Adds ~1 frame of latency (bounded by a short timeout fallback), so leave off
 	 * for captures that don't follow a DOM teardown.
@@ -229,45 +141,9 @@ export interface IBrowserViewCaptureScreenshotOptions {
 	awaitNextPaint?: boolean;
 }
 
-/** Bounded semantic text from Chromium for user accessibility. */
-export interface IBrowserViewAccessibilitySnapshot {
-	readonly text: string;
-	readonly truncated: boolean;
-	readonly scope: 'main-frame';
-}
-
-/** Identifies who controls a browser view. */
-export type IBrowserViewOwner =
-	| { readonly type: 'user' }
-	| { readonly type: 'agent'; readonly sessionId: string };
-
-/**
- * Grants matching agents access to a browser view. Omitted identifiers match all values.
- */
-export interface IBrowserViewAgentAudience {
-	readonly type: 'agent';
-	readonly sessionId?: string;
-}
-
-export type IBrowserViewAudience = IBrowserViewAgentAudience;
-
-export function equalsBrowserViewAudience(first: IBrowserViewAudience, second: IBrowserViewAudience): boolean {
-	return first.type === second.type
-		&& first.sessionId === second.sessionId;
-}
-
-/**
- * Returns whether an audience satisfies a pattern whose omitted identifiers are wildcards.
- */
-export function matchesBrowserViewAudience(candidate: IBrowserViewAudience, pattern: IBrowserViewAudience): boolean {
-	return candidate.type === pattern.type
-		&& (pattern.sessionId === undefined || pattern.sessionId === candidate.sessionId);
-}
-
-/** Identifies the workbench window and optional Agents Window session that host a browser view. */
+/** Identifies the workbench window that hosts a browser view. */
 export interface IBrowserViewHost {
 	readonly windowId: number;
-	readonly sessionId?: string;
 }
 
 export const enum BrowserViewPresentation {
@@ -276,13 +152,12 @@ export const enum BrowserViewPresentation {
 }
 
 /**
- * Summary information about a browser view, including its current state and
- * ownership. Returned by the main service when listing or creating views.
+ * Summary information about a browser view, including its current state.
+ * Returned by the main service when listing or creating views.
  */
 export interface IBrowserViewInfo {
 	readonly id: string;
 	readonly host: IBrowserViewHost;
-	readonly owner: IBrowserViewOwner;
 	readonly presentation: BrowserViewPresentation;
 	readonly associatedResource?: UriComponents;
 	readonly state: IBrowserViewState;
@@ -306,16 +181,12 @@ export interface IBrowserViewCreatedEvent {
 	readonly editorOpenRequest?: IBrowserViewEditorOpenOptions;
 }
 
-/** Host, ownership, storage, and initial access for a newly created browser view. */
+/** Host and storage for a newly created browser view. */
 export interface IBrowserViewCreationContext {
-	readonly sandboxNetworkRestrictions?: ISandboxNetworkRestrictions;
 	readonly host: IBrowserViewHost;
-	readonly owner: IBrowserViewOwner;
 	readonly session: BrowserViewSessionSelector;
 	/** Controls whether the workbench registers this view as a normal integrated-browser page. */
 	readonly presentation?: BrowserViewPresentation;
-	/** Grants automation clients access before the view is announced to other processes. */
-	readonly initialAudiences?: readonly IBrowserViewAudience[];
 }
 
 /** Complete main-process creation contract for a browser view. */
@@ -341,7 +212,6 @@ export interface IBrowserViewStorageKeys {
 }
 
 export interface IBrowserViewState {
-	readonly sandboxSessionId?: string;
 	url: string;
 	title: string;
 	canGoBack: boolean;
@@ -358,11 +228,8 @@ export interface IBrowserViewState {
 	storageKeys: IBrowserViewStorageKeys;
 	permissions: ISerializedBrowserPermissionsSnapshot;
 	browserZoomIndex: number;
-	elementSelectionState: IBrowserElementSelectionState;
 	isRemoteSession: boolean;
-	isAreaSelectionActive: boolean;
 	device: IBrowserDeviceProfile | undefined;
-	audiences: IBrowserViewAudience[];
 }
 
 export interface IBrowserViewNavigationEvent {
@@ -456,40 +323,20 @@ export interface IBrowserViewFindInPageResult {
 export enum BrowserViewStorageScope {
 	Global = 'global',
 	Workspace = 'workspace',
-	Ephemeral = 'ephemeral',
-	Agent = 'agent'
+	Ephemeral = 'ephemeral'
 }
 
 export type IBrowserViewSessionOptions =
 	| { readonly scope: BrowserViewStorageScope.Global }
 	| { readonly scope: BrowserViewStorageScope.Workspace }
-	| { readonly scope: BrowserViewStorageScope.Ephemeral }
-	| {
-		readonly scope: BrowserViewStorageScope.Agent;
-		/** Views with the same affinity share one in-memory browser session. */
-		readonly affinity?: string;
-	};
+	| { readonly scope: BrowserViewStorageScope.Ephemeral };
 
 export function isInMemoryStorageScope(scope: BrowserViewStorageScope): boolean {
-	return scope === BrowserViewStorageScope.Ephemeral || scope === BrowserViewStorageScope.Agent;
-}
-
-export function isBrowserViewStorageScopeShareableWithAgent(scope: BrowserViewStorageScope, networkFilteringEnabled: boolean): boolean {
-	return !networkFilteringEnabled || scope === BrowserViewStorageScope.Agent;
+	return scope === BrowserViewStorageScope.Ephemeral;
 }
 
 /** Selects an existing browser context by ID or resolves one from storage options. */
 export type BrowserViewSessionSelector = string | IBrowserViewSessionOptions;
-
-export function getAgentBrowserViewCreationDefaults(sessionId: string, storageAffinity?: string) {
-	return {
-		owner: { type: 'agent', sessionId } as const,
-		initialAudiences: [{ type: 'agent' }] as const,
-		session: storageAffinity === undefined
-			? { scope: BrowserViewStorageScope.Agent } as const
-			: { scope: BrowserViewStorageScope.Agent, affinity: storageAffinity } as const
-	};
-}
 
 export const ipcBrowserViewChannelName = 'browserView';
 
@@ -531,17 +378,10 @@ export interface BrowserViewEventData {
 	onDidKeyCommand: IBrowserViewKeyDownEvent;
 	onDidChangeTitle: IBrowserViewTitleChangeEvent;
 	onDidChangeFavicon: IBrowserViewFaviconChangeEvent;
-	onDidChangeOwner: IBrowserViewOwner;
 	onDidFindInPage: IBrowserViewFindInPageResult;
 	onDidClose: void;
-	onDidSelectElement: IElementData;
-	onDidRemoveElementComment: string;
-	onDidChangeElementSelectionState: IBrowserElementSelectionState;
-	onDidPickArea: IBrowserViewRect | undefined;
-	onDidChangeAreaSelectionActive: boolean;
 	onDidChangeDeviceEmulation: IBrowserDeviceProfile | undefined;
 	onDidChangeRemoteStatus: boolean;
-	onDidChangeAudiences: IBrowserViewAudience[];
 	onDidRequestPermission: IBrowserViewPermissionRequestEvent;
 	onDidChangePermissions: ISerializedBrowserPermissionsSnapshot;
 }
@@ -573,15 +413,11 @@ export function reviveBrowserViewInfo(info: IBrowserViewSerializedInfo, lastScre
 }
 
 export interface IBrowserViewService {
-	setSessionNetworkRestrictions(sessionId: string, restrictions: ISandboxNetworkRestrictions): Promise<void>;
-	/** Read-only accessibility snapshot that does not grant agent access. */
-	getAccessibilitySnapshot(id: string, expectedHostWindowId: number): Promise<IBrowserViewAccessibilitySnapshot>;
-
 	/** Subscribe once per workbench; the first event is its current snapshot, followed by live changes. */
 	onDynamicBrowserViewEvent(windowId: number): Event<BrowserViewEvent>;
 
 	/**
-	 * Get all known browser views with their ownership and state information.
+	 * Get all known browser views with their state information.
 	 */
 	getBrowserViews(windowId?: number): Promise<IBrowserViewInfo[]>;
 
@@ -600,22 +436,12 @@ export interface IBrowserViewService {
 	destroyBrowserView(id: string): Promise<void>;
 
 	/**
-	 * Update the owner of an existing browser view.
-	 */
-	setOwner(id: string, owner: IBrowserViewOwner): Promise<void>;
-
-	/**
 	 * Get the state of an existing browser view by ID, or throw if it doesn't exist
 	 * @param id The browser view identifier
 	 * @return The state of the browser view for the given ID
 	 * @throws If no browser view exists for the given ID
 	 */
 	getState(id: string): Promise<IBrowserViewState>;
-
-	/**
-	 * Adds an audience or, when disabled, removes every audience matching it.
-	 */
-	setAudience(id: string, audience: IBrowserViewAudience, enabled: boolean): Promise<void>;
 
 	/**
 	 * Update the bounds of a browser view
@@ -793,43 +619,6 @@ export interface IBrowserViewService {
 	 */
 	selectDevice(id: string, requestId: string, deviceId: string | null): Promise<void>;
 
-	/**
-	 * Get captured console logs for a browser view.
-	 * Console messages are automatically captured from the moment the view is created.
-	 * @param id The browser view identifier
-	 * @returns The captured console logs as a single string
-	 */
-	getConsoleLogs(id: string): Promise<string>;
-
-	/**
-	 * Toggle element selection mode in a browser view.
-	 * Element selections are delivered via {@link onDynamicDidSelectElement}.
-	 * State changes are delivered via {@link onDynamicDidChangeElementSelectionState}.
-	 *
-	 * @param id The browser view identifier
-	 * @param enabled Whether to enable or disable. Omit to toggle.
-	 * @param options Options to update while enabling or continuing element selection.
-	 */
-	toggleElementSelection(id: string, enabled?: boolean, options?: IBrowserElementSelectionOptions): Promise<void>;
-
-	/**
-	 * Synchronize the element comments displayed in a browser view.
-	 *
-	 * @param id The browser view identifier
-	 * @param update The comment state to synchronize
-	 */
-	setElementComments(id: string, update: IBrowserElementCommentsUpdate): Promise<void>;
-
-	/**
-	 * Toggle drag-to-select area picking on the top frame of a browser view.
-	 * The pick result (rectangle, or `undefined` on cancellation) is delivered via
-	 * {@link onDynamicDidPickArea}. UI toggle state is delivered via
-	 * {@link onDynamicDidChangeAreaSelectionActive}.
-	 *
-	 * @param id The browser view identifier
-	 * @param enabled Whether to enable or disable. Omit to toggle.
-	 */
-	toggleAreaSelection(id: string, enabled?: boolean): Promise<void>;
 
 	/**
 	 * Replace the calling window's configuration for the browser views it owns.

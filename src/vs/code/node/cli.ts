@@ -15,7 +15,7 @@ import { whenDeleted, writeFileSync } from '../../base/node/pfs.js';
 import { findFreePort } from '../../base/node/ports.js';
 import { watchFileContents } from '../../platform/files/node/watcher/nodejs/nodejsWatcherLib.js';
 import { NativeParsedArgs } from '../../platform/environment/common/argv.js';
-import { buildHelpMessage, buildStdinMessage, buildVersionMessage, NATIVE_CLI_COMMANDS, OPTIONS } from '../../platform/environment/node/argv.js';
+import { buildHelpMessage, buildStdinMessage, buildVersionMessage, OPTIONS } from '../../platform/environment/node/argv.js';
 import { addArg, parseCLIProcessArgv } from '../../platform/environment/node/argvHelper.js';
 import { combineUriFlags } from './cliArgs.js';
 import { getStdinFilePath, hasStdinWithoutTty, readFromStdin, stdinDataListener } from '../../platform/environment/node/stdin.js';
@@ -35,8 +35,7 @@ function shouldSpawnCliProcess(argv: NativeParsedArgs): boolean {
 		|| !!argv['install-extension']
 		|| !!argv['uninstall-extension']
 		|| !!argv['update-extensions']
-		|| !!argv['locate-extension']
-		|| !!argv['add-mcp'];
+		|| !!argv['locate-extension'];
 }
 
 export async function main(argv: string[]): Promise<void> {
@@ -49,23 +48,10 @@ export async function main(argv: string[]): Promise<void> {
 		return;
 	}
 
-	for (const subcommand of NATIVE_CLI_COMMANDS) {
-		if (args[subcommand]) {
-			console.error(`'${subcommand}' command not supported in ${product.applicationName}`);
-			return;
-		}
-	}
-
 	// Help (general)
 	if (args.help) {
 		const executable = `${product.applicationName}${isWindows ? '.exe' : ''}`;
 		console.log(buildHelpMessage(product.nameLong, executable, product.version, OPTIONS));
-	}
-
-	// Help (chat)
-	else if (args.chat?.help) {
-		const executable = `${product.applicationName}${isWindows ? '.exe' : ''}`;
-		console.log(buildHelpMessage(product.nameLong, executable, product.version, OPTIONS.chat.options, { isChat: true }));
 	}
 
 	// Version Info
@@ -216,21 +202,15 @@ export async function main(argv: string[]): Promise<void> {
 			const tempUserDataDir = join(tempParentDir, 'data');
 			const tempExtensionsDir = join(tempParentDir, 'extensions');
 			const tempSharedDataDir = join(tempParentDir, 'shared');
-			const tempAgentPluginsDir = join(tempParentDir, 'agent-plugins');
-			const tempAgentsUserDataDir = join(tempParentDir, 'agents-data');
-			const tempAgentsExtensionsDir = join(tempParentDir, 'agents-extensions');
 
 			addArg(argv, '--user-data-dir', tempUserDataDir);
 			addArg(argv, '--extensions-dir', tempExtensionsDir);
 			addArg(argv, '--shared-data-dir', tempSharedDataDir);
-			addArg(argv, '--agent-plugins-dir', tempAgentPluginsDir);
-			addArg(argv, '--agents-user-data-dir', tempAgentsUserDataDir);
-			addArg(argv, '--agents-extensions-dir', tempAgentsExtensionsDir);
 
-			console.log(`State is temporarily stored. Relaunch this state with: ${product.applicationName} --user-data-dir "${tempUserDataDir}" --extensions-dir "${tempExtensionsDir}" --shared-data-dir "${tempSharedDataDir}" --agent-plugins-dir "${tempAgentPluginsDir}" --agents-user-data-dir "${tempAgentsUserDataDir}" --agents-extensions-dir "${tempAgentsExtensionsDir}"`);
+			console.log(`State is temporarily stored. Relaunch this state with: ${product.applicationName} --user-data-dir "${tempUserDataDir}" --extensions-dir "${tempExtensionsDir}" --shared-data-dir "${tempSharedDataDir}"`);
 		}
 
-		const hasReadStdinArg = args._.some(arg => arg === '-') || args.chat?._.some(arg => arg === '-');
+		const hasReadStdinArg = args._.some(arg => arg === '-');
 		if (hasReadStdinArg) {
 			// remove the "-" argument when we read from stdin
 			args._ = args._.filter(a => a !== '-');
@@ -269,15 +249,10 @@ export async function main(argv: string[]): Promise<void> {
 						processCallbacks.push(() => readFromStdinDone.p);
 					}
 
-					if (args.chat) {
-						// Make sure to add tmp file as context to chat
-						addArg(argv, '--add-file', stdinFilePath);
-					} else {
-						// Make sure to open tmp file as editor but ignore
-						// it in the "recently open" list
-						addArg(argv, stdinFilePath);
-						addArg(argv, '--skip-add-to-recently-opened');
-					}
+					// Make sure to open tmp file as editor but ignore
+					// it in the "recently open" list
+					addArg(argv, stdinFilePath);
+					addArg(argv, '--skip-add-to-recently-opened');
 
 					console.log(`Reading from stdin via: ${stdinFilePath}`);
 				} catch (e) {
@@ -290,7 +265,7 @@ export async function main(argv: string[]): Promise<void> {
 				// if we detect that data flows into via stdin after a certain timeout.
 				processCallbacks.push(_ => stdinDataListener(1000).then(dataReceived => {
 					if (dataReceived) {
-						console.log(buildStdinMessage(product.applicationName, !!args.chat));
+						console.log(buildStdinMessage(product.applicationName));
 					}
 				}));
 			}

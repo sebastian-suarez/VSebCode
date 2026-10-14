@@ -270,9 +270,6 @@ export abstract class AbstractNativeEnvironmentService implements INativeEnviron
 	}
 
 	@memoize
-	get agentSessionsWorkspace(): URI {
-		return joinPath(this.appSettingsHome, 'agent-sessions.code-workspace');
-	}
 
 	get exportPolicyData(): string | undefined {
 		return this.args['export-policy-data'];

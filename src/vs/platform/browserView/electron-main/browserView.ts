@@ -7,9 +7,8 @@ import { screen, WebContentsView, webContents } from 'electron';
 import { Disposable } from '../../../base/common/lifecycle.js';
 import { Emitter, Event } from '../../../base/common/event.js';
 import { VSBuffer } from '../../../base/common/buffer.js';
-import { IBrowserViewAudience, IBrowserViewBounds, IBrowserViewDevToolsStateEvent, IBrowserViewFocusEvent, IBrowserViewKeyDownEvent, IBrowserViewState, IBrowserViewNavigationEvent, IBrowserViewLoadingEvent, IBrowserViewLoadError, IBrowserViewTitleChangeEvent, IBrowserViewFaviconChangeEvent, IBrowserViewCaptureScreenshotOptions, IBrowserViewFindInPageOptions, IBrowserViewFindInPageResult, IBrowserViewVisibilityEvent, browserViewIsolatedWorldId, browserZoomFactors, browserZoomDefaultIndex, IBrowserViewOwner, IBrowserViewEditorOpenOptions, IBrowserViewPermissionRequestEvent, equalsBrowserViewAudience, isBrowserViewAssociatedResourceNavigation, matchesBrowserViewAudience, IBrowserViewHost, BrowserViewPresentation } from '../common/browserView.js';
+import { IBrowserViewBounds, IBrowserViewDevToolsStateEvent, IBrowserViewFocusEvent, IBrowserViewKeyDownEvent, IBrowserViewState, IBrowserViewNavigationEvent, IBrowserViewLoadingEvent, IBrowserViewLoadError, IBrowserViewTitleChangeEvent, IBrowserViewFaviconChangeEvent, IBrowserViewCaptureScreenshotOptions, IBrowserViewFindInPageOptions, IBrowserViewFindInPageResult, IBrowserViewVisibilityEvent, browserViewIsolatedWorldId, browserZoomFactors, browserZoomDefaultIndex, IBrowserViewEditorOpenOptions, IBrowserViewPermissionRequestEvent, isBrowserViewAssociatedResourceNavigation, IBrowserViewHost, BrowserViewPresentation } from '../common/browserView.js';
 import { BrowserViewEmulator } from './browserViewEmulator.js';
-import { BrowserViewInspector } from './browserViewInspector.js';
 import { IWindowsMainService } from '../../windows/electron-main/windows.js';
 import { ICodeWindow, LoadReason } from '../../window/electron-main/window.js';
 import { IAuxiliaryWindowsMainService } from '../../auxiliaryWindow/electron-main/auxiliaryWindows.js';
@@ -55,19 +54,13 @@ export class BrowserView extends Disposable {
 
 	readonly debugger: BrowserViewDebugger;
 	readonly emulator: BrowserViewEmulator;
-	readonly inspector: BrowserViewInspector;
 
 	private _ownerWindow: ICodeWindow;
-	private _owner: IBrowserViewOwner;
 	private _currentWindow: ICodeWindow | IAuxiliaryWindow | undefined;
 	private _isDisposed = false;
-	private _audiences: readonly IBrowserViewAudience[] = [];
 
 	private _wantsVisibility = false;
 	private _hasBeenLaidOut = false;
-
-	private static readonly MAX_CONSOLE_LOG_ENTRIES = 1000;
-	private readonly _consoleLogs: string[] = [];
 
 	/**
 	 * Resize a full-page screenshot so its largest dimension never exceeds this many pixels. A very tall
@@ -101,9 +94,6 @@ export class BrowserView extends Disposable {
 	private readonly _onDidChangeFavicon = this._register(new Emitter<IBrowserViewFaviconChangeEvent>());
 	readonly onDidChangeFavicon: Event<IBrowserViewFaviconChangeEvent> = this._onDidChangeFavicon.event;
 
-	private readonly _onDidChangeOwner = this._register(new Emitter<IBrowserViewOwner>());
-	readonly onDidChangeOwner: Event<IBrowserViewOwner> = this._onDidChangeOwner.event;
-
 	private readonly _onDidFindInPage = this._register(new Emitter<IBrowserViewFindInPageResult>());
 	readonly onDidFindInPage: Event<IBrowserViewFindInPageResult> = this._onDidFindInPage.event;
 
@@ -119,16 +109,12 @@ export class BrowserView extends Disposable {
 	private readonly _onDidChangePermissions = this._register(new Emitter<ISerializedBrowserPermissionsSnapshot>());
 	readonly onDidChangePermissions: Event<ISerializedBrowserPermissionsSnapshot> = this._onDidChangePermissions.event;
 
-	private readonly _onDidChangeAudiences = this._register(new Emitter<IBrowserViewAudience[]>());
-	readonly onDidChangeAudiences: Event<IBrowserViewAudience[]> = this._onDidChangeAudiences.event;
-
 	constructor(
 		public readonly id: string,
 		public readonly host: IBrowserViewHost,
-		owner: IBrowserViewOwner,
 		public readonly associatedResource: URI | undefined,
 		public readonly session: BrowserSession,
-		private readonly _createChildView: (owner: IBrowserViewOwner, url: string, electronOptions: Electron.WebContentsViewConstructorOptions | undefined, editorOptions: IBrowserViewEditorOpenOptions) => BrowserView,
+		private readonly _createChildView: (url: string, electronOptions: Electron.WebContentsViewConstructorOptions | undefined, editorOptions: IBrowserViewEditorOpenOptions) => BrowserView,
 		openContextMenu: (view: BrowserView, params: Electron.ContextMenuParams) => void,
 		options: Electron.WebContentsViewConstructorOptions | undefined,
 		@IWindowsMainService private readonly windowsMainService: IWindowsMainService,
@@ -137,7 +123,6 @@ export class BrowserView extends Disposable {
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
 	) {
 		super();
-		this._owner = owner;
 
 		const webPreferences: Electron.WebPreferences = {
 			...options?.webPreferences,
@@ -213,7 +198,7 @@ export class BrowserView extends Disposable {
 						}
 					})());
 
-					const childView = this._createChildView(this.owner, details.url, options, {
+					const childView = this._createChildView(details.url, options, {
 						pinned: true,
 						background: location === NewPageLocation.Background,
 						parentViewId: id,
@@ -241,7 +226,6 @@ export class BrowserView extends Disposable {
 
 		this.debugger = new BrowserViewDebugger(this);
 		this.emulator = this._register(new BrowserViewEmulator(this, this.logService));
-		this.inspector = this._register(new BrowserViewInspector(this));
 
 		const fireRemoteStatus = () => this._onDidChangeRemoteStatus.fire(this.session.remote.isRemote);
 		this._register(this.session.remote.onDidStart(fireRemoteStatus));
@@ -443,7 +427,6 @@ export class BrowserView extends Disposable {
 		webContents.on('did-navigate', () => {
 			// Chromium resets the zoom factor to its per-origin default (100%) when
 			// navigating to a new document. Re-apply our stored zoom to override it.
-			this._consoleLogs.length = 0; // Clear console logs on navigation since they are per-page
 			this._view.webContents.setZoomFactor(browserZoomFactors[this._browserZoomIndex]);
 
 			// Enable pinch-to-zoom
@@ -542,13 +525,6 @@ export class BrowserView extends Disposable {
 			});
 		});
 
-		// Capture console messages for sharing with chat
-		this._view.webContents.on('console-message', (event) => {
-			this._consoleLogs.push(`[${event.level}] ${event.message}`);
-			if (this._consoleLogs.length > BrowserView.MAX_CONSOLE_LOG_ENTRIES) {
-				this._consoleLogs.splice(0, this._consoleLogs.length - BrowserView.MAX_CONSOLE_LOG_ENTRIES);
-			}
-		});
 	}
 
 	private consumePopupPermission(location: NewPageLocation): boolean {
@@ -600,15 +576,6 @@ export class BrowserView extends Disposable {
 		);
 	}
 
-	get owner(): IBrowserViewOwner {
-		return this._owner;
-	}
-
-	setOwner(owner: IBrowserViewOwner): void {
-		this._owner = owner;
-		this._onDidChangeOwner.fire(owner);
-	}
-
 	get webContents(): Electron.WebContents {
 		return this._view.webContents;
 	}
@@ -634,44 +601,12 @@ export class BrowserView extends Disposable {
 			lastError: this._lastError,
 			certificateError: this.session.trust.getCertificateError(url),
 			storageScope: this.session.storageScope,
-			sandboxSessionId: this.session.sandboxSessionId,
 			storageKeys: { ...this.session.history.storageKeys, ...this.session.permissions.storageKeys },
 			permissions: this.session.permissions.serialize(),
 			browserZoomIndex: this._browserZoomIndex,
-			elementSelectionState: this.inspector.elementSelectionState,
 			isRemoteSession: this.session.remote.isRemote,
-			isAreaSelectionActive: this.inspector.isAreaSelectionActive,
-			device: this.emulator.device,
-			audiences: [...this._audiences]
+			device: this.emulator.device
 		};
-	}
-
-	get audiences(): readonly IBrowserViewAudience[] {
-		return this._audiences;
-	}
-
-	setAudience(audience: IBrowserViewAudience, enabled: boolean): void {
-		if (enabled) {
-			if (!this._audiences.some(candidate => equalsBrowserViewAudience(candidate, audience))) {
-				this._audiences = [...this._audiences, audience];
-				this._onDidChangeAudiences.fire([...this._audiences]);
-			}
-		} else {
-			const audiences = this._audiences.filter(candidate => !matchesBrowserViewAudience(candidate, audience));
-			if (audiences.length !== this._audiences.length) {
-				this._audiences = audiences;
-				this._onDidChangeAudiences.fire([...this._audiences]);
-			}
-		}
-	}
-
-	setAudiences(audiences: readonly IBrowserViewAudience[]): void {
-		if (audiences.length === this._audiences.length && audiences.every(audience => this._audiences.some(candidate => equalsBrowserViewAudience(candidate, audience)))) {
-			return;
-		}
-
-		this._audiences = [...audiences];
-		this._onDidChangeAudiences.fire([...this._audiences]);
 	}
 
 	/**
@@ -741,13 +676,6 @@ export class BrowserView extends Disposable {
 	}
 
 	/**
-	 * Get captured console logs.
-	 */
-	getConsoleLogs(): string {
-		return this._consoleLogs.join('\n');
-	}
-
-	/**
 	 * Load a URL in this view
 	 */
 	async loadURL(url: string): Promise<void> {
@@ -767,7 +695,7 @@ export class BrowserView extends Disposable {
 		}
 
 		logBrowserOpen(this.telemetryService, 'browserLinkForeground');
-		this._createChildView(this.owner, url, undefined, {
+		this._createChildView(url, undefined, {
 			pinned: true,
 			parentViewId: this.id
 		});
@@ -825,6 +753,22 @@ export class BrowserView extends Disposable {
 	}
 
 	/**
+	 * The pinch-to-zoom magnification of the top frame, which is separate from the regular zoom factor.
+	 */
+	private async _getVisualViewportScale(): Promise<number> {
+		try {
+			const result = await this.debugger.sendCommand('Page.getLayoutMetrics') as { cssVisualViewport?: { scale?: number } };
+			const scale = Number(result.cssVisualViewport?.scale);
+			if (Number.isFinite(scale) && scale > 0) {
+				return scale;
+			}
+		} catch {
+			// Ignore execution errors while loading and use defaults.
+		}
+		return 1;
+	}
+
+	/**
 	 * Capture a screenshot of this view
 	 */
 	async captureScreenshot(options?: IBrowserViewCaptureScreenshotOptions): Promise<VSBuffer> {
@@ -844,7 +788,7 @@ export class BrowserView extends Disposable {
 		if (options?.pageRect) {
 			const zoomFactor = this._view.webContents.getZoomFactor();
 			// The visual viewport scale accounts for pinch-to-zoom magnification, which is separate from the regular zoom factor.
-			const visualViewportScale = await this.inspector.getVisualViewportScale();
+			const visualViewportScale = await this._getVisualViewportScale();
 			const emulationScale = this.emulator.emulatedScaleFactor;
 			options.screenRect = {
 				x: options.pageRect.x * visualViewportScale * zoomFactor * emulationScale,

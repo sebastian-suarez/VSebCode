@@ -15,8 +15,6 @@ import { joinPath } from '../../base/common/resources.js';
 import { join } from '../../base/common/path.js';
 import { ProtocolConstants } from '../../base/parts/ipc/common/ipc.net.js';
 
-export const agentHostBridgeConnectionTokenEnvironmentVariable = 'VSCODE_AGENT_HOST_BRIDGE_CONNECTION_TOKEN';
-
 /**
  * Returns server arguments with connection tokens redacted for logging.
  */
@@ -24,9 +22,6 @@ export function getRedactedServerParsedArgs(args: ServerParsedArgs): ServerParse
 	const redactedArgs = { ...args };
 	if (typeof redactedArgs['connection-token'] !== 'undefined') {
 		redactedArgs['connection-token'] = '<redacted>';
-	}
-	if (typeof redactedArgs['agent-host-bridge-connection-token'] !== 'undefined') {
-		redactedArgs['agent-host-bridge-connection-token'] = '<redacted>';
 	}
 	return redactedArgs;
 }
@@ -69,7 +64,6 @@ export const serverOptions: OptionDescriptions<Required<ServerParsedArgs>> = {
 	'default-folder': { type: 'string', description: nls.localize('default-folder', 'The workspace folder to open when no input is specified in the browser URL. A relative or absolute path resolved against the current working directory.') },
 	'default-workspace': { type: 'string', description: nls.localize('default-workspace', 'The workspace to open when no input is specified in the browser URL. A relative or absolute path resolved against the current working directory.') },
 
-	'github-auth': { type: 'string' },
 	'use-test-resolver': { type: 'boolean' },
 
 	/* ----- extension management ----- */
@@ -98,12 +92,6 @@ export const serverOptions: OptionDescriptions<Required<ServerParsedArgs>> = {
 	'remote-auto-shutdown-without-delay': { type: 'boolean' },
 	'inspect-ptyhost': { type: 'string', allowEmptyValue: true },
 
-	'agent-host-port': { type: 'string', cat: 'o', args: 'port', description: nls.localize('agent-host-port', "The port the agent host WebSocket server should listen on.") },
-	'agent-host-path': { type: 'string', cat: 'o', args: 'path', description: nls.localize('agent-host-path', "The path to a socket file for the agent host WebSocket server to listen on.") },
-	'agent-host-bridge-port': { type: 'string', cat: 'o', args: 'port', description: nls.localize('agent-host-bridge-port', "Bridge renderer agent-host traffic to an already-running agent host listening on this port. Does not spawn an agent host.") },
-	'agent-host-bridge-path': { type: 'string', cat: 'o', args: 'path', description: nls.localize('agent-host-bridge-path', "Bridge renderer agent-host traffic to an already-running agent host listening on this socket path. Does not spawn an agent host.") },
-	'agent-host-bridge-host': { type: 'string', cat: 'o', args: 'host', description: nls.localize('agent-host-bridge-host', "Host the externally-running agent host is reachable at when used with --agent-host-bridge-port. Defaults to localhost.") },
-	'agent-host-bridge-connection-token': { type: 'string', cat: 'o', args: 'token', description: nls.localize('agent-host-bridge-connection-token', "Connection token required by the externally-running agent host when used with --agent-host-bridge-port.") },
 
 	'use-host-proxy': { type: 'boolean' },
 	'without-browser-env-var': { type: 'boolean' },
@@ -202,7 +190,6 @@ export interface ServerParsedArgs {
 	folder: string;
 
 
-	'github-auth'?: string;
 	'use-test-resolver'?: boolean;
 
 	/* ----- extension management ----- */
@@ -231,12 +218,6 @@ export interface ServerParsedArgs {
 	'remote-auto-shutdown-without-delay'?: boolean;
 	'inspect-ptyhost'?: string;
 
-	'agent-host-port'?: string;
-	'agent-host-path'?: string;
-	'agent-host-bridge-port'?: string;
-	'agent-host-bridge-path'?: string;
-	'agent-host-bridge-host'?: string;
-	'agent-host-bridge-connection-token'?: string;
 
 	'use-host-proxy'?: boolean;
 	'without-browser-env-var'?: boolean;
@@ -256,7 +237,6 @@ export const IServerEnvironmentService = refineServiceDecorator<IEnvironmentServ
 
 export interface IServerEnvironmentService extends INativeEnvironmentService {
 	readonly machineSettingsResource: URI;
-	readonly mcpResource: URI;
 	readonly args: ServerParsedArgs;
 	readonly reconnectionGraceTime: number;
 }
@@ -266,8 +246,6 @@ export class ServerEnvironmentService extends NativeEnvironmentService implement
 	override get userRoamingDataHome(): URI { return this.appSettingsHome; }
 	@memoize
 	get machineSettingsResource(): URI { return joinPath(URI.file(join(this.userDataPath, 'Machine')), 'settings.json'); }
-	@memoize
-	get mcpResource(): URI { return joinPath(URI.file(join(this.userDataPath, 'User')), 'mcp.json'); }
 	override get args(): ServerParsedArgs { return super.args as ServerParsedArgs; }
 	@memoize
 	get reconnectionGraceTime(): number { return parseGraceTime(this.args['reconnection-grace-time'], ProtocolConstants.ReconnectionGraceTime); }

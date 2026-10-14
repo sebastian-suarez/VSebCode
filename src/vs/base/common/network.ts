@@ -79,31 +79,6 @@ export namespace Schemas {
 	/** Scheme used for the image carousel editor. */
 	export const vscodeImageCarousel = 'vscode-image-carousel';
 
-	/** Scheme used for code blocks in chat. */
-	export const vscodeChatCodeBlock = 'vscode-chat-code-block';
-
-	/** Scheme used for LHS of code compare (aka diff) blocks in chat. */
-	export const vscodeChatCodeCompareBlock = 'vscode-chat-code-compare-block';
-
-	/** Scheme used for the chat input editor. */
-	export const vscodeChatEditor = 'vscode-chat-editor';
-
-	/** Scheme used for the chat input part */
-	export const vscodeChatInput = 'chatSessionInput';
-
-	/** Scheme used for the Agents window new-session composer input */
-	export const sessionsChatInput = 'sessions-chat';
-
-	/** Scheme used for local chat session content */
-	export const vscodeLocalChatSession = 'vscode-chat-session';
-
-	/** Scheme used for read-only resources owned by a chat response or attachment */
-	export const vscodeChatResponseResource = 'vscode-chat-response-resource';
-	/** Scheme used for Agent Host terminal channels. */
-	export const agentHostTerminal = 'agenthost-terminal';
-	/** Scheme used for subscription-backed Agent Host terminal output editors. */
-	export const vscodeChatTerminalOutput = 'vscode-chat-terminal-output';
-
 	/**
 	 * Scheme used internally for webviews that aren't linked to a resource (i.e. not custom editors)
 	 */
@@ -164,17 +139,6 @@ export namespace Schemas {
 	 * Scheme used for the accessible view
 	 */
 	export const accessibleView = 'accessible-view';
-
-	/**
-	 * Used for snapshots of chat edits
-	 */
-	export const chatEditingSnapshotScheme = 'chat-editing-snapshot-text-model';
-	export const chatEditingModel = 'chat-editing-text-model';
-
-	/**
-	 * Used for rendering multidiffs in copilot agent sessions
-	 */
-	export const copilotPr = 'copilot-pr';
 }
 
 export function matchesScheme(target: URI | string, scheme: string): boolean {
@@ -284,7 +248,6 @@ export const nodeModulesPath: AppResourcePath = 'vs/../../node_modules';
 export const nodeModulesAsarPath: AppResourcePath = 'vs/../../node_modules.asar';
 export const nodeModulesAsarUnpackedPath: AppResourcePath = 'vs/../../node_modules.asar.unpacked';
 
-export const AGENTS_AUTHORITY = 'agents';
 export const VSCODE_AUTHORITY = 'vscode-app';
 
 class FileAccessImpl {

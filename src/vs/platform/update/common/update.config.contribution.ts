@@ -77,7 +77,6 @@ configurationRegistry.registerConfiguration({
 			scope: ConfigurationScope.APPLICATION,
 			description: localize('showReleaseNotes', "Offer to open the Release Notes after an update."),
 			tags: ['usesOnlineServices'],
-			agentsWindow: { default: false, readOnly: true },
 		},
 		'update.titleBar': {
 			type: 'boolean',

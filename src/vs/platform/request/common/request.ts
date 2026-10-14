@@ -11,7 +11,7 @@ import { Disposable } from '../../../base/common/lifecycle.js';
 import { listenStream } from '../../../base/common/stream.js';
 import { IHeaders, IRequestContext, IRequestOptions } from '../../../base/parts/request/common/request.js';
 import { localize } from '../../../nls.js';
-import { AgentHostConfigurationSyncScope, ConfigurationScope, Extensions, IConfigurationNode, IConfigurationRegistry } from '../../configuration/common/configurationRegistry.js';
+import { ConfigurationScope, Extensions, IConfigurationNode, IConfigurationRegistry } from '../../configuration/common/configurationRegistry.js';
 import { createDecorator } from '../../instantiation/common/instantiation.js';
 import { ILogService } from '../../log/common/log.js';
 import { Registry } from '../../registry/common/platform.js';
@@ -299,8 +299,7 @@ function registerProxyConfigurations(useHostProxy = true, useHostProxyDefault = 
 					type: 'string',
 					pattern: '^(https?|socks|socks4a?|socks5h?)://([^:]*(:[^@]*)?@)?([^:]+|\\[[:0-9a-fA-F]+\\])(:\\d+)?/?$|^$',
 					markdownDescription: localize('proxy', "The proxy setting to use. If not set, will be inherited from the `http_proxy` and `https_proxy` environment variables. When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be configured in the local and the remote settings separately.", '`#http.useLocalProxyConfiguration#`'),
-					restricted: true,
-					agentHost: { key: 'http.proxy', scope: AgentHostConfigurationSyncScope.Ambient, transform: value => typeof value === 'string' ? value : '' },
+					restricted: true
 				},
 				'http.proxyStrictSSL': {
 					type: 'boolean',
@@ -311,15 +310,13 @@ function registerProxyConfigurations(useHostProxy = true, useHostProxyDefault = 
 				'http.proxyKerberosServicePrincipal': {
 					type: 'string',
 					markdownDescription: localize('proxyKerberosServicePrincipal', "Overrides the principal service name for Kerberos authentication with the HTTP proxy. A default based on the proxy hostname is used when this is not set. When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be configured in the local and the remote settings separately.", '`#http.useLocalProxyConfiguration#`'),
-					restricted: true,
-					agentHost: { key: 'http.proxyKerberosServicePrincipal', scope: AgentHostConfigurationSyncScope.Ambient, transform: value => typeof value === 'string' ? value : '' },
+					restricted: true
 				},
 				'http.noProxy': {
 					type: 'array',
 					items: { type: 'string' },
 					markdownDescription: localize('noProxy', "Specifies domain names for which proxy settings should be ignored for HTTP/HTTPS requests. When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be configured in the local and the remote settings separately.", '`#http.useLocalProxyConfiguration#`'),
-					restricted: true,
-					agentHost: { key: 'http.noProxy', scope: AgentHostConfigurationSyncScope.Ambient, transform: value => Array.isArray(value) ? value : [] },
+					restricted: true
 				},
 				'http.proxyAuthorization': {
 					type: ['null', 'string'],
@@ -352,9 +349,6 @@ function registerProxyConfigurations(useHostProxy = true, useHostProxyDefault = 
 					default: systemCertificatesNodeDefault,
 					markdownDescription: localize('systemCertificatesNode', "Controls whether system certificates should be loaded using Node.js built-in support. Reload the window after changing this setting. When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be configured in the local and the remote settings separately.", '`#http.useLocalProxyConfiguration#`'),
 					restricted: true,
-					experiment: {
-						mode: 'auto'
-					}
 				},
 				'http.experimental.systemCertificatesV2': {
 					type: 'boolean',
@@ -382,9 +376,6 @@ function registerProxyConfigurations(useHostProxy = true, useHostProxyDefault = 
 					tags: ['experimental'],
 					markdownDescription: localize('networkInterfaceCheckInterval', "Controls the interval in seconds for checking network interface changes to invalidate the proxy cache. Set to -1 to disable. When during [remote development](https://aka.ms/vscode-remote) the {0} setting is disabled this setting can be configured in the local and the remote settings separately.", '`#http.useLocalProxyConfiguration#`'),
 					restricted: true,
-					experiment: {
-						mode: 'auto'
-					}
 				}
 			}
 		}

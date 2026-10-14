@@ -48,7 +48,6 @@ suite('WebClientServer', () => {
 		const localeUrl = `https://example.com/fr"><script>alert(document.cookie)</script><x/nls.messages.js`;
 		const values = {
 			WORKBENCH_WEB_CONFIGURATION: JSON.stringify({ serverBasePath: forwardedPrefix }),
-			WORKBENCH_AUTH_SESSION: '',
 			WORKBENCH_WEB_BASE_URL: forwardedPrefix,
 			WORKBENCH_NLS_URL: localeUrl,
 			WORKBENCH_NLS_FALLBACK_URL: '/static/out/nls.messages.js',
@@ -85,7 +84,6 @@ suite('WebClientServer', () => {
 
 		const rendered = renderWorkbenchTemplate(template, {
 			WORKBENCH_WEB_CONFIGURATION: JSON.stringify(configuration),
-			WORKBENCH_AUTH_SESSION: '',
 			WORKBENCH_WEB_BASE_URL: baseUrl,
 			WORKBENCH_NLS_URL: '',
 			WORKBENCH_NLS_FALLBACK_URL: `${baseUrl}/out/nls.messages.js`,
@@ -107,7 +105,6 @@ suite('WebClientServer', () => {
 
 		const rendered = renderWorkbenchTemplate(template, {
 			WORKBENCH_WEB_CONFIGURATION: '{}',
-			WORKBENCH_AUTH_SESSION: '',
 			WORKBENCH_WEB_BASE_URL: '/static',
 			WORKBENCH_NLS_URL: '',
 			WORKBENCH_NLS_FALLBACK_URL: '/static/out/nls.messages.js',

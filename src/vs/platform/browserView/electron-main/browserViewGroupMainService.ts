@@ -11,8 +11,6 @@ import { IBrowserViewGroupFilter, IBrowserViewGroupService } from '../common/bro
 import { IBrowserViewCreationContext } from '../common/browserView.js';
 import { BrowserViewGroup } from './browserViewGroup.js';
 import { CDPEvent, CDPRequest, CDPResponse } from '../common/cdp/types.js';
-import { IBrowserViewMainService } from './browserViewMainService.js';
-import { ISandboxNetworkRestrictions } from '../../sandbox/common/sandboxSettingsResolutionHelper.js';
 
 export const IBrowserViewGroupMainService = createDecorator<IBrowserViewGroupMainService>('browserViewGroupMainService');
 
@@ -33,7 +31,6 @@ export class BrowserViewGroupMainService extends Disposable implements IBrowserV
 
 	constructor(
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
-		@IBrowserViewMainService private readonly browserViewMainService: IBrowserViewMainService,
 	) {
 		super();
 	}
@@ -55,10 +52,6 @@ export class BrowserViewGroupMainService extends Disposable implements IBrowserV
 			throw error;
 		}
 
-	}
-
-	setSessionNetworkRestrictions(sessionId: string, restrictions: ISandboxNetworkRestrictions): Promise<void> {
-		return this.browserViewMainService.setSessionNetworkRestrictions(sessionId, restrictions);
 	}
 
 	async destroyGroup(groupId: string): Promise<void> {

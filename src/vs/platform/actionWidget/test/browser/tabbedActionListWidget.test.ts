@@ -1395,11 +1395,11 @@ suite('TabbedActionListWidget', () => {
 			widget.show<ITestItem>({
 				user: 'test',
 				anchor,
-				tabs: [{ id: 'Copilot' }, { id: 'Ollama' }],
-				initialTab: 'Ollama',
+				tabs: [{ id: 'Alpha' }, { id: 'Beta' }],
+				initialTab: 'Beta',
 				sizingTab,
 				createActionList: tab => ({
-					items: tab === 'Copilot'
+					items: tab === 'Alpha'
 						? sizingItemIds.map(action)
 						: [action('only')],
 				}),
@@ -1415,8 +1415,8 @@ suite('TabbedActionListWidget', () => {
 		};
 
 		const unsized = heightsAcrossTabs(undefined);
-		const sized = heightsAcrossTabs('Copilot');
-		const empty = heightsAcrossTabs('Copilot', []);
+		const sized = heightsAcrossTabs('Alpha');
+		const empty = heightsAcrossTabs('Alpha', []);
 
 		// Clamping depends on the room around the anchor, which differs between the two
 		// renders here, so compare how each tab is sized rather than the pixels.
@@ -1448,10 +1448,10 @@ suite('TabbedActionListWidget', () => {
 			widget.show<ITestItem>({
 				user: 'test',
 				anchor,
-				tabs: [{ id: 'Copilot' }, { id: 'Ollama' }],
-				initialTab: 'Ollama',
-				sizingTab: 'Copilot',
-				createActionList: tab => tab === 'Copilot'
+				tabs: [{ id: 'Alpha' }, { id: 'Beta' }],
+				initialTab: 'Beta',
+				sizingTab: 'Alpha',
+				createActionList: tab => tab === 'Alpha'
 					? {
 						items: [
 							action('promoted'),
@@ -1488,9 +1488,9 @@ suite('TabbedActionListWidget', () => {
 		widget.show<ITestItem>({
 			user: 'test',
 			anchor,
-			tabs: [{ id: 'Copilot' }, { id: 'Other' }],
-			initialTab: 'Copilot',
-			sizingTab: 'Copilot',
+			tabs: [{ id: 'Alpha' }, { id: 'Other' }],
+			initialTab: 'Alpha',
+			sizingTab: 'Alpha',
 			showCheckedItemHover: true,
 			createActionList: (tab, forSizing) => {
 				const model = {
@@ -1500,7 +1500,7 @@ suite('TabbedActionListWidget', () => {
 					hover: { content, expandable: true },
 				};
 				return {
-					items: searching && !forSizing ? ['one', 'two', 'three', 'four', 'five', 'six'].map(action) : tab === 'Copilot' ? [
+					items: searching && !forSizing ? ['one', 'two', 'three', 'four', 'five', 'six'].map(action) : tab === 'Alpha' ? [
 						...(pinned ? [{ kind: ActionListItemKind.Separator, label: 'Pinned' }, model] : []),
 						action('suggested'),
 						{ ...action('other-models'), section: 'other', isSectionToggle: true },
@@ -1562,12 +1562,12 @@ suite('TabbedActionListWidget', () => {
 			const show = () => widget.show<ITestItem>({
 				user: 'test',
 				anchor,
-				tabs: [{ id: 'Copilot' }, { id: 'Other' }],
-				initialTab: 'Copilot',
-				sizingTab: 'Copilot',
+				tabs: [{ id: 'Alpha' }, { id: 'Other' }],
+				initialTab: 'Alpha',
+				sizingTab: 'Alpha',
 				width: 300,
 				createActionList: tab => ({
-					items: (tab === 'Copilot' ? ['a', 'b', 'c', 'd', 'e', 'f'] : ['other']).map(action),
+					items: (tab === 'Alpha' ? ['a', 'b', 'c', 'd', 'e', 'f'] : ['other']).map(action),
 					listOptions: { anchorPosition: AnchorPosition.ABOVE },
 				}),
 				renderFooter: container => {

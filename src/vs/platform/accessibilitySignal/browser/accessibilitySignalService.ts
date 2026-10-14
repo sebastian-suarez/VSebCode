@@ -150,7 +150,6 @@ export class AccessibilitySignalService extends Disposable implements IAccessibi
 
 	}
 
-
 	private sendSignalTelemetry(signal: AccessibilitySignal, source: string | undefined): void {
 		const isScreenReaderOptimized = this.accessibilityService.isScreenReaderOptimized();
 		const key = signal.name + (source ? `::${source}` : '') + (isScreenReaderOptimized ? '{screenReaderOptimized}' : '');
@@ -337,15 +336,11 @@ export class Sound {
 	public static readonly clear = Sound.register({ fileName: 'clear.mp3' });
 	public static readonly save = Sound.register({ fileName: 'save.mp3' });
 	public static readonly format = Sound.register({ fileName: 'format.mp3' });
-	public static readonly voiceRecordingStarted = Sound.register({ fileName: 'voiceRecordingStarted.mp3' });
-	public static readonly voiceRecordingStopped = Sound.register({ fileName: 'voiceRecordingStopped.mp3' });
 	public static readonly progress = Sound.register({ fileName: 'progress.mp3' });
-	public static readonly chatEditModifiedFile = Sound.register({ fileName: 'chatEditModifiedFile.mp3' });
 	public static readonly editsKept = Sound.register({ fileName: 'editsKept.mp3' });
 	public static readonly editsUndone = Sound.register({ fileName: 'editsUndone.mp3' });
 	public static readonly nextEditSuggestion = Sound.register({ fileName: 'nextEditSuggestion.mp3' });
 	public static readonly terminalCommandSucceeded = Sound.register({ fileName: 'terminalCommandSucceeded.mp3' });
-	public static readonly chatUserActionRequired = Sound.register({ fileName: 'chatUserActionRequired.mp3' });
 	public static readonly codeActionTriggered = Sound.register({ fileName: 'codeActionTriggered.mp3' });
 	public static readonly codeActionApplied = Sound.register({ fileName: 'codeActionApplied.mp3' });
 	public static readonly confetti = Sound.register({ fileName: 'confetti.mp3' });
@@ -584,36 +579,6 @@ export class AccessibilitySignal {
 		settingsKey: 'accessibility.signals.diffLineModified',
 	});
 
-	public static readonly chatEditModifiedFile = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.chatEditModifiedFile', 'Chat Edit Modified File'),
-		sound: Sound.chatEditModifiedFile,
-		announcementMessage: localize('accessibility.signals.chatEditModifiedFile', 'File Modified from Chat Edits'),
-		settingsKey: 'accessibility.signals.chatEditModifiedFile',
-	});
-
-	public static readonly chatRequestSent = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.chatRequestSent', 'Chat Request Sent'),
-		sound: Sound.requestSent,
-		legacySoundSettingsKey: 'audioCues.chatRequestSent',
-		legacyAnnouncementSettingsKey: 'accessibility.alert.chatRequestSent',
-		announcementMessage: localize('accessibility.signals.chatRequestSent', 'Chat Request Sent'),
-		settingsKey: 'accessibility.signals.chatRequestSent',
-	});
-
-	public static readonly chatResponseReceived = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.chatResponseReceived', 'Chat Response Received'),
-		legacySoundSettingsKey: 'audioCues.chatResponseReceived',
-		sound: {
-			randomOneOf: [
-				Sound.responseReceived1,
-				Sound.responseReceived2,
-				Sound.responseReceived3,
-				Sound.responseReceived4
-			]
-		},
-		settingsKey: 'accessibility.signals.chatResponseReceived'
-	});
-
 	public static readonly confetti = AccessibilitySignal.register({
 		name: localize('accessibilitySignals.confetti', 'Confetti'),
 		sound: Sound.confetti,
@@ -636,11 +601,9 @@ export class AccessibilitySignal {
 		settingsKey: 'accessibility.signals.codeActionApplied'
 	});
 
-
 	public static readonly progress = AccessibilitySignal.register({
 		name: localize('accessibilitySignals.progress', 'Progress'),
 		sound: Sound.progress,
-		legacySoundSettingsKey: 'audioCues.chatResponsePending',
 		legacyAnnouncementSettingsKey: 'accessibility.alert.progress',
 		announcementMessage: localize('accessibility.signals.progress', 'Progress'),
 		settingsKey: 'accessibility.signals.progress'
@@ -673,34 +636,6 @@ export class AccessibilitySignal {
 		settingsKey: 'accessibility.signals.format'
 	});
 
-	public static readonly voiceRecordingStarted = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.voiceRecordingStarted', 'Voice Recording Started'),
-		sound: Sound.voiceRecordingStarted,
-		legacySoundSettingsKey: 'audioCues.voiceRecordingStarted',
-		settingsKey: 'accessibility.signals.voiceRecordingStarted'
-	});
-
-	public static readonly voiceModeStarted = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.voiceModeStarted', 'Voice Mode Started'),
-		sound: Sound.voiceRecordingStarted,
-		announcementMessage: localize('accessibility.signals.voiceModeStarted', 'Voice Mode Started'),
-		settingsKey: 'accessibility.signals.voiceModeStarted'
-	});
-
-	public static readonly voiceRecordingStopped = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.voiceRecordingStopped', 'Voice Recording Stopped'),
-		sound: Sound.voiceRecordingStopped,
-		legacySoundSettingsKey: 'audioCues.voiceRecordingStopped',
-		settingsKey: 'accessibility.signals.voiceRecordingStopped'
-	});
-
-	public static readonly voiceModeStopped = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.voiceModeStopped', 'Voice Mode Stopped'),
-		sound: Sound.voiceRecordingStopped,
-		announcementMessage: localize('accessibility.signals.voiceModeStopped', 'Voice Mode Stopped'),
-		settingsKey: 'accessibility.signals.voiceModeStopped'
-	});
-
 	public static readonly editsKept = AccessibilitySignal.register({
 		name: localize('accessibilitySignals.editsKept', 'Edits Kept'),
 		sound: Sound.editsKept,
@@ -715,10 +650,4 @@ export class AccessibilitySignal {
 		settingsKey: 'accessibility.signals.editsUndone',
 	});
 
-	public static readonly chatUserActionRequired = AccessibilitySignal.register({
-		name: localize('accessibilitySignals.chatUserActionRequired', 'Chat User Action Required'),
-		sound: Sound.chatUserActionRequired,
-		announcementMessage: localize('accessibility.signals.chatUserActionRequired', 'Chat User Action Required'),
-		settingsKey: 'accessibility.signals.chatUserActionRequired'
-	});
 }

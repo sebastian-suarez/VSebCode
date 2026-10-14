@@ -15,7 +15,7 @@ import { matchesSomeScheme, Schemas } from '../../../base/common/network.js';
 import { dirname, join, posix, resolve, win32 } from '../../../base/common/path.js';
 import { isLinux, isMacintosh, isWindows } from '../../../base/common/platform.js';
 import { AddFirstParameterToFunctions, hasKey } from '../../../base/common/types.js';
-import { URI, UriComponents } from '../../../base/common/uri.js';
+import { URI } from '../../../base/common/uri.js';
 import { virtualMachineHint } from '../../../base/node/id.js';
 import { Promises, SymlinkSupport } from '../../../base/node/pfs.js';
 import { findFreePort, isPortFree } from '../../../base/node/ports.js';
@@ -27,13 +27,13 @@ import { IEnvironmentMainService } from '../../environment/electron-main/environ
 import { createDecorator, IInstantiationService } from '../../instantiation/common/instantiation.js';
 import { ILifecycleMainService, IRelaunchOptions } from '../../lifecycle/electron-main/lifecycleMainService.js';
 import { ILogService } from '../../log/common/log.js';
-import { FocusMode, IApplicationBadge, ICommonNativeHostService, INativeHostOptions, INativeSystemWideKeybinding, INativeSystemWideKeybindingResult, INativeZipFile, INativeZipOptions, INativeZipProgress, IOpenAgentsWindowOptions, IOSProperties, IOSProxy, IOSProxyConfig, IOSStatistics, IStartTracingOptions, IToastOptions, IToastResult, PowerSaveBlockerType, SystemIdleState, ThermalState } from '../common/native.js';
+import { FocusMode, IApplicationBadge, ICommonNativeHostService, INativeHostOptions, INativeSystemWideKeybinding, INativeSystemWideKeybindingResult, INativeZipFile, INativeZipOptions, INativeZipProgress, IOSProperties, IOSProxy, IOSProxyConfig, IOSStatistics, IStartTracingOptions, IToastOptions, IToastResult, PowerSaveBlockerType, SystemIdleState, ThermalState } from '../common/native.js';
 import { IGlobalKeybindingsMainService } from '../../globalKeybindings/electron-main/globalKeybindingsMainService.js';
 import { IGPUProcessMainService } from '../../gpu/electron-main/gpuProcessMainService.js';
 import { IProductService } from '../../product/common/productService.js';
 import { IPartsSplash } from '../../theme/common/themeService.js';
 import { IThemeMainService } from '../../theme/electron-main/themeMainService.js';
-import { defaultWindowState, ICodeWindow, LoadReason } from '../../window/electron-main/window.js';
+import { defaultWindowState, ICodeWindow } from '../../window/electron-main/window.js';
 import { IColorScheme, IOpenedAuxiliaryWindow, IOpenedMainWindow, IOpenEmptyWindowOptions, IOpenWindowOptions, IPoint, IRectangle, IWindowOpenable } from '../../window/common/window.js';
 import { defaultBrowserWindowOptions, IWindowsMainService, OpenContext } from '../../windows/electron-main/windows.js';
 import { isWorkspaceIdentifier, toWorkspaceIdentifier } from '../../workspace/common/workspace.js';
@@ -50,10 +50,8 @@ import { IConfigurationService } from '../../configuration/common/configuration.
 import { IProxyAuthService } from './auth.js';
 import { AuthInfo, Credentials, IRequestService } from '../../request/common/request.js';
 import { randomPath } from '../../../base/common/extpath.js';
-import { CancellationToken, CancellationTokenSource } from '../../../base/common/cancellation.js';
+import { CancellationTokenSource } from '../../../base/common/cancellation.js';
 import { GPUCompositingState } from './gpuCompositingState.js';
-import { AgentHostEditorUpdate, AgentsWindowInvitationState, IAgentHostEditorState, IAgentsWindowInvitation } from '../../chat/common/agentsWindowInvitation.js';
-import { IApplicationStorageMainService } from '../../storage/electron-main/storageMainService.js';
 
 export interface INativeHostMainService extends AddFirstParameterToFunctions<ICommonNativeHostService, Promise<unknown> /* only methods, not events */, number | undefined /* window ID */> { }
 
@@ -63,7 +61,6 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 	declare readonly _serviceBrand: undefined;
 
 	private readonly gpuCompositingState: GPUCompositingState;
-	private readonly agentsWindowInvitations: AgentsWindowInvitationState;
 
 	constructor(
 		@IWindowsMainService private readonly windowsMainService: IWindowsMainService,
@@ -81,15 +78,10 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
 		@IGlobalKeybindingsMainService private readonly globalKeybindingsMainService: IGlobalKeybindingsMainService,
 		@IGPUProcessMainService gpuProcessMainService: IGPUProcessMainService,
-		@IApplicationStorageMainService private readonly applicationStorageService: IApplicationStorageMainService,
 	) {
 		super();
 
 		this.gpuCompositingState = this._register(new GPUCompositingState(gpuProcessMainService));
-		this.agentsWindowInvitations = this._register(new AgentsWindowInvitationState(Date.now, applicationStorageService));
-		this.onDidChangeAgentHostEditorState = this.agentsWindowInvitations.onDidChange;
-		this._register(windowsMainService.onDidDestroyWindow(window => this.agentsWindowInvitations.resetWindow(window.id, false)));
-		this._register(lifecycleMainService.onWillLoadWindow(event => this.agentsWindowInvitations.resetWindow(event.window.id, event.reason === LoadReason.RELOAD)));
 
 		// Events
 		{
@@ -223,50 +215,11 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 
 	readonly onDidChangeDisplay: Event<void>;
 	readonly onDidChangeGPUCompositing: Event<boolean>;
-	readonly onDidChangeAgentHostEditorState: Event<IAgentHostEditorState>;
 
 	//#endregion
 
 
 	//#region Window
-
-	async getAgentHostEditorState(windowId: number | undefined, legacyEditorSessionCount: number): Promise<IAgentHostEditorState> {
-		await this.applicationStorageService.whenReady;
-		return this.agentsWindowInvitations.initialize(legacyEditorSessionCount);
-	}
-
-	async updateAgentHostEditorState(windowId: number | undefined, update: AgentHostEditorUpdate): Promise<void> {
-		await this.applicationStorageService.whenReady;
-		const window = typeof windowId === 'number' ? this.windowsMainService.getWindowById(windowId) : undefined;
-		if (window?.config?.isSessionsWindow && update.kind === 'request') {
-			this.agentsWindowInvitations.update(undefined, update);
-			return;
-		}
-		this.agentsWindowInvitations.update(this.getEditorWindowId(windowId), update);
-	}
-
-	async claimAgentsWindowInvitation(windowId: number | undefined, resource: UriComponents, developerMode: boolean): Promise<IAgentsWindowInvitation | undefined> {
-		await this.applicationStorageService.whenReady;
-		return this.agentsWindowInvitations.claim(this.getEditorWindowId(windowId), URI.revive(resource), developerMode);
-	}
-
-	async markAgentsWindowInvitationShown(windowId: number | undefined, id: string): Promise<void> {
-		await this.applicationStorageService.whenReady;
-		this.agentsWindowInvitations.markShown(this.getEditorWindowId(windowId), id);
-	}
-
-	async releaseAgentsWindowInvitation(windowId: number | undefined, id: string): Promise<void> {
-		await this.applicationStorageService.whenReady;
-		this.agentsWindowInvitations.release(this.getEditorWindowId(windowId), id);
-	}
-
-	private getEditorWindowId(windowId: number | undefined): number {
-		const window = typeof windowId === 'number' ? this.windowsMainService.getWindowById(windowId) : undefined;
-		if (!window || window.config?.isSessionsWindow) {
-			throw new Error('Agent Host editor activity requires an editor window.');
-		}
-		return window.id;
-	}
 
 	getWindows(windowId: number | undefined, options: { includeAuxiliaryWindows: true }): Promise<Array<IOpenedMainWindow | IOpenedAuxiliaryWindow>>;
 	getWindows(windowId: number | undefined, options: { includeAuxiliaryWindows: false }): Promise<Array<IOpenedMainWindow>>;
@@ -334,7 +287,7 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 
 	private async doOpenWindow(windowId: number | undefined, toOpen: IWindowOpenable[], options: IOpenWindowOptions = Object.create(null)): Promise<void> {
 		if (toOpen.length > 0) {
-			const windows = await this.windowsMainService.open({
+			await this.windowsMainService.open({
 				context: OpenContext.API,
 				contextWindowId: windowId,
 				urisToOpen: toOpen,
@@ -353,15 +306,6 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 				forceProfile: options.forceProfile,
 				forceTempProfile: options.forceTempProfile,
 			});
-
-			// Hand off a chat session to the opened window so it restores both the
-			// folder and the session (e.g. the Agents window "Open in VS Code" flow).
-			// Only meaningful when exactly one window is opened so the session is
-			// not sent to an ambiguous target.
-			const chatSessionToOpen = options.chatSessionToOpen;
-			if (chatSessionToOpen && windows.length === 1) {
-				windows[0].sendWhenReady('vscode:openChatSession', CancellationToken.None, URI.revive(chatSessionToOpen).toString());
-			}
 		}
 	}
 
@@ -370,18 +314,6 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 			context: OpenContext.API,
 			contextWindowId: windowId
 		}, options);
-	}
-
-	async openAgentsWindow(windowId: number | undefined, options?: IOpenAgentsWindowOptions): Promise<void> {
-		const windows = await this.windowsMainService.openAgentsWindow({
-			context: OpenContext.API,
-			contextWindowId: windowId,
-			cli: this.environmentMainService.args,
-		}, options?.folderUri ? URI.revive(options.folderUri) : undefined, options?.reveal === 'new' ? 'new' : URI.revive(options?.reveal), options?.source, options?.folderUriIsDefault, options?.draft, options?.onboardingSessionResource ? URI.revive(options.onboardingSessionResource) : undefined);
-		if (windows.length > 0) {
-			// Transfer focus is a no-op on macOS while VS Code is hidden, e.g. when run from a system-wide keybinding
-			windows[0].focus({ mode: FocusMode.Force });
-		}
 	}
 
 	async syncSystemWideKeybindings(windowId: number | undefined, keybindings: INativeSystemWideKeybinding[]): Promise<INativeSystemWideKeybindingResult> {

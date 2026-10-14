@@ -82,8 +82,6 @@ export interface IEnvironmentService {
 	disableExperiments: boolean;
 	serviceMachineIdResource: URI;
 
-	// --- agent sessions workspace
-	agentSessionsWorkspace: URI;
 	// --- Policy
 	policyFile?: URI;
 

@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { session } from 'electron';
-import { createHash } from 'crypto';
 import { normalize } from '../../../base/common/path.js';
 import { isLinux } from '../../../base/common/platform.js';
 import { joinPath } from '../../../base/common/resources.js';
@@ -19,8 +18,6 @@ import { BrowserSessionRemote, IBrowserSessionRemote } from './browserSessionRem
 import { FileAccess, Schemas } from '../../../base/common/network.js';
 import { IInstantiationService } from '../../instantiation/common/instantiation.js';
 import { localize } from '../../../nls.js';
-import { IAgentNetworkFilterService } from '../../networkFilter/common/networkFilterService.js';
-import { ISandboxNetworkRestrictions } from '../../sandbox/common/sandboxSettingsResolutionHelper.js';
 
 /**
  * Holds an Electron session along with its storage scope and unique browser
@@ -59,7 +56,6 @@ export class BrowserSession {
 	 *  - Global scope         -> `"global"`
 	 *  - Workspace scope      -> `"workspace:${workspaceId}"`
 	 *  - Ephemeral per-view   -> `"ephemeral:${viewId}"`
-	 *  - Agent scope          -> `"agent:${identityHash}"`
 	 *  - Custom type          -> `"${type}:${viewId}"`
 	 */
 	private static readonly _byId = new Map<string, WeakRef<BrowserSession>>();
@@ -117,18 +113,6 @@ export class BrowserSession {
 		return ids;
 	}
 
-	/** Update network filtering on all live browser sessions. */
-	static updateNetworkFiltering(): void {
-		for (const [id, ref] of BrowserSession._byId) {
-			const browserSession = ref.deref();
-			if (browserSession) {
-				browserSession.updateNetworkFilter();
-			} else {
-				BrowserSession._byId.delete(id);
-			}
-		}
-	}
-
 	/**
 	 * Get or create the singleton global-scope session.
 	 */
@@ -152,7 +136,7 @@ export class BrowserSession {
 	 * Get or create an ephemeral session for the given view or target ID.
 	 */
 	static getOrCreateEphemeral(instantiationService: IInstantiationService, viewId: string, type?: string): BrowserSession {
-		if (type === 'workspace' || type === 'ephemeral' || type === 'agent') {
+		if (type === 'workspace' || type === 'ephemeral') {
 			throw new Error(`Cannot create session with reserved type '${type}'`);
 		}
 
@@ -160,24 +144,6 @@ export class BrowserSession {
 		const electronSession = session.fromPartition(`vscode-browser-${type}${viewId}`);
 		return BrowserSession._bySession.get(electronSession)
 			?? instantiationService.createInstance(BrowserSession, sessionId, electronSession, BrowserViewStorageScope.Ephemeral);
-	}
-
-	/** Get or create an in-memory agent session by affinity, workspace, or window. */
-	static getOrCreateAgent(instantiationService: IInstantiationService, workspaceId: string | undefined, affinity?: string, windowId?: number): BrowserSession {
-		let identity: string;
-		if (affinity !== undefined) {
-			identity = `affinity:${affinity}`;
-		} else if (workspaceId !== undefined) {
-			identity = `workspace:${workspaceId}`;
-		} else if (windowId !== undefined) {
-			identity = `window:${windowId}`;
-		} else {
-			throw new Error('Agent browser sessions require an affinity, workspace, or window');
-		}
-		const identityHash = createHash('sha256').update(identity).digest('hex');
-		const electronSession = session.fromPartition(`vscode-browser-agent-${identityHash}`);
-		return BrowserSession._bySession.get(electronSession)
-			?? instantiationService.createInstance(BrowserSession, `agent:${identityHash}`, electronSession, BrowserViewStorageScope.Agent);
 	}
 
 	/**
@@ -202,7 +168,6 @@ export class BrowserSession {
 		options: IBrowserViewSessionOptions,
 		workspaceStorageHome: URI,
 		workspaceId?: string,
-		windowId?: number,
 	): BrowserSession {
 		switch (options.scope) {
 			case BrowserViewStorageScope.Global:
@@ -214,8 +179,6 @@ export class BrowserSession {
 				return BrowserSession.getOrCreateEphemeral(instantiationService, viewId);
 			case BrowserViewStorageScope.Ephemeral:
 				return BrowserSession.getOrCreateEphemeral(instantiationService, viewId);
-			case BrowserViewStorageScope.Agent:
-				return BrowserSession.getOrCreateAgent(instantiationService, workspaceId, options.affinity, windowId);
 		}
 	}
 
@@ -243,22 +206,6 @@ export class BrowserSession {
 	private readonly _history: BrowserSessionHistory;
 	private readonly _remote: BrowserSessionRemote;
 	private readonly _permissions: BrowserSessionPermissions;
-	private _networkFilterEnabled = false;
-	private _sandboxNetworkRestrictions?: ISandboxNetworkRestrictions;
-	sandboxSessionId?: string;
-
-	setSandboxNetworkRestrictions(sessionId: string, restrictions: ISandboxNetworkRestrictions): void {
-		if (this.storageScope !== BrowserViewStorageScope.Agent) {
-			throw new Error('Sandbox network restrictions require an isolated Agent browser session');
-		}
-		if (this.sandboxSessionId !== undefined && this.sandboxSessionId !== sessionId) {
-			throw new Error('Browser sandbox restrictions cannot be shared across agent sessions');
-		}
-		this.sandboxSessionId = sessionId;
-		this._sandboxNetworkRestrictions = restrictions;
-		this.updateNetworkFilter(true);
-	}
-
 	/**
 	 * @deprecated Don't use this directly. Create sessions via the static factory methods.
 	 */
@@ -273,13 +220,11 @@ export class BrowserSession {
 		readonly electronSession: Electron.Session,
 		/** Resolved storage scope. */
 		readonly storageScope: BrowserViewStorageScope,
-		@IAgentNetworkFilterService private readonly agentNetworkFilterService: IAgentNetworkFilterService,
 	) {
 		this._trust = new BrowserSessionTrust(this);
 		this._history = new BrowserSessionHistory(this);
 		this._remote = new BrowserSessionRemote(this);
 		this._permissions = new BrowserSessionPermissions(this);
-		this.updateNetworkFilter();
 		this.configure();
 		BrowserSession.knownSessions.add(electronSession);
 		BrowserSession._bySession.set(electronSession, this);
@@ -317,31 +262,6 @@ export class BrowserSession {
 		this._trust.connectStorage(storage);
 		this._history.connectStorage(storage);
 		this._permissions.connectStorage(storage);
-	}
-
-	/**
-	 * Dynamically apply network filtering to Agent sessions.
-	 */
-	private updateNetworkFilter(force = false): void {
-		if (this.storageScope !== BrowserViewStorageScope.Agent) {
-			return;
-		}
-
-		const enabled = this.agentNetworkFilterService.isEnabled(this._sandboxNetworkRestrictions);
-		if (!force && this._networkFilterEnabled === enabled) {
-			return;
-		}
-		this._networkFilterEnabled = enabled;
-		this.electronSession.webRequest.onBeforeRequest(enabled ? (details, callback) => {
-			let uri: URI;
-			try {
-				uri = URI.parse(details.url, true);
-			} catch {
-				callback({ cancel: true });
-				return;
-			}
-			callback({ cancel: !this.agentNetworkFilterService.isUriAllowed(uri, this._sandboxNetworkRestrictions) });
-		} : null);
 	}
 
 	/**

@@ -74,7 +74,7 @@ suite('BrowserView event IPC', () => {
 
 	function info(id: string, windowId = 1, lastScreenshot?: VSBuffer): IBrowserViewInfo {
 		return upcastPartial<IBrowserViewInfo>({
-			id, host: { windowId }, owner: { type: 'user' },
+			id, host: { windowId },
 			state: upcastPartial<IBrowserViewInfo['state']>({ url: 'https://example.com/', lastScreenshot })
 		});
 	}
@@ -198,7 +198,7 @@ suite('BrowserView event IPC', () => {
 		first.main.flush();
 		listener.dispose();
 		first.main.flush();
-		source.emit([{ type: 'changed', windowId: 1, id: 'page', event: 'onDidPickArea', data: undefined }, []]);
+		source.emit([{ type: 'changed', windowId: 1, id: 'page', event: 'onDidClose', data: undefined }, []]);
 
 		const reconnected = connect(source);
 		store.add(reconnected.service.onDynamicBrowserViewEvent(1)(([event]) => received.push(event.type)));

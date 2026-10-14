@@ -243,7 +243,7 @@ suite('BrowserSessionTrust', () => {
 
 	test('connectStorage ignores in-memory sessions', async () => {
 		const results = [];
-		for (const storageScope of [BrowserViewStorageScope.Ephemeral, BrowserViewStorageScope.Agent]) {
+		for (const storageScope of [BrowserViewStorageScope.Ephemeral]) {
 			const { trust, storage } = createTrust('test-session', storageScope);
 			const persisted = JSON.stringify({
 				'test-session': {
@@ -267,13 +267,6 @@ suite('BrowserSessionTrust', () => {
 		assert.deepStrictEqual(results, [
 			{
 				storageScope: BrowserViewStorageScope.Ephemeral,
-				persistedTrustRestored: false,
-				inMemoryTrustAdded: true,
-				storageWrites: 0,
-				storageUnchanged: true,
-			},
-			{
-				storageScope: BrowserViewStorageScope.Agent,
 				persistedTrustRestored: false,
 				inMemoryTrustAdded: true,
 				storageWrites: 0,

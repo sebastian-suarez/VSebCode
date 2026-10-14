@@ -108,18 +108,6 @@ interface IBuiltInExtensionControl {
 	[name: string]: 'marketplace' | 'disabled' | string;
 }
 
-function getProductBuiltInExtensionsEnabledWithAutoUpdates(productService: IProductService, environmentService: IEnvironmentService): Set<string> {
-	const result = new Set<string>();
-	for (const id of productService.builtInExtensionsEnabledWithAutoUpdates) {
-		const toLowerCaseId = id.toLowerCase();
-		if (environmentService.skipBuiltinExtensions?.some(skipId => skipId.toLowerCase() === toLowerCaseId)) {
-			continue;
-		}
-		result.add(toLowerCaseId);
-	}
-	return result;
-}
-
 export type SystemExtensionsScanOptions = {
 	readonly checkControlFile?: boolean;
 	readonly language?: string;
@@ -414,15 +402,10 @@ export abstract class AbstractExtensionsScannerService extends Disposable implem
 				result.set(extension.identifier.id, extension);
 			}
 		});
-		const productBuiltInExtensionsEnabledWithAutoUpdates = getProductBuiltInExtensionsEnabledWithAutoUpdates(this.productService, this.environmentService);
 		user?.forEach((extension) => {
 			const existing = result.get(extension.identifier.id);
 			if (!existing && system && extension.type === ExtensionType.System) {
 				this.logService.debug(`Skipping obsolete system extension ${extension.location.path}.`);
-				return;
-			}
-			if (productBuiltInExtensionsEnabledWithAutoUpdates.has(extension.identifier.id.toLowerCase()) && !extension.forceAutoUpdate) {
-				this.logService.info(`Skipping user installed builtin extension ${extension.identifier.id} with version ${extension.manifest.version} because it is not allowed to in the current product quality ${this.productService.quality}`);
 				return;
 			}
 			if (!existing || pick(existing, extension, false)) {
@@ -588,8 +571,6 @@ type NlsConfiguration = {
 
 class ExtensionsScanner extends Disposable {
 
-	private readonly productQuality: string | undefined;
-	private readonly productBuiltInExtensionsEnabledWithAutoUpdates: Set<string>;
 
 	constructor(
 		@IExtensionsProfileScannerService protected readonly extensionsProfileScannerService: IExtensionsProfileScannerService,
@@ -600,8 +581,6 @@ class ExtensionsScanner extends Disposable {
 		@ILogService protected readonly logService: ILogService
 	) {
 		super();
-		this.productQuality = productService.quality;
-		this.productBuiltInExtensionsEnabledWithAutoUpdates = getProductBuiltInExtensionsEnabledWithAutoUpdates(productService, environmentService);
 	}
 
 	async scanExtensions(input: ExtensionScannerInput): Promise<IRelaxedScannedExtension[]> {
@@ -740,7 +719,7 @@ class ExtensionsScanner extends Disposable {
 			isValid,
 			validations,
 			preRelease: !!metadata?.preRelease,
-			forceAutoUpdate: this.productBuiltInExtensionsEnabledWithAutoUpdates.has(id.toLowerCase()) && this.productQuality === 'stable',
+			forceAutoUpdate: false,
 		};
 		if (input.validate) {
 			extension = this.validate(extension, input);
