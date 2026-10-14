@@ -57,7 +57,7 @@ if (args.sandbox &&
 
 // Set userData path before app 'ready' event
 perf.mark('code/willGetUserDataPath');
-const userDataPath = getUserDataPath(args, product.nameShort ?? 'code-oss-dev');
+const userDataPath = getUserDataPath(args, product.nameShort ?? 'vsebcode-dev');
 if (process.platform === 'win32') {
 	const userDataUNCHost = getUNCHost(userDataPath);
 	if (userDataUNCHost) {
@@ -442,16 +442,16 @@ function createDefaultArgvConfigSync(argvConfigPath: string): void {
 
 		// Default argv content
 		const defaultArgvConfigContent = [
-			'// This configuration file allows you to pass permanent command line arguments to VS Code.',
+			`// This configuration file allows you to pass permanent command line arguments to ${product.nameShort}.`,
 			'// Only a subset of arguments is currently supported to reduce the likelihood of breaking',
 			'// the installation.',
 			'//',
 			'// PLEASE DO NOT CHANGE WITHOUT UNDERSTANDING THE IMPACT',
 			'//',
-			'// NOTE: Changing this file requires a restart of VS Code.',
+			`// NOTE: Changing this file requires a restart of ${product.nameShort}.`,
 			'{',
 			'	// Use software rendering instead of hardware accelerated rendering.',
-			'	// This can help in cases where you see rendering issues in VS Code.',
+			`	// This can help in cases where you see rendering issues in ${product.nameShort}.`,
 			'	// "disable-hardware-acceleration": true',
 			'}'
 		];

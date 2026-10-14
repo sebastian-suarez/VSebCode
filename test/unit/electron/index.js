@@ -137,7 +137,7 @@ if (crashReporterDirectory) {
 	app.setPath('crashDumps', crashReporterDirectory);
 
 	crashReporter.start({
-		companyName: 'Microsoft',
+		companyName: product.nameShort,
 		productName: process.env.VSCODE_DEV ? `${product.nameShort} Dev` : product.nameShort,
 		uploadToServer: false,
 		compress: true
@@ -333,11 +333,11 @@ app.on('ready', async () => {
 		return {
 			product: {
 				version: '1.x.y',
-				nameShort: 'Code - OSS Dev',
-				nameLong: 'Code - OSS Dev',
-				applicationName: 'code-oss',
-				dataFolderName: '.vscode-oss',
-				urlProtocol: 'code-oss',
+				nameShort: 'VSebCode Dev',
+				nameLong: 'VSebCode Dev',
+				applicationName: 'vsc',
+				dataFolderName: '.vsebcode',
+				urlProtocol: 'vsebcode',
 			}
 		};
 	});
