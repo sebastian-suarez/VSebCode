@@ -96,7 +96,6 @@ Source: "{#ExeBasename}.exe"; DestDir: "{code:GetDestDir}"; DestName: "{code:Get
 Source: "{#ExeBasename}.VisualElementsManifest.xml"; DestDir: "{code:GetDestDir}"; DestName: "{code:GetVisualElementsManifest}"; Flags: ignoreversion
 Source: "tools\*"; DestDir: "{app}\{#VersionedResourcesFolder}\tools"; Flags: ignoreversion
 Source: "policies\*"; DestDir: "{code:GetDestDir}\{#VersionedResourcesFolder}\policies"; Flags: ignoreversion skipifsourcedoesntexist
-Source: "bin\{#TunnelApplicationName}.exe"; DestDir: "{code:GetDestDir}\bin"; DestName: "{code:GetBinDirTunnelApplicationFilename}"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "bin\{#ApplicationName}.cmd"; DestDir: "{code:GetDestDir}\bin"; DestName: "{code:GetBinDirApplicationCmdFilename}"; Flags: ignoreversion
 Source: "bin\{#ApplicationName}"; DestDir: "{code:GetDestDir}\bin"; DestName: "{code:GetBinDirApplicationFilename}"; Flags: ignoreversion
 Source: "{#ProductJsonPath}"; DestDir: "{code:GetDestDir}\{#VersionedResourcesFolder}\resources\app"; Flags: ignoreversion
@@ -1441,72 +1440,10 @@ begin
   end;
 end;
 
-var
-	ShouldRestartTunnelService: Boolean;
-
-function StopTunnelOtherProcesses(): Boolean;
-var
-	WaitCounter: Integer;
-	TaskKilled: Integer;
-begin
-	Log('Stopping all tunnel services (at ' + ExpandConstant('"{app}\bin\{#TunnelApplicationName}.exe"') + ')');
-	ShellExec('', 'powershell.exe', '-NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -Command "Get-WmiObject Win32_Process | Where-Object { $_.ExecutablePath -eq ' + ExpandConstant('''{app}\bin\{#TunnelApplicationName}.exe''') + ' } | Select @{Name=''Id''; Expression={$_.ProcessId}} | Stop-Process -Force"', '', SW_HIDE, ewWaitUntilTerminated, TaskKilled)
-
-	WaitCounter := 10;
-	while (WaitCounter > 0) and CheckForMutexes('{#TunnelMutex}') do
-	begin
-		Log('Tunnel process is is still running, waiting');
-		Sleep(500);
-		WaitCounter := WaitCounter - 1
-	end;
-
-	if CheckForMutexes('{#TunnelMutex}') then
-		begin
-			Log('Unable to stop tunnel processes');
-			Result := False;
-		end
-	else
-		Result := True;
-end;
-
-procedure StopTunnelServiceIfNeeded();
-var
-	StopServiceResultCode: Integer;
-	WaitCounter: Integer;
-begin
-  ShouldRestartTunnelService := False;
- 	if CheckForMutexes('{#TunnelServiceMutex}') then begin
-		// stop the tunnel service
-		Log('Stopping the tunnel service using ' + ExpandConstant('"{app}\bin\{#ApplicationName}.cmd"'));
-		ShellExec('', ExpandConstant('"{app}\bin\{#ApplicationName}.cmd"'), 'tunnel service uninstall', '', SW_HIDE, ewWaitUntilTerminated, StopServiceResultCode);
-
-		Log('Stopping the tunnel service completed with result code ' + IntToStr(StopServiceResultCode));
-
-		WaitCounter := 10;
-		while (WaitCounter > 0) and CheckForMutexes('{#TunnelServiceMutex}') do
-		begin
-			Log('Tunnel service is still running, waiting');
-			Sleep(500);
-			WaitCounter := WaitCounter - 1
-		end;
-		if CheckForMutexes('{#TunnelServiceMutex}') then
-			Log('Unable to stop tunnel service')
-		else
-			ShouldRestartTunnelService := True;
-	end
-end;
-
-
 // called before the wizard checks for running application
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
-  if IsNotBackgroundUpdate() then
-    StopTunnelServiceIfNeeded();
-
-  if IsNotBackgroundUpdate() and not StopTunnelOtherProcesses() then
-     Result := '{#NameShort} is still running a tunnel process. Please stop the tunnel before installing.'
-  else
-  	Result := '';
+  Result := '';
 end;
 
 // VS Code will create a flag file before the update starts (/update=C:\foo\bar)
@@ -1670,14 +1607,6 @@ begin
     Result := ExpandConstant('{#ExeBasename}.exe');
 end;
 
-function GetBinDirTunnelApplicationFilename(Value: string): string;
-begin
-  if IsBackgroundUpdate() and IsVersionedUpdate() then
-    Result := ExpandConstant('new_{#TunnelApplicationName}.exe')
-  else
-    Result := ExpandConstant('{#TunnelApplicationName}.exe');
-end;
-
 function GetBinDirApplicationFilename(Value: string): string;
 begin
   if IsBackgroundUpdate() and IsVersionedUpdate() then
@@ -1804,7 +1733,6 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   UpdateResultCode: Integer;
-	StartServiceResultCode: Integer;
 begin
   if CurStep = ssPostInstall then
   begin
@@ -1843,7 +1771,6 @@ begin
       Log('Application appears not to be running.');
 
       if not SessionEndFileExists() and not CancelFileExists() then begin
-        StopTunnelServiceIfNeeded();
         Log('Invoking inno_updater for background update');
         Exec(ExpandConstant('{app}\{#VersionedResourcesFolder}\tools\inno_updater.exe'), ExpandConstant('"{app}\{#ExeBasename}.exe" ' + BoolToStr(LockFileExists()) + ' "{cm:UpdatingVisualStudioCode}"'), '', SW_SHOW, ewWaitUntilTerminated, UpdateResultCode);
         DeleteFile(ExpandConstant('{app}\updating_version'));
@@ -1866,15 +1793,6 @@ begin
         Exec(ExpandConstant('{app}\{#VersionedResourcesFolder}\tools\inno_updater.exe'), ExpandConstant('"--gc" "{app}\{#ExeBasename}.exe" "{#VersionedResourcesFolder}" "{#ExeBasename}.exe"'), '', SW_SHOW, ewWaitUntilTerminated, UpdateResultCode);
         Log('inno_updater completed gc successfully');
       end;
-    end;
-
-    if ShouldRestartTunnelService then
-    begin
-      // start the tunnel service
-      Log('Restarting the tunnel service...');
-      ShellExec('', ExpandConstant('"{app}\bin\{#ApplicationName}.cmd"'), 'tunnel service install', '', SW_HIDE, ewWaitUntilTerminated, StartServiceResultCode);
-      Log('Starting the tunnel service completed with result code ' + IntToStr(StartServiceResultCode));
-      ShouldRestartTunnelService := False
     end;
   end;
 end;

@@ -45,7 +45,7 @@ export type OptionDescriptions<T> = {
 	Subcommand<T[P]>
 };
 
-export const NATIVE_CLI_COMMANDS = ['tunnel', 'serve-web', 'agent'] as const;
+export const NATIVE_CLI_COMMANDS = ['agent'] as const;
 
 export const OPTIONS: OptionDescriptions<Required<NativeParsedArgs>> = {
 	'chat': {
@@ -62,40 +62,12 @@ export const OPTIONS: OptionDescriptions<Required<NativeParsedArgs>> = {
 			'help': { type: 'boolean', alias: 'h', description: localize('help', "Print usage.") }
 		}
 	},
-	'serve-web': {
-		type: 'subcommand',
-		description: 'Run a server that displays the editor UI in browsers.',
-		options: {
-			'cli-data-dir': { type: 'string', args: 'dir', description: localize('cliDataDir', "Directory where CLI metadata should be stored.") },
-			'disable-telemetry': { type: 'boolean' },
-		}
-	},
 	'agent': {
 		type: 'subcommand',
 		description: 'Start and interact with AI agent hosts.',
 		options: {
 			'cli-data-dir': { type: 'string', args: 'dir', description: localize('cliDataDir', "Directory where CLI metadata should be stored.") },
 			'disable-telemetry': { type: 'boolean' },
-		}
-	},
-	'tunnel': {
-		type: 'subcommand',
-		description: 'Make the current machine accessible from vscode.dev or other machines through a secure tunnel.',
-		options: {
-			'cli-data-dir': { type: 'string', args: 'dir', description: localize('cliDataDir', "Directory where CLI metadata should be stored.") },
-			'disable-telemetry': { type: 'boolean' },
-			user: {
-				type: 'subcommand',
-				options: {
-					login: {
-						type: 'subcommand',
-						options: {
-							provider: { type: 'string' },
-							'access-token': { type: 'string' }
-						}
-					}
-				}
-			}
 		}
 	},
 	'diff': { type: 'boolean', cat: 'o', alias: 'd', args: ['file', 'file'], description: localize('diff', "Compare two files with each other.") },

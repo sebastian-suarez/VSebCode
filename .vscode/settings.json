@@ -17,10 +17,6 @@
 	"[javascript]": {
 		"editor.formatOnSave": true
 	},
-	"[rust]": {
-		"editor.defaultFormatter": "rust-lang.rust-analyzer",
-		"editor.formatOnSave": true,
-	},
 	// --- Files ---
 	"files.trimTrailingWhitespace": true,
 	"files.insertFinalNewline": true,
@@ -31,7 +27,6 @@
 		"**/*.tsbuildinfo": true,
 		"**/.DS_Store": true,
 		".vscode-test": true,
-		"cli/target": true,
 		"build/**/*.js.map": true,
 		"build/**/*.js": {
 			"when": "$(basename).ts"
@@ -44,7 +39,6 @@
 		"**/node_modules/**/*.*": true,
 		"**/yarn.lock": true,
 		"**/package-lock.json": true,
-		"**/Cargo.lock": true,
 		"out/**": true,
 		"out-build/**": true,
 		"out-vscode/**": true,
@@ -63,7 +57,6 @@
 	// --- Search ---
 	"search.exclude": {
 		"**/node_modules": true,
-		"cli/target/**": true,
 		".build/**": true,
 		"out/**": true,
 		"out-build/**": true,
@@ -161,9 +154,6 @@
 	"eslint.useFlatConfig": true,
 	"emmet.excludeLanguages": [],
 	"gulp.autoDetect": "off",
-	"rust-analyzer.linkedProjects": [
-		"cli/Cargo.toml"
-	],
 	"conventionalCommits.scopes": [
 		"tree",
 		"scm",

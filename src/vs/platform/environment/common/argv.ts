@@ -14,15 +14,6 @@ export interface INativeCliOptions {
 export interface NativeParsedArgs {
 
 	// subcommands
-	tunnel?: INativeCliOptions & {
-		user: {
-			login: {
-				'access-token'?: string;
-				'provider'?: string;
-			};
-		};
-	};
-	'serve-web'?: INativeCliOptions;
 	'agent'?: INativeCliOptions;
 	chat?: {
 		_: string[];

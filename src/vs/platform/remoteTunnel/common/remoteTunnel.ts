@@ -128,3 +128,21 @@ export function normalizeTunnelName(name: string): string {
 
 export const LOG_ID = 'remoteTunnelService';
 export const LOGGER_NAME = localize('remoteTunnelLog', "Remote Tunnel Service");
+
+export interface IRemoteTunnelStartOptions {
+	readonly authenticationProviderId?: 'github';
+	readonly showServiceOption?: boolean;
+	readonly showSuccessNotification?: boolean;
+}
+
+export const RemoteTunnelCommandIds = {
+	turnOn: 'workbench.remoteTunnel.actions.turnOn',
+	turnOff: 'workbench.remoteTunnel.actions.turnOff',
+	connecting: 'workbench.remoteTunnel.actions.connecting',
+	manage: 'workbench.remoteTunnel.actions.manage',
+	showLog: 'workbench.remoteTunnel.actions.showLog',
+	configure: 'workbench.remoteTunnel.actions.configure',
+	rename: 'workbench.remoteTunnel.actions.rename',
+	copyToClipboard: 'workbench.remoteTunnel.actions.copyToClipboard',
+	learnMore: 'workbench.remoteTunnel.actions.learnMore',
+} as const;

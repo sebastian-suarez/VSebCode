@@ -12,7 +12,7 @@ import { observableValue } from '../../../../../base/common/observable.js';
 import { mock } from '../../../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { ICommandService } from '../../../../../platform/commands/common/commands.js';
-import { ConfigurationTarget, IConfigurationChangeEvent, IConfigurationOverrides, IConfigurationService, IConfigurationUpdateOverrides } from '../../../../../platform/configuration/common/configuration.js';
+import { IConfigurationChangeEvent, IConfigurationService } from '../../../../../platform/configuration/common/configuration.js';
 import { NullActionViewItemService } from '../../../../../platform/actions/browser/actionViewItemService.js';
 import { MockContextKeyService } from '../../../../../platform/keybinding/test/common/mockKeybindingService.js';
 import { NullLogService } from '../../../../../platform/log/common/log.js';
@@ -22,11 +22,9 @@ import { AgentHostRemoteConnectionsBackend, AgentHostRemoteConnectionsSettingId,
 import { TestInstantiationService } from '../../../../../platform/instantiation/test/common/instantiationServiceMock.js';
 import { NullHoverService } from '../../../../../platform/hover/test/browser/nullHoverService.js';
 import { IProductService } from '../../../../../platform/product/common/productService.js';
-import { IInputOptions, IQuickInputService } from '../../../../../platform/quickinput/common/quickInput.js';
-import { CONFIGURATION_KEY_HOST_NAME, INACTIVE_TUNNEL_MODE, IRemoteTunnelService, type ActiveTunnelMode, type TunnelMode, type TunnelStatus } from '../../../../../platform/remoteTunnel/common/remoteTunnel.js';
+import { INACTIVE_TUNNEL_MODE, IRemoteTunnelService, type ActiveTunnelMode, type TunnelMode, type TunnelStatus, IRemoteTunnelStartOptions } from '../../../../../platform/remoteTunnel/common/remoteTunnel.js';
 import { getRemoteTunnelAccessState, ToggleRemoteConnectionsActionViewItem } from '../../electron-browser/toggleRemoteConnectionsActionViewItem.js';
 import { executeToggleRemoteConnections, TUNNEL_HOST_SHARING_KEY, TunnelHostContribution } from '../../electron-browser/tunnelHost.contribution.js';
-import { IRemoteTunnelStartOptions, promptToRenameRemoteTunnel } from '../../../remoteTunnel/electron-browser/remoteTunnel.contribution.js';
 
 class TestRemoteTunnelService extends mock<IRemoteTunnelService>() {
 	stops = 0;
@@ -95,28 +93,6 @@ class TestCommandService extends mock<ICommandService>() {
 	override executeCommand<R = unknown>(id: string, ...args: unknown[]): Promise<R | undefined> {
 		this.commands.push({ id, args });
 		return Promise.resolve<R | undefined>(undefined);
-	}
-}
-
-class TestQuickInputService extends mock<IQuickInputService>() {
-	result: string | undefined;
-	options: IInputOptions | undefined;
-
-	override async input(options?: IInputOptions): Promise<string | undefined> {
-		this.options = options;
-		return this.result;
-	}
-}
-
-class TestConfigurationService extends mock<IConfigurationService>() {
-	readonly updates: Array<{ key: string; value: unknown; target: ConfigurationTarget | undefined }> = [];
-
-	override updateValue(key: string, value: unknown): Promise<void>;
-	override updateValue(key: string, value: unknown, target: ConfigurationTarget): Promise<void>;
-	override updateValue(key: string, value: unknown, overrides: IConfigurationOverrides | IConfigurationUpdateOverrides): Promise<void>;
-	override updateValue(key: string, value: unknown, targetOrOverrides?: ConfigurationTarget | IConfigurationOverrides | IConfigurationUpdateOverrides): Promise<void> {
-		this.updates.push({ key, value, target: typeof targetOrOverrides === 'number' ? targetOrOverrides : undefined });
-		return Promise.resolve();
 	}
 }
 
@@ -467,28 +443,4 @@ suite('ToggleRemoteConnectionsActionViewItem', () => {
 			assert.deepStrictEqual({ mode: remoteTunnel.mode, stops: remoteTunnel.stops }, { mode: INACTIVE_TUNNEL_MODE, stops: 0 });
 		});
 	}
-
-	test('renames a tunnel through quick input and persists the hostname override', async () => {
-		const quickInputService = new TestQuickInputService();
-		const configurationService = new TestConfigurationService();
-		quickInputService.result = 'renamed-tunnel';
-
-		await promptToRenameRemoteTunnel(quickInputService, configurationService, 'old-tunnel');
-
-		assert.deepStrictEqual({
-			input: {
-				title: quickInputService.options?.title,
-				value: quickInputService.options?.value,
-				placeHolder: quickInputService.options?.placeHolder,
-			},
-			updates: configurationService.updates,
-		}, {
-			input: {
-				title: 'Rename Tunnel',
-				value: 'old-tunnel',
-				placeHolder: 'Leave blank to use this machine\'s host name.',
-			},
-			updates: [{ key: CONFIGURATION_KEY_HOST_NAME, value: 'renamed-tunnel', target: ConfigurationTarget.USER }],
-		});
-	});
 });

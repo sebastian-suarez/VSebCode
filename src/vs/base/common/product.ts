@@ -204,7 +204,8 @@ export interface IProductConfiguration {
 	readonly serverApplicationName: string;
 	readonly serverDataFolderName?: string;
 
-	readonly tunnelApplicationName?: string;
+
+
 	readonly tunnelApplicationConfig?: ITunnelApplicationConfig;
 
 
@@ -286,12 +287,6 @@ export interface IProductOnboardingTheme {
 	readonly type: 'dark' | 'light' | 'hcDark' | 'hcLight';
 }
 
-export interface ITunnelApplicationConfig {
-	authenticationProviders: IStringDictionary<{ scopes: string[] }>;
-	editorWebUrl: string;
-	extension: IRemoteExtensionTip;
-}
-
 export interface IExtensionRecommendations {
 	readonly onFileOpen: IFileOpenCondition[];
 	readonly onSettingsEditorOpen?: ISettingsEditorOpenCondition;
@@ -339,6 +334,12 @@ export interface IExeBasedExtensionTip {
 	windowsPath?: string;
 	important?: boolean;
 	recommendations: IStringDictionary<{ name: string; important?: boolean; isExtensionPack?: boolean; whenNotInstalled?: string[] }>;
+}
+
+export interface ITunnelApplicationConfig {
+	authenticationProviders: IStringDictionary<{ scopes: string[] }>;
+	editorWebUrl: string;
+	extension: IRemoteExtensionTip;
 }
 
 export interface IRemoteExtensionTip {

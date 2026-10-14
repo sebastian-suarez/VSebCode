@@ -16,11 +16,10 @@ import { AgentHostRemoteConnectionsBackend, AgentHostRemoteConnectionsSettingId,
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { INotificationService } from '../../../../platform/notification/common/notification.js';
-import { INACTIVE_TUNNEL_MODE, IRemoteTunnelService, TunnelMode, TunnelStatus } from '../../../../platform/remoteTunnel/common/remoteTunnel.js';
+import { INACTIVE_TUNNEL_MODE, IRemoteTunnelService, IRemoteTunnelStartOptions, RemoteTunnelCommandIds, TunnelMode, TunnelStatus } from '../../../../platform/remoteTunnel/common/remoteTunnel.js';
 import { IsSessionsWindowContext, RemoteNameContext } from '../../../common/contextkeys.js';
 import { IWorkbenchContribution, registerWorkbenchContribution2, WorkbenchPhase } from '../../../common/contributions.js';
 import { ChatContextKeyExprs, ChatContextKeys } from '../common/actions/chatContextKeys.js';
-import { IRemoteTunnelStartOptions, RemoteTunnelCommandIds } from '../../remoteTunnel/electron-browser/remoteTunnel.contribution.js';
 import { getRemoteTunnelAccessState, ToggleRemoteConnectionsActionViewItem } from './toggleRemoteConnectionsActionViewItem.js';
 
 export const TUNNEL_HOST_SHARING_KEY = 'tunnelHostSharing';
