@@ -19,11 +19,14 @@ import { NotificationPriority, Severity, type INotification, type INotificationH
 const MAX_OSC99_TEXT_LENGTH = 10000;
 
 /**
- * Removes every markdown link `[label](target)` from a notification text and keeps the label, so
- * that no link, nested or reassembled from surviving fragments, reaches the notification. The
- * result equals replacing `/\[([^\]]+)\]\(([^)]+)\)/g` with `$1` until nothing changes, but it
- * takes one pass over the text: repeating a backtracking regular expression over text written by
- * a process is quadratic, and a few hundred kilobytes stall the renderer for seconds.
+ * Removes markdown links `[label](target)` from a notification text in one pass over it and
+ * guarantees that no parsable link remains: the result never contains `](`, which the pattern
+ * `/\[([^\]]+)\]\(([^)]+)\)/` needs, unless the text had no link at all, in which case it is
+ * returned unchanged. For the texts upstream's sanitizer handles, which replaces that pattern by
+ * its label until nothing changes, the result is the same; for adversarial nestings it may keep a
+ * bracket upstream would drop, with a space breaking the adjacency. Repeating a backtracking
+ * regular expression over text written by a process is quadratic, and a few hundred kilobytes
+ * stall the renderer for seconds, which is why the pattern is not used.
  */
 export function sanitizeOsc99MessageText(text: string): string {
 	const lastTargetEnd = text.lastIndexOf(')');
@@ -31,22 +34,28 @@ export function sanitizeOsc99MessageText(text: string): string {
 		return text;
 	}
 	const chars = text.split('');
-	// Positions of the `[` that may still start a link, oldest first: the link pattern matches
-	// the leftmost `[` whose label reaches a `](target)`, and a literal `]` ends every open label
+	// Positions of the `[` that may still start a link, oldest first (the pattern matches the
+	// leftmost `[` whose label reaches a `](target)`), each with the count of characters removed
+	// inside targets when it was seen, so that the surviving label length is known; a literal `]`
+	// ends every open label
 	const openBrackets: number[] = [];
+	const removedAtOpen: number[] = [];
 	let firstOpenBracket = 0;
+	let removedInTargets = 0;
+	let removedLinks = 0;
 	for (let i = 0; i < chars.length; i++) {
 		const char = chars[i];
 		if (char === '[') {
 			openBrackets.push(i);
+			removedAtOpen.push(removedInTargets);
 			continue;
 		}
 		if (char !== ']') {
 			continue;
 		}
 		const labelStart = firstOpenBracket < openBrackets.length ? openBrackets[firstOpenBracket] : -1;
-		const hasLabel = labelStart !== -1 && labelStart < i - 1;
-		const targetEnd = hasLabel && chars[i + 1] === '(' && lastTargetEnd > i + 1 ? text.indexOf(')', i + 2) : -1;
+		const labelLength = labelStart === -1 ? 0 : i - labelStart - 1 - (removedInTargets - removedAtOpen[firstOpenBracket]);
+		const targetEnd = labelLength > 0 && chars[i + 1] === '(' && lastTargetEnd > i + 1 ? text.indexOf(')', i + 2) : -1;
 		if (targetEnd > i + 2) {
 			// `[label](target)`: drop the `[` and everything from `]` to `)`, keep the label
 			chars[labelStart] = '';
@@ -54,13 +63,18 @@ export function sanitizeOsc99MessageText(text: string): string {
 			for (let j = i; j <= targetEnd; j++) {
 				chars[j] = '';
 			}
+			removedInTargets += targetEnd - i + 1;
+			removedLinks++;
 			i = targetEnd;
 		} else {
 			// A literal `]` cannot be part of a label, so no earlier `[` starts a link
 			firstOpenBracket = openBrackets.length;
 		}
 	}
-	return chars.join('');
+	const sanitized = chars.join('');
+	// A removal can bring a literal `]` next to a `(`, which the repeated pattern would match in
+	// a later pass; breaking the adjacency keeps the result free of links
+	return removedLinks > 0 ? sanitized.replace(/\]\(/g, '] (') : sanitized;
 }
 
 const enum Osc99PayloadType {

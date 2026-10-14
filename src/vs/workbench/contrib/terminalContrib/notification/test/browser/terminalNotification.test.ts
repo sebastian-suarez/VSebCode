@@ -174,7 +174,8 @@ suite('Terminal OSC 99 notifications', () => {
 		strictEqual(host.notifications[0].message, ' Update available - click to install');
 	});
 
-	test('sanitizes links in one pass with the result of the repeated link pattern', () => {
+	test('leaves no link in any short text and changes nothing where the repeated pattern would not', () => {
+		const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
 		const repeatedPattern = (text: string): string => {
 			let sanitized = text;
 			let previous: string;
@@ -185,12 +186,13 @@ suite('Terminal OSC 99 notifications', () => {
 			return sanitized;
 		};
 		const alphabet = ['[', ']', '(', ')', 'x'];
-		const mismatches: { input: string; expected: string; actual: string }[] = [];
+		const failures: { input: string; actual: string; reason: string }[] = [];
 		const visit = (input: string, remaining: number): void => {
-			const expected = repeatedPattern(input);
 			const actual = sanitizeOsc99MessageText(input);
-			if (actual !== expected) {
-				mismatches.push({ input, expected, actual });
+			if (linkPattern.test(actual)) {
+				failures.push({ input, actual, reason: 'a link remains' });
+			} else if (repeatedPattern(input) === input && actual !== input) {
+				failures.push({ input, actual, reason: 'changed a text without links' });
 			}
 			if (remaining > 0) {
 				for (const char of alphabet) {
@@ -199,7 +201,29 @@ suite('Terminal OSC 99 notifications', () => {
 			}
 		};
 		visit('', 7);
-		deepStrictEqual(mismatches, []);
+		deepStrictEqual(failures, []);
+	});
+
+	test('keeps the labels of links and breaks the adjacency a removal creates', () => {
+		deepStrictEqual([
+			'Click [run](command:workbench.action.reloadWindow)',
+			'[[ ](http://z)Update available - click to install](command:workbench.action.terminal.sendSequence?x)',
+			'[[a](b)c](d)',
+			'[a](b)[c](d)',
+			'[a[b](c)](d)',
+			'[](x) and [a]() and [a](b',
+			'[[](x)](y)',
+			'[x][(](y)z)',
+		].map(text => sanitizeOsc99MessageText(text)), [
+			'Click run',
+			' Update available - click to install',
+			'ac',
+			'ac',
+			'ab',
+			'[](x) and [a]() and [a](b',
+			'[] (y)',
+			'[x] (z)',
+		]);
 	});
 
 	test('sanitizes long payloads without repeated scans', () => {
