@@ -1,13 +1,14 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { Emitter, Event } from '../../../../../../base/common/event.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../../base/test/common/utils.js';
 import { NotificationPriority, Severity, type INotification, type INotificationActions, type INotificationHandle, type INotificationProgress, type NotificationMessage } from '../../../../../../platform/notification/common/notification.js';
-import { TerminalNotificationHandler, type IOsc99NotificationHost } from '../../browser/terminalNotificationHandler.js';
+import { sanitizeOsc99MessageText, TerminalNotificationHandler, type IOsc99NotificationHost } from '../../browser/terminalNotificationHandler.js';
 
 class TestNotificationProgress implements INotificationProgress {
 	infinite(): void { }
@@ -171,6 +172,57 @@ suite('Terminal OSC 99 notifications', () => {
 		handler.handleSequence('i=nested:p=title;[[ ](http://z)Update available - click to install](command:workbench.action.terminal.sendSequence?%7B%22text%22%3A%22calc%5Cr%22%7D)');
 		strictEqual(host.notifications.length, 1);
 		strictEqual(host.notifications[0].message, ' Update available - click to install');
+	});
+
+	test('sanitizes links in one pass with the result of the repeated link pattern', () => {
+		const repeatedPattern = (text: string): string => {
+			let sanitized = text;
+			let previous: string;
+			do {
+				previous = sanitized;
+				sanitized = sanitized.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+			} while (sanitized !== previous);
+			return sanitized;
+		};
+		const alphabet = ['[', ']', '(', ')', 'x'];
+		const mismatches: { input: string; expected: string; actual: string }[] = [];
+		const visit = (input: string, remaining: number): void => {
+			const expected = repeatedPattern(input);
+			const actual = sanitizeOsc99MessageText(input);
+			if (actual !== expected) {
+				mismatches.push({ input, expected, actual });
+			}
+			if (remaining > 0) {
+				for (const char of alphabet) {
+					visit(input + char, remaining - 1);
+				}
+			}
+		};
+		visit('', 7);
+		deepStrictEqual(mismatches, []);
+	});
+
+	test('sanitizes long payloads without repeated scans', () => {
+		const count = 40000;
+		deepStrictEqual({
+			nested: sanitizeOsc99MessageText('['.repeat(count) + 'x' + '](x)'.repeat(count)),
+			openLinks: sanitizeOsc99MessageText('[x]('.repeat(count)),
+			openBrackets: sanitizeOsc99MessageText('['.repeat(count) + 'x'),
+			chainedTargets: sanitizeOsc99MessageText('[x](y'.repeat(count) + ')'),
+		}, {
+			nested: 'x',
+			openLinks: '[x]('.repeat(count),
+			openBrackets: '['.repeat(count) + 'x',
+			chainedTargets: 'x',
+		});
+	});
+
+	test('caps the text accumulated across sequences', () => {
+		handler.handleSequence('i=long:d=0:p=title;' + 't'.repeat(6000));
+		handler.handleSequence('i=long:d=0:p=title;' + 't'.repeat(6000));
+		handler.handleSequence('i=long:p=body;' + 'b'.repeat(12000));
+		strictEqual(host.notifications.length, 1);
+		strictEqual(host.notifications[0].message, 't'.repeat(10000) + ': ' + 'b'.repeat(10000));
 	});
 
 	test('defers display until done', () => {

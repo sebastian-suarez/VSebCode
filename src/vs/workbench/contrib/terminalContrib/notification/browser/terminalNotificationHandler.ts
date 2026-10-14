@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -9,6 +10,58 @@ import { decodeBase64 } from '../../../../../base/common/buffer.js';
 import { Disposable, DisposableStore, type IDisposable } from '../../../../../base/common/lifecycle.js';
 import { localize } from '../../../../../nls.js';
 import { NotificationPriority, Severity, type INotification, type INotificationHandle } from '../../../../../platform/notification/common/notification.js';
+
+/**
+ * The longest title, body or button text an OSC 99 notification accumulates across sequences;
+ * text beyond it is dropped. A process writing to the terminal could otherwise grow the pending
+ * text without limit.
+ */
+const MAX_OSC99_TEXT_LENGTH = 10000;
+
+/**
+ * Removes every markdown link `[label](target)` from a notification text and keeps the label, so
+ * that no link, nested or reassembled from surviving fragments, reaches the notification. The
+ * result equals replacing `/\[([^\]]+)\]\(([^)]+)\)/g` with `$1` until nothing changes, but it
+ * takes one pass over the text: repeating a backtracking regular expression over text written by
+ * a process is quadratic, and a few hundred kilobytes stall the renderer for seconds.
+ */
+export function sanitizeOsc99MessageText(text: string): string {
+	const lastTargetEnd = text.lastIndexOf(')');
+	if (lastTargetEnd === -1 || text.indexOf('](') === -1) {
+		return text;
+	}
+	const chars = text.split('');
+	// Positions of the `[` that may still start a link, oldest first: the link pattern matches
+	// the leftmost `[` whose label reaches a `](target)`, and a literal `]` ends every open label
+	const openBrackets: number[] = [];
+	let firstOpenBracket = 0;
+	for (let i = 0; i < chars.length; i++) {
+		const char = chars[i];
+		if (char === '[') {
+			openBrackets.push(i);
+			continue;
+		}
+		if (char !== ']') {
+			continue;
+		}
+		const labelStart = firstOpenBracket < openBrackets.length ? openBrackets[firstOpenBracket] : -1;
+		const hasLabel = labelStart !== -1 && labelStart < i - 1;
+		const targetEnd = hasLabel && chars[i + 1] === '(' && lastTargetEnd > i + 1 ? text.indexOf(')', i + 2) : -1;
+		if (targetEnd > i + 2) {
+			// `[label](target)`: drop the `[` and everything from `]` to `)`, keep the label
+			chars[labelStart] = '';
+			firstOpenBracket++;
+			for (let j = i; j <= targetEnd; j++) {
+				chars[j] = '';
+			}
+			i = targetEnd;
+		} else {
+			// A literal `]` cannot be part of a label, so no earlier `[` starts a link
+			firstOpenBracket = openBrackets.length;
+		}
+	}
+	return chars.join('');
+}
 
 const enum Osc99PayloadType {
 	Title = 'title',
@@ -101,13 +154,13 @@ export class TerminalNotificationHandler extends Disposable {
 
 		switch (payloadType) {
 			case Osc99PayloadType.Title:
-				state.title += payloadText;
+				state.title = this._appendOsc99Text(state.title, payloadText);
 				break;
 			case Osc99PayloadType.Body:
-				state.body += payloadText;
+				state.body = this._appendOsc99Text(state.body, payloadText);
 				break;
 			case Osc99PayloadType.Buttons:
-				state.buttonsPayload += payloadText;
+				state.buttonsPayload = this._appendOsc99Text(state.buttonsPayload, payloadText);
 				break;
 			default:
 				return true;
@@ -186,17 +239,9 @@ export class TerminalNotificationHandler extends Disposable {
 		return sanitized.length > 0 ? sanitized : undefined;
 	}
 
-	private _sanitizeOsc99MessageText(text: string): string {
-		// Markdown link syntax is nestable, so a single pass can splice surviving fragments into a
-		// new, valid link (e.g. `[[ ](http://z)label](command:...)` becomes `[ label](command:...)`).
-		// Replace to a fixed point so no parsable link can remain in the sanitized output.
-		let sanitized = text;
-		let previous: string;
-		do {
-			previous = sanitized;
-			sanitized = sanitized.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
-		} while (sanitized !== previous);
-		return sanitized;
+	private _appendOsc99Text(current: string, addition: string): string {
+		const remaining = MAX_OSC99_TEXT_LENGTH - current.length;
+		return remaining > 0 ? current + addition.slice(0, remaining) : current;
 	}
 
 	private _getOrCreateOsc99State(id: string | undefined): IOsc99NotificationState {
@@ -446,8 +491,8 @@ export class TerminalNotificationHandler extends Disposable {
 	}
 
 	private _getOsc99NotificationMessage(state: IOsc99NotificationState): string | undefined {
-		const title = this._sanitizeOsc99MessageText(state.title);
-		const body = this._sanitizeOsc99MessageText(state.body);
+		const title = sanitizeOsc99MessageText(state.title);
+		const body = sanitizeOsc99MessageText(state.body);
 		const hasTitle = title.trim().length > 0;
 		const hasBody = body.trim().length > 0;
 		if (hasTitle && hasBody) {
