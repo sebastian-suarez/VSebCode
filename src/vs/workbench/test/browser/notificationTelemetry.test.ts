@@ -214,7 +214,7 @@ suite('Notification telemetry UI', () => {
 		let invoked = 0;
 		ui.notifications.prompt(Severity.Info, 'Prompt', [{
 			label: 'Continue', telemetryId: NotificationActionTelemetryId.Continue, keepOpen: true, run: () => invoked++
-		}], { telemetry: NotificationTelemetryId.AuthenticationContinue, priority: NotificationPriority.SILENT });
+		}], { telemetry: NotificationTelemetryId.ExtensionInstall, priority: NotificationPriority.SILENT });
 		ui.center.show();
 		await ui.render();
 		const button = ui.container.querySelector<HTMLElement>('.notification-list-item-buttons-container .monaco-button');

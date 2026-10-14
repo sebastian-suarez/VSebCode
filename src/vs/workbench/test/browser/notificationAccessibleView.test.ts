@@ -90,7 +90,7 @@ suite('NotificationAccessibleView', () => {
 			let invoked = 0;
 			const action = withNotificationActionTelemetry(toAction({ id: 'private ID', label: 'Private label', run: () => invoked++ }), NotificationActionTelemetryId.Continue);
 			const notification = setupNotification([{
-				severity: Severity.Info, message: 'private message', telemetry: NotificationTelemetryId.AuthenticationContinue,
+				severity: Severity.Info, message: 'private message', telemetry: NotificationTelemetryId.ExtensionInstall,
 				actions: { [role]: [action] }
 			}]);
 			notification.createProvider().showing.dispose();

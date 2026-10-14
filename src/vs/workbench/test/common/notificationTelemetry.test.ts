@@ -43,18 +43,18 @@ suite('Notification telemetry contract', () => {
 		assert.deepStrictEqual({
 			unique: new Set(ids).size,
 			sources,
-			representative: [NotificationTelemetryId.AuthenticationSignIn, NotificationTelemetryId.ExtensionInstall, NotificationTelemetryId.FileSaveParticipants],
+			representative: [NotificationTelemetryId.RemoteReconnect, NotificationTelemetryId.ExtensionInstall, NotificationTelemetryId.FileSaveParticipants],
 			events: telemetry.events
 		}, {
 			unique: ids.length,
 			sources: ids.map(notificationId => ({ origin: 'core', notificationId, extensionId: 'none' })),
-			representative: ['authentication.signIn', 'extensions.install', 'files.saveParticipants'],
+			representative: ['remote.reconnect', 'extensions.install', 'files.saveParticipants'],
 			events: []
 		});
 	});
 
 	test('unknown and forged metadata never expose message, error, source, dedup or action content', () => {
-		for (const unsafe of [undefined, '/private/path', 'publisher.extension', { origin: 'extension', extensionId: 'publisher.extension' }, { id: NotificationTelemetryId.AuthenticationSignIn }]) {
+		for (const unsafe of [undefined, '/private/path', 'publisher.extension', { origin: 'extension', extensionId: 'publisher.extension' }, { id: NotificationTelemetryId.ExtensionInstall }]) {
 			const action = toAction({ id: 'private action ID', label: 'private button label', run: () => { } });
 			// @ts-expect-error Deliberately exercise untyped input without accepting arbitrary action IDs.
 			withNotificationActionTelemetry(action, 'private action metadata');
@@ -111,7 +111,7 @@ suite('Notification telemetry contract', () => {
 			{ label: 'Continue', telemetryId: NotificationActionTelemetryId.Continue, run: () => { }, isSecondary: false, menu: [{ label: 'Decline', telemetryId: NotificationActionTelemetryId.Decline, run: () => { } }] },
 			{ label: 'Reload', telemetryId: NotificationActionTelemetryId.Reload, isSecondary: true, run: () => { } }
 		];
-		const handle = service.prompt(Severity.Warning, 'private prompt', choices, { telemetry: NotificationTelemetryId.AuthenticationContinue });
+		const handle = service.prompt(Severity.Warning, 'private prompt', choices, { telemetry: NotificationTelemetryId.ExtensionInstall });
 		const item = service.model.notifications[0];
 		const primary = item.actions!.primary![0];
 		const secondary = item.actions!.secondary![0];
@@ -131,7 +131,7 @@ suite('Notification telemetry contract', () => {
 			shown: telemetry.shown,
 			actions: telemetry.interactions.map(event => [event.actionId, event.actionRole, event.timeSinceShownMs, event.surface])
 		}, {
-			source: { origin: 'core', notificationId: 'authentication.continue', extensionId: 'none' },
+			source: { origin: 'core', notificationId: 'extensions.install', extensionId: 'none' },
 			shown: [],
 			actions: [['continue', 'primary', -1, 'unknown'], ['reload', 'secondary', -1, 'unknown'], ['decline', 'primary', -1, 'unknown']]
 		});

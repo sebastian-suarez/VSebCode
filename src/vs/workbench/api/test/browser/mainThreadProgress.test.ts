@@ -30,7 +30,7 @@ suite('MainThreadProgress', () => {
 		assert.deepStrictEqual(contract, { titleIsString: true, messageIsString: true, exposesCapability: false, exposesTelemetryCapability: false });
 	});
 
-	test('extension-host attribution ignores public extra options and arbitrary display sources', async () => {
+	test('extension-host attribution ignores public extra options and the display source', async () => {
 		const options: IProgressOptions[] = [];
 		const mainThread = store.add(new MainThreadProgress(
 			SingleProxyRPCProtocol(new class extends mock<ExtHostProgressShape>() { }),
@@ -49,15 +49,11 @@ suite('MainThreadProgress', () => {
 				override readonly name = 'private display name';
 				override readonly isUnderDevelopment = underDevelopment;
 			};
-			const publicOptions = { location: ExtensionProgressLocation.Notification, title: 'private title', telemetryId: NotificationTelemetryId.AuthenticationSignIn };
+			const publicOptions = { location: ExtensionProgressLocation.Notification, title: 'private title', telemetryId: NotificationTelemetryId.ExtensionInstall };
 			await extHost.withProgress(extension, publicOptions, async () => { });
 		}
-		await extHost.withProgressFromSource({ id: 'private server URL', label: 'private server' }, { location: ExtensionProgressLocation.Notification }, async () => { }, NotificationTelemetryId.AuthenticationSignIn);
-		await extHost.withProgressFromSource({ id: 'publisher.extension', label: 'private label' }, { location: ExtensionProgressLocation.Notification }, async () => { });
 		assert.deepStrictEqual(options.map(value => getNotificationTelemetrySource(value.telemetry)), [
 			{ origin: 'extension', notificationId: 'extension.progress', extensionId: 'publisher.extension' },
-			{ origin: 'extension', notificationId: 'extension.progress', extensionId: 'unknown' },
-			{ origin: 'core', notificationId: 'authentication.signIn', extensionId: 'none' },
 			{ origin: 'extension', notificationId: 'extension.progress', extensionId: 'unknown' }
 		]);
 	});

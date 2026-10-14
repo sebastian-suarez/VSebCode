@@ -8,8 +8,6 @@ import { EXTENSION_IDENTIFIER_REGEX } from '../../extensionManagement/common/ext
 
 /** Audited, content-independent types. These IDs must not be used for notification deduplication. */
 export enum NotificationTelemetryId {
-	AuthenticationSignIn = 'authentication.signIn',
-	AuthenticationContinue = 'authentication.continue',
 	ExtensionsActivation = 'extensions.activation',
 	ExtensionInstall = 'extensions.install',
 	ExtensionDownload = 'extensions.downloadVsix',

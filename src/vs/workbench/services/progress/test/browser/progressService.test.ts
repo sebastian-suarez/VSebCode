@@ -74,7 +74,7 @@ suite('ProgressService notification messages', () => {
 			let cancellations = 0;
 			const promise = progressService.withProgress({
 				location: ProgressLocation.Notification,
-				telemetry: NotificationTelemetryId.AuthenticationSignIn,
+				telemetry: NotificationTelemetryId.ExtensionInstall,
 				title: 'private server name',
 				cancellable: 'Private cancellation label',
 			}, () => deferred.p, () => {
@@ -101,7 +101,7 @@ suite('ProgressService notification messages', () => {
 				privatePayload: JSON.stringify([...telemetry.shown, ...telemetry.interactions]).includes('private')
 			}, {
 				created: [],
-				source: { origin: 'core', notificationId: 'authentication.signIn', extensionId: 'none' },
+				source: { origin: 'core', notificationId: 'extensions.install', extensionId: 'none' },
 				flags: [[true, true]],
 				interactions: cancel ? [['progressCancel', 'progress.cancel', 'primary']] : [],
 				cancellations: cancel ? 1 : 0,
