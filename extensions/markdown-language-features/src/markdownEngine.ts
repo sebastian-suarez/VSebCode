@@ -296,6 +296,7 @@ export class MarkdownItEngine implements IMdParser {
 		const validateLink = md.validateLink;
 		md.validateLink = (link: string) => {
 			return validateLink(link)
+				|| isOfScheme(vscode.env.uriScheme, link)
 				|| isOfScheme(Schemes.vscode, link)
 				|| isOfScheme(Schemes['vscode-insiders'], link)
 				|| /^data:image\/.*?;/.test(link);

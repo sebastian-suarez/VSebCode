@@ -685,11 +685,7 @@
 		"vue": "_vue",
 		"jsonl": "_json",
 		"django-html": "_html",
-		"blade": "_php",
-		"prompt": "_markdown",
-		"instructions": "_markdown",
-		"chatagent": "_markdown",
-		"skill": "_markdown"
+		"blade": "_php"
 	},
 	"folderNames": {},
 	"folderNamesExpanded": {},

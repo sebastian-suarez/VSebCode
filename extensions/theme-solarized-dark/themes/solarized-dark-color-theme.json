@@ -333,11 +333,6 @@
 		// Base
 		// "foreground": "",
 		"focusBorder": "#2AA19899",
-		// agent sessions
-		"agentsPanel.border": "#586E7566",
-		"agentsChatInput.border": "#586E7566",
-		"agentsChatInput.focusBorder": "#2AA19899",
-		"agentsNewSessionButton.border": "#586E7566",
 		// "contrastActiveBorder": "",
 		// "contrastBorder": "",
 

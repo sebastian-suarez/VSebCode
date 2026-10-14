@@ -9,7 +9,6 @@
   "enabledApiProposals": [
     "workspaceTrust",
     "multiDocumentHighlightProvider",
-    "codeActionAI",
     "codeActionRanges",
     "editorHoverVerbosityLevel"
   ],

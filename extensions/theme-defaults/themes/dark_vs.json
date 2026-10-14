@@ -36,10 +36,6 @@
 		"terminal.inactiveSelectionBackground": "#3A3D41",
 		"widget.border": "#303031",
 		"actionBar.toggledBackground": "#383a49",
-		"agentsPanel.border": "#303031",
-		"agentsChatInput.border": "#303031",
-		"agentsChatInput.focusBorder": "#007ACC",
-		"agentsNewSessionButton.border": "#303031",
 		// modern ui
 		"surface.border": "#252526",
 		"modernActivityBarItem.activeBackground": "#1E1E1E",

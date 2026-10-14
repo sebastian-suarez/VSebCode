@@ -12,6 +12,7 @@ import { cdTestSuiteSpec as cdTestSuite } from './completions/cd.test';
 import { codeSpecOptionsAndSubcommands, codeTestSuite, codeTunnelTestSuite } from './completions/code.test';
 import { testPaths, type ISuiteSpec } from './helpers';
 import { codeInsidersTestSuite, codeTunnelInsidersTestSuite } from './completions/code-insiders.test';
+import { vscTestSuite } from './completions/vsc.test';
 import { lsTestSuiteSpec } from './completions/upstream/ls.test';
 import { echoTestSuiteSpec } from './completions/upstream/echo.test';
 import { mkdirTestSuiteSpec } from './completions/upstream/mkdir.test';
@@ -45,6 +46,7 @@ const testSpecs2: ISuiteSpec[] = [
 	codeInsidersTestSuite,
 	codeTunnelTestSuite,
 	codeTunnelInsidersTestSuite,
+	vscTestSuite,
 
 	// completions/upstream/
 	echoTestSuiteSpec,
