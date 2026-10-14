@@ -63,7 +63,7 @@ async function npmInstallAsync(dir: string, opts?: child_process.SpawnOptions): 
 
 	const command = process.env['npm_command'] || 'install';
 
-	if (process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME'] && /^(.build\/distro\/npm\/)?remote$/.test(dir)) {
+	if (process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME'] && dir === 'remote') {
 		const syncOpts: child_process.SpawnSyncOptions = {
 			env: finalOpts.env,
 			cwd: root,
@@ -80,7 +80,6 @@ async function npmInstallAsync(dir: string, opts?: child_process.SpawnOptions): 
 			'docker', 'run',
 			'-e', 'GITHUB_TOKEN',
 			'-v', `${process.env['VSCODE_HOST_MOUNT']}:/root/vscode`,
-			'-v', `${process.env['VSCODE_HOST_MOUNT']}/.build/.gitconfig-distro:/root/.gitconfig`,
 			'-v', `${process.env['VSCODE_NPMRC_PATH']}:/root/.npmrc`,
 			'-w', path.resolve('/root/vscode', dir),
 			process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME'],
@@ -246,8 +245,7 @@ async function main() {
 			continue;
 		}
 
-		if (/^(.build\/distro\/npm\/)?remote$/.test(dir)) {
-			const remoteDir = dir;
+		if (dir === 'remote') {
 			nativeTasks.push(() => {
 				const env: NodeJS.ProcessEnv = { ...process.env };
 				if (process.env['VSCODE_REMOTE_CC']) {
@@ -267,7 +265,7 @@ async function main() {
 				if (process.env['VSCODE_REMOTE_LDFLAGS']) { env['LDFLAGS'] = process.env['VSCODE_REMOTE_LDFLAGS']; }
 				if (process.env['VSCODE_REMOTE_NODE_GYP']) { env['npm_config_node_gyp'] = process.env['VSCODE_REMOTE_NODE_GYP']; }
 				setNpmrcConfig('remote', env);
-				return npmInstallAsync(remoteDir, { env });
+				return npmInstallAsync('remote', { env });
 			});
 			continue;
 		}

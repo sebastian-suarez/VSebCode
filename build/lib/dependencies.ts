@@ -38,17 +38,7 @@ function getNpmProductionDependencies(folder: string): string[] {
 }
 
 export function getProductionDependencies(folderPath: string): string[] {
-	const result = getNpmProductionDependencies(folderPath);
-	// Account for distro npm dependencies
-	const realFolderPath = fs.realpathSync(folderPath);
-	const relativeFolderPath = path.relative(root, realFolderPath);
-	const distroFolderPath = `${root}/.build/distro/npm/${relativeFolderPath}`;
-
-	if (fs.existsSync(distroFolderPath)) {
-		result.push(...getNpmProductionDependencies(distroFolderPath));
-	}
-
-	return [...new Set(result)];
+	return [...new Set(getNpmProductionDependencies(folderPath))];
 }
 
 if (import.meta.main) {
