@@ -7,7 +7,7 @@ import assert from 'assert';
 import * as sinon from 'sinon';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { Downloading, StateType } from '../../../../../platform/update/common/update.js';
-import { computeDownloadSpeed, computeDownloadTimeRemaining, computeProgressPercent, computeUpdateInfoVersion, formatBytes, formatDate, formatTimeRemaining, getUpdateInfoUrl, isMajorMinorVersionChange, tryParseDate } from '../../common/updateUtils.js';
+import { computeDownloadSpeed, computeDownloadTimeRemaining, computeProgressPercent, formatBytes, formatDate, formatTimeRemaining, tryParseDate } from '../../common/updateUtils.js';
 
 suite('UpdateUtils', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
@@ -129,38 +129,6 @@ suite('UpdateUtils', () => {
 		});
 	});
 
-	suite('computeUpdateInfoVersion', () => {
-		test('returns minor .0 version when minor differs', () => {
-			assert.strictEqual(computeUpdateInfoVersion('1.108.2', '1.109.5'), '1.109');
-			assert.strictEqual(computeUpdateInfoVersion('1.108.0', '1.109.0'), '1.109');
-			assert.strictEqual(computeUpdateInfoVersion('1.107.3', '1.110.1'), '1.110');
-		});
-
-		test('returns target version as-is when same minor', () => {
-			assert.strictEqual(computeUpdateInfoVersion('1.109.2', '1.109.5'), '1.109.5');
-			assert.strictEqual(computeUpdateInfoVersion('1.109.0', '1.109.3'), '1.109.3');
-		});
-
-		test('returns minor .0 version when major differs', () => {
-			assert.strictEqual(computeUpdateInfoVersion('1.109.2', '2.0.1'), '2.0');
-		});
-
-		test('returns undefined for invalid versions', () => {
-			assert.strictEqual(computeUpdateInfoVersion('invalid', '1.109.5'), undefined);
-			assert.strictEqual(computeUpdateInfoVersion('1.109.2', 'invalid'), undefined);
-		});
-	});
-
-	suite('getUpdateInfoUrl', () => {
-		test('constructs correct URL for .0 versions', () => {
-			assert.strictEqual(getUpdateInfoUrl('1.109.0'), 'https://code.visualstudio.com/raw/v1_109_update.md');
-		});
-
-		test('constructs correct URL for patch versions', () => {
-			assert.strictEqual(getUpdateInfoUrl('1.109.5'), 'https://code.visualstudio.com/raw/v1_109_5_update.md');
-		});
-	});
-
 	suite('formatTimeRemaining', () => {
 		test('formats seconds for values less than 1 minute', () => {
 			assert.strictEqual(formatTimeRemaining(1), '1s');
@@ -243,41 +211,6 @@ suite('UpdateUtils', () => {
 			const result = formatDate(1705276800000);
 			assert.ok(result.length > 0);
 			assert.ok(result.includes('2024'));
-		});
-	});
-
-	suite('isMajorMinorVersionChange', () => {
-		test('returns true for major version change', () => {
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', '2.0.0'), true);
-		});
-
-		test('returns true for minor version change', () => {
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', '1.91.0'), true);
-		});
-
-		test('returns false for patch-only change', () => {
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', '1.90.1'), false);
-		});
-
-		test('returns false for identical versions', () => {
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', '1.90.0'), false);
-		});
-
-		test('returns false when previous version is undefined', () => {
-			assert.strictEqual(isMajorMinorVersionChange(undefined, '1.90.0'), false);
-		});
-
-		test('returns false when new version is undefined', () => {
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', undefined), false);
-		});
-
-		test('returns false when both versions are undefined', () => {
-			assert.strictEqual(isMajorMinorVersionChange(undefined, undefined), false);
-		});
-
-		test('returns false for unparseable versions', () => {
-			assert.strictEqual(isMajorMinorVersionChange('invalid', '1.90.0'), false);
-			assert.strictEqual(isMajorMinorVersionChange('1.90.0', 'invalid'), false);
 		});
 	});
 });

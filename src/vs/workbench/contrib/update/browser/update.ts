@@ -13,60 +13,30 @@ import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IWorkbenchContribution } from '../../../common/contributions.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { IUpdateService, State as UpdateState, StateType } from '../../../../platform/update/common/update.js';
-import { INotificationService, NotificationPriority, Severity } from '../../../../platform/notification/common/notification.js';
+import { INotificationService, NotificationPriority } from '../../../../platform/notification/common/notification.js';
 import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IBrowserWorkbenchEnvironmentService } from '../../../services/environment/browser/environmentService.js';
-import { ReleaseNotesManager } from './releaseNotesEditor.js';
 import { isWeb } from '../../../../base/common/platform.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { RawContextKey, IContextKey, IContextKeyService, ContextKeyExpr } from '../../../../platform/contextkey/common/contextkey.js';
-import { MenuRegistry, MenuId, registerAction2, Action2 } from '../../../../platform/actions/common/actions.js';
+import { MenuRegistry, MenuId } from '../../../../platform/actions/common/actions.js';
 import { CommandsRegistry } from '../../../../platform/commands/common/commands.js';
 import { IHostService } from '../../../services/host/browser/host.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
-import { IUserDataSyncEnablementService, IUserDataSyncService, IUserDataSyncStoreManagementService, SyncStatus, UserDataSyncStoreType } from '../../../../platform/userDataSync/common/userDataSync.js';
-import { IsWebContext } from '../../../../platform/contextkey/common/contextkeys.js';
-import { Promises } from '../../../../base/common/async.js';
-import { IUserDataSyncWorkbenchService } from '../../../services/userDataSync/common/userDataSync.js';
-import { Event } from '../../../../base/common/event.js';
 import { IVersion, tryParseVersion } from '../common/updateUtils.js';
 import { UpdateGlobalActivityBadgeVisibleContext } from '../common/update.js';
 
 export const CONTEXT_UPDATE_STATE = new RawContextKey<string>('updateState', StateType.Uninitialized);
 export const MAJOR_MINOR_UPDATE_AVAILABLE = new RawContextKey<boolean>('majorMinorUpdateAvailable', false);
 
-let releaseNotesManager: ReleaseNotesManager | undefined = undefined;
-
-export function showReleaseNotesInEditor(instantiationService: IInstantiationService, version: string, useCurrentFile: boolean) {
-	if (!releaseNotesManager) {
-		releaseNotesManager = instantiationService.createInstance(ReleaseNotesManager);
-	}
-
-	return releaseNotesManager.show(version, useCurrentFile);
-}
-
-async function openLatestReleaseNotesInBrowser(accessor: ServicesAccessor) {
+async function showReleaseNotes(accessor: ServicesAccessor): Promise<void> {
 	const openerService = accessor.get(IOpenerService);
 	const productService = accessor.get(IProductService);
 
 	if (productService.releaseNotesUrl) {
-		const uri = URI.parse(productService.releaseNotesUrl);
-		await openerService.open(uri);
+		await openerService.open(URI.parse(productService.releaseNotesUrl));
 	} else {
 		throw new Error(nls.localize('update.noReleaseNotesOnline', "This version of {0} does not have release notes online", productService.nameLong));
-	}
-}
-
-async function showReleaseNotes(accessor: ServicesAccessor, version: string) {
-	const instantiationService = accessor.get(IInstantiationService);
-	try {
-		await showReleaseNotesInEditor(instantiationService, version, false);
-	} catch (err) {
-		try {
-			await instantiationService.invokeFunction(openLatestReleaseNotesInBrowser);
-		} catch (err2) {
-			throw new Error(`${err.message} and ${err2.message}`);
-		}
 	}
 }
 
@@ -165,7 +135,6 @@ export class ProductContribution implements IWorkbenchContribution {
 
 	constructor(
 		@IStorageService storageService: IStorageService,
-		@IInstantiationService instantiationService: IInstantiationService,
 		@INotificationService notificationService: INotificationService,
 		@IBrowserWorkbenchEnvironmentService environmentService: IBrowserWorkbenchEnvironmentService,
 		@IOpenerService openerService: IOpenerService,
@@ -185,26 +154,22 @@ export class ProductContribution implements IWorkbenchContribution {
 			const lastVersion = tryParseVersion(storageService.get(ProductContribution.KEY, StorageScope.APPLICATION, ''));
 			const currentVersion = tryParseVersion(productService.version);
 			const shouldShowReleaseNotes = configurationService.getValue<boolean>('update.showReleaseNotes');
-			const shouldShowPostInstallInfo = configurationService.getValue<boolean>('update.showPostInstallInfo');
 			const releaseNotesUrl = productService.releaseNotesUrl;
 
-			// was there a major/minor update? if so, open release notes (unless post-install info is enabled, which takes over)
-			if (shouldShowReleaseNotes && !shouldShowPostInstallInfo && !environmentService.skipReleaseNotes && releaseNotesUrl && lastVersion && currentVersion && isMajorMinorUpdate(lastVersion, currentVersion)) {
-				showReleaseNotesInEditor(instantiationService, productService.version, false)
-					.then(undefined, () => {
-						notificationService.prompt(
-							severity.Info,
-							nls.localize('read the release notes', "Welcome to {0} v{1}! Would you like to read the Release Notes?", productService.nameLong, productService.version),
-							[{
-								label: nls.localize('releaseNotes', "Release Notes"),
-								run: () => {
-									const uri = URI.parse(releaseNotesUrl);
-									openerService.open(uri);
-								}
-							}],
-							{ priority: NotificationPriority.OPTIONAL }
-						);
-					});
+			// was there a major/minor update? if so, offer the release notes
+			if (shouldShowReleaseNotes && !environmentService.skipReleaseNotes && releaseNotesUrl && lastVersion && currentVersion && isMajorMinorUpdate(lastVersion, currentVersion)) {
+				notificationService.prompt(
+					severity.Info,
+					nls.localize('read the release notes', "Welcome to {0} v{1}! Would you like to read the Release Notes?", productService.nameLong, productService.version),
+					[{
+						label: nls.localize('releaseNotes', "Release Notes"),
+						run: () => {
+							const uri = URI.parse(releaseNotesUrl);
+							openerService.open(uri);
+						}
+					}],
+					{ priority: NotificationPriority.OPTIONAL }
+				);
 			}
 
 			storageService.store(ProductContribution.KEY, productService.version, StorageScope.APPLICATION, StorageTarget.MACHINE);
@@ -335,11 +300,7 @@ export class UpdateContribution extends Disposable implements IWorkbenchContribu
 					return;
 				}
 
-				const productVersion = this.updateService.state.update.productVersion;
-				if (productVersion) {
-					this.instantiationService.invokeFunction(accessor => showReleaseNotes(accessor, productVersion));
-				}
-
+				this.instantiationService.invokeFunction(accessor => showReleaseNotes(accessor));
 			});
 			MenuRegistry.appendMenuItem(MenuId.GlobalActivity, {
 				group: '7_update',
@@ -350,124 +311,6 @@ export class UpdateContribution extends Disposable implements IWorkbenchContribu
 				},
 				when: ContextKeyExpr.and(CONTEXT_UPDATE_STATE.isEqualTo(StateType.Ready), MAJOR_MINOR_UPDATE_AVAILABLE)
 			});
-		}
-	}
-}
-
-export class SwitchProductQualityContribution extends Disposable implements IWorkbenchContribution {
-
-	constructor(
-		@IProductService private readonly productService: IProductService,
-		@IBrowserWorkbenchEnvironmentService private readonly environmentService: IBrowserWorkbenchEnvironmentService
-	) {
-		super();
-
-		this.registerGlobalActivityActions();
-	}
-
-	private registerGlobalActivityActions(): void {
-		const quality = this.productService.quality;
-		const productQualityChangeHandler = this.environmentService.options?.productQualityChangeHandler;
-		if (productQualityChangeHandler && (quality === 'stable' || quality === 'insider')) {
-			const newQuality = quality === 'stable' ? 'insider' : 'stable';
-			const commandId = `update.switchQuality.${newQuality}`;
-			const isSwitchingToInsiders = newQuality === 'insider';
-			this._register(registerAction2(class SwitchQuality extends Action2 {
-				constructor() {
-					super({
-						id: commandId,
-						title: isSwitchingToInsiders ? nls.localize('switchToInsiders', "Switch to Insiders Version...") : nls.localize('switchToStable', "Switch to Stable Version..."),
-						precondition: IsWebContext,
-						menu: {
-							id: MenuId.GlobalActivity,
-							when: IsWebContext,
-							group: '7_update',
-						}
-					});
-				}
-
-				async run(accessor: ServicesAccessor): Promise<void> {
-					const dialogService = accessor.get(IDialogService);
-					const userDataSyncEnablementService = accessor.get(IUserDataSyncEnablementService);
-					const userDataSyncStoreManagementService = accessor.get(IUserDataSyncStoreManagementService);
-					const storageService = accessor.get(IStorageService);
-					const userDataSyncWorkbenchService = accessor.get(IUserDataSyncWorkbenchService);
-					const userDataSyncService = accessor.get(IUserDataSyncService);
-					const notificationService = accessor.get(INotificationService);
-
-					try {
-						const selectSettingsSyncServiceDialogShownKey = 'switchQuality.selectSettingsSyncServiceDialogShown';
-						const userDataSyncStore = userDataSyncStoreManagementService.userDataSyncStore;
-						let userDataSyncStoreType: UserDataSyncStoreType | undefined;
-						if (userDataSyncStore && isSwitchingToInsiders && userDataSyncEnablementService.isEnabled()
-							&& !storageService.getBoolean(selectSettingsSyncServiceDialogShownKey, StorageScope.APPLICATION, false)) {
-							userDataSyncStoreType = await this.selectSettingsSyncService(dialogService);
-							if (!userDataSyncStoreType) {
-								return;
-							}
-							storageService.store(selectSettingsSyncServiceDialogShownKey, true, StorageScope.APPLICATION, StorageTarget.USER);
-							if (userDataSyncStoreType === 'stable') {
-								// Update the stable service type in the current window, so that it uses stable service after switched to insiders version (after reload).
-								await userDataSyncStoreManagementService.switch(userDataSyncStoreType);
-							}
-						}
-
-						const res = await dialogService.confirm({
-							type: 'info',
-							message: nls.localize('relaunchMessage', "Changing the version requires a reload to take effect"),
-							detail: newQuality === 'insider' ?
-								nls.localize('relaunchDetailInsiders', "Press the reload button to switch to the Insiders version of VS Code.") :
-								nls.localize('relaunchDetailStable', "Press the reload button to switch to the Stable version of VS Code."),
-							primaryButton: nls.localize({ key: 'reload', comment: ['&& denotes a mnemonic'] }, "&&Reload")
-						});
-
-						if (res.confirmed) {
-							const promises: Promise<unknown>[] = [];
-
-							// If sync is happening wait until it is finished before reload
-							if (userDataSyncService.status === SyncStatus.Syncing) {
-								promises.push(Event.toPromise(Event.filter(userDataSyncService.onDidChangeStatus, status => status !== SyncStatus.Syncing)));
-							}
-
-							// If user chose the sync service then synchronise the store type option in insiders service, so that other clients using insiders service are also updated.
-							if (isSwitchingToInsiders && userDataSyncStoreType) {
-								promises.push(userDataSyncWorkbenchService.synchroniseUserDataSyncStoreType());
-							}
-
-							await Promises.settled(promises);
-
-							productQualityChangeHandler(newQuality);
-						} else {
-							// Reset
-							if (userDataSyncStoreType) {
-								storageService.remove(selectSettingsSyncServiceDialogShownKey, StorageScope.APPLICATION);
-							}
-						}
-					} catch (error) {
-						notificationService.error(error);
-					}
-				}
-
-				private async selectSettingsSyncService(dialogService: IDialogService): Promise<UserDataSyncStoreType | undefined> {
-					const { result } = await dialogService.prompt<UserDataSyncStoreType>({
-						type: Severity.Info,
-						message: nls.localize('selectSyncService.message', "Choose the settings sync service to use after changing the version"),
-						detail: nls.localize('selectSyncService.detail', "The Insiders version of VS Code will synchronize your settings, keybindings, extensions, snippets and UI State using separate insiders settings sync service by default."),
-						buttons: [
-							{
-								label: nls.localize({ key: 'use insiders', comment: ['&& denotes a mnemonic'] }, "&&Insiders"),
-								run: () => 'insiders'
-							},
-							{
-								label: nls.localize({ key: 'use stable', comment: ['&& denotes a mnemonic'] }, "&&Stable (current)"),
-								run: () => 'stable'
-							}
-						],
-						cancelButton: true
-					});
-					return result;
-				}
-			}));
 		}
 	}
 }
