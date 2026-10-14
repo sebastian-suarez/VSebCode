@@ -13,6 +13,7 @@ import { IWorkbenchContribution } from '../../../common/contributions.js';
 import { ClearDisplayLanguageAction, ConfigureDisplayLanguageAction } from './localizationsActions.js';
 import { IExtensionFeatureTableRenderer, IRenderedData, ITableData, IRowData, IExtensionFeaturesRegistry, Extensions } from '../../../services/extensionManagement/common/extensionFeatures.js';
 import { ExtensionsRegistry } from '../../../services/extensions/common/extensionsRegistry.js';
+import product from '../../../../platform/product/common/product.js';
 
 export class BaseLocalizationWorkbenchContribution extends Disposable implements IWorkbenchContribution {
 	constructor() {
@@ -56,9 +57,9 @@ export class BaseLocalizationWorkbenchContribution extends Disposable implements
 								properties: {
 									id: {
 										type: 'string',
-										description: localize('vscode.extension.contributes.localizations.translations.id', "Id of VS Code or Extension for which this translation is contributed to. Id of VS Code is always `vscode` and of extension should be in format `publisherId.extensionName`."),
+										description: localize('vscode.extension.contributes.localizations.translations.id', "Id of {0} or Extension for which this translation is contributed to. Id of {0} is always `vscode` and of extension should be in format `publisherId.extensionName`.", product.nameShort),
 										pattern: '^((vscode)|([a-z0-9A-Z][a-z0-9A-Z-]*)\\.([a-z0-9A-Z][a-z0-9A-Z-]*))$',
-										patternErrorMessage: localize('vscode.extension.contributes.localizations.translations.id.pattern', "Id should be `vscode` or in format `publisherId.extensionName` for translating VS code or an extension respectively.")
+										patternErrorMessage: localize('vscode.extension.contributes.localizations.translations.id.pattern', "Id should be `vscode` or in format `publisherId.extensionName` for translating {0} or an extension respectively.", product.nameShort)
 									},
 									path: {
 										type: 'string',

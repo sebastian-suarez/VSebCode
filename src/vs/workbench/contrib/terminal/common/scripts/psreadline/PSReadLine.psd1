@@ -13,7 +13,6 @@ AliasesToExport = @()
 FunctionsToExport = 'PSConsoleHostReadLine'
 CmdletsToExport = 'Get-PSReadLineKeyHandler','Set-PSReadLineKeyHandler','Remove-PSReadLineKeyHandler',
                   'Get-PSReadLineOption','Set-PSReadLineOption'
-HelpInfoURI = 'https://aka.ms/powershell75-help'
 PrivateData = @{ PSData = @{ Prerelease = 'beta3'; ProjectUri = 'https://github.com/PowerShell/PSReadLine' } }
 }
 

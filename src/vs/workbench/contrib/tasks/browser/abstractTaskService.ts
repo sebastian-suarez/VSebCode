@@ -86,6 +86,7 @@ import { IRemoteAgentService } from '../../../services/remote/common/remoteAgent
 import { IViewsService } from '../../../services/views/common/viewsService.js';
 import { configureTaskIcon, isWorkspaceFolder, ITaskQuickPickEntry, QUICKOPEN_DETAIL_CONFIG, QUICKOPEN_SKIP_CONFIG, TaskQuickPick } from './taskQuickPick.js';
 import { IHostService } from '../../../services/host/browser/host.js';
+import { IProductService } from '../../../../platform/product/common/productService.js';
 import * as dom from '../../../../base/browser/dom.js';
 import { FocusMode } from '../../../../platform/native/common/native.js';
 
@@ -291,7 +292,8 @@ export abstract class AbstractTaskService extends Disposable implements ITaskSer
 		@ILifecycleService private readonly _lifecycleService: ILifecycleService,
 		@IRemoteAgentService remoteAgentService: IRemoteAgentService,
 		@IInstantiationService private readonly _instantiationService: IInstantiationService,
-		@IHostService private readonly _hostService: IHostService
+		@IHostService private readonly _hostService: IHostService,
+		@IProductService protected readonly _productService: IProductService
 	) {
 		super();
 		this._whenTaskSystemReady = Event.toPromise(this.onDidChangeTaskSystemInfo);
@@ -3434,7 +3436,7 @@ export abstract class AbstractTaskService extends Disposable implements ITaskSer
 							return;
 						}
 						if (response.code && response.code === TerminateResponseCode.ProcessNotFound) {
-							this._notificationService.error(nls.localize('TerminateAction.noProcess', 'The launched process doesn\'t exist anymore. If the task spawned background tasks exiting VS Code might result in orphaned processes.'));
+							this._notificationService.error(nls.localize('TerminateAction.noProcess', 'The launched process doesn\'t exist anymore. If the task spawned background tasks exiting {0} might result in orphaned processes.', this._productService.nameShort));
 						} else {
 							this._notificationService.error(nls.localize('TerminateAction.failed', 'Failed to terminate running task'));
 						}

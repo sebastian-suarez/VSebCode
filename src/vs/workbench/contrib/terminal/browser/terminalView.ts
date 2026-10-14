@@ -53,6 +53,7 @@ import { MicrotaskDelay } from '../../../../base/common/symbols.js';
 import { IStorageService } from '../../../../platform/storage/common/storage.js';
 import { hasNativeContextMenu } from '../../../../platform/window/common/window.js';
 import { hasKey } from '../../../../base/common/types.js';
+import { IProductService } from '../../../../platform/product/common/productService.js';
 
 export class TerminalViewPane extends ViewPane {
 	private _parentDomElement: HTMLElement | undefined;
@@ -90,6 +91,7 @@ export class TerminalViewPane extends ViewPane {
 		@IMenuService private readonly _menuService: IMenuService,
 		@ITerminalProfileService private readonly _terminalProfileService: ITerminalProfileService,
 		@ITerminalProfileResolverService private readonly _terminalProfileResolverService: ITerminalProfileResolverService,
+		@IProductService private readonly _productService: IProductService,
 	) {
 		super(options, keybindingService, contextMenuService, _configurationService, _contextKeyService, viewDescriptorService, _instantiationService, openerService, themeService, hoverService);
 		this._register(this._terminalService.onDidRegisterProcessSupport(() => {
@@ -208,7 +210,7 @@ export class TerminalViewPane extends ViewPane {
 						label: nls.localize('terminal.useMonospace', "Use 'monospace'"),
 						run: () => this.configurationService.updateValue(TerminalSettingId.FontFamily, 'monospace'),
 					}];
-					this._notificationService.prompt(Severity.Warning, nls.localize('terminal.monospaceOnly', "The terminal only supports monospace fonts. Be sure to restart VS Code if this is a newly installed font."), choices);
+					this._notificationService.prompt(Severity.Warning, nls.localize('terminal.monospaceOnly', "The terminal only supports monospace fonts. Be sure to restart {0} if this is a newly installed font.", this._productService.nameShort), choices);
 				}
 			}
 		}));

@@ -24,6 +24,7 @@ import { ContextKeyExpr, IContextKey, IContextKeyService, RawContextKey } from '
 import { IContextViewService } from '../../../../../platform/contextview/browser/contextView.js';
 import { IHoverService, WorkbenchHoverDelegate } from '../../../../../platform/hover/browser/hover.js';
 import { IInstantiationService, ServicesAccessor } from '../../../../../platform/instantiation/common/instantiation.js';
+import { IProductService } from '../../../../../platform/product/common/productService.js';
 import { IQuickInputService, IQuickPickItem } from '../../../../../platform/quickinput/common/quickInput.js';
 import { defaultInputBoxStyles, defaultSelectBoxStyles } from '../../../../../platform/theme/browser/defaultStyles.js';
 import { IEditorService } from '../../../../services/editor/common/editorService.js';
@@ -870,8 +871,9 @@ class SetBrowserUserAgentAction extends Action2 {
 			return;
 		}
 		const quickInputService = accessor.get(IQuickInputService);
+		const productService = accessor.get(IProductService);
 		const value = await quickInputService.input({
-			prompt: localize('browser.userAgent.prompt', "User agent string (leave empty for VS Code default)"),
+			prompt: localize('browser.userAgent.prompt', "User agent string (leave empty for {0} default)", productService.nameShort),
 			value: support.userAgent ?? '',
 		});
 		if (value === undefined) {

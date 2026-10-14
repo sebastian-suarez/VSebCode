@@ -14,6 +14,7 @@ import { VSBuffer } from '../../../../base/common/buffer.js';
 import { readTrustedDomains, TRUSTED_DOMAINS_CONTENT_STORAGE_KEY, TRUSTED_DOMAINS_STORAGE_KEY } from './trustedDomains.js';
 import { assertReturnsDefined } from '../../../../base/common/types.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
+import product from '../../../../platform/product/common/product.js';
 
 const TRUSTED_DOMAINS_SCHEMA = 'trustedDomains';
 
@@ -26,14 +27,14 @@ const TRUSTED_DOMAINS_STAT: IStat = {
 
 const CONFIG_HELP_TEXT_PRE = `// Links matching one or more entries in the list below can be opened without link protection.
 // The following examples show what entries can look like:
-// - "https://microsoft.com": Matches this specific domain using https
-// - "https://microsoft.com:8080": Matches this specific domain on this port using https
-// - "https://microsoft.com:*": Matches this specific domain on any port using https
-// - "https://microsoft.com/foo": Matches https://microsoft.com/foo and https://microsoft.com/foo/bar,
-//   but not https://microsoft.com/foobar or https://microsoft.com/bar
-// - "https://*.microsoft.com": Match all domains ending in "microsoft.com" using https
-// - "microsoft.com": Match this specific domain using either http or https
-// - "*.microsoft.com": Match all domains ending in "microsoft.com" using either http or https
+// - "https://example.com": Matches this specific domain using https
+// - "https://example.com:8080": Matches this specific domain on this port using https
+// - "https://example.com:*": Matches this specific domain on any port using https
+// - "https://example.com/foo": Matches https://example.com/foo and https://example.com/foo/bar,
+//   but not https://example.com/foobar or https://example.com/bar
+// - "https://*.example.com": Match all domains ending in "example.com" using https
+// - "example.com": Match this specific domain using either http or https
+// - "*.example.com": Match all domains ending in "example.com" using either http or https
 // - "http://192.168.0.1: Matches this specific IP using http
 // - "http://192.168.0.*: Matches all IP's with this prefix using http
 // - "*": Match all domains using either http or https
@@ -46,19 +47,19 @@ const CONFIG_HELP_TEXT_AFTER = `//
 `;
 
 const CONFIG_PLACEHOLDER_TEXT = `[
-	// "https://microsoft.com"
+	// "https://example.com"
 ]`;
 
 function computeTrustedDomainContent(defaultTrustedDomains: string[], trustedDomains: string[], configuring?: string) {
 	let content = CONFIG_HELP_TEXT_PRE;
 
 	if (defaultTrustedDomains.length > 0) {
-		content += `// By default, VS Code trusts "localhost" as well as the following domains:\n`;
+		content += `// By default, ${product.nameShort} trusts "localhost" as well as the following domains:\n`;
 		defaultTrustedDomains.forEach(d => {
 			content += `// - "${d}"\n`;
 		});
 	} else {
-		content += `// By default, VS Code trusts "localhost".\n`;
+		content += `// By default, ${product.nameShort} trusts "localhost".\n`;
 	}
 
 	content += CONFIG_HELP_TEXT_AFTER;

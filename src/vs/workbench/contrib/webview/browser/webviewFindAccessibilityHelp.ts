@@ -8,6 +8,7 @@ import { localize } from '../../../../nls.js';
 import { AccessibleViewProviderId, AccessibleViewType, AccessibleContentProvider, IAccessibleViewContentProvider, IAccessibleViewOptions } from '../../../../platform/accessibility/browser/accessibleView.js';
 import { IAccessibleViewImplementation } from '../../../../platform/accessibility/browser/accessibleViewRegistry.js';
 import { ServicesAccessor } from '../../../../platform/instantiation/common/instantiation.js';
+import { IProductService } from '../../../../platform/product/common/productService.js';
 import { KEYBINDING_CONTEXT_WEBVIEW_FIND_WIDGET_FOCUSED } from './webview.js';
 import { AccessibilityVerbositySettingId } from '../../accessibility/browser/accessibilityConfiguration.js';
 
@@ -18,7 +19,7 @@ export class WebviewFindAccessibilityHelp implements IAccessibleViewImplementati
 	readonly when = KEYBINDING_CONTEXT_WEBVIEW_FIND_WIDGET_FOCUSED;
 
 	getProvider(accessor: ServicesAccessor): AccessibleContentProvider | undefined {
-		return new WebviewFindAccessibilityHelpProvider();
+		return new WebviewFindAccessibilityHelpProvider(accessor.get(IProductService));
 	}
 }
 
@@ -26,6 +27,10 @@ class WebviewFindAccessibilityHelpProvider extends Disposable implements IAccess
 	readonly id = AccessibleViewProviderId.WebviewFindHelp;
 	readonly verbositySettingKey = AccessibilityVerbositySettingId.Find;
 	readonly options: IAccessibleViewOptions = { type: AccessibleViewType.Help };
+
+	constructor(private readonly _productService: IProductService) {
+		super();
+	}
 
 	onClose(): void {
 		// Focus will remain on webview
@@ -81,7 +86,7 @@ class WebviewFindAccessibilityHelpProvider extends Disposable implements IAccess
 
 		// Important About Webviews
 		content.push(localize('webview.importantHeader', "Important About Webviews:"));
-		content.push(localize('webview.importantDesc', "Some webviews intercept keyboard input before VS Code's Find can use it. If Enter or Shift+Enter do not navigate matches, the webview may be handling those keys. Try clicking or tabbing into the webview content first to ensure the webview has focus, then reopen Find and try navigation again."));
+		content.push(localize('webview.importantDesc', "Some webviews intercept keyboard input before {0}'s Find can use it. If Enter or Shift+Enter do not navigate matches, the webview may be handling those keys. Try clicking or tabbing into the webview content first to ensure the webview has focus, then reopen Find and try navigation again.", this._productService.nameShort));
 		content.push('');
 
 		// Settings

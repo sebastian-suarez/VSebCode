@@ -6,6 +6,7 @@
 import * as nls from '../../../../nls.js';
 import * as Objects from '../../../../base/common/objects.js';
 import { IJSONSchema, IJSONSchemaMap } from '../../../../base/common/jsonSchema.js';
+import product from '../../../../platform/product/common/product.js';
 
 import commonSchema from './jsonSchemaCommon.js';
 
@@ -437,7 +438,7 @@ const taskConfiguration: IJSONSchema = {
 		},
 		promptOnClose: {
 			type: 'boolean',
-			description: nls.localize('JsonSchema.tasks.promptOnClose', 'Whether the user is prompted when VS Code closes with a running task.'),
+			description: nls.localize('JsonSchema.tasks.promptOnClose', 'Whether the user is prompted when {0} closes with a running task.', product.nameShort),
 			default: false
 		},
 		presentation: Objects.deepClone(presentation),

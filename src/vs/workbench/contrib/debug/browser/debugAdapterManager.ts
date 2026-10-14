@@ -21,6 +21,7 @@ import { IContextKey, IContextKeyService } from '../../../../platform/contextkey
 import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { Extensions as JSONExtensions, IJSONContributionRegistry } from '../../../../platform/jsonschemas/common/jsonContributionRegistry.js';
+import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IQuickInputService, IQuickPickItem } from '../../../../platform/quickinput/common/quickInput.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
 import { IWorkspaceFolder } from '../../../../platform/workspace/common/workspace.js';
@@ -74,6 +75,7 @@ export class AdapterManager extends Disposable implements IAdapterManager {
 		@ILifecycleService private readonly lifecycleService: ILifecycleService,
 		@ITaskService private readonly tasksService: ITaskService,
 		@IMenuService private readonly menuService: IMenuService,
+		@IProductService private readonly productService: IProductService,
 	) {
 		super();
 		this.adapterDescriptorFactories = [];
@@ -175,7 +177,7 @@ export class AdapterManager extends Disposable implements IAdapterManager {
 					},
 					'debugServer': {
 						type: 'number',
-						description: nls.localize('debugServer', "For debug extension development only: if a port is specified VS Code tries to connect to a debug adapter running in server mode"),
+						description: nls.localize('debugServer', "For debug extension development only: if a port is specified {0} tries to connect to a debug adapter running in server mode", this.productService.nameShort),
 						default: 4711
 					},
 					'preLaunchTask': {

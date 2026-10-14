@@ -9,6 +9,7 @@ import * as nls from '../../../../nls.js';
 import { IJSONSchema } from '../../../../base/common/jsonSchema.js';
 import { defaultExternalUriOpenerId } from '../../../../platform/opener/common/opener.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
+import product from '../../../../platform/product/common/product.js';
 
 export { defaultExternalUriOpenerId };
 
@@ -24,13 +25,13 @@ const externalUriOpenerIdSchemaAddition: IJSONSchema = {
 };
 
 const exampleUriPatterns = `
-- \`https://microsoft.com\`: Matches this specific domain using https
-- \`https://microsoft.com:8080\`: Matches this specific domain on this port using https
-- \`https://microsoft.com:*\`: Matches this specific domain on any port using https
-- \`https://microsoft.com/foo\`: Matches \`https://microsoft.com/foo\` and \`https://microsoft.com/foo/bar\`, but not \`https://microsoft.com/foobar\` or \`https://microsoft.com/bar\`
-- \`https://*.microsoft.com\`: Match all domains ending in \`microsoft.com\` using https
-- \`microsoft.com\`: Match this specific domain using either http or https
-- \`*.microsoft.com\`: Match all domains ending in \`microsoft.com\` using either http or https
+- \`https://example.com\`: Matches this specific domain using https
+- \`https://example.com:8080\`: Matches this specific domain on this port using https
+- \`https://example.com:*\`: Matches this specific domain on any port using https
+- \`https://example.com/foo\`: Matches \`https://example.com/foo\` and \`https://example.com/foo/bar\`, but not \`https://example.com/foobar\` or \`https://example.com/bar\`
+- \`https://*.example.com\`: Match all domains ending in \`example.com\` using https
+- \`example.com\`: Match this specific domain using either http or https
+- \`*.example.com\`: Match all domains ending in \`example.com\` using either http or https
 - \`http://192.168.0.1\`: Matches this specific IP using http
 - \`http://192.168.0.*\`: Matches all IP's with this prefix using http
 - \`*\`: Match all domains using either http or https`;
@@ -56,7 +57,7 @@ export const externalUriOpenersConfigurationNode: IConfigurationNode = {
 						type: 'string',
 						markdownDescription: nls.localize('externalUriOpeners.uri', "Map URI pattern to an opener id.\nExample patterns: \n{0}", exampleUriPatterns),
 						enum: [defaultExternalUriOpenerId],
-						enumDescriptions: [nls.localize('externalUriOpeners.defaultId', "Open using VS Code's standard opener.")],
+						enumDescriptions: [nls.localize('externalUriOpeners.defaultId', "Open using {0}'s standard opener.", product.nameShort)],
 					},
 					externalUriOpenerIdSchemaAddition
 				]
