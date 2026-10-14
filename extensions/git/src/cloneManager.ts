@@ -9,7 +9,6 @@ import * as os from 'os';
 import { pickRemoteSource } from './remoteSource';
 import { l10n, workspace, window, Uri, ProgressLocation, commands } from 'vscode';
 import { RepositoryCache, RepositoryCacheInfo } from './repositoryCache';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import { Model } from './model';
 import { getSafeNotificationMessage } from './notification';
 
@@ -26,7 +25,6 @@ export interface CloneOptions {
 
 export class CloneManager {
 	constructor(private readonly model: Model,
-		private readonly telemetryReporter: TelemetryReporter,
 		private readonly repositoryCache: RepositoryCache) { }
 
 	async clone(url?: string, options: CloneOptions = {}) {
@@ -38,14 +36,6 @@ export class CloneManager {
 		}
 
 		if (!url) {
-			/* __GDPR__
-				"clone" : {
-					"owner": "lszomoru",
-					"outcome" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The outcome of the git operation" },
-					"openFolder": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true, "comment": "Indicates whether the folder is opened following the clone operation" }
-				}
-			*/
-			this.telemetryReporter.sendTelemetryEvent('clone', { outcome: 'no_URL' });
 			return;
 		}
 
@@ -74,14 +64,6 @@ export class CloneManager {
 			});
 
 			if (!uris || uris.length === 0) {
-				/* __GDPR__
-					"clone" : {
-						"owner": "lszomoru",
-						"outcome" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The outcome of the git operation" },
-						"openFolder": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true, "comment": "Indicates whether the folder is opened following the clone operation" }
-					}
-				*/
-				this.telemetryReporter.sendTelemetryEvent('clone', { outcome: 'no_directory' });
 				return;
 			}
 
@@ -108,26 +90,8 @@ export class CloneManager {
 
 			return repositoryPath;
 		} catch (err) {
-			if (/already exists and is not an empty directory/.test(err && err.stderr || '')) {
-				/* __GDPR__
-					"clone" : {
-						"owner": "lszomoru",
-						"outcome" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The outcome of the git operation" },
-						"openFolder": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true, "comment": "Indicates whether the folder is opened following the clone operation" }
-					}
-				*/
-				this.telemetryReporter.sendTelemetryEvent('clone', { outcome: 'directory_not_empty' });
-			} else if (/Cancelled/i.test(err && (err.message || err.stderr || ''))) {
+			if (/Cancelled/i.test(err && (err.message || err.stderr || ''))) {
 				return;
-			} else {
-				/* __GDPR__
-					"clone" : {
-						"owner": "lszomoru",
-						"outcome" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The outcome of the git operation" },
-						"openFolder": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true, "comment": "Indicates whether the folder is opened following the clone operation" }
-					}
-				*/
-				this.telemetryReporter.sendTelemetryEvent('clone', { outcome: 'error' });
 			}
 
 			throw err;
@@ -170,15 +134,6 @@ export class CloneManager {
 				: result === openNewWindow ? PostCloneAction.OpenNewWindow
 					: result === addToWorkspace ? PostCloneAction.AddToWorkspace : undefined;
 		}
-
-		/* __GDPR__
-			"clone" : {
-				"owner": "lszomoru",
-				"outcome" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The outcome of the git operation" },
-				"openFolder": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true, "comment": "Indicates whether the folder is opened following the clone operation" }
-			}
-		*/
-		this.telemetryReporter.sendTelemetryEvent('clone', { outcome: 'success' }, { openFolder: action === PostCloneAction.Open || action === PostCloneAction.OpenNewWindow ? 1 : 0 });
 
 		const uri = Uri.file(target);
 

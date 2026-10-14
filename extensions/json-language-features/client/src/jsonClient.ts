@@ -134,19 +134,11 @@ export namespace CommandIds {
 	export const sortCommandId = 'json.sort';
 }
 
-export interface TelemetryReporter {
-	sendTelemetryEvent(eventName: string, properties?: {
-		[key: string]: string;
-	}, measurements?: {
-		[key: string]: number;
-	}): void;
-}
 
 export type LanguageClientConstructor = (name: string, description: string, clientOptions: LanguageClientOptions) => BaseLanguageClient;
 
 export interface Runtime {
 	schemaRequests: SchemaRequestService;
-	telemetry?: TelemetryReporter;
 	readonly timer: {
 		setTimeout(callback: (...args: any[]) => void, ms: number, ...args: any[]): Disposable;
 	};
@@ -440,16 +432,6 @@ async function startClientWithParticipants(_context: ExtensionContext, languageP
 			}
 			if (!await isTrusted(requestUrl)) {
 				throw new ResponseError(SchemaRequestServiceErrors.UntrustedSchemaError, l10n.t('Location {0} is untrusted', requestUrl.href));
-			}
-			if (runtime.telemetry && requestUrl.host === 'schema.management.azure.com') {
-				/* __GDPR__
-					"json.schema" : {
-						"owner": "aeschli",
-						"comment": "Measure the use of the Azure resource manager schemas",
-						"schemaURL" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The azure schema URL that was requested." }
-					}
-				*/
-				runtime.telemetry.sendTelemetryEvent('json.schema', { schemaURL: requestUrl.href });
 			}
 			try {
 				const content = await runtime.schemaRequests.getContent(requestUrl.href);

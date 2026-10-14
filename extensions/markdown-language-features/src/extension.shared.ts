@@ -20,7 +20,6 @@ import { createSharedLinkPresentationService, registerLinkPresentationProvider }
 import { MdDocumentRenderer } from './preview/documentRenderer';
 import { MarkdownPreviewManager } from './preview/previewManager';
 import { ExtensionContentSecurityPolicyArbiter } from './preview/security';
-import { loadDefaultTelemetryReporter } from './telemetryReporter';
 import { MdLinkOpener } from './util/openDocumentLink';
 import { registerUpdatePastedLinks } from './languageFeatures/updateLinksOnPaste';
 import { markdownLanguageIds } from './util/file';
@@ -32,9 +31,6 @@ export function activateShared(
 	logger: ILogger,
 	contributions: MarkdownContributionProvider,
 ) {
-	const telemetryReporter = loadDefaultTelemetryReporter();
-	context.subscriptions.push(telemetryReporter);
-
 	const cspArbiter = new ExtensionContentSecurityPolicyArbiter(context.globalState, context.workspaceState);
 	const commandManager = new CommandManager();
 
@@ -45,7 +41,7 @@ export function activateShared(
 	context.subscriptions.push(previewManager);
 
 	context.subscriptions.push(registerMarkdownLanguageFeatures(client, commandManager, engine));
-	context.subscriptions.push(registerMarkdownCommands(commandManager, previewManager, telemetryReporter, cspArbiter, engine));
+	context.subscriptions.push(registerMarkdownCommands(commandManager, previewManager, cspArbiter, engine));
 
 	const linkPresentationService = createSharedLinkPresentationService(logger);
 	context.subscriptions.push(

@@ -11,7 +11,6 @@ import { GitFileSystemProvider } from './fileSystemProvider';
 import { GitDecorations } from './decorationProvider';
 import { Askpass } from './askpass';
 import { toDisposable, filterEvent, eventToPromise } from './util';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import type { GitExtension } from './api/git';
 import { GitProtocolHandler } from './protocolHandler';
 import { GitExtensionImpl } from './api/extension';
@@ -38,7 +37,7 @@ export async function deactivate(): Promise<void> {
 	}
 }
 
-async function createModel(context: ExtensionContext, logger: LogOutputChannel, telemetryReporter: TelemetryReporter, disposables: Disposable[]): Promise<{ model: Model; cloneManager: CloneManager }> {
+async function createModel(context: ExtensionContext, logger: LogOutputChannel, disposables: Disposable[]): Promise<{ model: Model; cloneManager: CloneManager }> {
 	const pathValue = workspace.getConfiguration('git').get<string | string[]>('path');
 	let pathHints = Array.isArray(pathValue) ? pathValue : pathValue ? [pathValue] : [];
 
@@ -91,9 +90,9 @@ async function createModel(context: ExtensionContext, logger: LogOutputChannel, 
 		version: info.version,
 		env: environment,
 	});
-	const model = new Model(git, askpass, context.globalState, context.workspaceState, logger, telemetryReporter);
+	const model = new Model(git, askpass, context.globalState, context.workspaceState, logger);
 	disposables.push(model);
-	const cloneManager = new CloneManager(model, telemetryReporter, model.repositoryCache);
+	const cloneManager = new CloneManager(model, model.repositoryCache);
 
 	const onRepository = () => commands.executeCommand('setContext', 'gitOpenRepositoryCount', `${model.repositories.length}`);
 	model.onDidOpenRepository(onRepository, null, disposables);
@@ -112,7 +111,7 @@ async function createModel(context: ExtensionContext, logger: LogOutputChannel, 
 	git.onOutput.addListener('log', onOutput);
 	disposables.push(toDisposable(() => git.onOutput.removeListener('log', onOutput)));
 
-	const cc = new CommandCenter(git, model, context.globalState, logger, telemetryReporter, cloneManager);
+	const cc = new CommandCenter(git, model, context.globalState, logger, cloneManager);
 	disposables.push(
 		cc,
 		new GitFileSystemProvider(model, logger),
@@ -202,9 +201,6 @@ export async function _activate(context: ExtensionContext): Promise<GitExtension
 	disposables.push(logger.onDidChangeLogLevel(onDidChangeLogLevel));
 	onDidChangeLogLevel(logger.logLevel);
 
-	const { aiKey } = require('../package.json') as { aiKey: string };
-	const telemetryReporter = new TelemetryReporter(aiKey);
-	deactivateTasks.push(() => telemetryReporter.dispose());
 
 	const config = workspace.getConfiguration('git', null);
 	const enabled = config.get<boolean>('enabled');
@@ -215,7 +211,7 @@ export async function _activate(context: ExtensionContext): Promise<GitExtension
 		const result = new GitExtensionImpl();
 
 		eventToPromise(onEnabled).then(async () => {
-			const { model, cloneManager } = await createModel(context, logger, telemetryReporter, disposables);
+			const { model, cloneManager } = await createModel(context, logger, disposables);
 			result.model = model;
 			result.cloneManager = cloneManager;
 		});
@@ -223,7 +219,7 @@ export async function _activate(context: ExtensionContext): Promise<GitExtension
 	}
 
 	try {
-		const { model, cloneManager } = await createModel(context, logger, telemetryReporter, disposables);
+		const { model, cloneManager } = await createModel(context, logger, disposables);
 
 		return new GitExtensionImpl({ model, cloneManager });
 	} catch (err) {
@@ -234,12 +230,6 @@ export async function _activate(context: ExtensionContext): Promise<GitExtension
 			throw err;
 		}
 
-		/* __GDPR__
-			"git.missing" : {
-				"owner": "lszomoru"
-			}
-		*/
-		telemetryReporter.sendTelemetryEvent('git.missing');
 
 		commands.executeCommand('setContext', 'git.missing', true);
 		warnAboutMissingGit();

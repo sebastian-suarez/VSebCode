@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import VsCodeTelemetryReporter from '@vscode/extension-telemetry';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Api, getExtensionApi } from './api';
@@ -11,8 +10,6 @@ import { CommandManager } from './commands/commandManager';
 import { DisableTsgoCommand, tsNativeExtensionIds } from './commands/useTsgo';
 import { registerBaseCommands } from './commands/index';
 import { ElectronServiceConfigurationProvider } from './configuration/configuration.electron';
-import { ExperimentationTelemetryReporter, IExperimentationTelemetryReporter } from './experimentTelemetryReporter';
-import { ExperimentationService } from './experimentationService';
 import { createLazyClientHost, lazilyActivateClient } from './lazyClientHost';
 import { Logger } from './logging/logger';
 import { nodeRequestCancellerFactory } from './tsServer/cancellation.electron';
@@ -21,10 +18,8 @@ import { PluginManager } from './tsServer/plugins';
 import { ElectronServiceProcessFactory } from './tsServer/serverProcess.electron';
 import { DiskTypeScriptVersionProvider } from './tsServer/versionProvider.electron';
 import { ActiveJsTsEditorTracker } from './ui/activeJsTsEditorTracker';
-import { suggestNativePreview } from './ui/suggestNativePreview';
 import { onCaseInsensitiveFileSystem } from './utils/fs.electron';
 import { Lazy } from './utils/lazy';
-import { getPackageInfo } from './utils/packageInfo';
 import * as temp from './utils/temp.electron';
 import { conditionalRegistration, requireGlobalUnifiedConfig, requireHasVsCodeExtension } from './languageFeatures/util/dependentRegistration';
 import { DisposableStore } from './utils/dispose';
@@ -41,17 +36,6 @@ export function activate(
 	const logDirectoryProvider = new NodeLogDirectoryProvider(context);
 	const versionProvider = new DiskTypeScriptVersionProvider();
 
-	let experimentTelemetryReporter: IExperimentationTelemetryReporter | undefined;
-	const packageInfo = getPackageInfo(context);
-	if (packageInfo) {
-		const { name: id, version, aiKey } = packageInfo;
-		const vscTelemetryReporter = new VsCodeTelemetryReporter(aiKey);
-		experimentTelemetryReporter = new ExperimentationTelemetryReporter(vscTelemetryReporter);
-		context.subscriptions.push(experimentTelemetryReporter);
-
-		const experimentationService = new ExperimentationService(experimentTelemetryReporter, id, version, context.globalState);
-		suggestNativePreview(context, experimentationService, pluginManager);
-	}
 
 	// Register features that work in both TSGO and non-TSGO modes
 	import('./languageFeatures/tsconfig').then(module => {
@@ -86,7 +70,6 @@ export function activate(
 			processFactory: new ElectronServiceProcessFactory(),
 			activeJsTsEditorTracker,
 			serviceConfigurationProvider: new ElectronServiceConfigurationProvider(),
-			experimentTelemetryReporter,
 			logger: new Logger(),
 		}, item => {
 			onCompletionAccepted.fire(item);

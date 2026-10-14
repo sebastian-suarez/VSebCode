@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { cp } from '@vscode/fs-copyfile';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import { uniqueNamesGenerator, adjectives, animals, colors, NumberDictionary } from '@joaomoreno/unique-names-generator';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
@@ -922,7 +921,6 @@ export class Repository implements Disposable {
 		historyItemDetailProviderRegistry: ISourceControlHistoryItemDetailsProviderRegistry,
 		private readonly globalState: Memento,
 		private readonly logger: LogOutputChannel,
-		private telemetryReporter: TelemetryReporter,
 		private readonly repositoryCache: RepositoryCache
 	) {
 		this._operations = new OperationManager(this.logger);
@@ -3116,40 +3114,9 @@ export class Repository implements Disposable {
 		const limit = scopedConfig.get<number>('statusLimit', 10000);
 		const similarityThreshold = scopedConfig.get<number>('similarityThreshold', 50);
 
-		const start = new Date().getTime();
-		const { status, statusLength, didHitLimit } = await this.repository.getStatus({ limit, ignoreSubmodules, similarityThreshold, untrackedChanges, cancellationToken });
-		const totalTime = new Date().getTime() - start;
+		const { status, didHitLimit } = await this.repository.getStatus({ limit, ignoreSubmodules, similarityThreshold, untrackedChanges, cancellationToken });
 
 		this.isRepositoryHuge = didHitLimit ? { limit } : false;
-
-		if (didHitLimit) {
-			/* __GDPR__
-				"statusLimit" : {
-					"owner": "lszomoru",
-					"ignoreSubmodules": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "Setting indicating whether submodules are ignored" },
-					"limit": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Setting indicating the limit of status entries" },
-					"statusLength": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Total number of status entries" },
-					"totalTime": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Total number of ms the operation took" }
-				}
-			*/
-			this.telemetryReporter.sendTelemetryEvent('statusLimit', { ignoreSubmodules: String(ignoreSubmodules) }, { limit, statusLength, totalTime });
-		}
-
-		if (totalTime > 5000) {
-			/* __GDPR__
-				"statusSlow" : {
-					"owner": "digitarald",
-					"comment": "Reports when git status is slower than 5s",
-					"expiration": "1.73",
-					"ignoreSubmodules": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "Setting indicating whether submodules are ignored" },
-					"didHitLimit": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "Total number of status entries" },
-					"didWarnAboutLimit": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "True when the user was warned about slow git status" },
-					"statusLength": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Total number of status entries" },
-					"totalTime": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Total number of ms the operation took" }
-				}
-			*/
-			this.telemetryReporter.sendTelemetryEvent('statusSlow', { ignoreSubmodules: String(ignoreSubmodules), didHitLimit: String(didHitLimit), didWarnAboutLimit: String(this.didWarnAboutLimit) }, { statusLength, totalTime });
-		}
 
 		// Triggers or clears any validation warning
 		this._sourceControl.inputBox.validateInput = this._sourceControl.inputBox.validateInput;

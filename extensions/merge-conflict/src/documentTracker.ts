@@ -7,7 +7,6 @@ import * as vscode from 'vscode';
 import { MergeConflictParser } from './mergeConflictParser';
 import * as interfaces from './interfaces';
 import { Delayer } from './delayer';
-import TelemetryReporter from '@vscode/extension-telemetry';
 
 class ScanTask {
 	public origins: Set<string> = new Set<string>();
@@ -48,7 +47,7 @@ export default class DocumentMergeConflictTracker implements vscode.Disposable, 
 	private cache: Map<string, ScanTask> = new Map();
 	private delayExpireTime: number = 0;
 
-	constructor(private readonly telemetryReporter: TelemetryReporter) { }
+	constructor() { }
 
 	getConflicts(document: vscode.TextDocument, origin: string): PromiseLike<interfaces.IDocumentMergeConflict[]> {
 		// Attempt from cache
@@ -112,8 +111,6 @@ export default class DocumentMergeConflictTracker implements vscode.Disposable, 
 		this.cache.clear();
 	}
 
-	private readonly seenDocumentsWithConflicts = new Set<string>();
-
 	private getConflictsOrEmpty(document: vscode.TextDocument, _origins: string[]): interfaces.IDocumentMergeConflict[] {
 		const containsConflict = MergeConflictParser.containsConflict(document);
 
@@ -121,27 +118,7 @@ export default class DocumentMergeConflictTracker implements vscode.Disposable, 
 			return [];
 		}
 
-		const conflicts = MergeConflictParser.scanDocument(document, this.telemetryReporter);
-
-		const key = document.uri.toString();
-		// Don't report telemetry for the same document twice. This is an approximation, but good enough.
-		// Otherwise redo/undo could trigger this event multiple times.
-		if (!this.seenDocumentsWithConflicts.has(key)) {
-			this.seenDocumentsWithConflicts.add(key);
-
-			/* __GDPR__
-				"mergeMarkers.documentWithConflictMarkersOpened" : {
-					"owner": "hediet",
-					"comment": "Used to determine how many documents with conflicts are opened.",
-					"conflictCount": { "classification": "SystemMetaData", "purpose": "FeatureInsight", "isMeasurement": true, "comment": "Total number of conflict counts" }
-				}
-			*/
-			this.telemetryReporter.sendTelemetryEvent('mergeMarkers.documentWithConflictMarkersOpened', {}, {
-				conflictCount: conflicts.length,
-			});
-		}
-
-		return conflicts;
+		return MergeConflictParser.scanDocument(document);
 	}
 
 	private getCacheKey(document: vscode.TextDocument): string | null {

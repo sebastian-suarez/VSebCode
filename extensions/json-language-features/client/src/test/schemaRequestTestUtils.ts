@@ -190,12 +190,11 @@ export async function createSchemaClient(transport: 'browser' | 'node', options:
 			createSchemaLoadStatusItem: statusItem,
 			createLanguageStatusItem: statusItem
 		},
-		'@vscode/extension-telemetry': class { dispose() { } },
 		fs: {
 			promises: {
 				...fs,
 				readFile: async (filename: string) => path.basename(filename) === 'package.json'
-					? Buffer.from(JSON.stringify({ main: './client/out/node/jsonClientMain', aiKey: '' }))
+					? Buffer.from(JSON.stringify({ main: './client/out/node/jsonClientMain' }))
 					: fs.readFile(filename),
 			}
 		},

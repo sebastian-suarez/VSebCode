@@ -6,7 +6,6 @@
 import * as os from 'os';
 import * as path from 'path';
 import { Command, commands, Disposable, MessageOptions, Position, QuickPickItem, Range, SourceControlResourceState, TextDocumentShowOptions, TextEditor, Uri, ViewColumn, window, workspace, WorkspaceEdit, WorkspaceFolder, TimelineItem, env, Selection, TextDocumentContentProvider, InputBoxValidationSeverity, TabInputText, TabInputTextMerge, QuickPickItemKind, TextDocument, LogOutputChannel, l10n, Memento, UIKind, QuickInputButton, ThemeIcon, SourceControlHistoryItem, SourceControl, InputBoxValidationMessage, Tab, TabInputNotebook, TabInputNotebookDiff, QuickInputButtonLocation, languages, SourceControlArtifact, ProgressLocation } from 'vscode';
-import TelemetryReporter from '@vscode/extension-telemetry';
 import type { CommitOptions, RemoteSourcePublisher, Remote, Branch, Ref } from './api/git';
 import { ForcePushMode, GitErrorCodes, RefType, Status } from './api/git.constants';
 import { Git, GitError, Repository as GitRepository, Stash, Worktree } from './git';
@@ -789,11 +788,10 @@ export class CommandCenter {
 		private model: Model,
 		private globalState: Memento,
 		private logger: LogOutputChannel,
-		private telemetryReporter: TelemetryReporter,
 		private cloneManager: CloneManager
 	) {
 		this.disposables = Commands.map(({ commandId, key, method, options }) => {
-			const command = this.createCommand(commandId, key, method, options);
+			const command = this.createCommand(key, method, options);
 			return commands.registerCommand(commandId, command);
 		});
 
@@ -5522,7 +5520,7 @@ export class CommandCenter {
 		env.clipboard.writeText(stash.branchName);
 	}
 
-	private createCommand(id: string, key: string, method: Function, options: ScmCommandOptions): (...args: any[]) => any {
+	private createCommand(key: string, method: Function, options: ScmCommandOptions): (...args: any[]) => any {
 		const result = (...args: any[]) => {
 			let result: Promise<any>;
 
@@ -5548,13 +5546,6 @@ export class CommandCenter {
 				});
 			}
 
-			/* __GDPR__
-				"git.command" : {
-					"owner": "lszomoru",
-					"command" : { "classification": "SystemMetaData", "purpose": "FeatureInsight", "comment": "The command id of the command being executed" }
-				}
-			*/
-			this.telemetryReporter.sendTelemetryEvent('git.command', { command: id });
 
 			return result.catch(err => {
 				const options: MessageOptions = {
