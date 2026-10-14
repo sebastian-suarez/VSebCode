@@ -153,6 +153,14 @@ export function deleteRemovedSurfaces(repoRoot: string, paths: readonly string[]
 }
 
 /**
+ * Aborts the merge in progress and returns git's error when that fails.
+ */
+export function abortMerge(repoRoot: string): string | undefined {
+	const result = gitResult(repoRoot, ['merge', '--abort']);
+	return result.status === 0 ? undefined : result.stderr || `git merge --abort exited with ${result.status}`;
+}
+
+/**
  * Describes what upstream added between two bases: new folders under the watched roots, new
  * `product.json` fields, new dependencies of the manifests and new API proposals.
  */
@@ -224,13 +232,18 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 	const surfaces = readRemovedSurfaces(repoRoot);
 	let oldBase = git(repoRoot, ['rev-parse', `refs/heads/${upstreamBaseBranch}`]);
 	let baseAlreadyAdvanced = false;
-	if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tagCommit, oldBase]).status === 0) {
-		if (gitResult(repoRoot, ['rev-parse', '--verify', '--quiet', `${upstreamBaseBranch}^2`]).stdout.trim() !== tagCommit) {
-			throw new Error(`The branch ${upstreamBaseBranch} already contains ${tag}; merge a newer tag.`);
+	const baseSecondParent = gitResult(repoRoot, ['rev-parse', '--verify', '--quiet', `${upstreamBaseBranch}^2`]).stdout.trim();
+	if (baseSecondParent && gitResult(repoRoot, ['merge-base', '--is-ancestor', baseSecondParent, preMergeHead]).status !== 0) {
+		// An earlier run advanced the base and its merge was aborted
+		const previousBase = git(repoRoot, ['rev-parse', `${upstreamBaseBranch}^1`]);
+		if (baseSecondParent !== tagCommit) {
+			throw new Error(`The branch ${upstreamBaseBranch} is ahead of ${mainBranch}: an earlier sync of ${baseSecondParent.slice(0, 11)} was aborted. Restore the base first: git update-ref refs/heads/${upstreamBaseBranch} ${previousBase} ${oldBase}`);
 		}
-		// An earlier run advanced the base and its merge was aborted: report against the base before it
-		oldBase = git(repoRoot, ['rev-parse', `${upstreamBaseBranch}^1`]);
+		// The same tag again: report against the base before it
+		oldBase = previousBase;
 		baseAlreadyAdvanced = true;
+	} else if (gitResult(repoRoot, ['merge-base', '--is-ancestor', tagCommit, oldBase]).status === 0) {
+		throw new Error(`The branch ${upstreamBaseBranch} already contains ${tag}; merge a newer tag.`);
 	} else {
 		const audit = auditUpstreamSides(repoRoot, oldBase, tagCommit, surfaces);
 		if (audit.length > 0) {
@@ -244,8 +257,12 @@ export function runUpstreamMerge(repoRoot: string, tag: string, options: IUpstre
 		removed = deleteRemovedSurfaces(repoRoot, [...conflicted, ...added], surfaces);
 		newBase = baseAlreadyAdvanced ? git(repoRoot, ['rev-parse', `refs/heads/${upstreamBaseBranch}`]) : advanceUpstreamBase(repoRoot, tag, options.sign);
 	} catch (error) {
-		gitResult(repoRoot, ['merge', '--abort']);
-		throw new Error(`${error instanceof Error ? error.message : String(error)}\nThe merge was aborted; the working tree is back at ${preMergeHead.slice(0, 11)} and ${upstreamBaseBranch} is unchanged.`);
+		const message = error instanceof Error ? error.message : String(error);
+		const abortError = abortMerge(repoRoot);
+		if (abortError) {
+			throw new Error(`${message}\nThe merge could not be aborted (${abortError}); the index still holds the merge of ${tag}. Run git merge --abort by hand and check git status before retrying.`);
+		}
+		throw new Error(`${message}\nThe merge was aborted; the working tree is back at ${preMergeHead.slice(0, 11)} and ${upstreamBaseBranch} is unchanged.`);
 	}
 	const removedSet = new Set(removed);
 	const addedSet = new Set(added);

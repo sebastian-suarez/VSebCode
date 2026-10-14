@@ -10,7 +10,7 @@ import os from 'os';
 import path from 'path';
 import { suite, test } from 'node:test';
 import { removedSurfacesFile } from '../removedSurfaces.ts';
-import { advanceUpstreamBase, runUpstreamMerge, upstreamBaseBranch } from '../upstreamMerge.ts';
+import { abortMerge, advanceUpstreamBase, runUpstreamMerge, upstreamBaseBranch } from '../upstreamMerge.ts';
 
 interface IRepo {
 	readonly root: string;
@@ -236,27 +236,51 @@ suite('upstream merge', () => {
 		}
 	});
 
-	test('refuses a tag the base already contains from a later sync', () => {
+	test('refuses another tag while an aborted sync left the base ahead, until the base is restored', () => {
 		const repo = createRepo();
 		try {
-			createHistory(repo);
-			// A later tag on top of 1.1.0 was already synced into the base
+			const { base } = createHistory(repo);
 			repo.git('checkout', '-q', 'release');
 			repo.write({ 'src/vs/platform/keep/later.ts': 'export const later = 1;\n' });
 			repo.commit('later release work');
 			repo.git('tag', '1.2.0');
 			repo.git('checkout', '-q', 'main');
-			advanceUpstreamBase(repo.root, '1.2.0', false);
+			runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: false });
+			repo.git('merge', '--abort');
+			const advanced = repo.git('rev-parse', upstreamBaseBranch);
 			let message = '';
 			try {
-				runUpstreamMerge(repo.root, '1.1.0', { fetch: false, sign: false });
+				runUpstreamMerge(repo.root, '1.2.0', { fetch: false, sign: false });
 			} catch (error) {
 				message = error instanceof Error ? error.message : String(error);
 			}
-			assert.deepStrictEqual({ message, treeClean: repo.git('status', '--porcelain') }, {
-				message: `The branch ${upstreamBaseBranch} already contains 1.1.0; merge a newer tag.`,
-				treeClean: '',
+			const rollback = `git update-ref refs/heads/${upstreamBaseBranch} ${base} ${advanced}`;
+			repo.git('update-ref', `refs/heads/${upstreamBaseBranch}`, base, advanced);
+			const report = runUpstreamMerge(repo.root, '1.2.0', { fetch: false, sign: false });
+			assert.deepStrictEqual({
+				refused: message.includes(`is ahead of main`) && message.includes(rollback),
+				baseUntouchedByRefusal: repo.git('rev-parse', `${upstreamBaseBranch}`) === repo.git('rev-parse', `${upstreamBaseBranch}`),
+				oldBase: report.oldBase,
+				newBaseParents: repo.git('log', '-1', '--format=%P', upstreamBaseBranch).split(' '),
+				laterFileAdded: report.remainingAdditions.includes('src/vs/platform/keep/later.ts'),
+			}, {
+				refused: true,
+				baseUntouchedByRefusal: true,
+				oldBase: base,
+				newBaseParents: [base, repo.git('rev-parse', '1.2.0')],
+				laterFileAdded: true,
 			});
+		} finally {
+			fs.rmSync(repo.root, { recursive: true, force: true });
+		}
+	});
+
+	test('reports when there is no merge to abort', () => {
+		const repo = createRepo();
+		try {
+			createHistory(repo);
+			const abortError = abortMerge(repo.root);
+			assert.deepStrictEqual({ failed: abortError !== undefined && /merge/i.test(abortError), treeClean: repo.git('status', '--porcelain') }, { failed: true, treeClean: '' });
 		} finally {
 			fs.rmSync(repo.root, { recursive: true, force: true });
 		}
