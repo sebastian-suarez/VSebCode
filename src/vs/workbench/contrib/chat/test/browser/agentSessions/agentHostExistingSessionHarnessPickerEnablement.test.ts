@@ -15,7 +15,7 @@ import { TestConfigurationService } from '../../../../../../platform/configurati
 import { MockContextKeyService } from '../../../../../../platform/keybinding/test/common/mockKeybindingService.js';
 import { NullLogService } from '../../../../../../platform/log/common/log.js';
 import { Registry } from '../../../../../../platform/registry/common/platform.js';
-import { NullWorkbenchAssignmentService } from '../../../../../services/assignment/test/common/nullAssignmentService.js';
+import { NullWorkbenchAssignmentService } from '../../../../../services/assignment/common/assignmentService.js';
 import { AgentHostExistingSessionHarnessPickerEnablement } from '../../../browser/agentSessions/agentHost/agentHostExistingSessionHarnessPickerEnablement.js';
 
 const configurationRegistry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration);

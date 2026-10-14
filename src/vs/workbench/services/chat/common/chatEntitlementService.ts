@@ -33,7 +33,6 @@ import { InstantiationType, registerSingleton } from '../../../../platform/insta
 import { IObservable, observableFromEvent } from '../../../../base/common/observable.js';
 import { IDefaultAccountService } from '../../../../platform/defaultAccount/common/defaultAccount.js';
 import { IDefaultAccount, IEntitlementsData } from '../../../../base/common/defaultAccount.js';
-import { isInternalAccount } from '../../../../platform/assignment/common/assignment.js';
 
 export namespace ChatEntitlementContextKeys {
 
@@ -1648,3 +1647,10 @@ export class ChatEntitlementContext extends Disposable {
 //#endregion
 
 registerSingleton(IChatEntitlementService, ChatEntitlementService, InstantiationType.Eager /* To ensure context keys are set asap */);
+
+const internalOrganisations = ['Visual-Studio-Code', 'github', 'microsoft', 'ms-copilot', 'MicrosoftCopilot'];
+
+/** Whether the account is staff or belongs to one of the internal organisations. */
+function isInternalAccount(isStaff: boolean | undefined, organisations: readonly string[] | undefined): boolean {
+	return isStaff === true || !!organisations?.some(organisation => internalOrganisations.includes(organisation));
+}

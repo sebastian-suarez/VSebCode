@@ -27,7 +27,6 @@ const LAST_KNOWN_VERSION_STORAGE_KEY = 'abstractUpdateService/lastKnownVersion';
 
 export interface IUpdateURLOptions {
 	readonly background?: boolean;
-	readonly internalOrg?: string;
 }
 
 export function createUpdateURL(baseUpdateUrl: string, platform: string, quality: string, commit: string, options?: IUpdateURLOptions): string {
@@ -36,8 +35,6 @@ export function createUpdateURL(baseUpdateUrl: string, platform: string, quality
 	if (options?.background) {
 		url.searchParams.set('bg', 'true');
 	}
-
-	url.searchParams.set('u', options?.internalOrg ?? 'none');
 
 	return url.toString();
 }
@@ -111,7 +108,6 @@ export abstract class AbstractUpdateService extends Disposable implements IUpdat
 	protected _overwrite: boolean = false;
 	private _hasCheckedForOverwriteOnQuit: boolean = false;
 	private readonly overwriteUpdatesCheckInterval = this._register(new IntervalTimer());
-	private _internalOrg: string | undefined = undefined;
 
 	/** Disabled for a non-reversible reason (e.g. not built, missing config); ignores `update.mode` changes. */
 	private _disabledPermanently: boolean = false;
@@ -657,7 +653,7 @@ export abstract class AbstractUpdateService extends Disposable implements IUpdat
 			return undefined;
 		}
 
-		const url = this.buildUpdateFeedUrl(this.quality, commit ?? this.productService.commit!, { internalOrg: this.getInternalOrg() });
+		const url = this.buildUpdateFeedUrl(this.quality, commit ?? this.productService.commit!);
 
 		if (!url) {
 			return undefined;
@@ -684,18 +680,6 @@ export abstract class AbstractUpdateService extends Disposable implements IUpdat
 		// noop
 	}
 
-	async setInternalOrg(internalOrg: string | undefined): Promise<void> {
-		if (this._internalOrg === internalOrg) {
-			return;
-		}
-
-		this.logService.info('update#setInternalOrg', internalOrg);
-		this._internalOrg = internalOrg;
-	}
-
-	protected getInternalOrg(): string | undefined {
-		return this._internalOrg;
-	}
 
 	protected getUpdateType(): UpdateType {
 		return UpdateType.Archive;

@@ -30,7 +30,6 @@ import { IRecordingService, IRecordingData, RecordingState } from '../browser/re
 import { IScreenshotService } from '../browser/screenshotService.js';
 import { IIssueFormService } from '../common/issue.js';
 import { IProcessService } from '../../../../platform/process/common/process.js';
-import { IWorkbenchAssignmentService } from '../../../services/assignment/common/assignmentService.js';
 import product from '../../../../platform/product/common/product.js';
 import { IContextMenuService, IContextViewService } from '../../../../platform/contextview/browser/contextView.js';
 import { IMarkdownRendererService } from '../../../../platform/markdown/browser/markdownRenderer.js';
@@ -87,7 +86,6 @@ export class IssueReporterEditorPane extends EditorPane {
 		@IEditorService private readonly editorService: IEditorService,
 		@IIssueFormService private readonly issueFormService: IIssueFormService,
 		@IProcessService private readonly processService: IProcessService,
-		@IWorkbenchAssignmentService private readonly experimentService: IWorkbenchAssignmentService,
 		@IContextMenuService private readonly contextMenuService: IContextMenuService,
 		@IContextViewService private readonly contextViewService: IContextViewService,
 		@IMarkdownRendererService private readonly markdownRendererService: IMarkdownRendererService,
@@ -468,13 +466,6 @@ export class IssueReporterEditorPane extends EditorPane {
 			this.wizard?.markPerformanceInfoLoaded();
 		}
 
-		// Experiments (independent from system info)
-		try {
-			const experiments = await this.experimentService.getCurrentExperiments();
-			this.wizard?.updateModel({ experimentInfo: experiments?.join('\n') ?? localize('noExperiments', "No current experiments.") });
-		} catch {
-			// Ignore
-		}
 
 		// Wait for the issue service to finish enumerating installed extensions
 		// (it kicks off enumeration in parallel with this pane opening).
@@ -489,7 +480,7 @@ export class IssueReporterEditorPane extends EditorPane {
 			});
 		}
 
-		// Wait for the full async population (token, integrity check, experiments)
+		// Wait for the full async population (token, integrity check)
 		// to finish so we can forward late-arriving values into the wizard model.
 		// Note: githubAccessToken doesn't need forwarding — it's read from the
 		// shared data object at submit time, not from the overlay's internal model.

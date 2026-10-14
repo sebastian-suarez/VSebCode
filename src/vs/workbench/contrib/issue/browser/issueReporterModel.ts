@@ -31,7 +31,6 @@ export interface IssueReporterData {
 	includeWorkspaceInfo: boolean;
 	includeProcessInfo: boolean;
 	includeExtensions: boolean;
-	includeExperiments: boolean;
 	includeExtensionData: boolean;
 
 	numberOfThemeExtesions?: number;
@@ -45,7 +44,6 @@ export interface IssueReporterData {
 	actualSearchResults?: ISettingSearchResult[];
 	query?: string;
 	filterResultCount?: number;
-	experimentInfo?: string;
 	restrictedMode?: boolean;
 	isInstallationPure?: boolean;
 	isSessionsWindow?: boolean;
@@ -62,7 +60,6 @@ export class IssueReporterModel extends Disposable {
 			includeWorkspaceInfo: true,
 			includeProcessInfo: true,
 			includeExtensions: true,
-			includeExperiments: true,
 			includeExtensionData: true,
 			allExtensions: []
 		};
@@ -172,9 +169,6 @@ ${this.getInfos()}
 			info += this.generateExtensionsMd();
 		}
 
-		if (this._data.includeExperiments && this._data.experimentInfo) {
-			info += this.generateExperimentsInfoMd();
-		}
 
 		return info;
 	}
@@ -258,17 +252,6 @@ ${this._data.workspaceInfo};
 `;
 	}
 
-	private generateExperimentsInfoMd(): string {
-		return `<details>
-<summary>A/B Experiments</summary>
-
-\`\`\`
-${this._data.experimentInfo}
-\`\`\`
-
-</details>
-`;
-	}
 
 	private generateExtensionsMd(): string {
 		if (this._data.extensionsDisabled) {

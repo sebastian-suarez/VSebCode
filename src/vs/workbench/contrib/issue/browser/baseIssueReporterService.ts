@@ -615,7 +615,7 @@ export class BaseIssueReporterService extends Disposable {
 	}
 
 	public setEventHandlers(): void {
-		(['includeSystemInfo', 'includeProcessInfo', 'includeWorkspaceInfo', 'includeExtensions', 'includeExperiments', 'includeExtensionData'] as const).forEach(elementId => {
+		(['includeSystemInfo', 'includeProcessInfo', 'includeWorkspaceInfo', 'includeExtensions', 'includeExtensionData'] as const).forEach(elementId => {
 			this.addEventListener(elementId, 'click', (event: Event) => {
 				event.stopPropagation();
 				this.issueReporterModel.update({ [elementId]: !this.issueReporterModel.getData()[elementId] });
@@ -1096,8 +1096,6 @@ export class BaseIssueReporterService extends Disposable {
 		// eslint-disable-next-line no-restricted-syntax
 		const extensionsBlock = this.window.document.querySelector('.block-extensions');
 		// eslint-disable-next-line no-restricted-syntax
-		const experimentsBlock = this.window.document.querySelector('.block-experiments');
-		// eslint-disable-next-line no-restricted-syntax
 		const extensionDataBlock = this.window.document.querySelector('.block-extension-data');
 
 		// eslint-disable-next-line no-restricted-syntax
@@ -1124,7 +1122,6 @@ export class BaseIssueReporterService extends Disposable {
 		hide(processBlock);
 		hide(workspaceBlock);
 		hide(extensionsBlock);
-		hide(experimentsBlock);
 		hide(extensionSelector);
 		hide(extensionDataTextArea);
 		hide(extensionDataBlock);
@@ -1196,7 +1193,6 @@ export class BaseIssueReporterService extends Disposable {
 			if (!fileOnMarketplace) {
 				show(blockContainer);
 				show(systemBlock);
-				show(experimentsBlock);
 				if (!fileOnExtension) {
 					show(extensionsBlock);
 				}
@@ -1210,7 +1206,6 @@ export class BaseIssueReporterService extends Disposable {
 				show(systemBlock);
 				show(processBlock);
 				show(workspaceBlock);
-				show(experimentsBlock);
 			}
 
 			if (fileOnExtension) {

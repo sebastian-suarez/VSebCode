@@ -22,8 +22,7 @@ import { TestNotificationService } from '../../../../../../../platform/notificat
 import { ITelemetryService } from '../../../../../../../platform/telemetry/common/telemetry.js';
 import { TestExperimentTriggerTelemetryService } from '../../../../../../../platform/telemetry/test/common/experimentTriggerTestUtils.js';
 import { defaultButtonStyles } from '../../../../../../../platform/theme/browser/defaultStyles.js';
-import { IWorkbenchAssignmentService } from '../../../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../../../services/assignment/common/assignmentService.js';
 import { workbenchInstantiationService } from '../../../../../../test/browser/workbenchTestServices.js';
 import { ChatInputPart } from '../../../../browser/widget/input/chatInputPart.js';
 import { CHAT_SESSION_ARCHIVE_NUDGE_ICON_TREATMENT, CHAT_SESSION_ARCHIVE_NUDGE_TITLE_TREATMENT, ChatSessionArchiveNudge, IChatSessionArchiveNudgeOptions } from '../../../../browser/widget/input/chatSessionArchiveNudge.js';

@@ -29,8 +29,7 @@ import { ITelemetryService } from '../../../../../platform/telemetry/common/tele
 import { TestExperimentTriggerTelemetryService } from '../../../../../platform/telemetry/test/common/experimentTriggerTestUtils.js';
 import { IWorkspaceContextService } from '../../../../../platform/workspace/common/workspace.js';
 import { EditorCloseContext, IEditorCloseEvent } from '../../../../common/editor.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
 import { IEditorService } from '../../../../services/editor/common/editorService.js';
 import { IHostService } from '../../../../services/host/browser/host.js';

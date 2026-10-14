@@ -13,8 +13,7 @@ import { IConfigurationService } from '../../../../../platform/configuration/com
 import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 import { CHAT_INPUT_PILLS_ROW_HEIGHT, ChatPillsRow, ChatPillsWidget } from '../../../../browser/chatPills.js';
 import { CHAT_SESSION_ARCHIVE_NUDGE_ICON_TREATMENT, CHAT_SESSION_ARCHIVE_NUDGE_TITLE_TREATMENT } from '../../../../contrib/chat/browser/widget/input/chatSessionArchiveNudge.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { ComponentFixtureContext, defineComponentFixture, defineThemedFixtureGroup } from '../fixtureUtils.js';
 import { renderChatWidget } from './chatWidget.fixture.js';
 

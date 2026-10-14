@@ -23,8 +23,7 @@ import { IProductService } from '../../../../../platform/product/common/productS
 import { InMemoryStorageService, IStorageService, StorageScope, StorageTarget } from '../../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../../platform/telemetry/common/telemetry.js';
 import { TestExperimentTriggerTelemetryService } from '../../../../../platform/telemetry/test/common/experimentTriggerTestUtils.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { AGENTS_WINDOW_TOTAL_SESSIONS_STORAGE_KEY } from '../../common/constants.js';
 import { OpenWorkspaceInAgentsContribution } from '../../electron-browser/agentSessions/agentSessionsActions.js';
 

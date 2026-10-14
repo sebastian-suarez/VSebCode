@@ -76,7 +76,7 @@ export interface IssueReporterData extends WindowData {
 	 */
 	whenExtensionsLoaded?: Promise<void>;
 	/**
-	 * Resolves once all async data (extensions, token, integrity, experiments)
+	 * Resolves once all async data (extensions, token, integrity)
 	 * has been populated. Lets the wizard pane forward late-arriving values
 	 * like `isInstallationPure` and `githubAccessToken` into the overlay model.
 	 */
@@ -84,7 +84,6 @@ export interface IssueReporterData extends WindowData {
 	issueType?: IssueType;
 	issueSource?: IssueSource;
 	extensionId?: string;
-	experiments?: string;
 	restrictedMode: boolean;
 	isInstallationPure: boolean;
 	isSessionsWindow: boolean;

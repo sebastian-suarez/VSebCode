@@ -28,8 +28,7 @@ import { ITelemetryService } from '../../../../../platform/telemetry/common/tele
 import { NullTelemetryServiceShape } from '../../../../../platform/telemetry/common/telemetryUtils.js';
 import { StatusbarEntryItem } from '../../../../browser/parts/statusbar/statusbarItem.js';
 import { IView } from '../../../../common/views.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { ToggleTooltipCommand } from '../../../../services/statusbar/browser/statusbar.js';
 import { IViewsService } from '../../../../services/views/common/viewsService.js';
 import { TestChatWidgetService, workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';

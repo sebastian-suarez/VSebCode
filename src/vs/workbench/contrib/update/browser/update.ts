@@ -26,11 +26,9 @@ import { IHostService } from '../../../services/host/browser/host.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { IUserDataSyncEnablementService, IUserDataSyncService, IUserDataSyncStoreManagementService, SyncStatus, UserDataSyncStoreType } from '../../../../platform/userDataSync/common/userDataSync.js';
 import { IsWebContext } from '../../../../platform/contextkey/common/contextkeys.js';
-import { Promises, Throttler } from '../../../../base/common/async.js';
+import { Promises } from '../../../../base/common/async.js';
 import { IUserDataSyncWorkbenchService } from '../../../services/userDataSync/common/userDataSync.js';
 import { Event } from '../../../../base/common/event.js';
-import { IDefaultAccountService } from '../../../../platform/defaultAccount/common/defaultAccount.js';
-import { getInternalOrg } from '../../../../platform/assignment/common/assignment.js';
 import { IVersion, tryParseVersion } from '../common/updateUtils.js';
 import { UpdateGlobalActivityBadgeVisibleContext } from '../common/update.js';
 
@@ -470,60 +468,6 @@ export class SwitchProductQualityContribution extends Disposable implements IWor
 					return result;
 				}
 			}));
-		}
-	}
-}
-
-export class DefaultAccountUpdateContribution extends Disposable implements IWorkbenchContribution {
-
-	private static readonly STORAGE_KEY = 'update/internalOrg';
-	#internalOrg: string | undefined = undefined;
-	private throttler: Throttler = this._register(new Throttler());
-
-	constructor(
-		@IUpdateService private readonly updateService: IUpdateService,
-		@IDefaultAccountService private readonly defaultAccountService: IDefaultAccountService,
-		@IStorageService private readonly storageService: IStorageService
-	) {
-		super();
-
-		if (isWeb) {
-			return; // Electron only
-		}
-
-		this.#internalOrg = this.storageService.get(DefaultAccountUpdateContribution.STORAGE_KEY, StorageScope.APPLICATION, undefined);
-		this.throttler.queue(() => this.updateService.setInternalOrg(this.#internalOrg));
-
-		// Check on startup
-		this.refresh();
-
-		// Listen for account changes
-		this._register(this.defaultAccountService.onDidChangeDefaultAccount(() => this.refresh()));
-	}
-
-	private refresh(): void {
-		this.throttler.queue(() => this.doRefresh());
-	}
-
-	private async doRefresh(): Promise<void> {
-		try {
-			const defaultAccount = await this.defaultAccountService.getDefaultAccount();
-			const internalOrg = getInternalOrg(defaultAccount?.entitlementsData?.organization_login_list);
-
-			if (internalOrg === this.#internalOrg) {
-				return;
-			}
-
-			this.#internalOrg = internalOrg;
-			await this.updateService.setInternalOrg(this.#internalOrg);
-
-			if (this.#internalOrg) {
-				this.storageService.store(DefaultAccountUpdateContribution.STORAGE_KEY, internalOrg, StorageScope.APPLICATION, StorageTarget.MACHINE);
-			} else {
-				this.storageService.remove(DefaultAccountUpdateContribution.STORAGE_KEY, StorageScope.APPLICATION);
-			}
-		} catch (error) {
-			// Silently ignore errors - if we can't get the account, we don't disable background updates
 		}
 	}
 }

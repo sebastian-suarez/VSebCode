@@ -19,7 +19,6 @@ import { FileAccess } from '../../../../base/common/network.js';
 import { EXTENSION_INSTALL_DEP_PACK_CONTEXT, EXTENSION_INSTALL_SKIP_WALKTHROUGH_CONTEXT, IExtensionManagementService } from '../../../../platform/extensionManagement/common/extensionManagement.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
 import { walkthroughs } from '../common/gettingStartedContent.js';
-import { IWorkbenchAssignmentService } from '../../../services/assignment/common/assignmentService.js';
 import { IHostService } from '../../../services/host/browser/host.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { ILink, LinkedText, parseLinkedText } from '../../../../base/common/linkedText.js';
@@ -159,7 +158,6 @@ export class WalkthroughsService extends Disposable implements IWalkthroughsServ
 		@IHostService private readonly hostService: IHostService,
 		@IViewsService private readonly viewsService: IViewsService,
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
-		@IWorkbenchAssignmentService private readonly tasExperimentService: IWorkbenchAssignmentService,
 		@IWorkbenchLayoutService private readonly layoutService: IWorkbenchLayoutService,
 		@IEditorService private readonly editorService: IEditorService
 	) {
@@ -326,13 +324,8 @@ export class WalkthroughsService extends Disposable implements IWalkthroughsServ
 				this.metadata.set(categoryID, { firstSeen: +new Date(), stepIDs: walkthrough.steps?.map(s => s.id) ?? [], manaullyOpened: false });
 			}
 
-			const override = await Promise.race([
-				this.tasExperimentService?.getTreatment<string>(`gettingStarted.overrideCategory.${extension.identifier.value + '.' + walkthrough.id}.when`),
-				new Promise<string | undefined>(resolve => setTimeout(() => resolve(walkthrough.when), 5000))
-			]);
-
 			if (this.sessionInstalledExtensions.has(extension.identifier.value.toLowerCase())
-				&& this.contextService.contextMatchesRules(ContextKeyExpr.deserialize(override ?? walkthrough.when) ?? ContextKeyExpr.true())
+				&& this.contextService.contextMatchesRules(ContextKeyExpr.deserialize(walkthrough.when) ?? ContextKeyExpr.true())
 			) {
 				this.sessionInstalledExtensions.delete(extension.identifier.value.toLowerCase());
 				if (index < sectionToOpenIndex && isNewlyInstalled) {
@@ -426,7 +419,7 @@ export class WalkthroughsService extends Disposable implements IWalkthroughsServ
 					icon: extensionDefaultIcon,
 					type: 'icon'
 				},
-				when: ContextKeyExpr.deserialize(override ?? walkthrough.when) ?? ContextKeyExpr.true(),
+				when: ContextKeyExpr.deserialize(walkthrough.when) ?? ContextKeyExpr.true(),
 			} as const;
 
 			this._registerWalkthrough(walkthoughDescriptor);

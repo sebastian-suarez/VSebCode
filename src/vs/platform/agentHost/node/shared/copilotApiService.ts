@@ -8,7 +8,6 @@ import { CAPIClient, RequestType, type CCAModel, type IExtensionInformation } fr
 import { generateUuid } from '../../../../base/common/uuid.js';
 import { Disposable, toDisposable } from '../../../../base/common/lifecycle.js';
 import { getMachineId } from '../../../../base/node/id.js';
-import { getInternalOrg, isInternalAccount } from '../../../assignment/common/assignment.js';
 import { COPILOT_LICENSE_AGREEMENT } from '../../../endpoint/common/licenseAgreement.js';
 import { createDecorator } from '../../../instantiation/common/instantiation.js';
 import { ILogService } from '../../../log/common/log.js';
@@ -1222,3 +1221,25 @@ const KNOWN_SSE_EVENT_TYPES = new Set([
 	'message_start', 'message_delta', 'message_stop',
 	'content_block_start', 'content_block_delta', 'content_block_stop',
 ]);
+
+const internalOrganisations: Record<string, 'vscode' | 'github' | 'microsoft'> = {
+	'Visual-Studio-Code': 'vscode',
+	'github': 'github',
+	'microsoft': 'microsoft',
+	'ms-copilot': 'microsoft',
+	'MicrosoftCopilot': 'microsoft',
+};
+
+function getInternalOrg(organisations: readonly string[] | undefined): 'vscode' | 'github' | 'microsoft' | undefined {
+	for (const kind of ['vscode', 'github', 'microsoft'] as const) {
+		if (organisations?.some(organisation => internalOrganisations[organisation] === kind)) {
+			return kind;
+		}
+	}
+	return undefined;
+}
+
+/** Whether the account is staff or belongs to one of the internal organisations. */
+function isInternalAccount(isStaff: boolean | undefined, organisations: readonly string[] | undefined): boolean {
+	return isStaff === true || getInternalOrg(organisations) !== undefined;
+}

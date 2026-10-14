@@ -115,9 +115,8 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 
 		this.setState(State.CheckingForUpdates(explicit));
 
-		const internalOrg = this.getInternalOrg();
-		const background = !explicit && !internalOrg;
-		const url = this.buildUpdateFeedUrl(this.quality, pendingCommit ?? this.productService.commit!, { background, internalOrg });
+		const background = !explicit;
+		const url = this.buildUpdateFeedUrl(this.quality, pendingCommit ?? this.productService.commit!, { background });
 
 		if (!url) {
 			this.setState(State.Idle(UpdateType.Archive));
@@ -198,7 +197,7 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 
 	protected override async doDownloadUpdate(state: AvailableForDownload): Promise<void> {
 		// Rebuild feed URL and trigger download via Electron's auto-updater
-		this.buildUpdateFeedUrl(this.quality!, state.update.version, { internalOrg: this.getInternalOrg() });
+		this.buildUpdateFeedUrl(this.quality!, state.update.version);
 		this.setState(State.CheckingForUpdates(true));
 		electron.autoUpdater.checkForUpdates();
 	}

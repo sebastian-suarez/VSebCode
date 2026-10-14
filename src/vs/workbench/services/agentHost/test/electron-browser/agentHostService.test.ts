@@ -21,8 +21,7 @@ import { ILogService, NullLogService } from '../../../../../platform/log/common/
 import { IDefaultAccountService } from '../../../../../platform/defaultAccount/common/defaultAccount.js';
 import { ManagedSettingsFreshnessFailure, ManagedSettingsFreshnessState } from '../../../../../platform/policy/common/managedSettingsFreshness.js';
 import { AgentHostPrewarmContribution, createAgentHostOTelPolicyReadiness } from '../../electron-browser/agentHostService.js';
-import { IWorkbenchAssignmentService } from '../../../assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../assignment/common/assignmentService.js';
 import { IWorkbenchEnvironmentService } from '../../../environment/common/environmentService.js';
 import { AccountPolicyGateState, AccountPolicyGateUnsatisfiedReason, IAccountPolicyGateInfo, IAccountPolicyGateService } from '../../../policies/common/accountPolicyService.js';
 

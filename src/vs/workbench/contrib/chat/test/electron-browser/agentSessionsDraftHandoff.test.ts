@@ -34,8 +34,7 @@ import { TestExperimentTriggerTelemetryService } from '../../../../../platform/t
 import { AgentsWindowOpenSource } from '../../../../../platform/window/common/window.js';
 import { IWorkspaceContextService, WorkbenchState, WorkspaceFolder } from '../../../../../platform/workspace/common/workspace.js';
 import { IEditorService } from '../../../../services/editor/common/editorService.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { IChatWidget, IChatWidgetService } from '../../browser/chat.js';
 import { ChatViewPane } from '../../browser/widgetHosts/viewPane/chatViewPane.js';
 import { AgentSessionStatus, IAgentSession, IAgentSessionsModel } from '../../browser/agentSessions/agentSessionsModel.js';

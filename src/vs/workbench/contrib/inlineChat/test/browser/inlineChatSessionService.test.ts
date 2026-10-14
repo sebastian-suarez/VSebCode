@@ -23,8 +23,7 @@ import { SyncDescriptor } from '../../../../../platform/instantiation/common/des
 import { ServiceCollection } from '../../../../../platform/instantiation/common/serviceCollection.js';
 import { MockContextKeyService } from '../../../../../platform/keybinding/test/common/mockKeybindingService.js';
 import { IFilesConfigurationService } from '../../../../services/filesConfiguration/common/filesConfigurationService.js';
-import { IWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { IWorkbenchAssignmentService, NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { IWorkspaceEditingService } from '../../../../services/workspaces/common/workspaceEditing.js';
 import { nullExtensionDescription } from '../../../../services/extensions/common/extensions.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';

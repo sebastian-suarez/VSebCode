@@ -16,7 +16,7 @@ import { ContextKeyService } from '../../../../../platform/contextkey/browser/co
 import { InMemoryStorageService, StorageScope } from '../../../../../platform/storage/common/storage.js';
 import { NullTelemetryService } from '../../../../../platform/telemetry/common/telemetryUtils.js';
 import { Memento } from '../../../../common/memento.js';
-import { NullWorkbenchAssignmentService } from '../../../../services/assignment/test/common/nullAssignmentService.js';
+import { NullWorkbenchAssignmentService } from '../../../../services/assignment/common/assignmentService.js';
 import { TestHostService, TestLayoutService } from '../../../../test/browser/workbenchTestServices.js';
 import { TestLifecycleService } from '../../../../test/common/workbenchTestServices.js';
 import { GuidedTryoutPresentation } from '../../browser/guidedTryoutPresentation.js';

@@ -28,7 +28,6 @@ interface IConfiguration extends IWindowsConfiguration {
 	editor?: { accessibilitySupport?: 'on' | 'off' | 'auto' };
 	security?: { workspace?: { trust?: { enabled?: boolean } }; restrictUNCAccess?: boolean };
 	window: IWindowSettings;
-	workbench?: { enableExperiments?: boolean };
 	telemetry?: { feedback?: { enabled?: boolean } };
 	chat?: {
 		extensionUnification?: { enabled?: boolean };
@@ -63,7 +62,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 		'window.controlsStyle',
 		'editor.accessibilitySupport',
 		'security.workspace.trust.enabled',
-		'workbench.enableExperiments',
 		'_extensionsGallery.enablePPE',
 		'security.restrictUNCAccess',
 		'accessibility.verbosity.debug',
@@ -88,7 +86,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 	private readonly controlsStyle = new ChangeObserver('string');
 	private accessibilitySupport: 'on' | 'off' | 'auto' | undefined;
 	private readonly workspaceTrustEnabled = new ChangeObserver('boolean');
-	private readonly experimentsEnabled = new ChangeObserver('boolean');
 	private readonly enablePPEExtensionsGallery = new ChangeObserver('boolean');
 	private readonly restrictUNCAccess = new ChangeObserver('boolean');
 	private readonly accessibilityVerbosityDebug = new ChangeObserver('boolean');
@@ -183,8 +180,6 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 			processChanged(this.accessibilityVerbosityDebug.handleChange(config?.accessibility?.verbosity?.debug));
 		}
 
-		// Experiments
-		processChanged(this.experimentsEnabled.handleChange(config.workbench?.enableExperiments));
 
 		// Profiles
 		processChanged(this.productService.quality !== 'stable' && this.enablePPEExtensionsGallery.handleChange(config._extensionsGallery?.enablePPE));

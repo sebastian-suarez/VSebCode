@@ -138,12 +138,6 @@ export interface IProductConfiguration {
 	readonly settingsSearchBuildId?: number;
 	readonly settingsSearchUrl?: string;
 
-	readonly tasConfig?: {
-		endpoint: string;
-		telemetryEventName: string;
-		assignmentContextTelemetryPropertyName: string;
-	};
-
 	readonly extensionsGallery?: {
 		readonly serviceUrl: string;
 		readonly controlUrl: string;

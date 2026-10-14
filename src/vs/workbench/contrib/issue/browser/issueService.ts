@@ -18,7 +18,6 @@ import { IColorTheme, IThemeService } from '../../../../platform/theme/common/th
 import { IWorkspaceTrustManagementService } from '../../../../platform/workspace/common/workspaceTrust.js';
 import { SIDE_BAR_BACKGROUND } from '../../../common/theme.js';
 import { IIssueFormService, IssueReporterData, IssueReporterExtensionData, IssueReporterStyles, IWorkbenchIssueService } from '../common/issue.js';
-import { IWorkbenchAssignmentService } from '../../../services/assignment/common/assignmentService.js';
 import { IAuthenticationService } from '../../../services/authentication/common/authentication.js';
 import { IWorkbenchExtensionEnablementService } from '../../../services/extensionManagement/common/extensionManagement.js';
 import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
@@ -34,7 +33,6 @@ export class BrowserIssueService implements IWorkbenchIssueService {
 		@IProductService private readonly productService: IProductService,
 		@IIssueFormService private readonly issueFormService: IIssueFormService,
 		@IThemeService private readonly themeService: IThemeService,
-		@IWorkbenchAssignmentService private readonly experimentService: IWorkbenchAssignmentService,
 		@IWorkspaceTrustManagementService private readonly workspaceTrustManagementService: IWorkspaceTrustManagementService,
 		@IIntegrityService private readonly integrityService: IIntegrityService,
 		@IExtensionManagementService private readonly extensionManagementService: IExtensionManagementService,
@@ -70,7 +68,6 @@ export class BrowserIssueService implements IWorkbenchIssueService {
 
 		if (this.productService.reportIssueUrl) {
 			const theme = this.themeService.getColorTheme();
-			const experiments = await this.experimentService.getCurrentExperiments();
 
 			let githubAccessToken = '';
 			try {
@@ -133,7 +130,6 @@ export class BrowserIssueService implements IWorkbenchIssueService {
 				styles: getIssueReporterStyles(theme),
 				zoomLevel: getZoomLevel(mainWindow),
 				enabledExtensions: extensionData,
-				experiments: experiments?.join('\n'),
 				restrictedMode: !this.workspaceTrustManagementService.isWorkspaceTrusted(),
 				isInstallationPure,
 				isSessionsWindow: this.environmentService.isSessionsWindow,

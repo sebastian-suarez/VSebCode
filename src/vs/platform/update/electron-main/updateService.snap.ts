@@ -145,9 +145,6 @@ abstract class AbstractUpdateService implements IUpdateService {
 		// noop
 	}
 
-	async setInternalOrg(_internalOrg: string | undefined): Promise<void> {
-		// noop - not applicable for snap
-	}
 
 	abstract isLatestVersion(): Promise<boolean | undefined>;
 

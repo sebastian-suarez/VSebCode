@@ -10,7 +10,6 @@ const sendSystemInfoLabel = escape(localize('sendSystemInfo', "Include my system
 const sendProcessInfoLabel = escape(localize('sendProcessInfo', "Include my currently running processes"));
 const sendWorkspaceInfoLabel = escape(localize('sendWorkspaceInfo', "Include my workspace metadata"));
 const sendExtensionsLabel = escape(localize('sendExtensions', "Include my enabled extensions"));
-const sendExperimentsLabel = escape(localize('sendExperiments', "Include A/B experiment info"));
 const sendExtensionData = escape(localize('sendExtensionData', "Include additional extension info"));
 const acknowledgementsLabel = escape(localize('acknowledgements', "I acknowledge that my VS Code version is not updated and this issue may be closed."));
 const reviewGuidanceLabel = localize( // intentionally not escaped because of its embedded tags
@@ -149,16 +148,6 @@ export default (): string => `
 			<div id="systemInfo" class="block-info hidden" style="user-select: text;">
 				<!-- To be dynamically filled -->
 			</div>
-		</div>
-		<div class="block block-experiments">
-			<input class="sendData" aria-label="${sendExperimentsLabel}" type="checkbox" id="includeExperiments" checked/>
-			<label class="caption" for="includeExperiments">
-				${sendExperimentsLabel}
-				(<a href="#" class="showInfo">${escape(localize('show', "show"))}</a>)
-			</label>
-			<pre class="block-info hidden" style="user-select: text;">
-				<!-- To be dynamically filled -->
-			</pre>
 		</div>
 		<div class="block block-acknowledgements hidden" id="version-acknowledgements">
 			<input class="sendData" aria-label="${acknowledgementsLabel}" type="checkbox" id="includeAcknowledgement"/>

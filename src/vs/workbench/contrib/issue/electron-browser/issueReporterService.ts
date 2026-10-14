@@ -79,7 +79,6 @@ export class IssueReporter extends BaseIssueReporterService {
 		this.checkForUpdates();
 		this.setEventHandlers();
 		applyZoom(this.data.zoomLevel, this.window);
-		this.updateExperimentsInfo(this.data.experiments);
 		this.updateRestrictedMode(this.data.restrictedMode);
 		this.updateInstallationPureMode(this.data.isInstallationPure);
 	}
@@ -363,12 +362,4 @@ export class IssueReporter extends BaseIssueReporterService {
 		this.issueReporterModel.update({ isInstallationPure });
 	}
 
-	private updateExperimentsInfo(experimentInfo: string | undefined) {
-		this.issueReporterModel.update({ experimentInfo });
-		// eslint-disable-next-line no-restricted-syntax
-		const target = this.window.document.querySelector<HTMLElement>('.block-experiments .block-info');
-		if (target) {
-			target.textContent = experimentInfo ? experimentInfo : localize('noCurrentExperiments', "No current experiments.");
-		}
-	}
 }

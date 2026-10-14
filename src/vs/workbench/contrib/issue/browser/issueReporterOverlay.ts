@@ -130,7 +130,6 @@ export class IssueReporterOverlay {
 	private includeProcessInfo = true;
 	private includeWorkspaceInfo = true;
 	private includeExtensions = true;
-	private includeExperiments = true;
 	private includeExtensionData = false;
 	private diagnosticsCollapsed = false;
 	private performanceInfoLoaded = false;
@@ -183,7 +182,6 @@ export class IssueReporterOverlay {
 			includeWorkspaceInfo: true,
 			includeProcessInfo: true,
 			includeExtensions: true,
-			includeExperiments: true,
 			includeExtensionData: hasStandaloneExtensionData,
 		}));
 		this.selectedIssueType = data.issueType;
@@ -1642,23 +1640,6 @@ export class IssueReporterOverlay {
 			});
 		}
 
-		// Experiments
-		if (modelData.experimentInfo) {
-			diagnosticSectionCount++;
-			this.createDiagSection(diagContainer, {
-				id: 'experiments',
-				label: localize('abExperiments', "A/B Experiments"),
-				checked: this.includeExperiments,
-				onToggle: (checked) => {
-					this.includeExperiments = checked;
-					this.model.update({ includeExperiments: checked });
-				},
-				renderContent: (container) => {
-					const pre = append(container, $('pre.review-diag-pre'));
-					pre.textContent = modelData.experimentInfo!;
-				},
-			});
-		}
 
 		if (this.selectedIssueType === IssueType.PerformanceIssue && !modelData.fileOnMarketplace) {
 			const performanceContainer = append(diagContainer, $('div.review-performance-data'));
@@ -1788,14 +1769,12 @@ export class IssueReporterOverlay {
 		this.includeSystemInfo = included;
 		this.includeExtensionData = included;
 		this.includeExtensions = included;
-		this.includeExperiments = included;
 		this.includeProcessInfo = included;
 		this.includeWorkspaceInfo = included;
 		this.model.update({
 			includeSystemInfo: included,
 			includeExtensionData: included,
 			includeExtensions: included,
-			includeExperiments: included,
 			includeProcessInfo: included,
 			includeWorkspaceInfo: included,
 		});
@@ -2183,7 +2162,6 @@ export class IssueReporterOverlay {
 			includeProcessInfo: this.includeProcessInfo,
 			includeWorkspaceInfo: this.includeWorkspaceInfo,
 			includeExtensions: this.includeExtensions,
-			includeExperiments: this.includeExperiments,
 			includeExtensionData: this.includeExtensionData,
 		});
 
@@ -2205,9 +2183,6 @@ export class IssueReporterOverlay {
 			sections.push(this.generateExtensionsMd());
 		}
 
-		if (this.includeExperiments && modelData.experimentInfo) {
-			sections.push(this.createDetails('A/B Experiments', this.createCodeBlock(modelData.experimentInfo)));
-		}
 
 		if (this.selectedIssueType === IssueType.PerformanceIssue && !modelData.fileOnMarketplace) {
 			if (this.includeProcessInfo && modelData.processInfo) {
@@ -2475,7 +2450,6 @@ ${rows.map(row => row.map(value => this.escapeMarkdownTableCell(value ?? '')).jo
 			includeProcessInfo: this.includeProcessInfo,
 			includeWorkspaceInfo: this.includeWorkspaceInfo,
 			includeExtensions: this.includeExtensions,
-			includeExperiments: this.includeExperiments,
 			includeExtensionData: this.includeExtensionData,
 			screenshots: this.screenshots.map(screenshot => screenshot.annotatedDataUrl ?? screenshot.dataUrl),
 			recordings: this.recordings.map(recording => recording.filePath),
