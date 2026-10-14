@@ -8,7 +8,6 @@ import type { UriComponents, URI } from '../../base/common/uri.js';
 import type { IWebSocketFactory } from '../../platform/remote/browser/browserSocketFactory.js';
 import type { IURLCallbackProvider } from '../services/url/browser/urlService.js';
 import type { LogLevel } from '../../platform/log/common/log.js';
-import type { IUpdateProvider } from '../services/update/browser/updateService.js';
 import type { Event } from '../../base/common/event.js';
 import type { IProductConfiguration } from '../../base/common/product.js';
 import type { ISecretStorageProvider } from '../../platform/secrets/common/secrets.js';
@@ -308,21 +307,6 @@ export interface IWorkbenchConstructionOptions {
 	 * URI of the profile to preview.
 	 */
 	readonly profileToPreview?: UriComponents;
-
-	//#endregion
-
-
-	//#region Update/Quality related
-
-	/**
-	 * Support for update reporting
-	 */
-	readonly updateProvider?: IUpdateProvider;
-
-	/**
-	 * Support for product quality switching
-	 */
-	readonly productQualityChangeHandler?: IProductQualityChangeHandler;
 
 	//#endregion
 
@@ -716,15 +700,6 @@ export interface IDefaultLayout {
 	 * the first time the workspace has been opened
 	 */
 	readonly force?: boolean;
-}
-
-export interface IProductQualityChangeHandler {
-
-	/**
-	 * Handler is being called when the user wants to switch between
-	 * `insider` or `stable` product qualities.
-	 */
-	(newQuality: 'insider' | 'stable'): void;
 }
 
 export interface IDevelopmentOptions {

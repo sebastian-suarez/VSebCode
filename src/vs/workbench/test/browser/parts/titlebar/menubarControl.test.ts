@@ -18,7 +18,6 @@ import { IKeybindingService } from '../../../../../platform/keybinding/common/ke
 import { ILabelService } from '../../../../../platform/label/common/label.js';
 import { INotificationService } from '../../../../../platform/notification/common/notification.js';
 import { IStorageService } from '../../../../../platform/storage/common/storage.js';
-import { IUpdateService, State } from '../../../../../platform/update/common/update.js';
 import { IRecentlyOpened, IWorkspacesService } from '../../../../../platform/workspaces/common/workspaces.js';
 import { IOpenRecentAction, MenubarControl } from '../../../../browser/parts/titlebar/menubarControl.js';
 import { IWorkbenchEnvironmentService } from '../../../../services/environment/common/environmentService.js';
@@ -44,7 +43,6 @@ class TestMenubarControl extends MenubarControl {
 		@IKeybindingService keybindingService: IKeybindingService,
 		@IConfigurationService configurationService: IConfigurationService,
 		@ILabelService labelService: ILabelService,
-		@IUpdateService updateService: IUpdateService,
 		@IStorageService storageService: IStorageService,
 		@INotificationService notificationService: INotificationService,
 		@IPreferencesService preferencesService: IPreferencesService,
@@ -53,7 +51,7 @@ class TestMenubarControl extends MenubarControl {
 		@IHostService hostService: IHostService,
 		@ICommandService commandService: ICommandService
 	) {
-		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, updateService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
+		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
 	}
 
 	protected override doUpdateMenubar(_firstTime: boolean): void { }
@@ -71,10 +69,6 @@ suite('MenubarControl', () => {
 	test('bounds open recent menu labels without splitting surrogate pairs', () => {
 		const instantiationService = workbenchInstantiationService(undefined, disposables);
 		instantiationService.stub(IMenuService, new TestMenubarMenuService());
-		instantiationService.stub(IUpdateService, new class extends mock<IUpdateService>() {
-			override readonly onStateChange = Event.None;
-			override readonly state = State.Uninitialized;
-		});
 		instantiationService.stub(IPreferencesService, new class extends mock<IPreferencesService>() { });
 		instantiationService.stub(ICommandService, new class extends mock<ICommandService>() { });
 

@@ -3,13 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import '../../platform/update/common/update.config.contribution.js';
-
 import { app, dialog } from 'electron';
 import { unlinkSync, promises } from 'fs';
 import { URI } from '../../base/common/uri.js';
 import { coalesce, distinct } from '../../base/common/arrays.js';
-import { Promises, retry } from '../../base/common/async.js';
+import { Promises } from '../../base/common/async.js';
 import { toErrorMessage } from '../../base/common/errorMessage.js';
 import { ExpectedError, setUnexpectedErrorHandler } from '../../base/common/errors.js';
 import { IPathWithLineAndColumn, isValidBasename, parseLineAndColumnAware, sanitizeFilePath } from '../../base/common/extpath.js';
@@ -61,7 +59,6 @@ import { IStateReadService, IStateService } from '../../platform/state/node/stat
 import { NullTelemetryService } from '../../platform/telemetry/common/telemetryUtils.js';
 import { IThemeMainService } from '../../platform/theme/electron-main/themeMainService.js';
 import { IUserDataProfilesMainService, UserDataProfilesMainService } from '../../platform/userDataProfile/electron-main/userDataProfile.js';
-import { isInnoSetupInstall } from '../../platform/update/electron-main/win32UpdateType.js';
 import { IPolicyService, NullPolicyService } from '../../platform/policy/common/policy.js';
 import { NativePolicyService } from '../../platform/policy/node/nativePolicyService.js';
 import { FilePolicyService } from '../../platform/policy/common/filePolicyService.js';
@@ -325,19 +322,6 @@ class CodeMain {
 			mark('code/willStartMainServer');
 			mainProcessNodeIpcServer = await nodeIPCServe(environmentMainService.mainIPCHandle);
 			mark('code/didStartMainServer');
-
-			let releasedServerForUpdate = false;
-			const innoSetupActive = await this.checkInnoSetupMutex(productService, logService, () => {
-				mainProcessNodeIpcServer.dispose();
-				releasedServerForUpdate = true;
-			});
-			if (innoSetupActive) {
-				throw new Error(localize('innoSetupActive', "{0} is currently being updated. Please wait for the update to complete before launching.", productService.nameShort));
-			}
-			if (releasedServerForUpdate) {
-				return this.claimInstance(logService, environmentMainService, lifecycleMainService, instantiationService, productService, retry);
-			}
-
 			Event.once(lifecycleMainService.onWillShutdown)(() => mainProcessNodeIpcServer.dispose());
 		} catch (error) {
 
@@ -521,43 +505,6 @@ class CodeMain {
 		}
 
 		lifecycleMainService.kill(exitCode);
-	}
-
-	private async checkInnoSetupMutex(productService: IProductService, logService: ILogService, onActive: () => void): Promise<boolean> {
-		if (!(isWindows && productService.win32MutexName && productService.win32VersionedUpdate && isInnoSetupInstall(productService.target))) {
-			return false;
-		}
-
-		try {
-			const updatingMutexName = `${productService.win32MutexName}-updating`;
-			const mutex = await import('@vscode/windows-mutex');
-
-			if (!mutex.isActive(updatingMutexName)) {
-				return false;
-			}
-
-			onActive();
-
-			// Wait briefly for setup teardown to release the mutex; Inno's `nowait postinstall` runcode can race the setup process exit.
-			const pollIntervalMs = 250, retries = 120; // 30s total
-			logService.info(`checkInnoSetupMutex: ${updatingMutexName} is held, waiting up to ${(pollIntervalMs * retries) / 1000}s for setup to finish...`);
-			const start = Date.now();
-			try {
-				await retry(async () => {
-					if (mutex.isActive(updatingMutexName)) {
-						throw new Error('mutex still held');
-					}
-				}, pollIntervalMs, retries);
-				logService.info(`checkInnoSetupMutex: ${updatingMutexName} released after ${Date.now() - start}ms`);
-				return false;
-			} catch {
-				logService.warn(`checkInnoSetupMutex: ${updatingMutexName} still held after ${Date.now() - start}ms, giving up`);
-				return true;
-			}
-		} catch (error) {
-			logService.error('Failed to check Inno Setup mutex:', error);
-			return false;
-		}
 	}
 
 	//#region Command line arguments utilities

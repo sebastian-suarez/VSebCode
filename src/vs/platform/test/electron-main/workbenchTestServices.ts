@@ -7,7 +7,7 @@ import { Promises } from '../../../base/common/async.js';
 import { Event, Emitter } from '../../../base/common/event.js';
 import { IAuxiliaryWindow } from '../../auxiliaryWindow/electron-main/auxiliaryWindow.js';
 import { NativeParsedArgs } from '../../environment/common/argv.js';
-import { ILifecycleMainService, IRelaunchHandler, LifecycleMainPhase, ShutdownEvent, ShutdownReason } from '../../lifecycle/electron-main/lifecycleMainService.js';
+import { ILifecycleMainService, LifecycleMainPhase, ShutdownEvent, ShutdownReason } from '../../lifecycle/electron-main/lifecycleMainService.js';
 import { IStateService } from '../../state/node/state.js';
 import { ICodeWindow, UnloadReason } from '../../window/electron-main/window.js';
 
@@ -45,7 +45,6 @@ export class TestLifecycleMainService implements ILifecycleMainService {
 	registerAuxWindow(auxWindow: IAuxiliaryWindow): void { }
 	async reload(window: ICodeWindow, cli?: NativeParsedArgs): Promise<void> { }
 	async unload(window: ICodeWindow, reason: UnloadReason): Promise<boolean> { return true; }
-	setRelaunchHandler(handler: IRelaunchHandler): void { }
 	async relaunch(options?: { addArgs?: string[] | undefined; removeArgs?: string[] | undefined }): Promise<void> { }
 	async quit(willRestart?: boolean): Promise<boolean> { return true; }
 	async kill(code?: number): Promise<void> { }

@@ -87,7 +87,6 @@ import { ByteSize, IFileService } from '../../../../platform/files/common/files.
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { IRemoteAgentService } from '../../../services/remote/common/remoteAgentService.js';
 import { IExtensionGalleryManifestService } from '../../../../platform/extensionManagement/common/extensionGalleryManifest.js';
-import { ShowCurrentReleaseNotesActionId } from '../../update/common/update.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { fromNow } from '../../../../base/common/date.js';
@@ -740,12 +739,6 @@ export class ExtensionEditor extends EditorPane {
 				// Only allow links with specific schemes
 				if (matchesScheme(link, Schemas.http) || matchesScheme(link, Schemas.https) || matchesScheme(link, Schemas.mailto)) {
 					this.openerService.open(link);
-				} else if (matchesScheme(link, Schemas.command) && extension.type === ExtensionType.System) {
-					this.openerService.open(link, {
-						allowCommands: [
-							ShowCurrentReleaseNotesActionId
-						]
-					});
 				}
 			}));
 
@@ -767,9 +760,7 @@ export class ExtensionEditor extends EditorPane {
 		const content = await renderMarkdownDocument(contents, this.extensionService, this.languageService, {
 			sanitizerConfig: {
 				allowedLinkProtocols: {
-					override: extension.type === ExtensionType.System
-						? [...allowedLinkProtocols, Schemas.command]
-						: allowedLinkProtocols
+					override: allowedLinkProtocols
 				}
 			}
 		}, token);

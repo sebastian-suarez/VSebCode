@@ -70,15 +70,6 @@ export interface ShutdownEvent {
 	join(id: string, promise: Promise<void>): void;
 }
 
-export interface IRelaunchHandler {
-
-	/**
-	 * Allows a handler to deal with relaunching the application. The return
-	 * value indicates if the relaunch is handled or not.
-	 */
-	handleRelaunch(options?: IRelaunchOptions): boolean;
-}
-
 export interface IRelaunchOptions {
 	readonly addArgs?: string[];
 	readonly removeArgs?: string[];
@@ -152,11 +143,6 @@ export interface ILifecycleMainService {
 	 * Restart the application with optional arguments (CLI). All lifecycle event handlers are triggered.
 	 */
 	relaunch(options?: IRelaunchOptions): Promise<void>;
-
-	/**
-	 * Sets a custom handler for relaunching the application.
-	 */
-	setRelaunchHandler(handler: IRelaunchHandler): void;
 
 	/**
 	 * Shutdown the application normally. All lifecycle event handlers are triggered.
@@ -249,8 +235,6 @@ export class LifecycleMainService extends Disposable implements ILifecycleMainSe
 	private readonly mapWindowIdToPendingUnload = new Map<number, Promise<boolean>>();
 
 	private readonly phaseWhen = new Map<LifecycleMainPhase, Barrier>();
-
-	private relaunchHandler: IRelaunchHandler | undefined = undefined;
 
 	constructor(
 		@ILogService private readonly logService: ILogService,
@@ -674,10 +658,6 @@ export class LifecycleMainService extends Disposable implements ILifecycleMainSe
 		}
 	}
 
-	setRelaunchHandler(handler: IRelaunchHandler): void {
-		this.relaunchHandler = handler;
-	}
-
 	async relaunch(options?: IRelaunchOptions): Promise<void> {
 		this.trace('Lifecycle#relaunch()');
 
@@ -696,10 +676,8 @@ export class LifecycleMainService extends Disposable implements ILifecycleMainSe
 		}
 
 		const quitListener = () => {
-			if (!this.relaunchHandler?.handleRelaunch(options)) {
-				this.trace('Lifecycle#relaunch() - calling app.relaunch()');
-				electron.app.relaunch({ args });
-			}
+			this.trace('Lifecycle#relaunch() - calling app.relaunch()');
+			electron.app.relaunch({ args });
 		};
 		electron.app.once('quit', quitListener);
 

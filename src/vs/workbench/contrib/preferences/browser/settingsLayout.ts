@@ -286,11 +286,6 @@ export const tocData: ITOCEntry<string> = {
 					settings: ['keyboard.*']
 				},
 				{
-					id: 'application/update',
-					label: localize('update', "Update"),
-					settings: ['update.*']
-				},
-				{
 					id: 'application/telemetry',
 					label: localize('telemetry', "Telemetry"),
 					settings: ['telemetry.*']

@@ -7,7 +7,6 @@ import * as perf from '../../../../base/common/performance.js';
 import { createDecorator } from '../../../../platform/instantiation/common/instantiation.js';
 import { IWorkspaceContextService, WorkbenchState } from '../../../../platform/workspace/common/workspace.js';
 import { IExtensionService } from '../../extensions/common/extensions.js';
-import { IUpdateService } from '../../../../platform/update/common/update.js';
 import { ILifecycleService, LifecyclePhase } from '../../lifecycle/common/lifecycle.js';
 import { IEditorService } from '../../editor/common/editorService.js';
 import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
@@ -38,7 +37,6 @@ export interface IMemoryInfo {
 /* __GDPR__FRAGMENT__
 	"IStartupMetrics" : {
 		"ellapsed" : { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth", "isMeasurement": true },
-		"isLatestVersion": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth" },
 		"didUseCachedData": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth" },
 		"windowKind": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth" },
 		"windowCount": { "classification": "SystemMetaData", "purpose": "PerformanceAndHealth" },
@@ -97,12 +95,6 @@ export interface IStartupMetrics {
 	 * No folder, no file, no workspace has been opened
 	 */
 	readonly emptyWorkbench: boolean;
-
-	/**
-	 * This is the latest (stable/insider) version. Iff not we should ignore this
-	 * measurement.
-	 */
-	readonly isLatestVersion: boolean;
 
 	/**
 	 * Whether we asked for and V8 accepted cached data.
@@ -534,7 +526,6 @@ export abstract class AbstractTimerService implements ITimerService {
 		@ILifecycleService private readonly _lifecycleService: ILifecycleService,
 		@IWorkspaceContextService private readonly _contextService: IWorkspaceContextService,
 		@IExtensionService private readonly _extensionService: IExtensionService,
-		@IUpdateService private readonly _updateService: IUpdateService,
 		@IPaneCompositePartService private readonly _paneCompositeService: IPaneCompositePartService,
 		@IEditorService private readonly _editorService: IEditorService,
 		@IAccessibilityService private readonly _accessibilityService: IAccessibilityService,
@@ -699,7 +690,6 @@ export abstract class AbstractTimerService implements ITimerService {
 			ellapsed: this._marks.getDuration(startMark, 'code/didStartWorkbench'),
 
 			// reflections
-			isLatestVersion: Boolean(await this._updateService.isLatestVersion()),
 			didUseCachedData: this._didUseCachedData(),
 			windowKind: this._lifecycleService.startupKind,
 			windowCount: await this._getWindowCount(),

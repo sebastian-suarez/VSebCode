@@ -10,7 +10,6 @@ import { INativeWorkbenchEnvironmentService } from '../../../services/environmen
 import { ILifecycleService } from '../../../services/lifecycle/common/lifecycle.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
-import { IUpdateService } from '../../../../platform/update/common/update.js';
 import { INativeHostService } from '../../../../platform/native/common/native.js';
 import { IEditorService } from '../../../services/editor/common/editorService.js';
 import { ITimerService } from '../../../services/timer/browser/timerService.js';
@@ -51,13 +50,12 @@ export class NativeStartupTimings extends StartupTimings implements IWorkbenchCo
 		@IPaneCompositePartService paneCompositeService: IPaneCompositePartService,
 		@ITelemetryService private readonly _telemetryService: ITelemetryService,
 		@ILifecycleService lifecycleService: ILifecycleService,
-		@IUpdateService updateService: IUpdateService,
 		@INativeWorkbenchEnvironmentService private readonly _environmentService: INativeWorkbenchEnvironmentService,
 		@IProductService private readonly _productService: IProductService,
 		@IWorkspaceTrustManagementService workspaceTrustService: IWorkspaceTrustManagementService,
 		@IStorageService private readonly _storageService: IStorageService,
 	) {
-		super(editorService, paneCompositeService, lifecycleService, updateService, workspaceTrustService);
+		super(editorService, paneCompositeService, lifecycleService, workspaceTrustService);
 
 		this._report().catch(onUnexpectedError);
 	}

@@ -104,9 +104,6 @@ export class NativeWorkbenchEnvironmentService extends AbstractNativeEnvironment
 	get webviewExternalEndpoint(): string { return `${Schemas.vscodeWebview}://{{uuid}}`; }
 
 	@memoize
-	get skipReleaseNotes(): boolean { return !!this.args['skip-release-notes']; }
-
-	@memoize
 	get skipWelcome(): boolean { return !!this.args['skip-welcome']; }
 
 	@memoize

@@ -7,7 +7,6 @@ import { INativeHostService } from '../../../../platform/native/common/native.js
 import { INativeWorkbenchEnvironmentService } from '../../environment/electron-browser/environmentService.js';
 import { IWorkspaceContextService } from '../../../../platform/workspace/common/workspace.js';
 import { IExtensionService } from '../../extensions/common/extensions.js';
-import { IUpdateService } from '../../../../platform/update/common/update.js';
 import { ILifecycleService } from '../../lifecycle/common/lifecycle.js';
 import { IEditorService } from '../../editor/common/editorService.js';
 import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
@@ -28,7 +27,6 @@ export class TimerService extends AbstractTimerService {
 		@ILifecycleService lifecycleService: ILifecycleService,
 		@IWorkspaceContextService contextService: IWorkspaceContextService,
 		@IExtensionService extensionService: IExtensionService,
-		@IUpdateService updateService: IUpdateService,
 		@IPaneCompositePartService paneCompositeService: IPaneCompositePartService,
 		@IEditorService editorService: IEditorService,
 		@IAccessibilityService accessibilityService: IAccessibilityService,
@@ -37,7 +35,7 @@ export class TimerService extends AbstractTimerService {
 		@IProductService private readonly _productService: IProductService,
 		@IStorageService private readonly _storageService: IStorageService
 	) {
-		super(lifecycleService, contextService, extensionService, updateService, paneCompositeService, editorService, accessibilityService, telemetryService, layoutService);
+		super(lifecycleService, contextService, extensionService, paneCompositeService, editorService, accessibilityService, telemetryService, layoutService);
 		this.setPerformanceMarks('main', _environmentService.window.perfMarks);
 	}
 

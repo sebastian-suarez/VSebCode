@@ -14,7 +14,6 @@ import { INativeWorkbenchEnvironmentService } from '../../../services/environmen
 import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { ILabelService } from '../../../../platform/label/common/label.js';
-import { IUpdateService } from '../../../../platform/update/common/update.js';
 import { IOpenRecentAction, MenubarControl } from '../../../browser/parts/titlebar/menubarControl.js';
 import { IStorageService } from '../../../../platform/storage/common/storage.js';
 import { IMenubarData, IMenubarMenu, IMenubarKeybinding, IMenubarMenuItemSubmenu, IMenubarMenuItemAction, MenubarMenuItem } from '../../../../platform/menubar/common/menubar.js';
@@ -36,7 +35,6 @@ export class NativeMenubarControl extends MenubarControl {
 		@IKeybindingService keybindingService: IKeybindingService,
 		@IConfigurationService configurationService: IConfigurationService,
 		@ILabelService labelService: ILabelService,
-		@IUpdateService updateService: IUpdateService,
 		@IStorageService storageService: IStorageService,
 		@INotificationService notificationService: INotificationService,
 		@IPreferencesService preferencesService: IPreferencesService,
@@ -47,7 +45,7 @@ export class NativeMenubarControl extends MenubarControl {
 		@INativeHostService private readonly nativeHostService: INativeHostService,
 		@ICommandService commandService: ICommandService,
 	) {
-		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, updateService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
+		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
 
 		(async () => {
 			this.recentlyOpened = await this.workspacesService.getRecentlyOpened();

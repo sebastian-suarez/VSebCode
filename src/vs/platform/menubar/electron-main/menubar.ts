@@ -21,7 +21,6 @@ import { INativeHostMainService } from '../../native/electron-main/nativeHostMai
 import { IProductService } from '../../product/common/productService.js';
 import { IStateService } from '../../state/node/state.js';
 import { ITelemetryService } from '../../telemetry/common/telemetry.js';
-import { IUpdateService, StateType } from '../../update/common/update.js';
 import { INativeRunActionInWindowRequest, INativeRunKeybindingInWindowRequest, IWindowOpenable, hasNativeMenu } from '../../window/common/window.js';
 import { IWindowsCountChangedEvent, IWindowsMainService, OpenContext } from '../../windows/electron-main/windows.js';
 import { IWorkspacesHistoryMainService } from '../../workspaces/electron-main/workspacesHistoryMainService.js';
@@ -67,7 +66,6 @@ export class Menubar extends Disposable {
 	private readonly fallbackMenuHandlers: { [id: string]: (menuItem: MenuItem, browserWindow: BaseWindow | undefined, event: KeyboardEvent) => void } = Object.create(null);
 
 	constructor(
-		@IUpdateService private readonly updateService: IUpdateService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IWindowsMainService private readonly windowsMainService: IWindowsMainService,
 		@IEnvironmentMainService private readonly environmentMainService: IEnvironmentMainService,
@@ -180,10 +178,6 @@ export class Menubar extends Disposable {
 		this._register(this.windowsMainService.onDidChangeWindowsCount(e => this.onDidChangeWindowsCount(e)));
 		this._register(this.nativeHostMainService.onDidBlurMainWindow(() => this.onDidChangeWindowFocus()));
 		this._register(this.nativeHostMainService.onDidFocusMainWindow(() => this.onDidChangeWindowFocus()));
-
-		// Rebuild menu when update state changes so update menu items reflect
-		// the current state (e.g. "Restart to Update" instead of "Check for Updates...").
-		this._register(this.updateService.onStateChange(() => this.scheduleUpdateMenu()));
 	}
 
 	private get currentEnableMenuBarMnemonics(): boolean {
@@ -407,7 +401,6 @@ export class Menubar extends Disposable {
 
 	private setMacApplicationMenu(macApplicationMenu: Menu): void {
 		const about = this.createMenuItem(nls.localize('mAbout', "About {0}", this.productService.nameLong), 'workbench.action.showAboutDialog');
-		const checkForUpdates = this.getUpdateMenuItems();
 
 		let preferences;
 		if (this.shouldDrawMenu('Preferences')) {
@@ -438,7 +431,6 @@ export class Menubar extends Disposable {
 		}));
 
 		const actions = [about];
-		actions.push(...checkForUpdates);
 
 		if (preferences) {
 			actions.push(...[
@@ -518,10 +510,6 @@ export class Menubar extends Disposable {
 			} else if (isMenubarMenuItemRecentAction(item)) {
 				menu.append(this.createOpenRecentMenuItem(item));
 			} else if (isMenubarMenuItemAction(item)) {
-				if (item.id === 'workbench.action.showAboutDialog') {
-					this.insertCheckForUpdatesItems(menu);
-				}
-
 				if (isMacintosh) {
 					if ((this.windowsMainService.getWindowCount() === 0 && this.closedLastWindow) ||
 						(this.windowsMainService.getWindowCount() > 0 && this.noActiveMainWindow)) {
@@ -544,14 +532,6 @@ export class Menubar extends Disposable {
 	private setMenuById(menu: Menu, menuId: string): void {
 		if (this.menubarMenus?.[menuId]) {
 			this.setMenu(menu, this.menubarMenus[menuId].items);
-		}
-	}
-
-	private insertCheckForUpdatesItems(menu: Menu) {
-		const updateItems = this.getUpdateMenuItems();
-		if (updateItems.length) {
-			updateItems.forEach(i => menu.append(i));
-			menu.append(__separator__());
 		}
 	}
 
@@ -627,59 +607,6 @@ export class Menubar extends Disposable {
 			__separator__(),
 			bringAllToFront
 		].forEach(item => macWindowMenu.append(item));
-	}
-
-	private getUpdateMenuItems(): MenuItem[] {
-		const state = this.updateService.state;
-
-		switch (state.type) {
-			case StateType.Idle:
-				return [new MenuItem({
-					label: this.mnemonicLabel(nls.localize('miCheckForUpdates', "Check for &&Updates...")), click: () => setTimeout(() => {
-						this.reportMenuActionTelemetry('CheckForUpdate');
-						this.updateService.checkForUpdates(true);
-					}, 0)
-				})];
-
-			case StateType.CheckingForUpdates:
-				return [new MenuItem({ label: nls.localize('miCheckingForUpdates', "Checking for Updates..."), enabled: false })];
-
-			case StateType.AvailableForDownload:
-				return [new MenuItem({
-					label: this.mnemonicLabel(nls.localize('miDownloadUpdate', "D&&ownload Available Update")), click: () => {
-						this.updateService.downloadUpdate(true);
-					}
-				})];
-
-			case StateType.Downloading:
-			case StateType.Overwriting:
-				return [new MenuItem({ label: nls.localize('miDownloadingUpdate', "Downloading Update..."), enabled: false })];
-
-			case StateType.Downloaded:
-				return isMacintosh ? [] : [new MenuItem({
-					label: this.mnemonicLabel(nls.localize('miInstallUpdate', "Install &&Update...")), click: () => {
-						this.reportMenuActionTelemetry('InstallUpdate');
-						this.updateService.applyUpdate();
-					}
-				})];
-
-			case StateType.Updating:
-				return [new MenuItem({ label: nls.localize('miInstallingUpdate', "Installing Update..."), enabled: false })];
-
-			case StateType.Cancelling:
-				return [new MenuItem({ label: nls.localize('miCancellingUpdate', "Cancelling Update..."), enabled: false })];
-
-			case StateType.Ready:
-				return [new MenuItem({
-					label: this.mnemonicLabel(nls.localize('miRestartToUpdate', "Restart to &&Update")), click: () => {
-						this.reportMenuActionTelemetry('RestartToUpdate');
-						this.updateService.quitAndInstall();
-					}
-				})];
-
-			default:
-				return [];
-		}
 	}
 
 	private createMenuItem(labelOpt: string, commandId: string, enabledOpt?: boolean, checkedOpt?: boolean): MenuItem {

@@ -5,7 +5,6 @@
 
 import { isCodeEditor } from '../../../../editor/browser/editorBrowser.js';
 import { ILifecycleService, StartupKind, StartupKindToString } from '../../../services/lifecycle/common/lifecycle.js';
-import { IUpdateService } from '../../../../platform/update/common/update.js';
 import * as files from '../../files/common/files.js';
 import { IEditorService } from '../../../services/editor/common/editorService.js';
 import { IWorkspaceTrustManagementService } from '../../../../platform/workspace/common/workspaceTrust.js';
@@ -26,7 +25,6 @@ export abstract class StartupTimings {
 		@IEditorService private readonly _editorService: IEditorService,
 		@IPaneCompositePartService private readonly _paneCompositeService: IPaneCompositePartService,
 		@ILifecycleService private readonly _lifecycleService: ILifecycleService,
-		@IUpdateService private readonly _updateService: IUpdateService,
 		@IWorkspaceTrustManagementService private readonly _workspaceTrustService: IWorkspaceTrustManagementService
 	) {
 	}
@@ -60,10 +58,6 @@ export abstract class StartupTimings {
 		if (activePanel) {
 			return `Current active panel : ${this._paneCompositeService.getPaneComposite(activePanel.getId(), ViewContainerLocation.Panel)?.name}`;
 		}
-		const isLatestVersion = await this._updateService.isLatestVersion();
-		if (isLatestVersion === false) {
-			return 'Not on latest version, updates available';
-		}
 		return undefined;
 	}
 }
@@ -74,7 +68,6 @@ export class BrowserStartupTimings extends StartupTimings implements IWorkbenchC
 		@IEditorService editorService: IEditorService,
 		@IPaneCompositePartService paneCompositeService: IPaneCompositePartService,
 		@ILifecycleService lifecycleService: ILifecycleService,
-		@IUpdateService updateService: IUpdateService,
 		@IWorkspaceTrustManagementService workspaceTrustService: IWorkspaceTrustManagementService,
 		@ITimerService private readonly timerService: ITimerService,
 		@ILogService private readonly logService: ILogService,
@@ -82,7 +75,7 @@ export class BrowserStartupTimings extends StartupTimings implements IWorkbenchC
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
 		@IProductService private readonly productService: IProductService
 	) {
-		super(editorService, paneCompositeService, lifecycleService, updateService, workspaceTrustService);
+		super(editorService, paneCompositeService, lifecycleService, workspaceTrustService);
 
 		this.logPerfMarks();
 	}

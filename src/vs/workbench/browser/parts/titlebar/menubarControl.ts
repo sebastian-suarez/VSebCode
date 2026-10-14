@@ -19,7 +19,6 @@ import { IRecentlyOpened, isRecentFolder, IRecent, isRecentWorkspace, IWorkspace
 import { RunOnceScheduler } from '../../../../base/common/async.js';
 import { URI } from '../../../../base/common/uri.js';
 import { ILabelService, Verbosity } from '../../../../platform/label/common/label.js';
-import { IUpdateService, StateType } from '../../../../platform/update/common/update.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { INotificationService, Severity } from '../../../../platform/notification/common/notification.js';
 import { IPreferencesService } from '../../../services/preferences/common/preferences.js';
@@ -79,7 +78,6 @@ export abstract class MenubarControl extends Disposable {
 		protected readonly keybindingService: IKeybindingService,
 		protected readonly configurationService: IConfigurationService,
 		protected readonly labelService: ILabelService,
-		protected readonly updateService: IUpdateService,
 		protected readonly storageService: IStorageService,
 		protected readonly notificationService: INotificationService,
 		protected readonly preferencesService: IPreferencesService,
@@ -109,9 +107,6 @@ export abstract class MenubarControl extends Disposable {
 
 		// Update when config changes
 		this._register(this.configurationService.onDidChangeConfiguration(e => this.onConfigurationUpdated(e)));
-
-		// Listen to update service
-		this._register(this.updateService.onStateChange(() => this.onUpdateStateChange()));
 
 		// Listen for changes in recently opened menu
 		this._register(this.workspacesService.onDidChangeRecentlyOpened(() => { this.onDidChangeRecentlyOpened(); }));
@@ -152,10 +147,6 @@ export abstract class MenubarControl extends Disposable {
 		}
 
 		return label;
-	}
-
-	protected onUpdateStateChange(): void {
-		this.updateMenubar();
 	}
 
 	protected onUpdateKeybindings(): void {
@@ -342,7 +333,6 @@ export class CustomMenubarControl extends MenubarControl {
 		@IKeybindingService keybindingService: IKeybindingService,
 		@IConfigurationService configurationService: IConfigurationService,
 		@ILabelService labelService: ILabelService,
-		@IUpdateService updateService: IUpdateService,
 		@IStorageService storageService: IStorageService,
 		@INotificationService notificationService: INotificationService,
 		@IPreferencesService preferencesService: IPreferencesService,
@@ -352,7 +342,7 @@ export class CustomMenubarControl extends MenubarControl {
 		@IHostService hostService: IHostService,
 		@ICommandService commandService: ICommandService
 	) {
-		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, updateService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
+		super(menuService, workspacesService, contextKeyService, keybindingService, configurationService, labelService, storageService, notificationService, preferencesService, environmentService, accessibilityService, hostService, commandService);
 
 		this._onVisibilityChange = this._register(new Emitter<boolean>());
 		this._onFocusStateChange = this._register(new Emitter<boolean>());
@@ -379,52 +369,6 @@ export class CustomMenubarControl extends MenubarControl {
 		}
 	}
 
-	private getUpdateAction(): IAction | null {
-		const state = this.updateService.state;
-
-		switch (state.type) {
-			case StateType.Idle:
-				return toAction({
-					id: 'update.check', label: localize({ key: 'checkForUpdates', comment: ['&& denotes a mnemonic'] }, "Check for &&Updates..."), enabled: true, run: () =>
-						this.updateService.checkForUpdates(true)
-				});
-
-			case StateType.CheckingForUpdates:
-				return toAction({ id: 'update.checking', label: localize('checkingForUpdates', "Checking for Updates..."), enabled: false, run: () => { } });
-
-			case StateType.AvailableForDownload:
-				return toAction({
-					id: 'update.downloadNow', label: localize({ key: 'download now', comment: ['&& denotes a mnemonic'] }, "D&&ownload Update"), enabled: true, run: () =>
-						this.updateService.downloadUpdate(true)
-				});
-
-			case StateType.Downloading:
-			case StateType.Overwriting:
-				return toAction({ id: 'update.downloading', label: localize('DownloadingUpdate', "Downloading Update..."), enabled: false, run: () => { } });
-
-			case StateType.Downloaded:
-				return isMacintosh ? null : toAction({
-					id: 'update.install', label: localize({ key: 'installUpdate...', comment: ['&& denotes a mnemonic'] }, "Install &&Update..."), enabled: true, run: () =>
-						this.updateService.applyUpdate()
-				});
-
-			case StateType.Updating:
-				return toAction({ id: 'update.updating', label: localize('installingUpdate', "Installing Update..."), enabled: false, run: () => { } });
-
-			case StateType.Cancelling:
-				return toAction({ id: 'update.cancelling', label: localize('cancellingUpdate', "Cancelling Update..."), enabled: false, run: () => { } });
-
-			case StateType.Ready:
-				return toAction({
-					id: 'update.restart', label: localize({ key: 'restartToUpdate', comment: ['&& denotes a mnemonic'] }, "Restart to &&Update"), enabled: true, run: () =>
-						this.updateService.quitAndInstall()
-				});
-
-			default:
-				return null;
-		}
-	}
-
 	private get currentMenubarVisibility(): MenuBarVisibility {
 		return getMenuBarVisibility(this.configurationService);
 	}
@@ -444,18 +388,6 @@ export class CustomMenubarControl extends MenubarControl {
 		switch (nextAction.id) {
 			case OpenRecentAction.ID:
 				target.push(...this.getOpenRecentActions());
-				break;
-
-			case 'workbench.action.showAboutDialog':
-				if (!isMacintosh && !isWeb) {
-					const updateAction = this.getUpdateAction();
-					if (updateAction) {
-						updateAction.label = mnemonicMenuLabel(updateAction.label);
-						target.push(updateAction);
-						target.push(new Separator());
-					}
-				}
-
 				break;
 
 			default:
@@ -706,14 +638,6 @@ export class CustomMenubarControl extends MenubarControl {
 				this.menubar?.blur();
 			}
 		}
-	}
-
-	protected override onUpdateStateChange(): void {
-		if (!this.visible) {
-			return;
-		}
-
-		super.onUpdateStateChange();
 	}
 
 	protected override onDidChangeRecentlyOpened(): void {
