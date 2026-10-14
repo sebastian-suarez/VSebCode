@@ -58,6 +58,7 @@
     "valid-layers-check": "node build/checker/layersChecker.ts && node build/checker/layersTypeCheck.ts",
     "define-class-fields-check": "node --max-old-space-size=8192 build/lib/propertyInitOrderChecker.ts && tsc --project src/tsconfig.defineClassFields.json",
     "export-policy-data": "node build/lib/policies/exportPolicyData.ts",
+    "fork-header": "node build/lib/forkHeader.ts",
     "web": "echo 'npm run web' is replaced by './scripts/code-server' or './scripts/code-web'",
     "compile-web": "npm run gulp compile-web",
     "serve-out-rspack": "cd build/rspack && npx rspack serve --config rspack.serve-out.config.mts",

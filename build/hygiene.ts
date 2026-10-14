@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,15 +14,9 @@ import VinylFile from 'vinyl';
 import vfs from 'vinyl-fs';
 import { all, copyrightFilter, eslintFilter, indentationFilter, stylelintFilter, tsFormattingFilter, unicodeFilter } from './filters.ts';
 import eslint from './gulp-eslint.ts';
+import { copyrightHeaders } from './lib/forkHeader.ts';
 import * as formatter from './lib/formatter.ts';
 import gulpstylelint from './stylelint.ts';
-
-const copyrightHeaderLines = [
-	'/*---------------------------------------------------------------------------------------------',
-	' *  Copyright (c) Microsoft Corporation. All rights reserved.',
-	' *  Licensed under the MIT License. See License.txt in the project root for license information.',
-	' *--------------------------------------------------------------------------------------------*/',
-];
 
 interface VinylFileWithLines extends VinylFile {
 	__lines: string[];
@@ -136,12 +131,9 @@ export function hygiene(some: NodeJS.ReadWriteStream | string[] | undefined, run
 	const copyrights = es.through(function (file: VinylFileWithLines) {
 		const lines = file.__lines;
 
-		for (let i = 0; i < copyrightHeaderLines.length; i++) {
-			if (lines[i] !== copyrightHeaderLines[i]) {
-				console.error(file.relative + ': Missing or bad copyright statement');
-				errorCount++;
-				break;
-			}
+		if (!copyrightHeaders.some(header => header.every((line, i) => lines[i] === line))) {
+			console.error(file.relative + ': Missing or bad copyright statement');
+			errorCount++;
 		}
 
 		this.emit('data', file);
