@@ -3,8 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { Event } from '../../../../base/common/event.js';
-import { IDisposable } from '../../../../base/common/lifecycle.js';
-import { IAuthenticationChallenge, IAuthorizationProtectedResourceMetadata, IAuthorizationServerMetadata } from '../../../../base/common/oauth.js';
+import { IAuthenticationChallenge } from '../../../../base/common/oauth.js';
 import { filter } from '../../../../base/common/objects.js';
 import { compare } from '../../../../base/common/strings.js';
 import { URI } from '../../../../base/common/uri.js';
@@ -50,7 +49,6 @@ export interface AuthenticationSessionsChangeEvent {
 export interface AuthenticationProviderInformation {
 	id: string;
 	label: string;
-	authorizationServerGlobs?: ReadonlyArray<string>;
 }
 
 /**
@@ -117,16 +115,6 @@ export interface AllowedExtension {
 	lastUsed?: number;
 }
 
-export interface IAuthenticationProviderHostDelegate {
-	/** Priority for this delegate, delegates are tested in descending priority order */
-	readonly priority: number;
-	create(authorizationServer: URI, serverMetadata: IAuthorizationServerMetadata, resource: IAuthorizationProtectedResourceMetadata | undefined, clientId?: string, clientSecret?: string): Promise<string>;
-}
-
-export function getDynamicAuthenticationProviderId(authorizationServer: URI, resource: IAuthorizationProtectedResourceMetadata | undefined): string {
-	return resource ? `${authorizationServer.toString(true)} ${resource.resource}` : authorizationServer.toString(true);
-}
-
 export const IAuthenticationService = createDecorator<IAuthenticationService>('IAuthenticationService');
 
 export interface IAuthenticationService {
@@ -173,12 +161,6 @@ export interface IAuthenticationService {
 	 * @param id The id of the provider to check
 	 */
 	isAuthenticationProviderRegistered(id: string): boolean;
-
-	/**
-	 * Checks if an authentication provider is dynamic
-	 * @param id The id of the provider to check
-	 */
-	isDynamicAuthenticationProvider(id: string): boolean;
 
 	/**
 	 * Registers an authentication provider
@@ -235,25 +217,6 @@ export interface IAuthenticationService {
 	 * @param sessionId The id of the session to remove
 	 */
 	removeSession(providerId: string, sessionId: string): Promise<void>;
-
-	/**
-	 * Gets a provider id for a specified authorization server
-	 * @param authorizationServer The authorization server url that this provider is responsible for
-	 * @param resourceServer The resource server URI that should match the provider's resourceServer (if defined)
-	 */
-	getOrActivateProviderIdForServer(authorizationServer: URI, resourceServer?: URI): Promise<string | undefined>;
-
-	/**
-	 * Allows the ability register a delegate that will be used to start authentication providers
-	 * @param delegate The delegate to register
-	 */
-	registerAuthenticationProviderHostDelegate(delegate: IAuthenticationProviderHostDelegate): IDisposable;
-
-	/**
-	 * Creates a dynamic authentication provider for the given server metadata
-	 * @param serverMetadata The metadata for the server that is being authenticated against
-	 */
-	createDynamicAuthenticationProvider(authorizationServer: URI, serverMetadata: IAuthorizationServerMetadata, resourceMetadata: IAuthorizationProtectedResourceMetadata | undefined, clientId?: string, clientSecret?: string): Promise<IAuthenticationProvider | undefined>;
 }
 
 export function isAuthenticationSession(thing: unknown): thing is AuthenticationSession {
@@ -432,13 +395,6 @@ export interface IAuthenticationProvider {
 	 * The display label of the authentication provider.
 	 */
 	readonly label: string;
-
-	/**
-	 * The resource server URI that this provider is responsible for, if any.
-	 * TODO@TylerLeonhardt: Rather than this being added to the provider, it should be passed in to
-	 * getSessions/createSession/etc... this way we can have providers that handle multiple resource servers.
-	 */
-	readonly resourceServer?: URI;
 
 	/**
 	 * The resolved authorization servers. These can still contain globs, but should be concrete URIs

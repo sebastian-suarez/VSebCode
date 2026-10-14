@@ -12,7 +12,7 @@ import { InstantiationType, registerSingleton } from '../../../../platform/insta
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { ISecretStorageService } from '../../../../platform/secrets/common/secrets.js';
 import { IAuthenticationAccessService } from './authenticationAccessService.js';
-import { AuthenticationProviderInformation, AuthenticationSession, AuthenticationSessionAccount, AuthenticationSessionsChangeEvent, IAuthenticationCreateSessionOptions, IAuthenticationGetSessionsOptions, IAuthenticationProvider, IAuthenticationProviderHostDelegate, IAuthenticationService, IAuthenticationWwwAuthenticateRequest, isAuthenticationWwwAuthenticateRequest } from '../common/authentication.js';
+import { AuthenticationProviderInformation, AuthenticationSession, AuthenticationSessionAccount, AuthenticationSessionsChangeEvent, IAuthenticationCreateSessionOptions, IAuthenticationGetSessionsOptions, IAuthenticationProvider, IAuthenticationService, IAuthenticationWwwAuthenticateRequest, isAuthenticationWwwAuthenticateRequest } from '../common/authentication.js';
 import { IBrowserWorkbenchEnvironmentService } from '../../environment/browser/environmentService.js';
 import { ActivationKind, IExtensionService } from '../../extensions/common/extensions.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
@@ -20,7 +20,7 @@ import { IJSONSchema } from '../../../../base/common/jsonSchema.js';
 import { ExtensionsRegistry } from '../../extensions/common/extensionsRegistry.js';
 import { match } from '../../../../base/common/glob.js';
 import { URI } from '../../../../base/common/uri.js';
-import { IAuthorizationProtectedResourceMetadata, IAuthorizationServerMetadata, parseWWWAuthenticateHeader } from '../../../../base/common/oauth.js';
+import { parseWWWAuthenticateHeader } from '../../../../base/common/oauth.js';
 import { raceCancellation, raceTimeout } from '../../../../base/common/async.js';
 import { CancellationTokenSource } from '../../../../base/common/cancellation.js';
 
@@ -62,14 +62,6 @@ const authenticationDefinitionSchema: IJSONSchema = {
 		label: {
 			type: 'string',
 			description: localize('authentication.label', 'The human readable name of the authentication provider.'),
-		},
-		authorizationServerGlobs: {
-			type: 'array',
-			items: {
-				type: 'string',
-				description: localize('authentication.authorizationServerGlobs', 'A list of globs that match the authorization servers that this provider supports.'),
-			},
-			description: localize('authentication.authorizationServerGlobsDescription', 'A list of globs that match the authorization servers that this provider supports.')
 		}
 	}
 };
@@ -107,9 +99,6 @@ export class AuthenticationService extends Disposable implements IAuthentication
 
 	private _authenticationProviders: Map<string, IAuthenticationProvider> = new Map<string, IAuthenticationProvider>();
 	private _authenticationProviderDisposables: DisposableMap<string, IDisposable> = this._register(new DisposableMap<string, IDisposable>());
-	private _dynamicAuthenticationProviderIds = new Set<string>();
-
-	private readonly _delegates: IAuthenticationProviderHostDelegate[] = [];
 
 	private _disposedSource = new CancellationTokenSource();
 
@@ -215,10 +204,6 @@ export class AuthenticationService extends Disposable implements IAuthentication
 		return this._authenticationProviders.has(id);
 	}
 
-	isDynamicAuthenticationProvider(id: string): boolean {
-		return this._dynamicAuthenticationProviderIds.has(id);
-	}
-
 	registerAuthenticationProvider(id: string, authenticationProvider: IAuthenticationProvider): void {
 		this._authenticationProviders.set(id, authenticationProvider);
 		const disposableStore = new DisposableStore();
@@ -238,8 +223,6 @@ export class AuthenticationService extends Disposable implements IAuthentication
 		const provider = this._authenticationProviders.get(id);
 		if (provider) {
 			this._authenticationProviders.delete(id);
-			// If this is a dynamic provider, remove it from the set of dynamic providers
-			this._dynamicAuthenticationProviderIds.delete(id);
 			this._onDidUnregisterAuthenticationProvider.fire({ id, label: provider.label });
 		}
 		this._authenticationProviderDisposables.deleteAndDispose(id);
@@ -284,8 +267,6 @@ export class AuthenticationService extends Disposable implements IAuthentication
 			// Check if the authorization server is in the list of supported authorization servers
 			const server = options?.authorizationServer;
 			if (server) {
-				// Skip the resource server check since the auth provider id contains a specific resource server
-				// TODO@TylerLeonhardt: this can change when we have providers that support multiple resource servers
 				if (!this.matchesProvider(authProvider, server)) {
 					throw new Error(`The authentication provider '${id}' does not support the authorization server '${server.toString(true)}'.`);
 				}
@@ -340,71 +321,7 @@ export class AuthenticationService extends Disposable implements IAuthentication
 		}
 	}
 
-	async getOrActivateProviderIdForServer(authorizationServer: URI, resourceServer?: URI): Promise<string | undefined> {
-		for (const provider of this._authenticationProviders.values()) {
-			if (this.matchesProvider(provider, authorizationServer, resourceServer)) {
-				return provider.id;
-			}
-		}
-
-		const authServerStr = authorizationServer.toString(true);
-		const providers = this._declaredProviders
-			// Only consider providers that are not already registered since we already checked them
-			.filter(p => !this._authenticationProviders.has(p.id))
-			.filter(p => !!p.authorizationServerGlobs?.some(i => match(i, authServerStr, { ignoreCase: true })));
-
-		// TODO:@TylerLeonhardt fan out?
-		for (const provider of providers) {
-			const activeProvider = await this.tryActivateProvider(provider.id, true);
-			// Check the resolved authorization servers
-			if (this.matchesProvider(activeProvider, authorizationServer, resourceServer)) {
-				return activeProvider.id;
-			}
-		}
-		return undefined;
-	}
-
-	async createDynamicAuthenticationProvider(authorizationServer: URI, serverMetadata: IAuthorizationServerMetadata, resource: IAuthorizationProtectedResourceMetadata | undefined, clientId?: string, clientSecret?: string): Promise<IAuthenticationProvider | undefined> {
-		const delegate = this._delegates[0];
-		if (!delegate) {
-			this._logService.error('No authentication provider host delegate found');
-			return undefined;
-		}
-		const providerId = await delegate.create(authorizationServer, serverMetadata, resource, clientId, clientSecret);
-		const provider = this._authenticationProviders.get(providerId);
-		if (provider) {
-			this._logService.debug(`Created dynamic authentication provider: ${providerId}`);
-			this._dynamicAuthenticationProviderIds.add(providerId);
-			return provider;
-		}
-		this._logService.error(`Failed to create dynamic authentication provider: ${providerId}`);
-		return undefined;
-	}
-
-	registerAuthenticationProviderHostDelegate(delegate: IAuthenticationProviderHostDelegate): IDisposable {
-		this._delegates.push(delegate);
-		this._delegates.sort((a, b) => b.priority - a.priority);
-
-		return {
-			dispose: () => {
-				const index = this._delegates.indexOf(delegate);
-				if (index !== -1) {
-					this._delegates.splice(index, 1);
-				}
-			}
-		};
-	}
-
-	private matchesProvider(provider: IAuthenticationProvider, authorizationServer: URI, resourceServer?: URI): boolean {
-		// If a resourceServer is provided and the provider has a resourceServer defined, they must match
-		if (resourceServer && provider.resourceServer) {
-			const resourceServerStr = resourceServer.toString(true);
-			const providerResourceServerStr = provider.resourceServer.toString(true);
-			if (!equalsIgnoreCase(providerResourceServerStr, resourceServerStr)) {
-				return false;
-			}
-		}
-
+	private matchesProvider(provider: IAuthenticationProvider, authorizationServer: URI): boolean {
 		if (provider.authorizationServers) {
 			const authServerStr = authorizationServer.toString(true);
 			for (const server of provider.authorizationServers) {

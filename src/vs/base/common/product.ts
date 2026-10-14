@@ -158,8 +158,6 @@ export interface IProductConfiguration {
 
 	readonly linkProtectionTrustedDomains?: readonly string[];
 
-	readonly authClientIdMetadataUrl?: string;
-
 	readonly darwinUniversalAssetId?: string;
 	readonly darwinBundleIdentifier?: string;
 	readonly profileTemplatesUrl?: string;

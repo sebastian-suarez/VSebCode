@@ -33,10 +33,6 @@ import { ILogService, NullLogService } from '../../../../platform/log/common/log
 import { IHostService } from '../../../services/host/browser/host.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IUserActivityService, UserActivityService } from '../../../services/userActivity/common/userActivityService.js';
-import { ISecretStorageService } from '../../../../platform/secrets/common/secrets.js';
-import { TestSecretStorageService } from '../../../../platform/secrets/test/common/testSecretStorageService.js';
-import { IDynamicAuthenticationProviderStorageService } from '../../../services/authentication/common/dynamicAuthenticationProviderStorage.js';
-import { DynamicAuthenticationProviderStorageService } from '../../../services/authentication/browser/dynamicAuthenticationProviderStorageService.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
 import { ServiceCollection } from '../../../../platform/instantiation/common/serviceCollection.js';
 import { SyncDescriptor } from '../../../../platform/instantiation/common/descriptors.js';
@@ -63,8 +59,6 @@ suite('MainThreadAuthentication', () => {
 		services.set(ILogService, new SyncDescriptor(NullLogService));
 		services.set(IDialogService, new SyncDescriptor(TestDialogService, [{ confirmed: true }]));
 		services.set(IStorageService, new SyncDescriptor(TestStorageService));
-		services.set(ISecretStorageService, new SyncDescriptor(TestSecretStorageService));
-		services.set(IDynamicAuthenticationProviderStorageService, new SyncDescriptor(DynamicAuthenticationProviderStorageService));
 		services.set(IQuickInputService, new SyncDescriptor(TestQuickInputService));
 		services.set(IExtensionService, new SyncDescriptor(TestExtensionService));
 		services.set(IActivityService, new SyncDescriptor(TestActivityService));
@@ -121,8 +115,6 @@ suite('MainThreadAuthentication', () => {
 			$createSession: () => Promise.resolve({} as any),
 			$removeSession: () => Promise.resolve(),
 			$onDidChangeAuthenticationSessions: () => Promise.resolve(),
-			$registerDynamicAuthProvider: () => Promise.resolve('test'),
-			$onDidChangeDynamicAuthProviderTokens: () => Promise.resolve(),
 			$getSessionsFromChallenges: () => Promise.resolve([]),
 			// eslint-disable-next-line local/code-no-any-casts
 			$createSessionFromChallenges: () => Promise.resolve({} as any),

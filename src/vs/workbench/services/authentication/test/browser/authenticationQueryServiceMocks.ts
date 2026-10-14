@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Emitter } from '../../../../../base/common/event.js';
-import { Disposable, IDisposable } from '../../../../../base/common/lifecycle.js';
+import { Disposable } from '../../../../../base/common/lifecycle.js';
 import { AuthenticationSession, AuthenticationSessionAccount, IAuthenticationProvider, IAuthenticationService, IAuthenticationExtensionsService } from '../../common/authentication.js';
 import { IAuthenticationUsageService } from '../../browser/authenticationUsageService.js';
 import { IAuthenticationAccessService } from '../../browser/authenticationAccessService.js';
@@ -246,7 +246,6 @@ export class TestAuthenticationService extends BaseTestService implements IAuthe
 
 	// All other methods are stubs since we don't test them
 	get declaredProviders(): any[] { return []; }
-	isDynamicAuthenticationProvider(): boolean { return false; }
 	async getSessions(): Promise<readonly AuthenticationSession[]> { return []; }
 	async createSession(): Promise<AuthenticationSession> { return createSession(); }
 	async removeSession(): Promise<void> { }
@@ -255,9 +254,6 @@ export class TestAuthenticationService extends BaseTestService implements IAuthe
 	registerDeclaredAuthenticationProvider(): void { }
 	unregisterDeclaredAuthenticationProvider(): void { }
 	unregisterAuthenticationProvider(): void { }
-	registerAuthenticationProviderHostDelegate(): IDisposable { return { dispose: () => { } }; }
-	createDynamicAuthenticationProvider(): Promise<any> { return Promise.resolve(undefined); }
 	async requestNewSession(): Promise<AuthenticationSession> { return createSession(); }
 	async getSession(): Promise<AuthenticationSession | undefined> { return createSession(); }
-	getOrActivateProviderIdForServer(): Promise<string | undefined> { return Promise.resolve(undefined); }
 }

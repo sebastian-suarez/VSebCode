@@ -10,7 +10,6 @@ import { SerializedError } from '../../../base/common/errors.js';
 import { IRelativePattern } from '../../../base/common/glob.js';
 import { IMarkdownString } from '../../../base/common/htmlContent.js';
 import { IDisposable } from '../../../base/common/lifecycle.js';
-import { IAuthorizationProtectedResourceMetadata, IAuthorizationServerMetadata, IAuthorizationTokenResponse } from '../../../base/common/oauth.js';
 import * as performance from '../../../base/common/performance.js';
 import Severity from '../../../base/common/severity.js';
 import { ThemeColor, ThemeIcon } from '../../../base/common/themables.js';
@@ -185,13 +184,6 @@ export interface IRegisterAuthenticationProviderDetails {
 	supportsMultipleAccounts: boolean;
 	supportedAuthorizationServers?: UriComponents[];
 	supportsChallenges?: boolean;
-	resourceServer?: UriComponents;
-}
-
-export interface IRegisterDynamicAuthenticationProviderDetails extends IRegisterAuthenticationProviderDetails {
-	clientId: string;
-	clientSecret?: string;
-	authorizationServer: UriComponents;
 }
 
 export interface MainThreadAuthenticationShape extends IDisposable {
@@ -202,13 +194,6 @@ export interface MainThreadAuthenticationShape extends IDisposable {
 	$getSession(providerId: string, scopeListOrRequest: ReadonlyArray<string> | IAuthenticationWwwAuthenticateRequest, extensionId: string, extensionName: string, options: AuthenticationGetSessionOptions): Promise<Dto<AuthenticationSession> | undefined>;
 	$getAccounts(providerId: string): Promise<ReadonlyArray<Dto<AuthenticationSessionAccount>>>;
 	$removeSession(providerId: string, sessionId: string): Promise<void>;
-	$waitForUriHandler(expectedUri: UriComponents): Promise<UriComponents>;
-	$showContinueNotification(message: string): Promise<boolean>;
-	$showDeviceCodeModal(userCode: string, verificationUri: string): Promise<boolean>;
-	$promptForClientRegistration(authorizationServerUrl: string): Promise<{ clientId: string; clientSecret?: string } | undefined>;
-	$registerDynamicAuthenticationProvider(details: IRegisterDynamicAuthenticationProviderDetails): Promise<void>;
-	$setSessionsForDynamicAuthProvider(authProviderId: string, clientId: string, sessions: (IAuthorizationTokenResponse & { created_at: number })[]): Promise<void>;
-	$sendDidChangeDynamicProviderInfo({ providerId, clientId, authorizationServer, label, clientSecret }: { providerId: string; clientId?: string; authorizationServer?: UriComponents; label?: string; clientSecret?: string }): Promise<void>;
 }
 
 export interface MainThreadSecretStateShape extends IDisposable {
@@ -2010,8 +1995,6 @@ export interface ExtHostAuthenticationShape {
 	$removeSession(id: string, sessionId: string): Promise<void>;
 	$onDidChangeAuthenticationSessions(id: string, label: string, extensionIdFilter?: string[]): Promise<void>;
 	$onDidUnregisterAuthenticationProvider(id: string): Promise<void>;
-	$registerDynamicAuthProvider(authorizationServer: UriComponents, serverMetadata: IAuthorizationServerMetadata, resource?: IAuthorizationProtectedResourceMetadata, clientId?: string, clientSecret?: string, initialTokens?: (IAuthorizationTokenResponse & { created_at: number })[]): Promise<string>;
-	$onDidChangeDynamicAuthProviderTokens(authProviderId: string, clientId: string, tokens?: (IAuthorizationTokenResponse & { created_at: number })[]): Promise<void>;
 }
 
 export interface ExtHostSecretStateShape {

@@ -24,38 +24,26 @@ import { ITelemetryService } from '../../../../platform/telemetry/common/telemet
 import { NullTelemetryService } from '../../../../platform/telemetry/common/telemetryUtils.js';
 import { MainThreadAuthentication } from '../../browser/mainThreadAuthentication.js';
 import { ExtHostContext, MainContext, MainThreadAuthenticationShape } from '../../common/extHost.protocol.js';
-import { DynamicAuthProvider, ExtHostAuthentication } from '../../common/extHostAuthentication.js';
+import { ExtHostAuthentication } from '../../common/extHostAuthentication.js';
 import { IActivityService } from '../../../services/activity/common/activity.js';
 import { AuthenticationService } from '../../../services/authentication/browser/authenticationService.js';
 import { IAuthenticationExtensionsService, IAuthenticationProviderSessionOptions, IAuthenticationService } from '../../../services/authentication/common/authentication.js';
 import { IExtensionService, nullExtensionDescription as extensionDescription } from '../../../services/extensions/common/extensions.js';
 import { IRemoteAgentService } from '../../../services/remote/common/remoteAgentService.js';
 import { TestRPCProtocol } from '../common/testRPCProtocol.js';
-import { TestEnvironmentService, TestHostService, TestQuickInputService, TestRemoteAgentService } from '../../../test/browser/workbenchTestServices.js';
-import { TestActivityService, TestExtensionService, TestLoggerService, TestProductService, TestStorageService } from '../../../test/common/workbenchTestServices.js';
+import { TestEnvironmentService, TestQuickInputService, TestRemoteAgentService } from '../../../test/browser/workbenchTestServices.js';
+import { TestActivityService, TestExtensionService, TestProductService, TestStorageService } from '../../../test/common/workbenchTestServices.js';
 import type { AuthenticationConstraint, AuthenticationGetSessionOptions, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, AuthenticationSession } from 'vscode';
 import { IBrowserWorkbenchEnvironmentService } from '../../../services/environment/browser/environmentService.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { AuthenticationAccessService, IAuthenticationAccessService } from '../../../services/authentication/browser/authenticationAccessService.js';
 import { IAccountUsage, IAuthenticationUsageService } from '../../../services/authentication/browser/authenticationUsageService.js';
 import { AuthenticationExtensionsService } from '../../../services/authentication/browser/authenticationExtensionsService.js';
-import { ILogger, ILoggerService, ILogService, NullLogger, NullLogService } from '../../../../platform/log/common/log.js';
-import { IExtHostInitDataService } from '../../common/extHostInitDataService.js';
-import { ExtHostWindow, IExtHostWindow } from '../../common/extHostWindow.js';
-import { MainThreadWindow } from '../../browser/mainThreadWindow.js';
-import { IHostService } from '../../../services/host/browser/host.js';
+import { ILogService, NullLogService } from '../../../../platform/log/common/log.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
-import { IUserActivityService, UserActivityService } from '../../../services/userActivity/common/userActivityService.js';
-import { ExtHostUrls, IExtHostUrlsService } from '../../common/extHostUrls.js';
-import { ISecretStorageService } from '../../../../platform/secrets/common/secrets.js';
-import { TestSecretStorageService } from '../../../../platform/secrets/test/common/testSecretStorageService.js';
-import { IDynamicAuthenticationProviderStorageService } from '../../../services/authentication/common/dynamicAuthenticationProviderStorage.js';
-import { DynamicAuthenticationProviderStorageService } from '../../../services/authentication/browser/dynamicAuthenticationProviderStorageService.js';
-import { ExtHostProgress, IExtHostProgress } from '../../common/extHostProgress.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
 import { ServiceCollection } from '../../../../platform/instantiation/common/serviceCollection.js';
 import { SyncDescriptor } from '../../../../platform/instantiation/common/descriptors.js';
-import { Proxied } from '../../../services/extensions/common/proxyIdentifier.js';
 
 class AuthQuickPick {
 	private accept: ((e: IQuickPickDidAcceptEvent) => any) | undefined;
@@ -198,15 +186,11 @@ suite('ExtHostAuthentication', () => {
 		services.set(ILogService, new SyncDescriptor(NullLogService));
 		services.set(IDialogService, new SyncDescriptor(TestDialogService, [{ confirmed: true }]));
 		services.set(IStorageService, new SyncDescriptor(TestStorageService));
-		services.set(ISecretStorageService, new SyncDescriptor(TestSecretStorageService));
-		services.set(IDynamicAuthenticationProviderStorageService, new SyncDescriptor(DynamicAuthenticationProviderStorageService));
 		services.set(IQuickInputService, new SyncDescriptor(AuthTestQuickInputService));
 		services.set(IExtensionService, new SyncDescriptor(TestExtensionService));
 		services.set(IActivityService, new SyncDescriptor(TestActivityService));
 		services.set(IRemoteAgentService, new SyncDescriptor(TestRemoteAgentService));
 		services.set(INotificationService, new SyncDescriptor(TestNotificationService));
-		services.set(IHostService, new SyncDescriptor(TestHostService));
-		services.set(IUserActivityService, new SyncDescriptor(UserActivityService));
 		services.set(IAuthenticationAccessService, new SyncDescriptor(AuthenticationAccessService));
 		services.set(IAuthenticationService, new SyncDescriptor(AuthenticationService));
 		services.set(IAuthenticationUsageService, new SyncDescriptor(TestAuthUsageService));
@@ -223,14 +207,6 @@ suite('ExtHostAuthentication', () => {
 		rpcProtocol = disposables.add(new TestRPCProtocol());
 
 		rpcProtocol.set(MainContext.MainThreadAuthentication, disposables.add(mainInstantiationService.createInstance(MainThreadAuthentication, rpcProtocol)));
-		rpcProtocol.set(MainContext.MainThreadWindow, disposables.add(mainInstantiationService.createInstance(MainThreadWindow, rpcProtocol)));
-		// eslint-disable-next-line local/code-no-any-casts
-		const initData: IExtHostInitDataService = {
-			environment: {
-				appUriScheme: 'test',
-				appName: 'Test'
-			}
-		} as any;
 		extHostAuthentication = new class extends ExtHostAuthentication {
 			override registerAuthenticationProvider(...args: Parameters<ExtHostAuthentication['registerAuthenticationProvider']>) {
 				const registration = super.registerAuthenticationProvider(...args);
@@ -239,17 +215,6 @@ suite('ExtHostAuthentication', () => {
 			}
 		}(
 			rpcProtocol,
-			// eslint-disable-next-line local/code-no-any-casts
-			{
-				environment: {
-					appUriScheme: 'test',
-					appName: 'Test'
-				}
-			} as any,
-			new ExtHostWindow(initData, rpcProtocol),
-			new ExtHostUrls(rpcProtocol),
-			new ExtHostProgress(rpcProtocol),
-			disposables.add(new TestLoggerService()),
 			new NullLogService()
 		);
 		rpcProtocol.set(ExtHostContext.ExtHostAuthentication, extHostAuthentication);
@@ -933,47 +898,6 @@ suite('ExtHostAuthentication', () => {
 			assert.strictEqual(session.accessToken, 'token-session-1');
 		});
 
-		for (const silent of [true, undefined]) {
-			test(`does not request interactive client recovery during a ${silent ? 'silent' : 'passive'} lookup`, async () => {
-				let registrationPrompts = 0;
-				let refreshRequests = 0;
-				const loggerService = new class extends mock<ILoggerService>() {
-					override createLogger(): ILogger { return new NullLogger(); }
-				}();
-				const proxy = new class extends mock<Proxied<MainThreadAuthenticationShape>>() {
-					override $setSessionsForDynamicAuthProvider = async (): Promise<void> => { };
-					override $promptForClientRegistration = async (): Promise<{ clientId: string }> => {
-						registrationPrompts++;
-						return { clientId: 'replacement-client' };
-					};
-				}();
-				const provider = disposables.add(new DynamicAuthProvider(
-					new class extends mock<IExtHostWindow>() { }(),
-					new class extends mock<IExtHostUrlsService>() { }(),
-					new class extends mock<IExtHostInitDataService>() {
-						override readonly environment = new class extends mock<IExtHostInitDataService['environment']>() {
-							override readonly appName = 'Test';
-						}();
-					}(),
-					new class extends mock<IExtHostProgress>() { }(),
-					loggerService, proxy, authorizationServer,
-					{ issuer: authorizationServer.toString(true), response_types_supported: ['code'], token_endpoint: 'https://issuer.example/token' },
-					undefined, 'original-client', undefined, disposables.add(new Emitter()),
-					[{ access_token: 'expired-token', token_type: 'Bearer', scope: 'read', refresh_token: 'refresh-token', expires_in: 1, created_at: 0 }],
-					async () => {
-						refreshRequests++;
-						return new Response(JSON.stringify({ error: 'invalid_client' }), { status: 400 });
-					}
-				));
-				registerProvider('context-provider', provider);
-
-				const session = await extHostAuthentication.getSession(extensionDescription, 'context-provider', ['read'], { silent });
-
-				assert.deepStrictEqual({ session, registrationPrompts, refreshRequests, clientId: provider.clientId }, {
-					session: undefined, registrationPrompts: 0, refreshRequests: 1, clientId: 'original-client'
-				});
-			});
-		}
 	});
 
 	test('createIfNone - true', async () => {

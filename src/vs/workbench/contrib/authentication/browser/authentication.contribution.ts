@@ -17,7 +17,6 @@ import { Extensions, IExtensionFeatureTableRenderer, IExtensionFeaturesRegistry,
 import { ManageTrustedExtensionsForAccountAction } from './actions/manageTrustedExtensionsForAccountAction.js';
 import { ManageAccountPreferencesForExtensionAction } from './actions/manageAccountPreferencesForExtensionAction.js';
 import { IAuthenticationUsageService } from '../../../services/authentication/browser/authenticationUsageService.js';
-import { RemoveDynamicAuthenticationProvidersAction } from './actions/manageDynamicAuthenticationProvidersAction.js';
 import { ManageAccountsAction } from './actions/manageAccountsAction.js';
 
 const codeExchangeProxyCommand = CommandsRegistry.registerCommand('workbench.getCodeExchangeProxyEndpoints', function (accessor, _) {
@@ -41,8 +40,7 @@ class AuthenticationDataRenderer extends Disposable implements IExtensionFeature
 
 		const headers = [
 			localize('authenticationlabel', "Label"),
-			localize('authenticationid', "ID"),
-			localize('authenticationAuthorizationServers', "Authorization Servers")
+			localize('authenticationid', "ID")
 		];
 
 		const rows: IRowData[][] = authentication
@@ -50,8 +48,7 @@ class AuthenticationDataRenderer extends Disposable implements IExtensionFeature
 			.map(auth => {
 				return [
 					auth.label,
-					auth.id,
-					(auth.authorizationServerGlobs ?? []).join(',\n')
+					auth.id
 				];
 			});
 
@@ -90,7 +87,6 @@ class AuthenticationContribution extends Disposable implements IWorkbenchContrib
 		this._register(registerAction2(SignOutOfAccountAction));
 		this._register(registerAction2(ManageTrustedExtensionsForAccountAction));
 		this._register(registerAction2(ManageAccountPreferencesForExtensionAction));
-		this._register(registerAction2(RemoveDynamicAuthenticationProvidersAction));
 	}
 }
 

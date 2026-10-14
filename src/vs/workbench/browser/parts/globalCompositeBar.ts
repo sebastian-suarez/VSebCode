@@ -438,14 +438,11 @@ export class AccountsActivityActionViewItem extends AbstractGlobalActivityAction
 		const otherCommands = accountsMenu.getActions();
 		let menus: IAction[] = [];
 
-		const registeredProviders = providers.filter(providerId => !this.authenticationService.isDynamicAuthenticationProvider(providerId));
-		const dynamicProviders = providers.filter(providerId => this.authenticationService.isDynamicAuthenticationProvider(providerId));
-
 		if (!this.initialized) {
 			menus.push(disposables.add(new Action('noAccountsAvailable', localize('loading', "Loading..."), undefined, false)));
 		} else {
 
-			for (const providerId of registeredProviders) {
+			for (const providerId of providers) {
 				const provider = this.authenticationService.getProvider(providerId);
 				const accounts = this.groupedAccounts.get(providerId);
 				if (!accounts) {
@@ -472,62 +469,6 @@ export class AccountsActivityActionViewItem extends AbstractGlobalActivityAction
 
 
 					const providerSubMenuActions: IAction[] = [manageExtensionsAction];
-					if (account.canSignOut) {
-						providerSubMenuActions.push(toAction({
-							id: 'signOut',
-							label: localize('signOut', "Sign Out"),
-							enabled: true,
-							run: () => this.commandService.executeCommand('_signOutOfAccount', { providerId, accountLabel: account.label })
-						}));
-					}
-
-					const providerSubMenu = new SubmenuAction('activitybar.submenu', `${account.label} (${provider.label})`, providerSubMenuActions);
-					menus.push(providerSubMenu);
-				}
-			}
-
-			if (dynamicProviders.length && registeredProviders.length) {
-				menus.push(new Separator());
-			}
-
-			for (const providerId of dynamicProviders) {
-				const provider = this.authenticationService.getProvider(providerId);
-				const accounts = this.groupedAccounts.get(providerId);
-				// Provide _some_ discoverable way to manage dynamic authentication providers.
-				// This will either show up inside the account submenu or as a top-level menu item if there
-				// are no accounts.
-				const manageDynamicAuthProvidersAction = toAction({
-					id: 'manageDynamicAuthProviders',
-					label: localize('manageDynamicAuthProviders', "Manage Dynamic Authentication Providers..."),
-					enabled: true,
-					run: () => this.commandService.executeCommand('workbench.action.removeDynamicAuthenticationProviders')
-				});
-				if (!accounts) {
-					if (this.problematicProviders.has(providerId)) {
-						const providerUnavailableAction = disposables.add(new Action('providerUnavailable', localize('authProviderUnavailable', '{0} is currently unavailable', provider.label), undefined, false));
-						menus.push(providerUnavailableAction);
-						// try again in the background so that if the failure was intermittent, we can resolve it on the next showing of the menu
-						try {
-							await this.addAccountsFromProvider(providerId);
-						} catch (e) {
-							this.logService.error(e);
-						}
-					}
-					menus.push(manageDynamicAuthProvidersAction);
-					continue;
-				}
-
-				for (const account of accounts) {
-					// TODO@TylerLeonhardt: Is there a nice way to bring this back?
-					// const manageExtensionsAction = toAction({
-					// 	id: `configureSessions${account.label}`,
-					// 	label: localize('manageTrustedExtensions', "Manage Trusted Extensions"),
-					// 	enabled: true,
-					// 	run: () => this.commandService.executeCommand('_manageTrustedExtensionsForAccount', { providerId, accountLabel: account.label })
-					// });
-
-					const providerSubMenuActions: IAction[] = [];
-					providerSubMenuActions.push(manageDynamicAuthProvidersAction);
 					if (account.canSignOut) {
 						providerSubMenuActions.push(toAction({
 							id: 'signOut',
