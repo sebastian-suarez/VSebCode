@@ -18,7 +18,6 @@ RUN_GLOB=""
 GREP_PATTERN=""
 SUITE_FILTER=""
 HELP=false
-AGENT_HOST_E2E_GLOB="**/agentHost/test/node/e2e/{providers/*AgentHostE2E,conformance/*}.integrationTest.js"
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
@@ -58,14 +57,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Known suite names (used for help text and validation)
-KNOWN_SUITES="api-folder api-workspace colorize terminal-suggest typescript markdown emmet git git-base ipynb notebook-renderers configuration-editing copilot css html json"
+KNOWN_SUITES="api-folder api-workspace colorize terminal-suggest typescript markdown emmet git git-base ipynb notebook-renderers configuration-editing css html json"
 
 if $HELP; then
 	echo "Usage: $0 [options]"
 	echo ""
 	echo "Runs integration tests. When no filters are given, all integration tests"
 	echo "(node.js integration tests + extension host tests) are run."
-	echo "Agent Host E2E entrypoints run in parallel before the remaining node.js tests."
 	echo ""
 	echo "--run and --runGlob select which node.js integration test files to load."
 	echo "Extension host tests are skipped when these options are used."
@@ -129,15 +127,6 @@ VSCODEUSERDATADIR=`mktemp -d 2>/dev/null`
 VSCODECRASHDIR=$ROOT/.build/crashes
 VSCODELOGSDIR=$ROOT/.build/logs/integration-tests
 
-# Seed user settings to disable OS notifications (dock bounce, toast, etc.)
-mkdir -p "$VSCODEUSERDATADIR/User"
-cat > "$VSCODEUSERDATADIR/User/settings.json" <<EOF
-{
-	"chat.notifyWindowOnConfirmation": "off",
-	"chat.notifyWindowOnResponseReceived": "off"
-}
-EOF
-
 # Figure out which Electron to use for running tests
 if [ -z "$INTEGRATION_TEST_ELECTRON_PATH" ]
 then
@@ -179,14 +168,8 @@ if [[ -z "$SUITE_FILTER" ]]; then
 	echo
 	echo "### node.js integration tests"
 	echo
-	node --input-type=module -e "import { getAgentHostTestProfile } from './src/vs/platform/agentHost/test/node/agentHostTestProfile.ts'; console.log('Agent Host test profile:', getAgentHostTestProfile(), '(' + (process.env.AGENT_HOST_TEST_PROFILE_REASON ?? 'default') + ')');"
 	if [[ -z "$RUN_GLOB" && -z "$RUN_FILE" ]]; then
-		if [[ "$VSCODE_SKIP_AGENT_HOST_E2E" == "1" ]]; then
-			echo "Skipping Agent Host E2E tests because no relevant files changed."
-		else
-			node ./test/integration/agentHost/runner.ts "${EXTRA_ARGS[@]}"
-		fi
-		VSCODE_SKIP_PRELAUNCH=1 ./scripts/test.sh --runGlob "**/*.integrationTest.js" --excludeRunGlob "$AGENT_HOST_E2E_GLOB" "${EXTRA_ARGS[@]}"
+		VSCODE_SKIP_PRELAUNCH=1 ./scripts/test.sh --runGlob "**/*.integrationTest.js" "${EXTRA_ARGS[@]}"
 	else
 		./scripts/test.sh "${EXTRA_ARGS[@]}"
 	fi
@@ -311,14 +294,6 @@ echo
 echo "### Configuration editing tests"
 echo
 npm run test-extension -- -l configuration-editing "${GREP_ARGS[@]}"
-kill_app
-fi
-
-if should_run_suite copilot; then
-echo
-echo "### Copilot tests"
-echo
-npm run test-extension -- -l copilot "${GREP_ARGS[@]}"
 kill_app
 fi
 

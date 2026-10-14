@@ -215,9 +215,7 @@ async function loadTests(opts) {
 		'throw ListenerLeakError'
 	]);
 
-	const _allowedSuitesWithOutput = new Set([
-		'InlineChatController'
-	]);
+	const _allowedSuitesWithOutput = new Set([]);
 
 	let _testsWithUnexpectedOutput = false;
 

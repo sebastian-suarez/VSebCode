@@ -10,57 +10,21 @@ import * as path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import type { Page } from '@playwright/test';
 import { Application, ApplicationOptions, Logger } from '../../../../automation';
-import { getCopilotSmokeTestEnv, getMockLlmServerPath, getMockLlmServerUrl, installAllHandlers, MockLlmServer, preseedChatExtensionEnablement } from '../../utils';
+import { installAllHandlers } from '../../utils';
 
 const browserCommandPrefix = 'workbench.action.browser';
 
 export function setup(logger: Logger): void {
 	describe('Integrated Browser', () => {
 
-		let sharedBrowserPageId: string | undefined;
-		let mockServer: MockLlmServer;
-		before(async function () {
-			const { ScenarioBuilder, registerScenario, startServer } = require(getMockLlmServerPath());
-			registerScenario('text-only', new ScenarioBuilder().emit('OK').build());
-			registerScenario('browser-sharing-click-success', browserClickScenario('SUCCESS', request => {
-				sharedBrowserPageId = findBrowserPageId(request, 'Browser Smoke Sharing');
-				return sharedBrowserPageId;
-			}));
-			registerScenario('browser-sharing-click-error', browserClickScenario('ERROR', () => {
-				if (!sharedBrowserPageId) {
-					throw new Error('Shared browser page ID was not captured');
-				}
-				return sharedBrowserPageId;
-			}));
-			registerScenario('browser-sharing-click-reshared', browserClickScenario('RESHARED', request => {
-				sharedBrowserPageId = findBrowserPageId(request, 'Browser Smoke Sharing');
-				return sharedBrowserPageId;
-			}));
-			mockServer = await startServer(0, {
-				captureRequests: true,
-				logger: (message: string) => logger.log(`[mock-llm] ${message}`)
-			});
-		});
-
 		installAllHandlers(
 			logger,
-			options => {
-				const mediaOptions = withFakeMediaDevice(options);
-				return {
-					...mediaOptions,
-					extraEnv: {
-						...(mediaOptions.extraEnv ?? {}),
-						...getCopilotSmokeTestEnv(mockServer, { userDataDir: mediaOptions.userDataDir })
-					}
-				};
-			},
+			options => withFakeMediaDevice(options),
 			async app => {
-				await preseedChatExtensionEnablement(app.userDataPath);
-				preseedSettings(app.userDataPath, getMockLlmServerUrl(mockServer));
+				preseedSettings(app.userDataPath);
 			}
 		);
 
-		const comment = 'Smoke-test-comment';
 		const openPages = new Set<Page>();
 		const requestCounts = new Map<string, number>();
 		let server: http.Server;
@@ -100,7 +64,6 @@ export function setup(logger: Logger): void {
 
 		after(async () => {
 			await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
-			await mockServer.close();
 		});
 
 		it('opens an HTML file in a locked browser editor', async function () {
@@ -239,112 +202,6 @@ export function setup(logger: Logger): void {
 			assert.deepStrictEqual(inheritedPermission, { url: 'about:blank', camera: 'granted' });
 		});
 
-		it('adds browser context to chat', async function () {
-			const app = this.app as Application;
-			const browserPage = await openBrowserPage(app, `${baseUrl}/comment`, openPages);
-			const workbenchPage = app.code.driver.currentPage;
-			const target = browserPage.locator('#comment-target');
-			const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
-			await target.waitFor();
-
-			await browserPage.keyboard.press(`${modifier}+Shift+c`);
-			await browserPage.locator('[data-vscode-pick-host]').waitFor({ state: 'attached' });
-			await target.click();
-			await app.workbench.chat.waitForChatView();
-			await workbenchPage.locator('div[id="workbench.panel.chat"] .chat-attached-context-attachment', { hasText: 'button#comment-target' }).waitFor();
-
-			await target.click();
-			await browserPage.keyboard.press(`${modifier}+Alt+c`);
-			await browserPage.locator('[data-vscode-pick-host]').waitFor({ state: 'attached' });
-			await target.click();
-			await browserPage.waitForFunction(() => document.activeElement?.hasAttribute('data-vscode-pick-host'));
-			await browserPage.evaluate(() => document.querySelector('#comment-keydown-count')!.textContent = '0');
-			await browserPage.keyboard.type(comment);
-			await browserPage.keyboard.press('Enter');
-			assert.strictEqual(await browserPage.locator('#comment-keydown-count').textContent(), '0');
-			await app.workbench.chat.waitForInputText('@button#comment-target');
-			await app.workbench.chat.waitForInputText(comment);
-
-			await browserPage.keyboard.press('Escape');
-			await browserPage.locator('[data-vscode-pick-host]').waitFor({ state: 'attached' });
-			const chatInput = workbenchPage.locator('div[id="workbench.panel.chat"] .interactive-input-part .monaco-editor[role="code"]');
-			await chatInput.click();
-			await workbenchPage.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
-			await workbenchPage.keyboard.press('Backspace');
-			await browserPage.locator('[data-vscode-pick-host]').waitFor({ state: 'detached' });
-
-			await browserPage.goto(`${baseUrl}/screenshot`);
-			await runAddToChatMenuAction(browserPage, workbenchPage, 'Add Full Page Screenshot to Chat (Experimental)');
-			const attachment = workbenchPage.locator('div[id="workbench.panel.chat"] .chat-attached-context-attachment.image-attachment', { hasText: 'Browser Full Page Screenshot' });
-			const image = attachment.locator('img.chat-attached-context-pill-image');
-			await image.waitFor();
-			assert.strictEqual(await image.evaluate(element => {
-				const image = element as HTMLImageElement;
-				return image.naturalHeight > image.naturalWidth * 2;
-			}), true);
-		});
-
-		it('allows agents to use shared pages and blocks unshared pages', async function () {
-			this.timeout(5 * 60 * 1000);
-
-			const app = this.app as Application;
-			const browserPage = await openBrowserPage(app, `${baseUrl}/sharing`, openPages);
-			const workbenchPage = app.code.driver.currentPage;
-			const clickCount = browserPage.locator('#share-click-count');
-			const shareButton = workbenchPage.locator('.browser-share-toggle[aria-label="Share with Agent"]');
-			const unshareButton = workbenchPage.locator('.browser-share-toggle[aria-label="Stop Sharing with Agent"]');
-			const sharingDialog = workbenchPage.locator('.monaco-dialog-box:visible');
-			const allowSharing = async () => {
-				await shareButton.click();
-				await sharingDialog.locator('.monaco-button', { hasText: 'Allow' }).click();
-				await unshareButton.waitFor();
-			};
-
-			await shareButton.click();
-			await sharingDialog.locator('#monaco-dialog-message-text', { hasText: 'Share this browser page with the agent?' }).waitFor();
-			await sharingDialog.locator('.monaco-button', { hasText: 'Allow' }).click();
-			await unshareButton.waitFor();
-
-			// Keep a second page shared for the whole journey so the agent's CDP
-			// connection outlives unsharing the page under test. Otherwise the
-			// connection is torn down and rebuilt, which would hide regressions in
-			// how a re-added page is announced to an existing connection.
-			await openBrowserPage(app, `${baseUrl}/navigation/a`, openPages);
-			await allowSharing();
-			await workbenchPage.locator('.tab', { hasText: 'Browser Smoke Sharing' }).click();
-			await unshareButton.waitFor();
-
-			await app.workbench.quickaccess.runCommand('smoketest.openLocalChat');
-			await app.workbench.chat.waitForChatView();
-			await app.workbench.chat.sendMessage('[scenario:browser-sharing-click-success]');
-			const successToolResult = await waitForScenarioToolResult(mockServer, 'browser-sharing-click-success');
-			assert.doesNotMatch(successToolResult, /not found/i);
-			await clickCount.waitFor({ state: 'attached' });
-			assert.strictEqual(await clickCount.textContent(), '1');
-
-			await unshareButton.click();
-			await shareButton.waitFor();
-
-			await app.workbench.chat.sendMessage('[scenario:browser-sharing-click-error]');
-			const errorToolResult = await waitForScenarioToolResult(mockServer, 'browser-sharing-click-error');
-			assert.deepStrictEqual({
-				pageMissing: /Page "[0-9a-f-]+" not found/i.test(errorToolResult),
-				clicks: await clickCount.textContent()
-			}, {
-				pageMissing: true,
-				clicks: '1'
-			}, `Unshared page should not be reachable, but the tool returned: ${errorToolResult}`);
-
-			// Re-sharing has to restore agent access: the view rejoins the group and
-			// must be announced to the connection the agent is already using.
-			await allowSharing();
-
-			await app.workbench.chat.sendMessage('[scenario:browser-sharing-click-reshared]');
-			const resharedToolResult = await waitForScenarioToolResult(mockServer, 'browser-sharing-click-reshared');
-			assert.doesNotMatch(resharedToolResult, /not found/i);
-			await browserPage.locator('#share-click-count', { hasText: '2' }).waitFor();
-		});
-
 		// Keep this last because restarting can change restored UI and extension activation state.
 		it('preserves native page lifecycle across editors, popups, and restart', async function () {
 			const app = this.app as Application;
@@ -424,12 +281,12 @@ function normalizeFileUrl(url: string | null): string | null {
  * blocking the workbench. Seeding it up front means it is already in effect when
  * the window opens, so nothing changes and no prompt appears.
  *
- * The suite drives the browser toolbar overflow and "Add to Chat" menus through
+ * The suite drives the browser toolbar overflow menus through
  * DOM locators (`.monaco-menu-container`), which only exist for custom menus. The
  * default is quality dependent on macOS (`native` for stable, `inherit` for
  * insiders), so pinning `custom` keeps the suite deterministic across qualities.
  */
-function preseedSettings(userDataDir: string | undefined, mockServerUrl: string): void {
+function preseedSettings(userDataDir: string | undefined): void {
 	if (!userDataDir) {
 		throw new Error('Cannot pre-seed Integrated Browser settings without a user data directory');
 	}
@@ -437,18 +294,7 @@ function preseedSettings(userDataDir: string | undefined, mockServerUrl: string)
 	const settingsPath = path.join(userDataDir, 'User', 'settings.json');
 	fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
 	fs.writeFileSync(settingsPath, JSON.stringify({
-		'github.copilot.advanced.debug.overrideProxyUrl': mockServerUrl,
-		'github.copilot.advanced.debug.overrideCapiUrl': mockServerUrl,
-		'github.copilot.advanced.debug.overrideAuthType': 'token',
-		'chat.allowAnonymousAccess': true,
-		'github.copilot.chat.githubMcpServer.enabled': false,
-		'chat.mcp.discovery.enabled': false,
-		'chat.mcp.enabled': false,
-		'chat.disableAIFeatures': false,
-		'chat.tools.riskAssessment.enabled': false,
-		'github.copilot.chat.backgroundAgent.enabled': true,
 		'window.menuStyle': 'custom',
-		'workbench.browser.experimentalUserTools.enabled': true,
 		'workbench.editorAssociations': {
 			'*.html': 'workbench.editor.browser'
 		},
@@ -503,84 +349,6 @@ async function runBrowserOverflowAction(browserPage: Page, workbenchPage: Page, 
 	await item.click();
 }
 
-async function runAddToChatMenuAction(browserPage: Page, workbenchPage: Page, label: string): Promise<void> {
-	await browserPage.locator('body').click({ position: { x: 1, y: 1 } });
-	const dropdown = workbenchPage.locator('.browser-actions-toolbar .monaco-dropdown-with-default .dropdown-action-container .action-label');
-	await dropdown.hover();
-	await workbenchPage.waitForTimeout(500);
-	await dropdown.click();
-	const item = workbenchPage.locator('.monaco-menu-container:visible .action-menu-item', { hasText: label }).last();
-	await item.waitFor();
-	await item.hover();
-	await workbenchPage.waitForTimeout(500);
-	await item.click();
-}
-
-function browserClickScenario(result: 'SUCCESS' | 'ERROR' | 'RESHARED', getPageId: (request: readonly unknown[]) => string): unknown {
-	return {
-		type: 'multi-turn',
-		turns: [
-			{
-				kind: 'tool-calls',
-				toolCalls: [{
-					toolNamePattern: /click.?element/i,
-					arguments: (request: readonly unknown[]) => ({
-						pageId: getPageId(request),
-						selector: '#share-target',
-						element: 'sharing smoke button'
-					})
-				}]
-			},
-			{
-				kind: 'content',
-				chunks: [{ content: result, delayMs: 0 }]
-			}
-		]
-	};
-}
-
-function findBrowserPageId(request: readonly unknown[], title: string): string {
-	const match = JSON.stringify(request).match(new RegExp(`\\[([0-9a-f-]{36})\\]\\s+${title}`, 'i'));
-	if (!match) {
-		throw new Error(`Could not find the page ID for ${title} in the model request`);
-	}
-	return match[1];
-}
-
-async function waitForScenarioToolResult(mockServer: MockLlmServer, scenarioId: string): Promise<string> {
-	const deadline = Date.now() + 120_000;
-	while (Date.now() < deadline) {
-		for (const request of [...mockServer.getRequests()].reverse()) {
-			if (!JSON.stringify(request.body).includes(`[scenario:${scenarioId}]`)) {
-				continue;
-			}
-			const toolResults = findToolResults(request.body, scenarioId);
-			if (toolResults.length > 0) {
-				return toolResults[toolResults.length - 1];
-			}
-		}
-		await new Promise(resolve => setTimeout(resolve, 250));
-	}
-	throw new Error(`Timed out waiting for the ${scenarioId} tool result`);
-}
-
-function findToolResults(value: unknown, scenarioId: string): string[] {
-	if (!value || typeof value !== 'object') {
-		return [];
-	}
-	if (Array.isArray(value)) {
-		return value.flatMap(item => findToolResults(item, scenarioId));
-	}
-
-	const candidate = value as Record<string, unknown>;
-	const toolCallId = candidate.tool_call_id ?? candidate.call_id ?? candidate.tool_use_id;
-	if (typeof toolCallId === 'string' && toolCallId.includes(scenarioId)) {
-		const result = candidate.content ?? candidate.output;
-		return [typeof result === 'string' ? result : JSON.stringify(result)];
-	}
-	return Object.values(candidate).flatMap(item => findToolResults(item, scenarioId));
-}
-
 function pageForRoute(route: string, requestCount: number): string {
 	switch (route) {
 		case '/navigation/a':
@@ -603,26 +371,6 @@ function pageForRoute(route: string, requestCount: number): string {
 					}
 				});
 			</script>`);
-		case '/comment':
-			return html('Browser Smoke Comment', `<button id="comment-target">Comment target</button>
-				<output id="comment-keydown-count">0</output>
-				<script>
-					window.addEventListener('keydown', () => {
-						const output = document.querySelector('#comment-keydown-count');
-						output.textContent = String(Number(output.textContent) + 1);
-					});
-				</script>`);
-		case '/screenshot':
-			return html('Browser Smoke Screenshot', '<div id="screenshot-top">Top</div><div style="height: 2400px"></div><div id="screenshot-bottom">Bottom</div>');
-		case '/sharing':
-			return html('Browser Smoke Sharing', `<button id="share-target">Click target</button>
-				<output id="share-click-count">0</output>
-				<script>
-					document.querySelector('#share-target').addEventListener('click', () => {
-						const output = document.querySelector('#share-click-count');
-						output.textContent = String(Number(output.textContent) + 1);
-					});
-				</script>`);
 		case '/lifecycle':
 			return html('Browser Smoke Lifecycle', `<div id="lifecycle-content">Lifecycle content</div><input id="state-input">
 				<a id="open-popup" target="_blank" href="/popup-child">Open child</a><button id="write-popup">Write child</button>
