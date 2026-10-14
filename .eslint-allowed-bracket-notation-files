@@ -247,22 +247,6 @@ src/vs/sessions/electron-browser/sessions.ts
 src/vs/sessions/test/browser/chatGroupsView.test.ts
 
 # Build, CI, and scripts (48 files)
-build/azure-pipelines/common/apply-sdk-canary-override.ts
-build/azure-pipelines/common/createBuild.ts
-build/azure-pipelines/common/downloadNotice.ts
-build/azure-pipelines/common/getPublishAuthTokens.ts
-build/azure-pipelines/common/publish.ts
-build/azure-pipelines/common/releaseBuild.ts
-build/azure-pipelines/common/sign-win32.ts
-build/azure-pipelines/common/sign.ts
-build/azure-pipelines/distro/mixin-quality.ts
-build/azure-pipelines/oss/audit-notices.ts
-build/azure-pipelines/oss/merge-notices.ts
-build/azure-pipelines/oss/scan-licenses.ts
-build/azure-pipelines/upload-cdn.ts
-build/azure-pipelines/upload-nlsmetadata.ts
-build/azure-pipelines/upload-sourcemaps.ts
-build/azure-pipelines/win32/codesign.ts
 build/darwin/create-dmg.ts
 build/darwin/create-universal-app.ts
 build/darwin/sign-server.ts

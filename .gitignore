@@ -6,7 +6,6 @@ Thumbs.db
 node_modules
 .tmp/
 .build/
-/extensionsCG/
 .vscode/extensions/**/out/
 extensions/**/dist/
 src/vs/base/browser/ui/codicons/codicon/codicon.ttf
@@ -19,7 +18,6 @@ coverage/
 test_data/
 test-results/
 test-results.xml
-vscode.lsif
 vscode.db
 /.profile-oss
 /cli/target

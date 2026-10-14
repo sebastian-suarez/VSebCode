@@ -9,8 +9,6 @@
 # Lines starting with `#` are comments. Blank lines are ignored.
 
 .vscode-test.js
-build/azure-pipelines/common/installPlaywright.js
-build/azure-pipelines/github-check-run.js
 build/builtin/browser-main.js
 build/builtin/main.js
 build/npm/stubs/sharp/index.js

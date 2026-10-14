@@ -161,11 +161,6 @@ For the following platforms only downloads are validated (and not install/runtim
 - Red Hat UBI 9
 - Ubuntu 22.04 and 24.04 (also arm32)
 
-### Pipeline Files
-
-- [product-sanity-tests.yml](../../build/azure-pipelines/product-sanity-tests.yml) - Main pipeline definition
-- [sanity-tests.yml](../../build/azure-pipelines/common/sanity-tests.yml) - Reusable job template
-
 ### macOS Diagnostics
 
 macOS jobs log the exact OS version/build, hardware configuration, memory pressure, swap usage,
