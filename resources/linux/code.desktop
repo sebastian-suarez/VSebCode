@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=@@NAME_LONG@@
-Comment=Code Editing. Redefined.
+Comment=Code editor based on Code - OSS without Microsoft services or AI features
 GenericName=Text Editor
 Exec=@@EXEC@@ %F
 Icon=@@ICON@@
@@ -10,7 +10,7 @@ StartupWMClass=@@DESKTOP_NAME@@
 Categories=TextEditor;Development;IDE;
 MimeType=application/x-@@NAME@@-workspace;
 Actions=new-empty-window;
-Keywords=vscode;
+Keywords=vsebcode;vsc;
 
 [Desktop Action new-empty-window]
 Name=New Empty Window

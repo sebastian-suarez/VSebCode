@@ -10,7 +10,7 @@ else
 	VSCODE_PATH=$(dirname $(dirname $(dirname $(dirname $(dirname $(readlink -f $0))))))
 fi
 
-PROD_NAME="Code Server - Dev"
+PROD_NAME="VSebCode Server - Dev"
 VERSION=""
 COMMIT=""
 EXEC_NAME=""

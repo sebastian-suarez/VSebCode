@@ -108,14 +108,9 @@ function prepareDebPackage(arch: string) {
 
 		const postinst = gulp.src('resources/linux/debian/postinst.template', { base: '.' })
 			.pipe(replace('@@NAME@@', product.applicationName))
-			.pipe(replace('@@ARCHITECTURE@@', debArch))
 			.pipe(rename('DEBIAN/postinst'));
 
-		const templates = gulp.src('resources/linux/debian/templates.template', { base: '.' })
-			.pipe(replace('@@NAME@@', product.applicationName))
-			.pipe(rename('DEBIAN/templates'));
-
-		const all = es.merge(control, templates, postinst, postrm, prerm, desktops, appdata, workspaceMime, icon, bash_completion, zsh_completion, code);
+		const all = es.merge(control, postinst, postrm, prerm, desktops, appdata, workspaceMime, icon, bash_completion, zsh_completion, code);
 
 		return all.pipe(vfs.dest(destination));
 	};
@@ -195,15 +190,11 @@ function prepareRpmPackage(arch: string) {
 
 		const spec = gulp.src('resources/linux/rpm/code.spec.template', { base: '.' })
 			.pipe(replace('@@NAME@@', product.applicationName))
-			.pipe(replace('@@NAME_LONG@@', product.nameLong))
 			.pipe(replace('@@DESKTOP_NAME@@', linuxDesktopName))
 			.pipe(replace('@@ICON@@', product.linuxIconName))
 			.pipe(replace('@@VERSION@@', packageJson.version))
 			.pipe(replace('@@RELEASE@@', linuxPackageRevision.toString()))
-			.pipe(replace('@@ARCHITECTURE@@', rpmArch))
 			.pipe(replace('@@LICENSE@@', product.licenseName))
-			.pipe(replace('@@QUALITY@@', (product as typeof product & { quality?: string }).quality || '@@QUALITY@@'))
-			.pipe(replace('@@UPDATEURL@@', (product as typeof product & { updateUrl?: string }).updateUrl || '@@UPDATEURL@@'))
 			.pipe(replace('@@DEPENDENCIES@@', dependencies.join(', ')))
 			.pipe(replace('@@RECOMMENDS@@', rpmRecommendedDependencies.join(', ')))
 			.pipe(replace('@@STRIP@@', stripBinary))

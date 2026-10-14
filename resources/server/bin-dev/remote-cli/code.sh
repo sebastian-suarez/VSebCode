@@ -12,7 +12,7 @@ fi
 
 export VSCODE_DEV=1
 
-PROD_NAME="Code Server - Dev"
+PROD_NAME="VSebCode Server - Dev"
 VERSION=""
 COMMIT=""
 EXEC_NAME="$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")"
