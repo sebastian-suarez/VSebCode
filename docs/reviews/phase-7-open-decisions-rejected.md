@@ -16,6 +16,8 @@ Each area of phase 7 was reviewed by a fresh-context Claude reviewer and by a Co
 ## Profile import and export, rename suggestions
 
 - `isProfileURL` ignores the scheme, so the web-only "Create in {0}" action of `userDataProfilesEditorModel.ts` also shows for `https://profile-*` URLs and opens them in a browser tab. Upstream behaviour, deferred to area E, which removes the web workbench.
+- Dropping a `<urlProtocol>://profile-<other>/x.code-profile` resource throws "This profile link is not supported." inside the drop handler of `contrib/userDataProfile/browser/userDataProfile.ts`, an unhandled rejection, where the interim code of `d3d31e57f20` showed "The dropped profile is invalid.". Not guarded: upstream threw for the same resource (its handler lookup failed and the HTTP request of a product-scheme URL rejects), the handler lets HTTP failures and invalid JSON throw the same way, and only internal drags can carry such a URI.
+- `dataChannelService.test.ts` makes two assertions in its kinds test and checks a platform function from a workbench service suite. Kept: both assertions guard the same removed kind, and the suite is where the kind list lives.
 
 ## OSC 99 notifications
 
