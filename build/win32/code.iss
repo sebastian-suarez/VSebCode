@@ -35,7 +35,9 @@ ArchitecturesAllowed={#ArchitecturesAllowed}
 ArchitecturesInstallIn64BitMode={#ArchitecturesInstallIn64BitMode}
 WizardStyle=modern
 
-// Close a running instance before installing over it.
+// AppMutex keeps Setup from continuing while the application runs; on the Preparing to Install
+// page the Restart Manager then closes any other process that still holds a file Setup replaces,
+// without letting it refuse.
 CloseApplications=force
 
 #if "user" == InstallTarget

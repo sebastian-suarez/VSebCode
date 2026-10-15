@@ -9,7 +9,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import pkg from '../package.json' with { type: 'json' };
 import product from '../product.json' with { type: 'json' };
-import { getVersion } from './lib/getVersion.ts';
 import * as task from './lib/gulp/task.ts';
 import * as util from './lib/util.ts';
 
@@ -17,7 +16,6 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 const repoPath = path.dirname(import.meta.dirname);
-const commit = getVersion(repoPath);
 const buildPath = (arch: string) => path.join(path.dirname(repoPath), `VSCode-win32-${arch}`);
 const setupDir = (arch: string, target: string) => path.join(repoPath, '.build', `win32-${arch}`, `${target}-setup`);
 const innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup'))), 'bin', 'ISCC.exe');
@@ -74,7 +72,6 @@ function buildWin32Setup(arch: string, target: string): task.CallbackTask {
 			DirName: product.win32DirName,
 			Version: pkg.version,
 			RawVersion: pkg.version.replace(/-\w+$/, ''),
-			Commit: commit,
 			NameVersion: product.win32NameVersion + (target === 'user' ? ' (User)' : ''),
 			ExeBasename: product.nameShort,
 			RegValueName: product.win32RegValueName,
