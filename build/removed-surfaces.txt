@@ -233,6 +233,7 @@ src/vs/platform/dialogs/test/electron-browser/dialog.test.ts
 src/vs/platform/environment/common/copilotHome.ts
 src/vs/platform/environment/test/common/copilotHome.test.ts
 src/vs/platform/extensionResourceLoader/browser/extensionResourceLoaderService.ts
+src/vs/platform/externalServices/common/serviceMachineId.ts
 src/vs/platform/files/browser/indexedDBFileSystemProvider.ts
 src/vs/platform/files/test/browser/indexedDBFileService.integrationTest.ts
 src/vs/platform/languagePacks/browser/languagePacks.ts
@@ -256,6 +257,7 @@ src/vs/platform/telemetry/common/assignmentContext.ts
 src/vs/platform/telemetry/common/commonProperties.ts
 src/vs/platform/telemetry/common/editArcTelemetry.ts
 src/vs/platform/telemetry/common/editTelemetry.ts
+src/vs/platform/telemetry/common/errorTelemetry.ts
 src/vs/platform/telemetry/common/experimentTrigger.ts
 src/vs/platform/telemetry/common/languageModelToolTelemetry.ts
 src/vs/platform/telemetry/common/remoteTelemetryChannel.ts
