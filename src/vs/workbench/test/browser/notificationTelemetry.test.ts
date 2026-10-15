@@ -214,7 +214,7 @@ suite('Notification telemetry UI', () => {
 		const ui = await createUI();
 		let invoked = 0;
 		ui.notifications.prompt(Severity.Info, 'Prompt', [{
-			label: 'Continue', telemetryId: NotificationActionTelemetryId.Continue, keepOpen: true, run: () => invoked++
+			label: 'Continue', telemetryId: NotificationActionTelemetryId.Reload, keepOpen: true, run: () => invoked++
 		}], { telemetry: NotificationTelemetryId.ExtensionInstall, priority: NotificationPriority.SILENT });
 		ui.center.show();
 		await ui.render();
@@ -230,7 +230,7 @@ suite('Notification telemetry UI', () => {
 			legacy: ui.telemetry.events.filter(event => event.eventName === 'workbenchActionExecuted').map(event => event.data)
 		}, {
 			invoked: 2,
-			actions: [['primaryAction', 'continue', 'center'], ['primaryAction', 'continue', 'center']],
+			actions: [['primaryAction', 'reload', 'center'], ['primaryAction', 'reload', 'center']],
 			legacy: [{ id: 'workbench.dialog.choice.0', from: 'message' }, { id: 'workbench.dialog.choice.0', from: 'message' }]
 		});
 	});
@@ -262,8 +262,8 @@ suite('Notification telemetry UI', () => {
 		const ui = await createUI();
 		const invoked: string[] = [];
 		const choices: IPromptChoiceWithMenu[] = [{
-			label: 'Continue', isSecondary: false, telemetryId: NotificationActionTelemetryId.Continue, run: () => invoked.push('primary'),
-			menu: [{ label: 'Decline', telemetryId: NotificationActionTelemetryId.Decline, keepOpen: true, run: () => invoked.push('menu') }]
+			label: 'Continue', isSecondary: false, telemetryId: NotificationActionTelemetryId.Reload, run: () => invoked.push('primary'),
+			menu: [{ label: 'Decline', telemetryId: NotificationActionTelemetryId.Configure, keepOpen: true, run: () => invoked.push('menu') }]
 		}];
 		ui.notifications.prompt(Severity.Info, 'Prompt', choices, { priority: NotificationPriority.SILENT });
 		const action = ui.notifications.model.notifications[0].actions!.primary![0];
@@ -281,7 +281,7 @@ suite('Notification telemetry UI', () => {
 		assert.deepStrictEqual({
 			invoked,
 			interactions: ui.telemetry.interactions.map(event => [event.interaction, event.actionId, event.surface])
-		}, { invoked: ['menu', 'primary'], interactions: [['primaryAction', 'decline', 'center'], ['primaryAction', 'continue', 'center']] });
+		}, { invoked: ['menu', 'primary'], interactions: [['primaryAction', 'configure', 'center'], ['primaryAction', 'reload', 'center']] });
 	});
 
 	test('keyboard links and context-menu copy record bounded interactions, not content or URLs', async () => {

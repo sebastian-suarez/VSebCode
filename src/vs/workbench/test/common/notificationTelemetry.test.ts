@@ -109,7 +109,7 @@ suite('Notification telemetry contract', () => {
 
 	test('prompt metadata and audited primary, secondary and dropdown choices survive handle updates', () => {
 		const choices: (IPromptChoice | IPromptChoiceWithMenu)[] = [
-			{ label: 'Continue', telemetryId: NotificationActionTelemetryId.Continue, run: () => { }, isSecondary: false, menu: [{ label: 'Decline', telemetryId: NotificationActionTelemetryId.Decline, run: () => { } }] },
+			{ label: 'Continue', telemetryId: NotificationActionTelemetryId.Reload, run: () => { }, isSecondary: false, menu: [{ label: 'Decline', telemetryId: NotificationActionTelemetryId.Configure, run: () => { } }] },
 			{ label: 'Reload', telemetryId: NotificationActionTelemetryId.Reload, isSecondary: true, run: () => { } }
 		];
 		const handle = service.prompt(Severity.Warning, 'private prompt', choices, { telemetry: NotificationTelemetryId.ExtensionInstall });
@@ -134,7 +134,7 @@ suite('Notification telemetry contract', () => {
 		}, {
 			source: { origin: 'core', notificationId: 'extensions.install', extensionId: 'none' },
 			shown: [],
-			actions: [['continue', 'primary', -1, 'unknown'], ['reload', 'secondary', -1, 'unknown'], ['decline', 'primary', -1, 'unknown']]
+			actions: [['reload', 'primary', -1, 'unknown'], ['reload', 'secondary', -1, 'unknown'], ['configure', 'primary', -1, 'unknown']]
 		});
 	});
 

@@ -89,7 +89,7 @@ suite('NotificationAccessibleView', () => {
 	for (const role of ['primary', 'secondary'] as const) {
 		test(`records accessible-view exposure and ${role} action once without collecting content`, async () => {
 			let invoked = 0;
-			const action = withNotificationActionTelemetry(toAction({ id: 'private ID', label: 'Private label', run: () => invoked++ }), NotificationActionTelemetryId.Continue);
+			const action = withNotificationActionTelemetry(toAction({ id: 'private ID', label: 'Private label', run: () => invoked++ }), NotificationActionTelemetryId.Reload);
 			const notification = setupNotification([{
 				severity: Severity.Info, message: 'private message', telemetry: NotificationTelemetryId.ExtensionInstall,
 				actions: { [role]: [action] }
@@ -102,7 +102,7 @@ suite('NotificationAccessibleView', () => {
 				shown: notification.telemetry.shown.map(event => event.surface),
 				actions: notification.telemetry.interactions.map(event => [event.interaction, event.actionRole, event.actionId, event.surface]),
 				privatePayload: JSON.stringify(notification.telemetry.events).includes('private')
-			}, { invoked: 1, shown: ['accessibleView'], actions: [[`${role}Action`, role, 'continue', 'accessibleView']], privatePayload: false });
+			}, { invoked: 1, shown: ['accessibleView'], actions: [[`${role}Action`, role, 'reload', 'accessibleView']], privatePayload: false });
 		});
 	}
 

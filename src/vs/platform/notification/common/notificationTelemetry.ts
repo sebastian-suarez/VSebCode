@@ -34,8 +34,6 @@ export enum NotificationActionTelemetryId {
 	Reload = 'reload',
 	Relaunch = 'relaunch',
 	RestartExtensionHost = 'restartExtensionHost',
-	Continue = 'continue',
-	Decline = 'decline',
 	Copy = 'copy',
 	Configure = 'configure',
 }
