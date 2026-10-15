@@ -10,7 +10,7 @@ import { isMarkdownString } from '../../../../base/common/htmlContent.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { Emitter } from '../../../../base/common/event.js';
-import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileContentHandler, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, ISaveProfileResult, IProfileImportOptions, IUserDataProfileCreateOptions, isProfileURL, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
+import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileContentHandler, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, ISaveProfileResult, IProfileImportOptions, IUserDataProfileCreateOptions, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
 import { Disposable, DisposableStore } from '../../../../base/common/lifecycle.js';
 import { IDialogService, IFileDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
@@ -75,6 +75,7 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 		@IProgressService private readonly progressService: IProgressService,
 		@IDialogService private readonly dialogService: IDialogService,
 		@IRequestService private readonly requestService: IRequestService,
+		@IProductService private readonly productService: IProductService,
 	) {
 		super();
 		this.fileUserDataProfileContentHandler = instantiationService.createInstance(FileUserDataProfileContentHandler);
@@ -347,9 +348,11 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 			return this.fileUserDataProfileContentHandler.readProfile(resource, CancellationToken.None);
 		}
 
-		if (isProfileURL(resource)) {
-			// `<urlProtocol>://profile-file/<file URI>` names a profile file; the handlers that extensions
-			// registered under other ids left with the profileContentHandlers API
+		if (resource.scheme === this.productService.urlProtocol) {
+			// `<urlProtocol>://profile-file/<file URI>` names a profile file; the other links of the
+			// product's scheme were served by extension handlers, which left with the
+			// profileContentHandlers API. Any other scheme, including an HTTP(S) host whose name starts
+			// with `profile-`, is fetched below
 			if (resource.authority === `${PROFILE_URL_AUTHORITY_PREFIX}${Schemas.file}`) {
 				return this.fileUserDataProfileContentHandler.readProfile(URI.parse(resource.path.substring(1)), CancellationToken.None);
 			}
