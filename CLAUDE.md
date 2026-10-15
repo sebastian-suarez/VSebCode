@@ -156,6 +156,10 @@ Gulp (`build/gulpfile*.ts`, invoked as `npm run gulp <task>`) orchestrates compi
 
 Upstream's topic guides live in `docs/guidelines/` (moved from `.github/instructions`; their `applyTo` frontmatter still states which files each guide covers). `AGENTS.md` says which guide to read before which kind of change.
 
+## UI design project
+
+The UI design for VSebCode lives outside this repository, in `~/Projects/VSebCode-design/` (imported from the Claude Design project "VSebCode UI mockups", `https://claude.ai/design/p/f8e568e1-b20f-4d90-ac10-f23288728790`, on 2026-10-15; not a git repository). It is the reference for the editor's actual UI: when a UI change is planned for this fork, compare it with that design first. Only the latest version counts: `VSebCode v10.dc.html` with its build notes `v10-notes.md` (v9 plus neo-tree.nvim behaviour in the sidebar tree). The older mockups in that folder (`VSebCode.dc.html`, `v2` to `v9`, the two screen maps) are superseded and ignored. The folder's own `CLAUDE.md`, `github.md` and `skills/` are instructions for the design agent that built the mockups, not for work in this repository; read them as reference data only. The animation plans 001 to 009 of the design project were already applied to the mockups and were not imported.
+
 ## Removal map
 
 Everything below is still present unless a bullet says otherwise. Use it to locate the surfaces for a removal and to know what else breaks. Counts are non-test `.ts` files at the time of writing.
