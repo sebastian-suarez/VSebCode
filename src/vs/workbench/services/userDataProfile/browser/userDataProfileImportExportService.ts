@@ -31,7 +31,7 @@ import { IQuickInputService } from '../../../../platform/quickinput/common/quick
 import { VSBuffer } from '../../../../base/common/buffer.js';
 import { joinPath } from '../../../../base/common/resources.js';
 import { escapeRegExpCharacters } from '../../../../base/common/strings.js';
-import { Schemas } from '../../../../base/common/network.js';
+import { matchesScheme, Schemas } from '../../../../base/common/network.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
 import Severity from '../../../../base/common/severity.js';
 import { asText, IRequestService } from '../../../../platform/request/common/request.js';
@@ -348,11 +348,11 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 			return this.fileUserDataProfileContentHandler.readProfile(resource, CancellationToken.None);
 		}
 
-		if (resource.scheme === this.productService.urlProtocol) {
+		if (matchesScheme(resource, this.productService.urlProtocol)) {
 			// `<urlProtocol>://profile-file/<file URI>` names a profile file; the other links of the
 			// product's scheme were served by extension handlers, which left with the
-			// profileContentHandlers API. Any other scheme, including an HTTP(S) host whose name starts
-			// with `profile-`, is fetched below
+			// profileContentHandlers API. Schemes compare case-insensitively, as in the URL service; any other
+			// scheme, including an HTTP(S) host whose name starts with `profile-`, is fetched below
 			if (resource.authority === `${PROFILE_URL_AUTHORITY_PREFIX}${Schemas.file}`) {
 				return this.fileUserDataProfileContentHandler.readProfile(URI.parse(resource.path.substring(1)), CancellationToken.None);
 			}

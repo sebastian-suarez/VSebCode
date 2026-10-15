@@ -59,12 +59,16 @@ suite('UserDataProfileImportExportService', () => {
 			profileNamedHost: await resolve('https://profile-share.example.org/team.code-profile'),
 			profileFileLink: await resolve(`vsebcode://profile-file/${encodeURIComponent('file:///profiles/team.code-profile')}`),
 			otherProfileLink: await resolve('vsebcode://profile-github/abc123'),
+			mixedCaseProfileFileLink: await resolve(`VSeBcOdE://profile-file/${encodeURIComponent('file:///profiles/team.code-profile')}`),
+			mixedCaseOtherProfileLink: await resolve('VSeBcOdE://profile-github/abc123'),
 			requestedUrls,
 		}, {
 			https: 'Team',
 			profileNamedHost: 'Team',
 			profileFileLink: 'Team',
 			otherProfileLink: 'error: This profile link is not supported.',
+			mixedCaseProfileFileLink: 'Team',
+			mixedCaseOtherProfileLink: 'error: This profile link is not supported.',
 			requestedUrls: ['https://example.org/team.code-profile', 'https://profile-share.example.org/team.code-profile'],
 		});
 	});
