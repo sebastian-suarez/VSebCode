@@ -96,6 +96,7 @@ src/vs/workbench/contrib/welcomeOnboarding/
 src/vs/workbench/services/accounts/
 src/vs/workbench/services/agentEditorComments/
 src/vs/workbench/services/agentHost/
+src/vs/workbench/services/aiEmbeddingVector/
 src/vs/workbench/services/aiRelatedInformation/
 src/vs/workbench/services/aiSettingsSearch/
 src/vs/workbench/services/assignment/
@@ -211,6 +212,7 @@ src/server-main.ts
 src/typings/copilot-api.d.ts
 src/vs/base/browser/deviceAccess.ts
 src/vs/base/common/defaultAccount.ts
+src/vs/base/common/editArcTracker.ts
 src/vs/base/common/managedSettings.ts
 src/vs/editor/common/services/completionsEnablement.ts
 src/vs/editor/contrib/inlineCompletions/browser/model/renameSymbolProcessor.ts
@@ -340,6 +342,7 @@ src/vs/workbench/api/test/common/extHostMcp.test.ts
 src/vs/workbench/api/test/node/extHostMcpNode.test.ts
 src/vs/workbench/api/test/node/loopbackServer.test.ts
 src/vs/workbench/browser/actions/policyDiagnosticsMarkdown.ts
+src/vs/workbench/browser/animatedCounterWidget.ts
 src/vs/workbench/browser/changesStatsWidget.ts
 src/vs/workbench/browser/chatChangesPill.ts
 src/vs/workbench/browser/chatDropdownPill.ts
@@ -367,12 +370,14 @@ src/vs/workbench/contrib/browserView/test/electron-browser/browserViewModel.test
 src/vs/workbench/contrib/codeEditor/browser/diffEditorTryout.contribution.ts
 src/vs/workbench/contrib/debug/browser/debugChatIntegration.ts
 src/vs/workbench/contrib/debug/browser/extensionHostDebugService.ts
+src/vs/workbench/contrib/debug/common/nullDebugService.ts
 src/vs/workbench/contrib/debug/node/telemetryApp.ts
 src/vs/workbench/contrib/extensions/browser/browserRuntimeExtensionsEditor.ts
 src/vs/workbench/contrib/extensions/browser/extensions.web.contribution.ts
 src/vs/workbench/contrib/extensions/browser/webRecommendations.ts
 src/vs/workbench/contrib/extensions/common/installExtensionsTool.ts
 src/vs/workbench/contrib/extensions/common/searchExtensionsTool.ts
+src/vs/workbench/contrib/git/common/utils.ts
 src/vs/workbench/contrib/issue/browser/issue.contribution.ts
 src/vs/workbench/contrib/issue/browser/issueService.ts
 src/vs/workbench/contrib/localization/browser/localization.contribution.ts
@@ -381,6 +386,7 @@ src/vs/workbench/contrib/logs/common/logsDataCleaner.ts
 src/vs/workbench/contrib/markdown/browser/markdownSettingRenderer.ts
 src/vs/workbench/contrib/markdown/test/browser/markdownSettingRenderer.test.ts
 src/vs/workbench/contrib/markers/browser/markersChatContext.ts
+src/vs/workbench/contrib/notebook/browser/diff/inlineDiff/notebookModifiedCellDecorator.ts
 src/vs/workbench/contrib/notebook/browser/diff/inlineDiff/notebookOriginalModelRefFactory.ts
 src/vs/workbench/contrib/notebook/browser/media/notebookCellChat.css
 src/vs/workbench/contrib/notebook/browser/media/notebookChatEditController.css
@@ -415,6 +421,7 @@ src/vs/workbench/contrib/terminal/test/browser/ahpTerminalCommandSource.test.ts
 src/vs/workbench/contrib/terminal/test/browser/chatTerminalCommandMirror.test.ts
 src/vs/workbench/contrib/terminal/test/browser/chatTerminalMirrorTestUtils.ts
 src/vs/workbench/contrib/terminalContrib/inlineHint/test/browser/terminalInitialHint.test.ts
+src/vs/workbench/contrib/testing/common/nullTestingService.ts
 src/vs/workbench/contrib/testing/common/testingChatAgentTool.ts
 src/vs/workbench/contrib/testing/test/common/testingChatAgentTool.test.ts
 src/vs/workbench/contrib/url/browser/externalUriResolver.ts
@@ -529,6 +536,7 @@ src/vs/workbench/services/workspaces/browser/workspaceEditingService.ts
 src/vs/workbench/services/workspaces/browser/workspacesService.ts
 src/vs/workbench/services/workspaces/common/editSessionIdentityService.ts
 src/vs/workbench/services/workspaces/common/workspaceIdentityService.ts
+src/vs/workbench/services/workspaces/common/workspaceUtils.ts
 src/vs/workbench/test/browser/actions/policyDiagnosticsMarkdown.test.ts
 src/vs/workbench/test/browser/aiCustomizationManagementSectionRegistry.test.ts
 src/vs/workbench/test/browser/chatPillHover.test.ts
