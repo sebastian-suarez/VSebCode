@@ -35,9 +35,10 @@ ArchitecturesAllowed={#ArchitecturesAllowed}
 ArchitecturesInstallIn64BitMode={#ArchitecturesInstallIn64BitMode}
 WizardStyle=modern
 
-// AppMutex keeps Setup from continuing while the application runs; on the Preparing to Install
-// page the Restart Manager then closes any other process that still holds a file Setup replaces,
-// without letting it refuse.
+// AppMutex makes Setup ask, at startup, for the running application to be closed. On the
+// Preparing to Install page, Setup lists the other processes the Restart Manager finds using a file
+// it replaces (names matching CloseApplicationsFilter, by default *.exe, *.dll and *.chm) and
+// closes them when the user agrees or the install is silent; force makes that close forced.
 CloseApplications=force
 
 #if "user" == InstallTarget
