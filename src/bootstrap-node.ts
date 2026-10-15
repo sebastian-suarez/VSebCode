@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -211,11 +212,6 @@ export function configurePortable(product: Partial<IProductConfiguration>): { po
 		}
 
 		if (process.platform === 'darwin') {
-			return path.dirname(path.dirname(path.dirname(appRoot)));
-		}
-
-		// appRoot = ..\Microsoft VS Code Insiders\<version>\resources\app
-		if (process.platform === 'win32' && product.win32VersionedUpdate) {
 			return path.dirname(path.dirname(path.dirname(appRoot)));
 		}
 

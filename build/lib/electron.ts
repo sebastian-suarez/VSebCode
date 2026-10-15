@@ -32,8 +32,6 @@ function isDocumentSuffix(str?: string): str is DarwinDocumentSuffix {
 const root = path.dirname(path.dirname(import.meta.dirname));
 const product = JSON.parse(fs.readFileSync(path.join(root, 'product.json'), 'utf8'));
 const commit = getVersion(root);
-const useVersionedUpdate = process.platform === 'win32' && (product as typeof product & { win32VersionedUpdate?: boolean })?.win32VersionedUpdate;
-const versionedResourcesFolder = useVersionedUpdate ? commit!.substring(0, 10) : '';
 
 function createTemplate(input: string): (params: Record<string, string>) => string {
 	return (params: Record<string, string>) => {
@@ -243,8 +241,6 @@ export const config = {
 	repo: electronAssetResolver,
 	validateChecksum: true,
 	checksumFile: path.join(root, 'build', 'checksums', 'electron.txt'),
-	createVersionedResources: useVersionedUpdate,
-	productVersionString: versionedResourcesFolder,
 };
 
 function getElectron(arch: string): () => NodeJS.ReadWriteStream {

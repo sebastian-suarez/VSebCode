@@ -61,10 +61,8 @@ function buildWin32Setup(arch: string, target: string): task.CallbackTask {
 		fs.mkdirSync(outputPath, { recursive: true });
 
 		const quality = (product as typeof product & { quality?: string }).quality || 'dev';
-		const useVersionedUpdate = (product as typeof product & { win32VersionedUpdate?: boolean })?.win32VersionedUpdate;
-		const versionedResourcesFolder = useVersionedUpdate ? commit!.substring(0, 10) : '';
 		const issPath = path.join(import.meta.dirname, 'win32', 'code.iss');
-		const productJsonRelativePath = path.join(versionedResourcesFolder, 'resources/app/product.json');
+		const productJsonRelativePath = path.join('resources', 'app', 'product.json');
 		const originalProductJsonPath = path.join(sourcePath, productJsonRelativePath);
 		const productJsonPath = path.join(outputPath, 'product.json');
 		const productJson = JSON.parse(fs.readFileSync(originalProductJsonPath, 'utf8'));
@@ -95,7 +93,6 @@ function buildWin32Setup(arch: string, target: string): task.CallbackTask {
 			InstallTarget: target,
 			ProductJsonRelativePath: productJsonRelativePath,
 			ProductJsonPath: productJsonPath,
-			VersionedResourcesFolder: versionedResourcesFolder,
 			Quality: quality
 		};
 

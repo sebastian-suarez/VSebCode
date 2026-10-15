@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -33,7 +34,7 @@ export function shouldGenerateNodeCompileCache(platform: string, arch: string, p
 	return platform === 'win32' && arch === 'x64';
 }
 
-export function getNodeCompileCachePaths(platform: string, outputDirectory: string, versionedResourcesFolder: string, product: INodeCompileCacheProduct): INodeCompileCachePaths {
+export function getNodeCompileCachePaths(platform: string, outputDirectory: string, product: INodeCompileCacheProduct): INodeCompileCachePaths {
 	if (platform === 'darwin') {
 		const applicationRoot = path.join(outputDirectory, `${product.nameLong}.app`);
 		return {
@@ -48,7 +49,7 @@ export function getNodeCompileCachePaths(platform: string, outputDirectory: stri
 
 	return {
 		application,
-		cacheDirectory: path.join(outputDirectory, versionedResourcesFolder, 'resources', 'app', 'node-compile-cache')
+		cacheDirectory: path.join(outputDirectory, 'resources', 'app', 'node-compile-cache')
 	};
 }
 
@@ -69,8 +70,8 @@ export function createNodeCompileCacheGenerationEnvironment(portableDirectory: s
 	return env;
 }
 
-export async function generateNodeCompileCache(platform: string, outputDirectory: string, versionedResourcesFolder: string, product: INodeCompileCacheProduct): Promise<void> {
-	const paths = getNodeCompileCachePaths(platform, outputDirectory, versionedResourcesFolder, product);
+export async function generateNodeCompileCache(platform: string, outputDirectory: string, product: INodeCompileCacheProduct): Promise<void> {
+	const paths = getNodeCompileCachePaths(platform, outputDirectory, product);
 	const temporaryDirectory = platform === 'win32' ? os.tmpdir() : '/tmp';
 	const portableDirectory = await fs.promises.mkdtemp(path.join(temporaryDirectory, 'vscode-cache-'));
 

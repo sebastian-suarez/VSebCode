@@ -24,6 +24,7 @@ extensions/mermaid-markdown-features/preview-src/chat/
 extensions/microsoft-authentication/
 extensions/prompt-basics/
 extensions/tunnel-forwarding/
+resources/win32/versioned/
 scripts/chat-simulation/
 scripts/mock-policy-server/
 src/vs/platform/agentHost/
@@ -144,11 +145,11 @@ build/npm/update-distro.ts
 build/vite/mobile-multi-diff-worker.ts
 build/vite/mobile-multi-diff.html
 build/vite/mobile-multi-diff.ts
-cglicenses.json
 build/win32/Cargo.lock
 build/win32/Cargo.toml
 build/win32/inno_updater.exe
 build/win32/vcruntime140.dll
+cglicenses.json
 extensions/configuration-editing/src/browser/net.ts
 extensions/configuration-editing/src/importExportProfiles.ts
 extensions/configuration-editing/src/node/net.ts

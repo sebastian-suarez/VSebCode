@@ -103,7 +103,6 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 
 	const task = () => {
 		const out = sourceFolderName;
-		const versionedResourcesFolder = util.getVersionedResourcesFolder(platform, commit!);
 
 		const checksums = computeChecksums(out, [
 			'vs/base/parts/sandbox/electron-browser/preload.js',
@@ -316,40 +315,21 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 		if (platform === 'win32') {
 			result = es.merge(result, gulp.src('resources/win32/bin/code.js', { base: 'resources/win32', allowEmpty: true }));
 
-			if (versionedResourcesFolder) {
-				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.cmd', { base: 'resources/win32/versioned' })
-					.pipe(replace('@@NAME@@', product.nameShort))
-					.pipe(replace('@@VERSIONFOLDER@@', versionedResourcesFolder))
-					.pipe(rename(function (f) { f.basename = product.applicationName; })));
+			result = es.merge(result, gulp.src('resources/win32/bin/code.cmd', { base: 'resources/win32' })
+				.pipe(replace('@@NAME@@', product.nameShort))
+				.pipe(rename(function (f) { f.basename = product.applicationName; })));
 
-				result = es.merge(result, gulp.src('resources/win32/versioned/bin/code.sh', { base: 'resources/win32/versioned' })
-					.pipe(replace('@@NAME@@', product.nameShort))
-					.pipe(replace('@@PRODNAME@@', product.nameLong))
-					.pipe(replace('@@VERSION@@', version))
-					.pipe(replace('@@COMMIT@@', String(commit)))
-					.pipe(replace('@@APPNAME@@', product.applicationName))
-					.pipe(replace('@@VERSIONFOLDER@@', versionedResourcesFolder))
-					.pipe(replace('@@SERVERDATAFOLDER@@', product.serverDataFolderName || '.vscode-remote'))
-					.pipe(replace('@@QUALITY@@', quality!))
-					.pipe(rename(function (f) { f.basename = product.applicationName; f.extname = ''; })));
-			} else {
-				result = es.merge(result, gulp.src('resources/win32/bin/code.cmd', { base: 'resources/win32' })
-					.pipe(replace('@@NAME@@', product.nameShort))
-					.pipe(rename(function (f) { f.basename = product.applicationName; })));
-
-				result = es.merge(result, gulp.src('resources/win32/bin/code.sh', { base: 'resources/win32' })
-					.pipe(replace('@@NAME@@', product.nameShort))
-					.pipe(replace('@@PRODNAME@@', product.nameLong))
-					.pipe(replace('@@VERSION@@', version))
-					.pipe(replace('@@COMMIT@@', String(commit)))
-					.pipe(replace('@@APPNAME@@', product.applicationName))
-					.pipe(replace('@@SERVERDATAFOLDER@@', product.serverDataFolderName || '.vscode-remote'))
-					.pipe(replace('@@QUALITY@@', String(quality)))
-					.pipe(rename(function (f) { f.basename = product.applicationName; f.extname = ''; })));
-			}
+			result = es.merge(result, gulp.src('resources/win32/bin/code.sh', { base: 'resources/win32' })
+				.pipe(replace('@@NAME@@', product.nameShort))
+				.pipe(replace('@@PRODNAME@@', product.nameLong))
+				.pipe(replace('@@VERSION@@', version))
+				.pipe(replace('@@COMMIT@@', String(commit)))
+				.pipe(replace('@@APPNAME@@', product.applicationName))
+				.pipe(replace('@@SERVERDATAFOLDER@@', product.serverDataFolderName || '.vscode-remote'))
+				.pipe(replace('@@QUALITY@@', String(quality)))
+				.pipe(rename(function (f) { f.basename = product.applicationName; f.extname = ''; })));
 
 			result = es.merge(result, gulp.src('resources/win32/VisualElementsManifest.xml', { base: 'resources/win32' })
-				.pipe(replace('@@VERSIONFOLDER@@', versionedResourcesFolder ? `${versionedResourcesFolder}\\` : ''))
 				.pipe(rename(product.nameShort + '.VisualElementsManifest.xml')));
 
 			result = es.merge(result, gulp.src('.build/policies/win32/**', { base: '.build/policies/win32' })
@@ -426,14 +406,13 @@ function patchWin32DependenciesTask(destinationFolderName: string) {
 	const cwd = path.join(path.dirname(root), destinationFolderName);
 
 	return async () => {
-		const versionedResourcesFolder = util.getVersionedResourcesFolder('win32', commit!);
 		const deps = (await Promise.all([
 			glob('**/*.node', { cwd, ignore: 'extensions/node_modules/@parcel/watcher/**' }),
 			glob('**/rg.exe', { cwd }),
 			glob('**/*explorer_command*.dll', { cwd }),
 		])).flatMap(o => o);
-		const packageJson = JSON.parse(await fs.promises.readFile(path.join(cwd, versionedResourcesFolder, 'resources', 'app', 'package.json'), 'utf8'));
-		const product = JSON.parse(await fs.promises.readFile(path.join(cwd, versionedResourcesFolder, 'resources', 'app', 'product.json'), 'utf8'));
+		const packageJson = JSON.parse(await fs.promises.readFile(path.join(cwd, 'resources', 'app', 'package.json'), 'utf8'));
+		const product = JSON.parse(await fs.promises.readFile(path.join(cwd, 'resources', 'app', 'product.json'), 'utf8'));
 		const baseVersion = packageJson.version.replace(/-.*$/, '');
 
 		const patchPromises = deps.map<Promise<unknown>>(async dep => {
@@ -466,7 +445,6 @@ function generateNodeCompileCacheTask(platform: string, destinationFolderName: s
 	return () => generateNodeCompileCache(
 		platform,
 		outputDirectory,
-		util.getVersionedResourcesFolder(platform, commit!),
 		product
 	);
 }

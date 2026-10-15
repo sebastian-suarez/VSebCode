@@ -18,8 +18,6 @@ import ternaryStream from 'ternary-stream';
 import type { Transform } from 'stream';
 import * as tar from 'tar';
 
-const root = path.dirname(path.dirname(import.meta.dirname));
-
 export interface ICancellationToken {
 	isCancellationRequested(): boolean;
 }
@@ -358,12 +356,6 @@ export function streamToPromise(stream: NodeJS.ReadWriteStream): Promise<void> {
 		stream.on('error', err => e(err));
 		stream.on('end', () => c());
 	});
-}
-
-export function getVersionedResourcesFolder(platform: string, commit: string): string {
-	const productJson = JSON.parse(fs.readFileSync(path.join(root, 'product.json'), 'utf8'));
-	const useVersionedUpdate = platform === 'win32' && productJson.win32VersionedUpdate;
-	return useVersionedUpdate ? commit.substring(0, 10) : '';
 }
 
 export class VinylStat implements fs.Stats {
