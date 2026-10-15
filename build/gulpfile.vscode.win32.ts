@@ -6,10 +6,7 @@
 import assert from 'assert';
 import * as cp from 'child_process';
 import * as fs from 'fs';
-import { gulp } from './lib/gulp/facade.ts';
 import * as path from 'path';
-import rcedit from 'rcedit';
-import vfs from 'vinyl-fs';
 import pkg from '../package.json' with { type: 'json' };
 import product from '../product.json' with { type: 'json' };
 import { getVersion } from './lib/getVersion.ts';
@@ -127,20 +124,3 @@ defineWin32SetupTasks('x64', 'system');
 defineWin32SetupTasks('arm64', 'system');
 defineWin32SetupTasks('x64', 'user');
 defineWin32SetupTasks('arm64', 'user');
-
-function copyInnoUpdater(arch: string) {
-	return () => {
-		return gulp.src('build/win32/{inno_updater.exe,vcruntime140.dll}', { base: 'build/win32' })
-			.pipe(vfs.dest(path.join(buildPath(arch), 'tools')));
-	};
-}
-
-function updateIcon(executablePath: string): task.CallbackTask {
-	return cb => {
-		const icon = path.join(repoPath, 'resources', 'win32', 'code.ico');
-		rcedit(executablePath, { icon }, cb);
-	};
-}
-
-task.task(task.define('vscode-win32-x64-inno-updater', task.series(copyInnoUpdater('x64'), updateIcon(path.join(buildPath('x64'), 'tools', 'inno_updater.exe')))));
-task.task(task.define('vscode-win32-arm64-inno-updater', task.series(copyInnoUpdater('arm64'), updateIcon(path.join(buildPath('arm64'), 'tools', 'inno_updater.exe')))));
