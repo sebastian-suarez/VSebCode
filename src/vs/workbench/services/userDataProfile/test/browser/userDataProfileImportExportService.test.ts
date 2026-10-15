@@ -46,8 +46,14 @@ suite('UserDataProfileImportExportService', () => {
 		testObject = disposables.add(instantiationService.createInstance(UserDataProfileImportExportService));
 	});
 
-	test('fetches HTTP(S) URLs, including hosts whose name starts with profile-, and resolves profile-file links locally', async () => {
-		const resolve = async (uri: string) => (await testObject.resolveProfileTemplate(URI.parse(uri)))?.name ?? null;
+	test('fetches HTTP(S) URLs, including hosts whose name starts with profile-, resolves profile-file links locally and rejects other profile links', async () => {
+		const resolve = async (uri: string) => {
+			try {
+				return (await testObject.resolveProfileTemplate(URI.parse(uri)))?.name ?? null;
+			} catch (error) {
+				return `error: ${error.message}`;
+			}
+		};
 		assert.deepStrictEqual({
 			https: await resolve('https://example.org/team.code-profile'),
 			profileNamedHost: await resolve('https://profile-share.example.org/team.code-profile'),
@@ -58,7 +64,7 @@ suite('UserDataProfileImportExportService', () => {
 			https: 'Team',
 			profileNamedHost: 'Team',
 			profileFileLink: 'Team',
-			otherProfileLink: null,
+			otherProfileLink: 'error: This profile link is not supported.',
 			requestedUrls: ['https://example.org/team.code-profile', 'https://profile-share.example.org/team.code-profile'],
 		});
 	});

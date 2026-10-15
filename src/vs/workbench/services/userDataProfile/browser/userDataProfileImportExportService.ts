@@ -10,7 +10,7 @@ import { isMarkdownString } from '../../../../base/common/htmlContent.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { Emitter } from '../../../../base/common/event.js';
-import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileContentHandler, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, ISaveProfileResult, IProfileImportOptions, IUserDataProfileCreateOptions, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
+import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, IProfileImportOptions, IUserDataProfileCreateOptions, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
 import { Disposable, DisposableStore } from '../../../../base/common/lifecycle.js';
 import { IDialogService, IFileDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
@@ -356,7 +356,7 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 			if (resource.authority === `${PROFILE_URL_AUTHORITY_PREFIX}${Schemas.file}`) {
 				return this.fileUserDataProfileContentHandler.readProfile(URI.parse(resource.path.substring(1)), CancellationToken.None);
 			}
-			return null;
+			throw new Error(localize('unsupported profile link', "This profile link is not supported."));
 		}
 
 		const context = await this.requestService.request({ type: 'GET', url: resource.toString(true), callSite: 'userDataProfileImportExportService.resolveContent' }, CancellationToken.None);
@@ -402,10 +402,7 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 
 }
 
-class FileUserDataProfileContentHandler implements IUserDataProfileContentHandler {
-
-	readonly name = localize('local', "Local");
-	readonly description = localize('file', "file");
+class FileUserDataProfileContentHandler {
 
 	constructor(
 		@IFileDialogService private readonly fileDialogService: IFileDialogService,
@@ -415,7 +412,7 @@ class FileUserDataProfileContentHandler implements IUserDataProfileContentHandle
 		@ITextFileService private readonly textFileService: ITextFileService,
 	) { }
 
-	async saveProfile(name: string, content: string, token: CancellationToken): Promise<ISaveProfileResult | null> {
+	async saveProfile(name: string, content: string, token: CancellationToken): Promise<URI | null> {
 		const link = await this.fileDialogService.showSaveDialog({
 			title: localize('export profile dialog', "Save Profile"),
 			filters: PROFILE_FILTER,
@@ -425,7 +422,7 @@ class FileUserDataProfileContentHandler implements IUserDataProfileContentHandle
 			return null;
 		}
 		await this.textFileService.create([{ resource: link, value: content, options: { overwrite: true } }]);
-		return { link, id: link.toString() };
+		return link;
 	}
 
 	async canHandle(uri: URI): Promise<boolean> {
