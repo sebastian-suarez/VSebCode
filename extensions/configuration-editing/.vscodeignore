@@ -6,5 +6,4 @@ out/**
 esbuild*
 package-lock.json
 build/**
-schemas/devContainer.codespaces.schema.json
 schemas/devContainer.vscode.schema.json

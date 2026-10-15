@@ -150,6 +150,7 @@ build/win32/Cargo.toml
 build/win32/inno_updater.exe
 build/win32/vcruntime140.dll
 cglicenses.json
+extensions/configuration-editing/schemas/devContainer.codespaces.schema.json
 extensions/configuration-editing/src/browser/net.ts
 extensions/configuration-editing/src/importExportProfiles.ts
 extensions/configuration-editing/src/node/net.ts
