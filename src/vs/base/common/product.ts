@@ -161,9 +161,6 @@ export interface IProductConfiguration {
 	 */
 	readonly extensionConfigurationPolicy?: IStringDictionary<IPolicy | IExtensionConfigurationPolicyReference>;
 
-	readonly onboardingKeymaps?: readonly IProductOnboardingKeymap[];
-	readonly onboardingThemes?: readonly IProductOnboardingTheme[];
-
 	/**
 	 * When running as an embedded app, the parent VS Code's policy
 	 * identity (win32RegValueName / darwinBundleIdentifier) so that
@@ -174,20 +171,6 @@ export interface IProductConfiguration {
 		darwinBundleIdentifier?: string;
 		urlProtocol?: string;
 	};
-}
-
-export interface IProductOnboardingKeymap {
-	readonly id: string;
-	readonly label: string;
-	readonly extensionId?: string;
-	readonly description: string;
-}
-
-export interface IProductOnboardingTheme {
-	readonly id: string;
-	readonly label: string;
-	readonly themeId: string;
-	readonly type: 'dark' | 'light' | 'hcDark' | 'hcLight';
 }
 
 export interface IExtensionRecommendations {
