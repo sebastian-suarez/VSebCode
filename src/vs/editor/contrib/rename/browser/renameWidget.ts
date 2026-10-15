@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -28,7 +29,7 @@ import { IDimension } from '../../../common/core/2d/dimension.js';
 import { Position } from '../../../common/core/position.js';
 import { IRange, Range } from '../../../common/core/range.js';
 import { ScrollType } from '../../../common/editorCommon.js';
-import { NewSymbolName, NewSymbolNameTag, NewSymbolNameTriggerKind, ProviderResult } from '../../../common/languages.js';
+import { NewSymbolName, NewSymbolNameTriggerKind, ProviderResult } from '../../../common/languages.js';
 import * as nls from '../../../../nls.js';
 import { IContextKey, IContextKeyService, RawContextKey } from '../../../../platform/contextkey/common/contextkey.js';
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
@@ -1011,7 +1012,6 @@ class RenameCandidateView {
 	private static _PADDING: number = 2;
 
 	private readonly _domNode: HTMLElement;
-	private readonly _icon: HTMLElement;
 	private readonly _label: HTMLElement;
 
 	constructor(parent: HTMLElement, fontInfo: FontInfo) {
@@ -1024,17 +1024,6 @@ class RenameCandidateView {
 		this._domNode.style.height = `${fontInfo.lineHeight}px`;
 		this._domNode.style.padding = `${RenameCandidateView._PADDING}px`;
 
-		// @ulugbekna: needed to keep space when the `icon.style.display` is set to `none`
-		const iconContainer = document.createElement('div');
-		iconContainer.style.display = `flex`;
-		iconContainer.style.alignItems = `center`;
-		iconContainer.style.width = iconContainer.style.height = `${fontInfo.lineHeight * 0.8}px`;
-		this._domNode.appendChild(iconContainer);
-
-		this._icon = renderIcon(Codicon.sparkle);
-		this._icon.style.display = `none`;
-		iconContainer.appendChild(this._icon);
-
 		this._label = document.createElement('div');
 		domFontInfo.applyFontInfo(this._label, fontInfo);
 		this._domNode.appendChild(this._label);
@@ -1043,13 +1032,7 @@ class RenameCandidateView {
 	}
 
 	public populate(value: NewSymbolName) {
-		this._updateIcon(value);
 		this._updateLabel(value);
-	}
-
-	private _updateIcon(value: NewSymbolName) {
-		const isAIGenerated = !!value.tags?.includes(NewSymbolNameTag.AIGenerated);
-		this._icon.style.display = isAIGenerated ? 'inherit' : 'none';
 	}
 
 	private _updateLabel(value: NewSymbolName) {

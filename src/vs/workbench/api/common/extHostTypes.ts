@@ -2129,10 +2129,6 @@ export class InlineValueContext implements vscode.InlineValueContext {
 	}
 }
 
-export enum NewSymbolNameTag {
-	AIGenerated = 1
-}
-
 export enum NewSymbolNameTriggerKind {
 	Invoke = 0,
 	Automatic = 1,
@@ -2140,14 +2136,9 @@ export enum NewSymbolNameTriggerKind {
 
 export class NewSymbolName implements vscode.NewSymbolName {
 	readonly newSymbolName: string;
-	readonly tags?: readonly vscode.NewSymbolNameTag[] | undefined;
 
-	constructor(
-		newSymbolName: string,
-		tags?: readonly NewSymbolNameTag[]
-	) {
+	constructor(newSymbolName: string) {
 		this.newSymbolName = newSymbolName;
-		this.tags = tags;
 	}
 }
 

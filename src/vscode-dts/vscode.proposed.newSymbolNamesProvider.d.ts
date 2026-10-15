@@ -1,15 +1,12 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 // https://github.com/microsoft/vscode/issues/204345 @ulugbekna
 
 declare module 'vscode' {
-
-	export enum NewSymbolNameTag {
-		AIGenerated = 1
-	}
 
 	export enum NewSymbolNameTriggerKind {
 		Invoke = 0,
@@ -18,9 +15,8 @@ declare module 'vscode' {
 
 	export class NewSymbolName {
 		readonly newSymbolName: string;
-		readonly tags?: readonly NewSymbolNameTag[];
 
-		constructor(newSymbolName: string, tags?: readonly NewSymbolNameTag[]);
+		constructor(newSymbolName: string);
 	}
 
 	export interface NewSymbolNamesProvider {

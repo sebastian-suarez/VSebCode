@@ -951,7 +951,7 @@ class NewSymbolNamesAdapter {
 			return value.map(v =>
 				typeof v === 'string' /* @ulugbekna: for backward compatibility because `value` used to be just `string[]` */
 					? { newSymbolName: v }
-					: { newSymbolName: v.newSymbolName, tags: v.tags }
+					: { newSymbolName: v.newSymbolName }
 			);
 		} catch (err: unknown) {
 			this._logService.error(NewSymbolNamesAdapter._asMessage(err) ?? JSON.stringify(err, null, '\t') /* @ulugbekna: assuming `err` doesn't have circular references that could result in an exception when converting to JSON */);

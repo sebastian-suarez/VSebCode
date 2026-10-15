@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -847,7 +848,6 @@ export function createMonacoLanguagesAPI(): typeof monaco.languages {
 		InlayHintKind: standaloneEnums.InlayHintKind,
 		InlineCompletionTriggerKind: standaloneEnums.InlineCompletionTriggerKind,
 		CodeActionTriggerType: standaloneEnums.CodeActionTriggerType,
-		NewSymbolNameTag: standaloneEnums.NewSymbolNameTag,
 		NewSymbolNameTriggerKind: standaloneEnums.NewSymbolNameTriggerKind,
 		PartialAcceptTriggerKind: standaloneEnums.PartialAcceptTriggerKind,
 		HoverVerbosityAction: standaloneEnums.HoverVerbosityAction,

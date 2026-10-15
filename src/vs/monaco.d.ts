@@ -8512,10 +8512,6 @@ declare namespace monaco.languages {
 		resolveRenameLocation?(model: editor.ITextModel, position: Position, token: CancellationToken): ProviderResult<RenameLocation & Rejection>;
 	}
 
-	export enum NewSymbolNameTag {
-		AIGenerated = 1
-	}
-
 	export enum NewSymbolNameTriggerKind {
 		Invoke = 0,
 		Automatic = 1
@@ -8523,7 +8519,6 @@ declare namespace monaco.languages {
 
 	export interface NewSymbolName {
 		readonly newSymbolName: string;
-		readonly tags?: readonly NewSymbolNameTag[];
 	}
 
 	export interface NewSymbolNamesProvider {

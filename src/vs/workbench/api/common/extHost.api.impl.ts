@@ -1845,7 +1845,6 @@ export function createApiFactoryAndRegisterActors(accessor: ServicesAccessor): I
 			InlineCompletionEndOfLifeReasonKind: extHostTypes.InlineCompletionEndOfLifeReasonKind,
 			InlineCompletionDisplayLocationKind: extHostTypes.InlineCompletionDisplayLocationKind,
 			NewSymbolName: extHostTypes.NewSymbolName,
-			NewSymbolNameTag: extHostTypes.NewSymbolNameTag,
 			NewSymbolNameTriggerKind: extHostTypes.NewSymbolNameTriggerKind,
 			ExcludeSettingOptions: ExcludeSettingOptions,
 			TextSearchContext2: TextSearchContext2,
