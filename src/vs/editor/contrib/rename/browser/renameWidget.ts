@@ -847,7 +847,7 @@ class RenameCandidateListView {
 		const longestCandidateWidth = Math.ceil(Math.max(...candidates.map(c => c.newSymbolName.length)) * this._typicalHalfwidthCharacterWidth);
 		const width = Math.max(
 			this._minimumWidth,
-			4 /* padding */ + 16 /* sparkle icon */ + 5 /* margin-left */ + longestCandidateWidth + 10 /* (possibly visible) scrollbar width */ // TODO@ulugbekna: approximate calc - clean this up
+			4 /* padding */ + longestCandidateWidth + 10 /* (possibly visible) scrollbar width */ // TODO@ulugbekna: approximate calc - clean this up
 		);
 		return width;
 	}
@@ -1019,7 +1019,6 @@ class RenameCandidateView {
 		this._domNode = document.createElement('div');
 		this._domNode.className = 'rename-box rename-candidate';
 		this._domNode.style.display = `flex`;
-		this._domNode.style.columnGap = `5px`;
 		this._domNode.style.alignItems = `center`;
 		this._domNode.style.height = `${fontInfo.lineHeight}px`;
 		this._domNode.style.padding = `${RenameCandidateView._PADDING}px`;
