@@ -1,6 +1,6 @@
 # Phase 7 (open decisions): review findings not acted on
 
-Each area of phase 7 was reviewed by a fresh-context Claude reviewer and by a Codex adversarial review; the findings below were rejected or deferred with the evidence recorded here (2026-10-14). Everything else the reviewers reported was applied; the review log of `docs/plans/phase-7-open-decisions.md` lists it.
+The first sections record rejected or deferred findings from the reviews of phase 7 areas A to D (2026-10-14). Their accepted findings are recorded in `docs/plans/phase-7-open-decisions.md`. The later section records the independent review retry for areas E and F.
 
 ## Windows installer
 
@@ -24,3 +24,14 @@ Each area of phase 7 was reviewed by a fresh-context Claude reviewer and by a Co
 - The ownership suite installs its own `DisposableTracker` inside the test, restored in `finally`, instead of in the suite's `setup` and `teardown` as `base/test/common/event.test.ts` does. Kept: the reviewer found the swap acceptable, and the suite-level `ensureNoDisposablesAreLeakedInTestSuite()` that the lint rule requires stays in place.
 - A `notify()` that throws would leak the action store built for the failed show. Not guarded: the notification service does not throw from `notify`, and the per-notification store is now created after the call.
 - The member comments of `IOsc99ActiveNotification` and of the handler's fields end without a period, unlike the JSDoc of the constants. Kept: the fragments match the surrounding upstream member comments.
+
+## Server, web and additional cleanup review retry (2026-10-15)
+
+Eight scopes completed over the committed range `7ea78b921c79..fcfc1a4c8ee`, covering 248 changed files. Four scopes covering 132 files were rejected by the review service's session limit; this is incomplete independent coverage, not approval. The per-path ledger and raw outputs are retained under `/private/tmp/phase7-followup/implementation-review/`.
+
+- The Node runner should allow newer majors or accept major-only `.nvmrc` values: rejected as a current defect. `AGENTS.md` already requires the same Node major as `.nvmrc`; `.nvmrc` contains the full version `24.18.0`. The stricter comparison enforces that policy. A hypothetical future change to an alias is outside this diff.
+- Removing the server runners leaves the retained remote-client machinery without an in-repository client/server integration test: accepted as a coverage limit. The maintainer explicitly removed the server and its test resolver while retaining desktop client interfaces and the browser worker host. Reintroducing the server or pruning those retained interfaces is outside the approved scope. The worker host has separate activation evidence; it does not substitute for remote-client coverage.
+- The inlined remote-resource HTTP fixture should still match the deleted server helper: verified against the pre-removal helper. It retains the tested origin-gated access-control header, content-security policy, nosniff and Vary headers. It tests the desktop protocol handler against a fixture, not a shipped server implementation.
+- `tar`, browser IndexedDB and broadcast helpers, or Vite setup may now be unused: no removal. `build/lib/npmPackage.ts` and its tests still import `tar`; `htmlFileSystemProvider.ts` and the IndexedDB tests import IndexedDB; `workbench/browser/dnd.ts` imports `BroadcastDataChannel`; `build/vite/workbench-electron.ts` imports `setup-dev`. The retained Electron HTML entry imports `workbench-electron.ts`.
+- Missing cross-packet evidence for WSL substitutions, server references and the component explorer: the Windows shell template now has only `@@NAME@@`; the corresponding gulp replacement remains. `scripts/xterm-update.js` no longer installs remote packages; eslint has no server exemptions. The earlier component-explorer static build and HTTP serve check passed. A Vite packaged build was not newly exercised in this follow-up.
+- Stale phase status, plan introduction, browser-bundle wording and incomplete Windows validation notes: accepted and corrected in the documentation. The stale `build/darwin/sign-server.ts` bracket-notation allowlist entry was confirmed and removed during closeout; no runtime failure resulted from the entry naming a deleted file.

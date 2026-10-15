@@ -1,0 +1,62 @@
+# Phase 7 packaged desktop verification (2026-10-15)
+
+The cleanup implementation is committed through `fcfc1a4c8ee`. This record covers the subsequent macOS arm64 package verification, the Marketplace installation correction and the available independent review scopes. It does not cover distribution signing, publication or integration of the unfinished icons. Independent review coverage remains incomplete as described below.
+
+## Independent review coverage
+
+Eight of twelve fresh review scopes completed, covering 248 of the 380 files changed since `7ea78b921c79`. They cover build and packaging, documentation, workbench contributions, harnesses and platform/runtime code. The three services scopes and the additional-leftovers scope, covering 132 files, were rejected by a session limit; the service reported a reset at 7:30 a.m. Bogotá time. The earlier fallback reviews remain available, but do not complete the independent vendor requirement. The eight completed scopes reported one medium documentation inconsistency and seven low findings, including a duplicated remote-client coverage concern. Their dispositions are in [the rejection and deferral log](phase-7-open-decisions-rejected.md).
+
+## Package provenance and correction
+
+The initial package was built in a linked worktree. The unchanged Git-version helper did not resolve its `.git` file, so `product.commit` was absent. This was a functional issue: `src/vs/amdX.ts` uses that field to select `node_modules.asar`; the package instead tried to load xterm, TextMate and Oniguruma from nonexistent `node_modules` paths. Launch-only smoke testing had not exposed it. The original package and failure logs were preserved.
+
+The candidate's changed files matched the committed checkout byte for byte. Rebuilding that candidate with the supported `BUILD_SOURCEVERSION=fcfc1a4c8ee7fa3132fd93453179731114633bf4` setting produced a package containing that commit. The harness launched that package's executable explicitly. Its product metadata, executable hash and build log are recorded in the local evidence directory. This corrects the verification artifact; the worktree Git-version helper itself is unchanged.
+
+## Verified workflows
+
+- The selected existing smoke suites pass 13 tests, with four pre-existing skips: editor save/restore, dirty-file hot exit, autosave on shutdown, settings changes, terminal creation and renaming, and ordered terminal output replay after window reload and detach/attach.
+- Installing and updating a local VSIX succeeds. Its installed extension activates and runs commands.
+- The built-in Git extension discovers the temporary repository, reports a modification, stages it, exposes the staged diff and unstages it. The fixture's initial commit is signed; no remote is configured.
+- The packaged JavaScript debugger pauses at the fixture's debugger statement, evaluates `answer` to `42` in the Debug Console, continues and prints `DEBUG_QA_DONE:42`. Temporary tracker checks and older automation helpers initially failed because of child-session teardown, a command no longer exposed in the palette, and title-based selectors. Direct UI checks used the current editor and toolbar controls; no application code changed.
+- User settings persist after restarting the package. File-profile export includes the test settings; importing the exported file creates a separate profile containing those values. Activating the imported profile and restarting preserves its selection and settings.
+
+Tests use temporary workspace, user-data, extension and shared-data directories plus in-memory secret storage. An initial preliminary run used the smoke runner's default shared-data directory and was stopped; the recorded passing run explicitly supplies `--shared-data-dir`. The before/after check covered personal settings, keybindings, profile configuration where present, the extension index and Git configuration: all four checked locations were unchanged. This is a scoped configuration check, not a claim that no operating-system cache changed.
+
+## Marketplace installation regression
+
+Marketplace installation failed on the rebuilt package. Installing `ms-vscode.hexeditor` downloaded the extension but exited with `Signature verification was not executed.` `extensionSignatureVerificationService.ts` returns no result when the intentionally absent `@vscode/vsce-sign` module cannot load; `extensionManagementService.ts` rejected that result for built applications. Both source files were unchanged by the server/web cleanup, so this was an earlier defect exposed by packaged testing. The prior documentation claim that installation proceeded was incorrect.
+
+The focused follow-up below resolves the mismatch with the already-approved absence of the proprietary verifier. No verifier, signature-bypass flag or setting workaround was introduced. A stale `build/darwin/sign-server.ts` entry in `.eslint-allowed-bracket-notation-files` was also confirmed and removed during the subsequent closeout.
+
+Raw review outputs, the per-path coverage ledger, build and test logs, temporary fixtures, and package fingerprints are retained under `/private/tmp/phase7-followup/`. Icons remain pending; Windows validation and distribution work remain deferred.
+
+## Marketplace fix verification (2026-10-15)
+
+The native extension-management download gate now permits an absent verification result, without changing it to `Success`. With verification enabled, packaged builds still reject explicit signature and verifier errors and delete the download, except on Linux ARMHF. Required-signature unsigned extensions follow those same conditions. The existing archive validation, manifest identity check and removal of unverified cached downloads remain unchanged. Plan: [packaged Marketplace installation](../plans/packaged-marketplace-install.md).
+
+Eight new service tests use `isBuilt: true` and a supported target platform. Before the production fix, the two absent-verifier cases failed with the exact reported error (default configuration and verification explicitly enabled); the six controls passed. After the fix, all 48 native extension-management Electron tests pass, including the harness check. Client type checking, targeted eslint, hygiene and `git diff --check` pass.
+
+`npm run gulp vscode-darwin-arm64` rebuilt `/Users/sebastian.suarez/Projects/VSCode-darwin-arm64/VSebCode.app` from `fcfc1a4c8ee7fa3132fd93453179731114633bf4` plus the uncommitted fix. The packaged CLI successfully installed `ms-vscode.hexeditor@1.11.1` from Marketplace, and a second invocation listed that version. The trace confirms that the verifier module was absent and verification was not performed. Both commands used temporary user-data, shared-data and extension directories plus in-memory secret storage, without disabling verification. Package metadata, the source and packaged CLI hashes, and all new build/test/install logs are retained under `/private/tmp/packaged-marketplace-fix/`. This verifies the macOS arm64 package; Windows and Linux packages were not exercised.
+
+The required independent plan and implementation review invocations hit a session limit. Fresh implementation reviews found no material code issues. A final documentation finding was verified against the existing gate and corrected to state the verification-setting and Linux ARMHF exceptions. The fallback reviews do not complete the independent vendor requirement. Review evidence is retained with the new verification logs. No commit or push was made during that verification run.
+
+## Rebuilt Marketplace and local VSIX verification (2026-10-15)
+
+Repeated both installation paths on a fresh rebuild of `/Users/sebastian.suarez/Projects/VSCode-darwin-arm64/VSebCode.app`, version `1.143.0`, from `fcfc1a4c8ee7fa3132fd93453179731114633bf4` plus the existing uncommitted signature-gate fix. `npm run compile-client`, all 48 focused native extension-management Electron tests, the automation harness compilation and `npm run gulp vscode-darwin-arm64` pass. The source fingerprints and packaged executable/CLI hashes match before and after installation verification. No application source changed during this repeat. Plan: [Marketplace and local VSIX verification](../plans/marketplace-vsix-reverification.md).
+
+| Installation path | Verified result |
+|---|---|
+| Marketplace identifier `ms-vscode.hexeditor` | The packaged CLI fetched the Marketplace query, manifest and VSIX with HTTP 200 responses, installed version `1.11.1`, and listed it. The installed extension activated in the packaged desktop extension host, opened the temporary file in Hex Editor and rendered its expected first 16 bytes. Repeating after a full application restart passed, and the CLI still listed the installed version. |
+| Absolute local path `install-verification-1.0.0.vsix` | The same packaged CLI installed the temporary `local-test.install-verification@1.0.0` fixture into a separate fresh profile. Its installed JavaScript matches the packaged fixture source. The command activated the installed extension and returned `42`; after a full application restart, a new extension-host PID and activation token ran the command again, with its persisted counter advancing from 1 to 2. The CLI still listed the installed version. |
+
+Both paths used separate temporary user-data, shared-data, extension and workspace directories, in-memory secret storage and unchanged signature-verification settings. Extension-host initialization confirms these were installed extensions, without an extension-development path. The Marketplace trace records the intentionally missing verifier; successful installation does not assert signature verification. The before/after comparison of personal settings, keybindings, extension index and Git configuration found all four checked locations unchanged.
+
+Initial harness attempts used the wrong test-runner glob flag and a lowercase assertion for uppercase hex output; corrected runs passed. Comparing raw extension-list logs also included trace chatter, so the final persistence check compares the actual identifier/version lines. A JSON language-service `Channel has been closed` message occurred during shutdown of the initial timed-out UI attempt; the passing Marketplace and local VSIX UI runs recorded no application error. The original failures remain in the evidence.
+
+Commands, exit codes, source and package fingerprints, VSIX, installed manifests, UI results, screenshots and trace logs are retained under `/private/tmp/marketplace-vsix-reverification/`. This covers macOS arm64 installation, activation and restart persistence; it does not validate Windows/Linux packages, distribution signing or publication. The independent vendor plan and final review invocations hit the session limit. The available final reviews found no material issues after the evidence audit was tightened to require exact expected extension lists and derive the test count from retained output. The fallback reviews do not complete the independent vendor requirement. Review outputs and accepted findings are recorded with the evidence; there were no rejected findings. No commit or push was made during that verification run.
+
+## Closeout and current scope (2026-10-15)
+
+The maintainer authorized committing and pushing the verified Marketplace fix, regression tests and verification documentation, and removing the obsolete server-signing lint exception. The independent vendor reviews remain pending until the session limit resets; authorization to commit does not complete that review coverage.
+
+macOS is the only platform currently in scope for validation. Windows and Linux validation are deferred, the replacement icons remain pending, and distribution signing, notarization and publication are deferred. The existing Windows validation requirements apply if a Windows release is requested later.
