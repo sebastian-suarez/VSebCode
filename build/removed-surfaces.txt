@@ -53,6 +53,8 @@ src/vs/platform/sandbox/
 src/vs/platform/telemetry/browser/
 src/vs/platform/telemetry/electron-browser/
 src/vs/platform/telemetry/test/browser/
+src/vs/platform/terminal/common/autoApprove/
+src/vs/platform/terminal/test/common/autoApprove/
 src/vs/platform/update/
 src/vs/platform/userDataSync/
 src/vs/platform/webContentExtractor/
