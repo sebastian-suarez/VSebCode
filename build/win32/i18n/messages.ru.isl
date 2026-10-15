@@ -7,4 +7,3 @@ RunAfter=Запустить %1 после установки
 Other=Другое:
 SourceFile=Исходный файл %1
 OpenWithCodeContextMenu=Открыть с помощью %1
-UpdatingVisualStudioCode=Обновление VSebCode...

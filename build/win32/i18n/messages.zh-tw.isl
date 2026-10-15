@@ -7,4 +7,3 @@ RunAfter=安裝後執行 %1
 Other=其他:
 SourceFile=%1 來源檔案
 OpenWithCodeContextMenu=以 %1 開啟
-UpdatingVisualStudioCode=正在更新 VSebCode...

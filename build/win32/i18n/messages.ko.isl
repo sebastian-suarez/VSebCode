@@ -7,4 +7,3 @@ RunAfter=설치 후 %1 실행
 Other=기타:
 SourceFile=%1 원본 파일
 OpenWithCodeContextMenu=%1(으)로 열기
-UpdatingVisualStudioCode=VSebCode 업데이트 중...

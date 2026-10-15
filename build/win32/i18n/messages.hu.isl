@@ -7,4 +7,3 @@ RunAfter=%1 indítása a telepítés után
 Other=Egyéb:
 SourceFile=%1 forrásfájl
 OpenWithCodeContextMenu=Megnyitás a következővel: %1
-UpdatingVisualStudioCode=A VSebCode frissítése...
