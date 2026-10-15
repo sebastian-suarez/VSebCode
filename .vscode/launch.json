@@ -312,22 +312,6 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "VS Code Server (Web)",
-			"runtimeExecutable": "${workspaceFolder}/scripts/code-server.sh",
-			"windows": {
-				"runtimeExecutable": "${workspaceFolder}/scripts/code-server.bat",
-			},
-			"outFiles": [
-				"${workspaceFolder}/out/**/*.js"
-			],
-			"presentation": {
-				"group": "0_vscode",
-				"order": 2
-			}
-		},
-		{
-			"type": "node",
-			"request": "launch",
 			"name": "Main Process",
 			"attachSimplePort": 5875,
 			"enableContentValidation": false,
@@ -345,60 +329,6 @@
 			"presentation": {
 				"group": "1_vscode",
 				"order": 1
-			}
-		},
-		{
-			"type": "chrome",
-			"request": "launch",
-			"outFiles": [],
-			"perScriptSourcemaps": "yes",
-			"name": "VS Code Server (Web, Chrome)",
-			"url": "http://localhost:8080?tkn=dev-token",
-			"preLaunchTask": "Run code server",
-			"presentation": {
-				"group": "0_vscode",
-				"order": 3
-			}
-		},
-		{
-			"type": "msedge",
-			"request": "launch",
-			"outFiles": [],
-			"perScriptSourcemaps": "yes",
-			"name": "VS Code Server (Web, Edge)",
-			"url": "http://localhost:8080?tkn=dev-token",
-			"pauseForSourceMap": false,
-			"preLaunchTask": "Run code server",
-			"presentation": {
-				"group": "0_vscode",
-				"order": 3
-			}
-		},
-		{
-			"type": "chrome",
-			"request": "launch",
-			"outFiles": [],
-			"perScriptSourcemaps": "yes",
-			"name": "VS Code Web (Chrome)",
-			"url": "http://localhost:8080",
-			"preLaunchTask": "Run code web",
-			"presentation": {
-				"group": "0_vscode",
-				"order": 3
-			}
-		},
-		{
-			"type": "msedge",
-			"request": "launch",
-			"outFiles": [],
-			"perScriptSourcemaps": "yes",
-			"name": "VS Code Web (Edge)",
-			"url": "http://localhost:8080",
-			"pauseForSourceMap": false,
-			"preLaunchTask": "Run code web",
-			"presentation": {
-				"group": "0_vscode",
-				"order": 3
 			}
 		},
 		{
@@ -617,17 +547,6 @@
 				"order": 4
 			}
 		},
-		{
-			"name": "Monaco Editor - Workbench",
-			"type": "chrome",
-			"request": "launch",
-			"url": "http://localhost:5199/build/vite/workbench-vite.html",
-			"preLaunchTask": "Launch Monaco Editor Vite",
-			"presentation": {
-				"group": "monaco",
-				"order": 4
-			}
-		}
 	],
 	"compounds": [
 		{

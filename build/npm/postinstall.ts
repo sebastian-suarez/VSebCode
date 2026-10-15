@@ -23,20 +23,6 @@ function log(dir: string, message: string) {
 	}
 }
 
-function run(command: string, args: string[], opts: child_process.SpawnSyncOptions) {
-	log(opts.cwd as string || '.', '$ ' + command + ' ' + args.join(' '));
-
-	const result = child_process.spawnSync(command, args, opts);
-
-	if (result.error) {
-		console.error(`ERR Failed to spawn process: ${result.error}`);
-		process.exit(1);
-	} else if (result.status !== 0) {
-		console.error(`ERR Process exited with code: ${result.status}`);
-		process.exit(result.status);
-	}
-}
-
 function spawnAsync(command: string, args: string[], opts: child_process.SpawnOptions): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const child = child_process.spawn(command, args, { ...opts, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -64,36 +50,11 @@ async function npmInstallAsync(dir: string, opts?: child_process.SpawnOptions): 
 
 	const command = process.env['npm_command'] || 'install';
 
-	if (process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME'] && dir === 'remote') {
-		const syncOpts: child_process.SpawnSyncOptions = {
-			env: finalOpts.env,
-			cwd: root,
-			stdio: 'inherit',
-			shell: true,
-		};
-		const userinfo = os.userInfo();
-		log(dir, `Installing dependencies inside container ${process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME']}...`);
-
-		if (process.env['npm_config_arch'] === 'arm64') {
-			run('sudo', ['docker', 'run', '--rm', '--privileged', 'vscodehub.azurecr.io/multiarch/qemu-user-static@sha256:fe60359c92e86a43cc87b3d906006245f77bfc0565676b80004cc666e4feb9f0', '--reset', '-p', 'yes'], syncOpts);
-		}
-		run('sudo', [
-			'docker', 'run',
-			'-e', 'GITHUB_TOKEN',
-			'-v', `${process.env['VSCODE_HOST_MOUNT']}:/root/vscode`,
-			'-v', `${process.env['VSCODE_NPMRC_PATH']}:/root/.npmrc`,
-			'-w', path.resolve('/root/vscode', dir),
-			process.env['VSCODE_REMOTE_DEPENDENCIES_CONTAINER_NAME'],
-			'sh', '-c', `\"chown -R root:root ${path.resolve('/root/vscode', dir)} && export PATH="/root/vscode/.build/nodejs-musl/usr/local/bin:$PATH" && npm i -g node-gyp-build && npm ci\"`
-		], syncOpts);
-		run('sudo', ['chown', '-R', `${userinfo.uid}:${userinfo.gid}`, `${path.resolve(root, dir)}`], syncOpts);
-	} else {
-		log(dir, 'Installing dependencies...');
-		const output = await spawnAsync(npm, command.split(' '), finalOpts);
-		if (output.trim()) {
-			for (const line of output.trim().split('\n')) {
-				log(dir, line);
-			}
+	log(dir, 'Installing dependencies...');
+	const output = await spawnAsync(npm, command.split(' '), finalOpts);
+	if (output.trim()) {
+		for (const line of output.trim().split('\n')) {
+			log(dir, line);
 		}
 	}
 	removeParcelWatcherPrebuild(dir);
@@ -125,7 +86,7 @@ function setNpmrcConfig(dir: string, env: NodeJS.ProcessEnv) {
 	// the correct clang variable. So keep the version check
 	// in preinstall sync with this logic.
 	// Change was first introduced in https://github.com/nodejs/node/commit/6e0a2bb54c5bbeff0e9e33e1a0c683ed980a8a0f
-	if ((dir === 'remote' || dir === 'build') && process.platform === 'darwin') {
+	if (dir === 'build' && process.platform === 'darwin') {
 		env['npm_config_force_process_config'] = 'true';
 	} else {
 		delete env['npm_config_force_process_config'];
@@ -246,31 +207,6 @@ async function main() {
 			continue;
 		}
 
-		if (dir === 'remote') {
-			nativeTasks.push(() => {
-				const env: NodeJS.ProcessEnv = { ...process.env };
-				if (process.env['VSCODE_REMOTE_CC']) {
-					env['CC'] = process.env['VSCODE_REMOTE_CC'];
-				} else {
-					delete env['CC'];
-				}
-				if (process.env['VSCODE_REMOTE_CXX']) {
-					env['CXX'] = process.env['VSCODE_REMOTE_CXX'];
-				} else {
-					delete env['CXX'];
-				}
-				if (process.env['CXXFLAGS']) { delete env['CXXFLAGS']; }
-				if (process.env['CFLAGS']) { delete env['CFLAGS']; }
-				if (process.env['LDFLAGS']) { delete env['LDFLAGS']; }
-				if (process.env['VSCODE_REMOTE_CXXFLAGS']) { env['CXXFLAGS'] = process.env['VSCODE_REMOTE_CXXFLAGS']; }
-				if (process.env['VSCODE_REMOTE_LDFLAGS']) { env['LDFLAGS'] = process.env['VSCODE_REMOTE_LDFLAGS']; }
-				if (process.env['VSCODE_REMOTE_NODE_GYP']) { env['npm_config_node_gyp'] = process.env['VSCODE_REMOTE_NODE_GYP']; }
-				setNpmrcConfig('remote', env);
-				return npmInstallAsync('remote', { env });
-			});
-			continue;
-		}
-
 		const taskDir = dir;
 		parallelTasks.push(() => {
 			const env = { ...process.env };
@@ -279,7 +215,7 @@ async function main() {
 		});
 	}
 
-	// Native dirs (build, remote) run sequentially to avoid node-gyp conflicts
+	// Install native build dependencies before the parallel JS-only installs
 	for (const task of nativeTasks) {
 		await task();
 	}

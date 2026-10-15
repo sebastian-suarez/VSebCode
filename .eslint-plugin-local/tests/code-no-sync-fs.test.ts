@@ -105,7 +105,7 @@ suite('code-no-sync-fs production configuration', () => {
 	});
 
 	test('allows tests and development scripts', async () => {
-		const files = ['src/vs/base/test/node/example.test.ts', 'extensions/git/src/test/example.ts', 'scripts/example.ts', 'build/example.ts', 'src/vs/code/node/cli.ts', 'src/vs/server/node/server.cli.ts'];
+		const files = ['src/vs/base/test/node/example.test.ts', 'extensions/git/src/test/example.ts', 'scripts/example.ts', 'build/example.ts', 'src/vs/code/node/cli.ts'];
 		assert.deepStrictEqual(await Promise.all(files.map(async file => {
 			const results = await eslint.lintText(`import { statSync } from 'fs'; statSync('file');`, { filePath: resolve(root, file) });
 			return results.flatMap(result => result.messages.filter(message => message.ruleId === 'local/code-no-sync-fs'));
@@ -121,11 +121,11 @@ suite('code-no-sync-fs production configuration', () => {
 	});
 
 	test('allows bootstrap entry points and the AMD loader without exempting nested production files', async () => {
-		const files = ['src/bootstrap-esm.ts', 'src/bootstrap-node.ts', 'src/mainImpl.ts', 'src/server-main.ts', 'src/future-bootstrap.ts', 'src/vs/amdX.ts', 'src/vs/code/electron-main/main.ts', 'src/vs/platform/agentHost/node/example.ts'];
+		const files = ['src/bootstrap-esm.ts', 'src/bootstrap-node.ts', 'src/mainImpl.ts', 'src/future-bootstrap.ts', 'src/vs/amdX.ts', 'src/vs/code/electron-main/main.ts', 'src/vs/platform/agentHost/node/example.ts'];
 		assert.deepStrictEqual(await Promise.all(files.map(async file => {
 			const results = await eslint.lintText(`import { statSync } from 'fs'; statSync('file');`, { filePath: resolve(root, file) });
 			return results.flatMap(result => result.messages.filter(message => message.ruleId === 'local/code-no-sync-fs').map(message => message.severity));
-		})), [[], [], [], [], [], [], [], [2]]);
+		})), [[], [], [], [], [], [], [2]]);
 	});
 
 	test('allows a documented call-site exception without exempting later calls', async () => {
@@ -137,19 +137,16 @@ suite('code-no-sync-fs production configuration', () => {
 		const files = [
 			'src/vs/base/node/pfs.ts',
 			'src/vs/platform/environment/node/wait.ts',
-			'src/vs/server/node/remoteExtensionHostAgentServer.ts',
-			'src/vs/server/node/server.main.ts',
 			'src/vs/workbench/api/node/extHostCLIServer.ts',
 			'src/vs/workbench/api/node/extHostExtensionService.ts',
 			'src/vs/workbench/api/node/extHostStoragePaths.ts',
 			'src/vs/base/node/example.ts',
 			'src/vs/platform/environment/node/example.ts',
-			'src/vs/server/node/example.ts',
 			'src/vs/workbench/api/node/example.ts',
 		];
 		assert.deepStrictEqual(await Promise.all(files.map(async file => {
 			const results = await eslint.lintText(`import { writeFileSync } from 'vs/base/node/pfs'; writeFileSync('file', 'data');`, { filePath: resolve(root, file) });
 			return results.flatMap(result => result.messages.filter(message => message.ruleId === 'local/code-no-sync-fs').map(message => message.severity));
-		})), [[], [], [], [], [], [], [], [2], [2], [2], [2]]);
+		})), [[], [], [], [], [], [2], [2], [2]]);
 	});
 });

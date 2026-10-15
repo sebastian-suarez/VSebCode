@@ -28,7 +28,7 @@ const conflictableFiles: readonly RegExp[] = [
 
 // The folders whose new children an upstream merge must have reviewed: a new feature or package
 const watchedRoots: readonly string[] = ['src/vs/workbench/contrib', 'src/vs/workbench/services', 'src/vs/workbench/api', 'src/vs/platform', 'src/vs/editor/contrib', 'extensions'];
-const dependencyManifests: readonly string[] = ['package.json', 'remote/package.json', 'extensions/package.json', 'build/package.json'];
+const dependencyManifests: readonly string[] = ['package.json', 'extensions/package.json', 'build/package.json'];
 const dependencySections: readonly string[] = ['dependencies', 'devDependencies', 'optionalDependencies'];
 
 /**

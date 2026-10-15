@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import * as path from 'path';
-import type { BuildTarget } from './resources.ts';
 import { rewriteSourceMappingURL } from './source-map-url.ts';
 
 /**
@@ -18,11 +18,7 @@ const desktopStandaloneFiles = [
 	'vs/platform/browserView/electron-browser/preload-browserView.ts',
 ];
 
-export async function compileStandaloneFiles(srcDir: string, outDir: string, target: BuildTarget, minify: boolean, sourceMapBaseUrl?: string): Promise<void> {
-	if (target !== 'desktop') {
-		return;
-	}
-
+export async function compileStandaloneFiles(srcDir: string, outDir: string, minify: boolean, sourceMapBaseUrl?: string): Promise<void> {
 	console.log(`[standalone] Compiling ${desktopStandaloneFiles.length} standalone files...`);
 
 	const banner = `/*!--------------------------------------------------------

@@ -45,7 +45,6 @@ export interface IExtensionDefinition {
 const root = path.dirname(path.dirname(import.meta.dirname));
 const productjson = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../product.json'), 'utf8'));
 const builtInExtensions = productjson.builtInExtensions as IExtensionDefinition[] || [];
-const webBuiltInExtensions = productjson.webBuiltInExtensions as IExtensionDefinition[] || [];
 const controlFilePath = path.join(os.homedir(), '.vsebcode-dev', 'extensions', 'control.json');
 const ENABLE_LOGGING = !process.env['VSCODE_BUILD_BUILTIN_EXTENSIONS_SILENCE_PLEASE'];
 
@@ -205,7 +204,7 @@ export function getBuiltInExtensions(): Promise<void> {
 	const control = readControlFile();
 	const streams: Stream[] = [];
 
-	for (const extension of [...builtInExtensions, ...webBuiltInExtensions]) {
+	for (const extension of builtInExtensions) {
 		const controlState = control[extension.name] || 'marketplace';
 		control[extension.name] = controlState;
 

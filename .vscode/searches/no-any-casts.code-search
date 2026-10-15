@@ -1,13 +1,10 @@
 # Query: // eslint-disable-next-line (local/code-no-any-casts|@typescript-eslint/no-explicit-any)
 # Flags: RegExp
 
-727 results - 269 files
+578 results - 221 files
 
 .eslint-plugin-local/code-policy-localization-key-match.ts:
   123: 					// eslint-disable-next-line local/code-no-any-casts
-
-build/gulpfile.reh.ts:
-  187: 	// eslint-disable-next-line local/code-no-any-casts
 
 extensions/html-language-features/server/src/htmlServer.ts:
   544: 		// eslint-disable-next-line local/code-no-any-casts
@@ -516,28 +513,6 @@ src/vs/platform/storage/electron-main/storageIpc.ts:
 
 src/vs/platform/terminal/node/terminalProcess.ts:
   547: 			// eslint-disable-next-line local/code-no-any-casts, @typescript-eslint/no-explicit-any
-
-src/vs/server/node/extensionHostConnection.ts:
-  243: 			// eslint-disable-next-line local/code-no-any-casts, @typescript-eslint/no-explicit-any
-
-src/vs/server/node/remoteExtensionHostAgentServer.ts:
-  767: 	// eslint-disable-next-line local/code-no-any-casts
-  769: 	// eslint-disable-next-line local/code-no-any-casts
-  771: 	// eslint-disable-next-line local/code-no-any-casts
-
-src/vs/server/node/remoteTerminalChannel.ts:
-  112: 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-src/vs/workbench/workbench.web.main.internal.ts:
-  196: // eslint-disable-next-line local/code-no-any-casts
-  221: 	// eslint-disable-next-line local/code-no-any-casts
-  223: 	// eslint-disable-next-line local/code-no-any-casts
-
-src/vs/workbench/workbench.web.main.ts:
-  58: 	// eslint-disable-next-line local/code-no-any-casts
-  60: 	// eslint-disable-next-line local/code-no-any-casts
-  82: 		// eslint-disable-next-line local/code-no-any-casts
-  91: 				// eslint-disable-next-line local/code-no-any-casts
 
 src/vs/workbench/api/browser/mainThreadExtensionService.ts:
   57: 		// eslint-disable-next-line local/code-no-any-casts, @typescript-eslint/no-explicit-any

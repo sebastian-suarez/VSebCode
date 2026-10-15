@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,15 +14,12 @@ import { inlineMeta } from '../inlineMeta.ts';
 
 suite('Bootstrap package metadata', () => {
 	const targets: { target: BuildTarget; files: string[] }[] = [
-		{ target: 'desktop', files: ['main.js', 'cli.js', 'bootstrap-fork.js'] },
-		{ target: 'server', files: ['server-main.js', 'server-cli.js', 'bootstrap-fork.js'] },
-		{ target: 'server-web', files: ['server-main.js', 'server-cli.js', 'bootstrap-fork.js'] },
-		{ target: 'web', files: [] },
+		{ target: 'desktop', files: ['main.js', 'mainImpl.js', 'cli.js', 'bootstrap-fork.js'] },
 	];
 
 	for (const { target, files } of targets) {
 		test(`${target} uses the bundler's bootstrap files for metadata injection`, async () => {
-			const filenames = ['main.js', 'cli.js', 'server-main.js', 'server-cli.js', 'bootstrap-fork.js', 'other.js'];
+			const filenames = ['main.js', 'mainImpl.js', 'cli.js', 'bootstrap-fork.js', 'other.js'];
 			const original = 'export const config={BUILD_INSERT_PACKAGE_CONFIGURATION:"BUILD_INSERT_PACKAGE_CONFIGURATION"};';
 			const packageJson = JSON.stringify({ name: 'Code - OSS', version: '1.0.0' });
 			const stream = inlineMeta(es.readArray(filenames.map(filename => new File({

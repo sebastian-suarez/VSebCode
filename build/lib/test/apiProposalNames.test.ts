@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -255,8 +256,6 @@ suite('API proposal registry tasks', () => {
 				'tsgo-typecheck',
 				'esbuild-out-build',
 				'esbuild-vscode-min',
-				'esbuild-vscode-reh-min',
-				'esbuild-vscode-reh-web-min',
 			],
 			files: before,
 		});

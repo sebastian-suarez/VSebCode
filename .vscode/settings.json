@@ -42,13 +42,11 @@
 		"out/**": true,
 		"out-build/**": true,
 		"out-vscode/**": true,
-		"out-vscode-reh/**": true,
 		"extensions/**/dist/**": true,
 		"extensions/**/out/**": true,
 		"extensions/terminal-suggest/src/completions/upstream/**": true,
 		"test/smoke/out/**": true,
 		"test/automation/out/**": true,
-		"test/integration/browser/out/**": true
 	},
 	// --- Search ---
 	"search.exclude": {
@@ -62,7 +60,6 @@
 		"extensions/**/out/**": true,
 		"test/smoke/out/**": true,
 		"test/automation/out/**": true,
-		"test/integration/browser/out/**": true,
 		"src/vs/base/test/common/filters.perf.data.js": true,
 		"src/vs/base/test/node/uri.perf.data.txt": true,
 		"src/vs/workbench/api/test/browser/extHostDocumentData.test.perf-data.ts": true,
@@ -81,7 +78,6 @@
 		"@xterm/headless",
 		"node-pty",
 		"vscode-notebook-renderer",
-		"src/vs/workbench/workbench.web.main.internal.ts"
 	],
 	// --- Languages ---
 	"json.schemas": [

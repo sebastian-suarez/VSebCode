@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -75,10 +76,8 @@ async function update() {
 	}
 
 	if (modulesWithVersion.length > 0) {
-		for (const cwd of [vscodeDir, path.join(vscodeDir, 'remote'), path.join(vscodeDir, 'remote/web')]) {
-			console.log(`${path.join(cwd, 'package.json')}: Updating\n  ${modulesWithVersion.join('\n  ')}`);
-			cp.execSync(`npm install ${modulesWithVersion.join(' ')}`, { cwd });
-		}
+		console.log(`${path.join(vscodeDir, 'package.json')}: Updating\n  ${modulesWithVersion.join('\n  ')}`);
+		cp.execSync(`npm install ${modulesWithVersion.join(' ')}`, { cwd: vscodeDir });
 	}
 
 	const backendOnlyModulesWithVersion = [];
@@ -91,10 +90,8 @@ async function update() {
 		backendOnlyModulesWithVersion.push(moduleWithVersion);
 	}
 	if (backendOnlyModulesWithVersion.length > 0) {
-		for (const cwd of [vscodeDir, path.join(vscodeDir, 'remote')]) {
-			console.log(`${path.join(cwd, 'package.json')}: Updating\n  ${backendOnlyModulesWithVersion.join('\n  ')}`);
-			cp.execSync(`npm install ${backendOnlyModulesWithVersion.join(' ')}`, { cwd });
-		}
+		console.log(`${path.join(vscodeDir, 'package.json')}: Updating\n  ${backendOnlyModulesWithVersion.join('\n  ')}`);
+		cp.execSync(`npm install ${backendOnlyModulesWithVersion.join(' ')}`, { cwd: vscodeDir });
 	}
 }
 

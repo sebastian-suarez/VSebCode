@@ -170,8 +170,6 @@ export default defineConfig(
 			// Core synchronous helpers and startup/shutdown infrastructure.
 			'src/vs/base/node/pfs.ts',
 			'src/vs/platform/environment/node/wait.ts',
-			'src/vs/server/node/remoteExtensionHostAgentServer.ts',
-			'src/vs/server/node/server.main.ts',
 			'src/vs/workbench/api/node/extHostCLIServer.ts',
 			'src/vs/workbench/api/node/extHostExtensionService.ts',
 			'src/vs/workbench/api/node/extHostStoragePaths.ts',
@@ -182,11 +180,9 @@ export default defineConfig(
 			'**/scripts/**',
 			'**/script/**',
 			'**/build/**',
-			'extensions/vscode-test-resolver/**',
 			'extensions/vscode-api-tests/**',
 			// These isolated CLI/askpass processes do not share the application's event loop.
 			'src/vs/code/node/cli.ts',
-			'src/vs/server/node/server.cli.ts',
 			'extensions/git/src/askpass-main.ts',
 		],
 		rules: {
@@ -505,16 +501,13 @@ export default defineConfig(
 			'src/vs/platform/quickinput/common/quickInput.ts',
 			'src/vs/platform/registry/common/platform.ts',
 			'src/vs/platform/remote/browser/browserSocketFactory.ts',
-			'src/vs/platform/remote/browser/remoteAuthorityResolverService.ts',
 			'src/vs/platform/remote/common/remoteAgentConnection.ts',
 			'src/vs/platform/remote/common/remoteAuthorityResolver.ts',
 			'src/vs/platform/remote/electron-browser/electronRemoteResourceLoader.ts',
 			'src/vs/platform/remote/electron-browser/remoteAuthorityResolverService.ts',
 			'src/vs/platform/request/common/request.ts',
-			'src/vs/platform/request/common/requestIpc.ts',
 			'src/vs/platform/request/electron-utility/requestService.ts',
 			'src/vs/platform/request/node/proxy.ts',
-			'src/vs/platform/telemetry/common/errorTelemetry.ts',
 			'src/vs/platform/theme/common/iconRegistry.ts',
 			'src/vs/platform/theme/common/tokenClassificationRegistry.ts',
 			'src/vs/platform/url/common/urlIpc.ts',
@@ -749,7 +742,6 @@ export default defineConfig(
 			'src/vs/workbench/services/extensions/common/rpcProtocol.ts',
 			'src/vs/workbench/services/extensions/worker/polyfillNestedWorker.ts',
 			'src/vs/workbench/services/keybinding/browser/keybindingService.ts',
-			'src/vs/workbench/services/keybinding/browser/keyboardLayoutService.ts',
 			'src/vs/workbench/services/keybinding/common/keybindingEditing.ts',
 			'src/vs/workbench/services/keybinding/common/keymapInfo.ts',
 			'src/vs/workbench/services/language/common/languageService.ts',
@@ -776,10 +768,6 @@ export default defineConfig(
 			'src/vs/workbench/test/browser/workbenchTestServices.ts',
 			'src/vs/workbench/test/common/workbenchTestServices.ts',
 			'src/vs/workbench/test/electron-browser/workbenchTestServices.ts',
-			// Server
-			'src/vs/server/node/remoteAgentEnvironmentImpl.ts',
-			'src/vs/server/node/remoteExtensionHostAgentServer.ts',
-			'src/vs/server/node/remoteExtensionsScanner.ts',
 			// Tests
 			'**/*.test.ts',
 			'**/*.integrationTest.ts'
@@ -1521,7 +1509,6 @@ export default defineConfig(
 						'assert',
 						'child_process',
 						'console',
-						'cookie',
 						'crypto',
 						'detect-libc',
 						'dns',
@@ -1542,7 +1529,6 @@ export default defineConfig(
 						// 'path', NOT allowed: use src/vs/base/common/path.ts instead
 						'perf_hooks',
 						'readline',
-						'ssh2',
 						'stream',
 						'string_decoder',
 						'tar',
@@ -1555,7 +1541,6 @@ export default defineConfig(
 						'vscode-regexpp',
 						'vscode-textmate',
 						'worker_threads',
-						'ws',
 						'@xterm/addon-clipboard',
 						'@xterm/addon-image',
 						'@xterm/addon-ligatures',
@@ -1831,14 +1816,6 @@ export default defineConfig(
 						'vs/code/~',
 						{
 							'when': 'hasBrowser',
-							'pattern': 'vs/workbench/workbench.web.main.js'
-						},
-						{
-							'when': 'hasBrowser',
-							'pattern': 'vs/workbench/workbench.web.main.internal.js'
-						},
-						{
-							'when': 'hasBrowser',
 							'pattern': 'vs/workbench/~'
 						},
 						{
@@ -1848,30 +1825,10 @@ export default defineConfig(
 					]
 				},
 				{
-					'target': 'src/vs/server/~',
-					'restrictions': [
-						'vs/base/~',
-						'vs/base/parts/*/~',
-						'vs/platform/*/~',
-						'vs/workbench/~',
-						'vs/workbench/api/~',
-						'vs/workbench/services/*/~',
-						'vs/workbench/contrib/*/~',
-						'vs/server/~'
-					]
-				},
-				{
 					'target': 'src/vs/workbench/contrib/terminal/terminal.all.ts',
 					'layer': 'browser',
 					'restrictions': [
 						'vs/workbench/contrib/**'
-					]
-				},
-				{
-					'target': 'src/vs/workbench/contrib/terminal/terminalContribChatExports.ts',
-					'layer': 'browser',
-					'restrictions': [
-						'vs/workbench/contrib/terminalContrib/*/~'
 					]
 				},
 				{
@@ -1897,40 +1854,6 @@ export default defineConfig(
 						'vs/workbench/services/*/~',
 						'vs/workbench/contrib/*/~',
 						'vs/workbench/contrib/terminal/terminal.all.js',
-					]
-				},
-				{
-					'target': 'src/vs/workbench/workbench.web.main.ts',
-					'layer': 'browser',
-					'restrictions': [
-						'vs/base/~',
-						'vs/base/parts/*/~',
-						'vs/platform/*/~',
-						'vs/editor/~',
-						'vs/editor/contrib/*/~',
-						'vs/editor/editor.all.js',
-						'vs/workbench/~',
-						'vs/workbench/api/~',
-						'vs/workbench/services/*/~',
-						'vs/workbench/contrib/*/~',
-						'vs/workbench/workbench.common.main.js'
-					]
-				},
-				{
-					'target': 'src/vs/workbench/workbench.web.main.internal.ts',
-					'layer': 'browser',
-					'restrictions': [
-						'vs/base/~',
-						'vs/base/parts/*/~',
-						'vs/platform/*/~',
-						'vs/editor/~',
-						'vs/editor/contrib/*/~',
-						'vs/editor/editor.all.js',
-						'vs/workbench/~',
-						'vs/workbench/api/~',
-						'vs/workbench/services/*/~',
-						'vs/workbench/contrib/*/~',
-						'vs/workbench/workbench.web.main.js'
 					]
 				},
 				{
@@ -1971,7 +1894,7 @@ export default defineConfig(
 					]
 				},
 				{
-					'target': 'src/{bootstrap-cli.ts,bootstrap-esm.ts,bootstrap-fork.ts,bootstrap-import.ts,bootstrap-meta.ts,bootstrap-node.ts,bootstrap-server.ts,cli.ts,main.ts,mainImpl.ts,server-cli.ts,server-main.ts}',
+					'target': 'src/{bootstrap-cli.ts,bootstrap-esm.ts,bootstrap-fork.ts,bootstrap-meta.ts,bootstrap-node.ts,cli.ts,main.ts,mainImpl.ts}',
 					'restrictions': [
 						'vs/**/common/*',
 						'vs/**/node/*',

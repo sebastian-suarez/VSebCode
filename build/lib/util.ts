@@ -15,8 +15,6 @@ import through from 'through';
 import sm from 'source-map';
 import { pathToFileURL } from 'url';
 import ternaryStream from 'ternary-stream';
-import type { Transform } from 'stream';
-import * as tar from 'tar';
 
 export interface ICancellationToken {
 	isCancellationRequested(): boolean;
@@ -356,91 +354,4 @@ export function streamToPromise(stream: NodeJS.ReadWriteStream): Promise<void> {
 		stream.on('error', err => e(err));
 		stream.on('end', () => c());
 	});
-}
-
-export class VinylStat implements fs.Stats {
-
-	readonly dev: number;
-	readonly ino: number;
-	readonly mode: number;
-	readonly nlink: number;
-	readonly uid: number;
-	readonly gid: number;
-	readonly rdev: number;
-	readonly size: number;
-	readonly blksize: number;
-	readonly blocks: number;
-	readonly atimeMs: number;
-	readonly mtimeMs: number;
-	readonly ctimeMs: number;
-	readonly birthtimeMs: number;
-	readonly atime: Date;
-	readonly mtime: Date;
-	readonly ctime: Date;
-	readonly birthtime: Date;
-
-	constructor(stat: Partial<fs.Stats>) {
-		this.dev = stat.dev ?? 0;
-		this.ino = stat.ino ?? 0;
-		this.mode = stat.mode ?? 0;
-		this.nlink = stat.nlink ?? 0;
-		this.uid = stat.uid ?? 0;
-		this.gid = stat.gid ?? 0;
-		this.rdev = stat.rdev ?? 0;
-		this.size = stat.size ?? 0;
-		this.blksize = stat.blksize ?? 0;
-		this.blocks = stat.blocks ?? 0;
-		this.atimeMs = stat.atimeMs ?? 0;
-		this.mtimeMs = stat.mtimeMs ?? 0;
-		this.ctimeMs = stat.ctimeMs ?? 0;
-		this.birthtimeMs = stat.birthtimeMs ?? 0;
-		this.atime = stat.atime ?? new Date(0);
-		this.mtime = stat.mtime ?? new Date(0);
-		this.ctime = stat.ctime ?? new Date(0);
-		this.birthtime = stat.birthtime ?? new Date(0);
-	}
-
-	isFile(): boolean { return true; }
-	isDirectory(): boolean { return false; }
-	isBlockDevice(): boolean { return false; }
-	isCharacterDevice(): boolean { return false; }
-	isSymbolicLink(): boolean { return false; }
-	isFIFO(): boolean { return false; }
-	isSocket(): boolean { return false; }
-}
-
-export function untar(): Transform {
-	return es.through(function (this: through.ThroughStream, f: VinylFile) {
-		if (!f.contents || !Buffer.isBuffer(f.contents)) {
-			this.emit('error', new Error('Expected file with Buffer contents'));
-			return;
-		}
-
-		const self = this;
-		const parser = new tar.Parser();
-
-		parser.on('entry', (entry: tar.ReadEntry) => {
-			if (entry.type === 'File') {
-				const chunks: Buffer[] = [];
-				entry.on('data', (chunk: Buffer) => chunks.push(chunk));
-				entry.on('end', () => {
-					const file = new VinylFile({
-						path: entry.path,
-						contents: Buffer.concat(chunks),
-						stat: new VinylStat({
-							mode: entry.mode,
-							mtime: entry.mtime,
-							size: entry.size
-						})
-					});
-					self.emit('data', file);
-				});
-			} else {
-				entry.resume();
-			}
-		});
-
-		parser.on('error', (err: Error) => self.emit('error', err));
-		parser.end(f.contents);
-	}) as Transform;
 }

@@ -59,11 +59,9 @@ function updateExtensionPackageJSON(input: Stream, update: (data: any) => any): 
 		.pipe(packageJsonFilter.restore);
 }
 
-function fromLocal(extensionPath: string, forWeb: boolean): Stream {
+function fromLocal(extensionPath: string): Stream {
 
-	const esbuildConfigFileName = forWeb
-		? 'esbuild.browser.mts'
-		: 'esbuild.mts';
+	const esbuildConfigFileName = 'esbuild.mts';
 
 	const hasEsbuild = fs.existsSync(path.join(extensionPath, esbuildConfigFileName));
 
@@ -76,7 +74,7 @@ function fromLocal(extensionPath: string, forWeb: boolean): Stream {
 			? es.merge(
 				fromLocalEsbuild(extensionPath, esbuildConfigFileName),
 				// Standard esbuild extensions need a separate type check step
-				...getBuildRootsForExtension(extensionPath).map(root => typeCheckExtensionStream(root, forWeb)),
+				...getBuildRootsForExtension(extensionPath).map(root => typeCheckExtensionStream(root, false)),
 			)
 			// Extensions with their own build system (e.g. .esbuild.mts) handle type checking internally
 			: fromLocalEsbuild(extensionPath, esbuildConfigFileName);
@@ -306,139 +304,79 @@ const excludedExtensions = [
 	'vscode-api-tests',
 	'vscode-colorize-tests',
 	'vscode-colorize-perf-tests',
-	'vscode-test-resolver',
 	'ms-vscode.node-debug',
 	'ms-vscode.node-debug2',
 ];
 
-const marketplaceWebExtensionsExclude = new Set([
-	'ms-vscode.node-debug',
-	'ms-vscode.node-debug2',
-	'ms-vscode.js-debug-companion',
-	'ms-vscode.js-debug',
-	'ms-vscode.vscode-js-profile-table'
-]);
-
 const productJson = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, '../../product.json'), 'utf8'));
 const builtInExtensions: IExtensionDefinition[] = productJson.builtInExtensions || [];
-const webBuiltInExtensions: IExtensionDefinition[] = productJson.webBuiltInExtensions || [];
-
-type ExtensionKind = 'ui' | 'workspace' | 'web';
-interface IExtensionManifest {
-	main?: string;
-	browser?: string;
-	extensionKind?: ExtensionKind | ExtensionKind[];
-	extensionPack?: string[];
-	extensionDependencies?: string[];
-	contributes?: { [id: string]: any };
-}
-/**
- * Loosely based on `getExtensionKind` from `src/vs/workbench/services/extensions/common/extensionManifestPropertiesService.ts`
- */
-export function isWebExtension(manifest: IExtensionManifest): boolean {
-	if (Boolean(manifest.browser)) {
-		return true;
-	}
-	if (Boolean(manifest.main)) {
-		return false;
-	}
-	// neither browser nor main
-	if (typeof manifest.extensionKind !== 'undefined') {
-		const extensionKind = Array.isArray(manifest.extensionKind) ? manifest.extensionKind : [manifest.extensionKind];
-		if (extensionKind.indexOf('web') >= 0) {
-			return true;
-		}
-	}
-	if (typeof manifest.contributes !== 'undefined') {
-		for (const id of ['debuggers', 'terminal', 'typescriptServerPlugins']) {
-			if (manifest.contributes.hasOwnProperty(id)) {
-				return false;
-			}
-		}
-	}
-	return true;
-}
 
 /**
  * Package local extensions that are known to not have native dependencies. Mutually exclusive to {@link packageNativeLocalExtensionsStream}.
- * @param forWeb build the extensions that have web targets
  * @returns a stream
  */
-export function packageNonNativeLocalExtensionsStream(forWeb: boolean): Stream {
-	return doPackageLocalExtensionsStream(forWeb, false);
+export function packageNonNativeLocalExtensionsStream(): Stream {
+	return doPackageLocalExtensionsStream(false);
 }
 
 /**
  * Package local extensions that are known to have native dependencies. Mutually exclusive to {@link packageNonNativeLocalExtensionsStream}.
- * @note it's possible that the extension does not have native dependencies for the current platform, especially if building for the web,
+ * @note it's possible that the extension does not have native dependencies for the current platform,
  * but we simplify the logic here by having a flat list of extensions (See {@link nativeExtensions}) that are known to have native
  * dependencies on some platform and thus should be packaged on the platform that they are building for.
- * @param forWeb build the extensions that have web targets
  * @returns a stream
  */
-export function packageNativeLocalExtensionsStream(forWeb: boolean): Stream {
-	return doPackageLocalExtensionsStream(forWeb, true);
+export function packageNativeLocalExtensionsStream(): Stream {
+	return doPackageLocalExtensionsStream(true);
 }
 
 /**
  * Package all the local extensions... both those that are known to have native dependencies and those that are not.
- * @param forWeb build the extensions that have web targets
  * @returns a stream
  */
-export function packageAllLocalExtensionsStream(forWeb: boolean): Stream {
+export function packageAllLocalExtensionsStream(): Stream {
 	return es.merge([
-		packageNonNativeLocalExtensionsStream(forWeb),
-		packageNativeLocalExtensionsStream(forWeb)
+		packageNonNativeLocalExtensionsStream(),
+		packageNativeLocalExtensionsStream()
 	]);
 }
 
 /**
- * @param forWeb build the extensions that have web targets
  * @param native build the extensions that are marked as having native dependencies
  */
-function doPackageLocalExtensionsStream(forWeb: boolean, native: boolean): Stream {
+function doPackageLocalExtensionsStream(native: boolean): Stream {
 	const nativeExtensionsSet = new Set(nativeExtensions);
 	const localExtensionsDescriptions = (
 		(glob.sync('extensions/*/package.json') as string[])
 			.map(manifestPath => {
-				const absoluteManifestPath = path.join(root, manifestPath);
 				const extensionPath = path.dirname(path.join(root, manifestPath));
 				const extensionName = path.basename(extensionPath);
-				return { name: extensionName, path: extensionPath, manifestPath: absoluteManifestPath };
+				return { name: extensionName, path: extensionPath };
 			})
 			.filter(({ name }) => native ? nativeExtensionsSet.has(name) : !nativeExtensionsSet.has(name))
 			.filter(({ name }) => excludedExtensions.indexOf(name) === -1)
 			.filter(({ name }) => builtInExtensions.every(b => b.name !== name))
-			.filter(({ manifestPath }) => (forWeb ? isWebExtension(require(manifestPath)) : true))
 	);
 
 	const localExtensionsStream = minifyExtensionResources(
 		es.merge(
 			...localExtensionsDescriptions.map(extension => {
-				return fromLocal(extension.path, forWeb)
+				return fromLocal(extension.path)
 					.pipe(rename(p => p.dirname = `extensions/${extension.name}/${p.dirname}`));
 			})
 		)
 	);
 
-	let result: Stream;
-	if (forWeb) {
-		result = localExtensionsStream;
-	} else {
-		// also include shared production node modules
-		const productionDependencies = getProductionDependencies('extensions/');
-		const dependenciesSrc = productionDependencies.map(d => path.relative(root, d)).map(d => [`${d}/**`, `!${d}/**/{test,tests}/**`]).flat();
-
-		if (dependenciesSrc.length) {
-			result = es.merge(
-				localExtensionsStream,
-				gulp.src(dependenciesSrc, { base: '.' })
-					.pipe(util2.cleanNodeModules(path.join(root, 'build', '.moduleignore')))
-					.pipe(util2.cleanNodeModules(path.join(root, 'build', `.moduleignore.${process.platform}`))));
-		} else {
-			result = localExtensionsStream;
-		}
-	}
+	// Also include shared production node modules.
+	const productionDependencies = getProductionDependencies('extensions/');
+	const dependenciesSrc = productionDependencies.map(d => path.relative(root, d)).map(d => [`${d}/**`, `!${d}/**/{test,tests}/**`]).flat();
+	const result = dependenciesSrc.length
+		? es.merge(
+			localExtensionsStream,
+			gulp.src(dependenciesSrc, { base: '.' })
+				.pipe(util2.cleanNodeModules(path.join(root, 'build', '.moduleignore')))
+				.pipe(util2.cleanNodeModules(path.join(root, 'build', `.moduleignore.${process.platform}`))))
+		: localExtensionsStream;
 
 	return (
 		result
@@ -446,14 +384,10 @@ function doPackageLocalExtensionsStream(forWeb: boolean, native: boolean): Strea
 	);
 }
 
-export function packageMarketplaceExtensionsStream(forWeb: boolean): Stream {
-	const marketplaceExtensionsDescriptions = [
-		...builtInExtensions.filter(({ name }) => (forWeb ? !marketplaceWebExtensionsExclude.has(name) : true)),
-		...(forWeb ? webBuiltInExtensions : [])
-	];
+export function packageMarketplaceExtensionsStream(): Stream {
 	const marketplaceExtensionsStream = minifyExtensionResources(
 		es.merge(
-			...marketplaceExtensionsDescriptions
+			...builtInExtensions
 				.map(extension => {
 					const src = getExtensionStream(extension).pipe(rename(p => p.dirname = `extensions/${p.dirname}`));
 					return updateExtensionPackageJSON(src, (data: any) => {
@@ -470,51 +404,6 @@ export function packageMarketplaceExtensionsStream(forWeb: boolean): Stream {
 		marketplaceExtensionsStream
 			.pipe(util2.setExecutableBit(['**/*.sh']))
 	);
-}
-
-export interface IScannedBuiltinExtension {
-	readonly extensionPath: string;
-	readonly packageJSON: unknown;
-	readonly packageNLS: unknown | undefined;
-	readonly readmePath: string | undefined;
-	readonly changelogPath: string | undefined;
-}
-
-export function scanBuiltinExtensions(extensionsRoot: string, exclude: string[] = []): IScannedBuiltinExtension[] {
-	const scannedExtensions: IScannedBuiltinExtension[] = [];
-
-	try {
-		const extensionsFolders = fs.readdirSync(extensionsRoot);
-		for (const extensionFolder of extensionsFolders) {
-			if (exclude.indexOf(extensionFolder) >= 0) {
-				continue;
-			}
-			const packageJSONPath = path.join(extensionsRoot, extensionFolder, 'package.json');
-			if (!fs.existsSync(packageJSONPath)) {
-				continue;
-			}
-			const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath).toString('utf8'));
-			if (!isWebExtension(packageJSON)) {
-				continue;
-			}
-			const children = fs.readdirSync(path.join(extensionsRoot, extensionFolder));
-			const packageNLSPath = children.filter(child => child === 'package.nls.json')[0];
-			const packageNLS = packageNLSPath ? JSON.parse(fs.readFileSync(path.join(extensionsRoot, extensionFolder, packageNLSPath)).toString()) : undefined;
-			const readme = children.filter(child => /^readme(\.txt|\.md|)$/i.test(child))[0];
-			const changelog = children.filter(child => /^changelog(\.txt|\.md|)$/i.test(child))[0];
-
-			scannedExtensions.push({
-				extensionPath: extensionFolder,
-				packageJSON,
-				packageNLS,
-				readmePath: readme ? path.join(extensionFolder, readme) : undefined,
-				changelogPath: changelog ? path.join(extensionFolder, changelog) : undefined,
-			});
-		}
-		return scannedExtensions;
-	} catch (ex) {
-		return scannedExtensions;
-	}
 }
 
 export function translatePackageJSON(packageJSON: string, packageNLSPath: string) {

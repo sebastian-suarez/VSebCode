@@ -51,7 +51,7 @@ suite('standalone preloads', () => {
 		]) {
 			test(`links original sources for all preloads (minify: ${minify}, ${mode})`, async t => {
 				const outDir = path.join(await temporaryDirectory(t), 'out');
-				await compileStandaloneFiles(srcDir, outDir, 'desktop', minify, baseUrl);
+				await compileStandaloneFiles(srcDir, outDir, minify, baseUrl);
 
 				assert.deepStrictEqual(await outputFiles(outDir), javascriptFiles.flatMap(file => [file, `${file}.map`]).sort());
 				const results = await Promise.all(preloads.map(async ({ file, markers }) => {
@@ -104,15 +104,6 @@ suite('standalone preloads', () => {
 		}
 	}
 
-	for (const target of ['server', 'server-web', 'web'] as const) {
-		test(`does not read or emit desktop preloads for ${target}`, async t => {
-			const root = await temporaryDirectory(t);
-			const outDir = path.join(root, 'out');
-			await compileStandaloneFiles(path.join(root, 'missing-src'), outDir, target, true, sourceMapBaseUrl);
-			assert.strictEqual(fs.existsSync(outDir), false);
-		});
-	}
-
 	test('development transpilation keeps inline maps without embedded sources', async t => {
 		const outDir = path.join(await temporaryDirectory(t), 'out');
 		const maps = await Promise.all(preloads.map(async ({ file }) => {
@@ -138,7 +129,7 @@ suite('standalone preloads', () => {
 		const root = await temporaryDirectory(t);
 		const outDir = path.join(root, 'out');
 		const packagedOut = path.join(root, 'package', 'out');
-		await compileStandaloneFiles(srcDir, outDir, 'desktop', true, sourceMapBaseUrl);
+		await compileStandaloneFiles(srcDir, outDir, true, sourceMapBaseUrl);
 		const finalContents = await Promise.all(javascriptFiles.map(file => fs.promises.readFile(path.join(outDir, file))));
 		const uploadedPaths: string[] = [];
 
@@ -188,7 +179,7 @@ suite('standalone preloads', () => {
 	test('fails rather than skipping missing standalone sources', async t => {
 		const root = await temporaryDirectory(t);
 		await assert.rejects(
-			compileStandaloneFiles(path.join(root, 'missing-src'), path.join(root, 'out'), 'desktop', true),
+			compileStandaloneFiles(path.join(root, 'missing-src'), path.join(root, 'out'), true),
 			/Build failed/,
 		);
 	});

@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { type Configuration, CopyRspackPlugin, HtmlRspackPlugin, rspack } from '@rspack/core';
@@ -34,9 +35,7 @@ export default {
 	mode: 'development',
 	target: 'web',
 	devtool: 'source-map',
-	entry: {
-		workbench: path.join(repoRoot, 'src', 'vs', 'code', 'browser', 'workbench', 'workbench.ts'),
-	},
+	entry: {},
 	output: {
 		path: path.join(repoRoot, '.build', 'rspack-serve-out'),
 		filename: 'bundled/[name].js',
@@ -142,11 +141,6 @@ export default {
 			if (sourceCssPath !== requestedPath && fs.existsSync(sourceCssPath)) {
 				resource.request = sourceCssPath;
 			}
-		}),
-		new HtmlRspackPlugin({
-			filename: 'index.html',
-			template: path.join(__dirname, 'workbench-rspack.html'),
-			chunks: ['workbench'],
 		}),
 		...(isStaticComponentExplorerBuild ? [new HtmlRspackPlugin({
 			filename: '___explorer.html',
