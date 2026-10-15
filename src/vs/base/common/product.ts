@@ -76,9 +76,6 @@ export interface IProductConfiguration {
 	readonly featuredExtensions?: IFeaturedExtension[];
 
 	readonly downloadUrl?: string;
-	readonly webUrl?: string;
-	readonly webEndpointUrlTemplate?: string;
-	readonly webviewContentExternalBaseUrlTemplate?: string;
 	readonly target?: string;
 	readonly nlsCoreBaseUrl?: string;
 	/** Build-time hash of the commit and core NLS tables used to identify translated-message caches. */
@@ -105,7 +102,6 @@ export interface IProductConfiguration {
 	readonly virtualWorkspaceExtensionTips?: IStringDictionary<IVirtualWorkspaceExtensionTip>;
 	readonly extensionKeywords?: IStringDictionary<string[]>;
 	readonly keymapExtensionTips?: readonly string[];
-	readonly webExtensionTips?: readonly string[];
 	readonly languageExtensionTips?: readonly string[];
 	readonly trustedExtensionUrlPublicKeys?: IStringDictionary<string[]>;
 	readonly trustedExtensionProtocolHandlers?: readonly string[];
@@ -115,7 +111,6 @@ export interface IProductConfiguration {
 	readonly openToWelcomeMainPage?: boolean;
 
 	readonly documentationUrl?: string;
-	readonly serverDocumentationUrl?: string;
 	readonly keyboardShortcutsUrlMac?: string;
 	readonly keyboardShortcutsUrlLinux?: string;
 	readonly keyboardShortcutsUrlWin?: string;
@@ -127,16 +122,7 @@ export interface IProductConfiguration {
 	readonly reportIssueUrl?: string;
 	readonly reportMarketplaceIssueUrl?: string;
 	readonly licenseUrl?: string;
-	readonly serverLicenseUrl?: string;
 	readonly privacyStatementUrl?: string;
-
-	readonly serverGreeting?: string[];
-	readonly serverLicense?: string[];
-	readonly serverLicensePrompt?: string;
-	readonly serverApplicationName: string;
-	readonly serverDataFolderName?: string;
-
-	readonly tunnelApplicationConfig?: ITunnelApplicationConfig;
 
 	readonly checksums?: { [path: string]: string };
 	readonly checksumFailMoreInfoUrl?: string;
@@ -250,12 +236,6 @@ export interface IExeBasedExtensionTip {
 	windowsPath?: string;
 	important?: boolean;
 	recommendations: IStringDictionary<{ name: string; important?: boolean; isExtensionPack?: boolean; whenNotInstalled?: string[] }>;
-}
-
-export interface ITunnelApplicationConfig {
-	authenticationProviders: IStringDictionary<{ scopes: string[] }>;
-	editorWebUrl: string;
-	extension: IRemoteExtensionTip;
 }
 
 export interface IRemoteExtensionTip {

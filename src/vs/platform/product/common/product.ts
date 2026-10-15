@@ -13,9 +13,7 @@ interface IPackageConfiguration {
 }
 
 /**
- * @deprecated It is preferred that you use `IProductService` if you can. This
- * allows web embedders to override our defaults. But for things like `product.quality`,
- * the use is fine because that property is not overridable.
+ * @deprecated Prefer `IProductService` when dependency injection is available.
  */
 let product: IProductConfiguration;
 
@@ -40,8 +38,7 @@ else if (globalThis._VSCODE_PRODUCT_JSON && globalThis._VSCODE_PACKAGE_JSON) {
 		Object.assign(product, {
 			nameShort: `${product.nameShort} Dev`,
 			nameLong: `${product.nameLong} Dev`,
-			dataFolderName: `${product.dataFolderName}-dev`,
-			serverDataFolderName: product.serverDataFolderName ? `${product.serverDataFolderName}-dev` : undefined
+			dataFolderName: `${product.dataFolderName}-dev`
 		});
 	}
 
@@ -55,7 +52,7 @@ else if (globalThis._VSCODE_PRODUCT_JSON && globalThis._VSCODE_PACKAGE_JSON) {
 	}
 }
 
-// Web environment or unknown
+// Web worker environment or unknown
 else {
 
 	// Built time configuration (do NOT modify)
@@ -73,8 +70,7 @@ else {
 			urlProtocol: 'vsebcode',
 			reportIssueUrl: 'https://github.com/sebastian-suarez/VSebCode/issues/new',
 			licenseName: 'MIT',
-			licenseUrl: 'https://github.com/sebastian-suarez/VSebCode/blob/main/LICENSE.txt',
-			serverLicenseUrl: 'https://github.com/sebastian-suarez/VSebCode/blob/main/LICENSE.txt'
+			licenseUrl: 'https://github.com/sebastian-suarez/VSebCode/blob/main/LICENSE.txt'
 		});
 	}
 }

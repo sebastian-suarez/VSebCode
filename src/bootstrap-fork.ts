@@ -1,10 +1,11 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import * as performance from './vs/base/common/performance.js';
-import { removeGlobalNodeJsModuleLookupPaths, devInjectNodeModuleLookupPath } from './bootstrap-node.js';
+import { removeGlobalNodeJsModuleLookupPaths } from './bootstrap-node.js';
 import { bootstrapESM } from './bootstrap-esm.js';
 import { enableNodeCompileCache, getNodeCompileCacheKindForUtilityProcess } from './vs/base/node/nodeCompileCache.js';
 
@@ -209,10 +210,6 @@ configureCrashReporter();
 
 // Remove global paths from the node module lookup (node.js only)
 removeGlobalNodeJsModuleLookupPaths();
-
-if (process.env['VSCODE_DEV_INJECT_NODE_MODULE_LOOKUP_PATH']) {
-	devInjectNodeModuleLookupPath(process.env['VSCODE_DEV_INJECT_NODE_MODULE_LOOKUP_PATH']);
-}
 
 // Configure: pipe logging to parent process
 if (!!process.send && process.env['VSCODE_PIPE_LOGGING'] === 'true') {

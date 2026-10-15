@@ -127,25 +127,6 @@ function enableASARSupport(): void {
 
 enableASARSupport();
 
-/**
- * Add support for redirecting the loading of node modules
- *
- * Note: only applies when running out of sources.
- */
-export function devInjectNodeModuleLookupPath(injectPath: string): void {
-	if (!process.env['VSCODE_DEV']) {
-		return; // only applies running out of sources
-	}
-
-	if (!injectPath) {
-		throw new Error('Missing injectPath');
-	}
-
-	// register a loader hook
-	const Module = require('node:module');
-	Module.register('./bootstrap-import.js', { parentURL: import.meta.url, data: injectPath });
-}
-
 export function removeGlobalNodeJsModuleLookupPaths(): void {
 	if (typeof process?.versions?.electron === 'string') {
 		return; // Electron disables global search paths in https://github.com/electron/electron/blob/3186c2f0efa92d275dc3d57b5a14a60ed3846b0e/shell/common/node_bindings.cc#L653
