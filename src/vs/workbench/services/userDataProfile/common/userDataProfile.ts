@@ -15,8 +15,6 @@ import { registerIcon } from '../../../../platform/theme/common/iconRegistry.js'
 import { Codicon } from '../../../../base/common/codicons.js';
 import { ITreeItem, ITreeItemLabel } from '../../../common/views.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
-import { IDisposable } from '../../../../base/common/lifecycle.js';
-import { IProductService } from '../../../../platform/product/common/productService.js';
 
 export interface DidChangeUserDataProfileEvent {
 	readonly previous: IUserDataProfile;
@@ -71,18 +69,9 @@ export function isUserDataProfileTemplate(thing: unknown): thing is IUserDataPro
 		&& (isUndefined(candidate.extensions) || typeof candidate.extensions === 'string'));
 }
 
-export const PROFILE_URL_AUTHORITY = 'profile';
-export function toUserDataProfileUri(path: string, productService: IProductService): URI {
-	return URI.from({
-		scheme: productService.urlProtocol,
-		authority: PROFILE_URL_AUTHORITY,
-		path: path.startsWith('/') ? path : `/${path}`
-	});
-}
-
 export const PROFILE_URL_AUTHORITY_PREFIX = 'profile-';
 export function isProfileURL(uri: URI): boolean {
-	return uri.authority === PROFILE_URL_AUTHORITY || new RegExp(`^${PROFILE_URL_AUTHORITY_PREFIX}`).test(uri.authority);
+	return uri.authority.startsWith(PROFILE_URL_AUTHORITY_PREFIX);
 }
 
 export interface IUserDataProfileCreateOptions extends IUserDataProfileOptions {
@@ -99,9 +88,6 @@ export interface IProfileImportOptions extends IUserDataProfileCreateOptions {
 export const IUserDataProfileImportExportService = createDecorator<IUserDataProfileImportExportService>('IUserDataProfileImportExportService');
 export interface IUserDataProfileImportExportService {
 	readonly _serviceBrand: undefined;
-
-	registerProfileContentHandler(id: string, profileContentHandler: IUserDataProfileContentHandler): IDisposable;
-	unregisterProfileContentHandler(id: string): void;
 
 	resolveProfileTemplate(uri: URI): Promise<IUserDataProfileTemplate | null>;
 	exportProfile(profile: IUserDataProfile, exportFlags?: ProfileResourceTypeFlags): Promise<void>;
@@ -139,7 +125,6 @@ export interface ISaveProfileResult {
 export interface IUserDataProfileContentHandler {
 	readonly name: string;
 	readonly description?: string;
-	readonly extensionId?: string;
 	saveProfile(name: string, content: string, token: CancellationToken): Promise<ISaveProfileResult | null>;
 	readProfile(idOrUri: string | URI, token: CancellationToken): Promise<string | null>;
 }

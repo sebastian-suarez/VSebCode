@@ -10,9 +10,9 @@ import { isMarkdownString } from '../../../../base/common/htmlContent.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { Emitter } from '../../../../base/common/event.js';
-import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileContentHandler, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, ISaveProfileResult, IProfileImportOptions, PROFILE_URL_AUTHORITY, toUserDataProfileUri, IUserDataProfileCreateOptions, isProfileURL, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
-import { Disposable, DisposableStore, IDisposable, toDisposable } from '../../../../base/common/lifecycle.js';
-import { IDialogService, IFileDialogService, IPromptButton } from '../../../../platform/dialogs/common/dialogs.js';
+import { IUserDataProfileImportExportService, PROFILE_FILTER, PROFILE_EXTENSION, IUserDataProfileContentHandler, IUserDataProfileService, IProfileResourceTreeItem, PROFILES_CATEGORY, IUserDataProfileManagementService, ISaveProfileResult, IProfileImportOptions, IUserDataProfileCreateOptions, isProfileURL, PROFILE_URL_AUTHORITY_PREFIX } from '../common/userDataProfile.js';
+import { Disposable, DisposableStore } from '../../../../base/common/lifecycle.js';
+import { IDialogService, IFileDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 import { ITextFileService } from '../../textfile/common/textfiles.js';
 import { IFileService } from '../../../../platform/files/common/files.js';
@@ -26,17 +26,14 @@ import { TasksResource, TasksResourceTreeItem } from './tasksResource.js';
 import { ExtensionsResource, ExtensionsResourceExportTreeItem, ExtensionsResourceTreeItem } from './extensionsResource.js';
 import { GlobalStateResource, GlobalStateResourceExportTreeItem, GlobalStateResourceTreeItem } from './globalStateResource.js';
 import { InMemoryFileSystemProvider } from '../../../../platform/files/common/inMemoryFilesystemProvider.js';
-import { IOpenerService } from '../../../../platform/opener/common/opener.js';
 import { IProgressService, ProgressLocation } from '../../../../platform/progress/common/progress.js';
-import { IExtensionService } from '../../extensions/common/extensions.js';
-import { IQuickInputService, QuickPickItem } from '../../../../platform/quickinput/common/quickInput.js';
+import { IQuickInputService } from '../../../../platform/quickinput/common/quickInput.js';
 import { VSBuffer } from '../../../../base/common/buffer.js';
 import { joinPath } from '../../../../base/common/resources.js';
 import { escapeRegExpCharacters } from '../../../../base/common/strings.js';
 import { Schemas } from '../../../../base/common/network.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
 import Severity from '../../../../base/common/severity.js';
-import { IClipboardService } from '../../../../platform/clipboard/common/clipboardService.js';
 import { asText, IRequestService } from '../../../../platform/request/common/request.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
 import { Mutable, isUndefined } from '../../../../base/common/types.js';
@@ -68,8 +65,6 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 
 	readonly _serviceBrand: undefined;
 
-	private profileContentHandlers = new Map<string, IUserDataProfileContentHandler>();
-
 	private readonly fileUserDataProfileContentHandler: FileUserDataProfileContentHandler;
 
 	constructor(
@@ -77,30 +72,12 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 		@IUserDataProfileService private readonly userDataProfileService: IUserDataProfileService,
 		@IUserDataProfileManagementService private readonly userDataProfileManagementService: IUserDataProfileManagementService,
 		@IUserDataProfilesService private readonly userDataProfilesService: IUserDataProfilesService,
-		@IExtensionService private readonly extensionService: IExtensionService,
-		@IQuickInputService private readonly quickInputService: IQuickInputService,
 		@IProgressService private readonly progressService: IProgressService,
 		@IDialogService private readonly dialogService: IDialogService,
-		@IClipboardService private readonly clipboardService: IClipboardService,
-		@IOpenerService private readonly openerService: IOpenerService,
 		@IRequestService private readonly requestService: IRequestService,
-		@IProductService private readonly productService: IProductService,
-		@IUriIdentityService private readonly uriIdentityService: IUriIdentityService,
 	) {
 		super();
-		this.registerProfileContentHandler(Schemas.file, this.fileUserDataProfileContentHandler = instantiationService.createInstance(FileUserDataProfileContentHandler));
-	}
-
-	registerProfileContentHandler(id: string, profileContentHandler: IUserDataProfileContentHandler): IDisposable {
-		if (this.profileContentHandlers.has(id)) {
-			throw new Error(`Profile content handler with id '${id}' already registered.`);
-		}
-		this.profileContentHandlers.set(id, profileContentHandler);
-		return toDisposable(() => this.unregisterProfileContentHandler(id));
-	}
-
-	unregisterProfileContentHandler(id: string): void {
-		this.profileContentHandlers.delete(id);
+		this.fileUserDataProfileContentHandler = instantiationService.createInstance(FileUserDataProfileContentHandler);
 	}
 
 	async createFromProfile(from: IUserDataProfile, options: IUserDataProfileCreateOptions, token: CancellationToken): Promise<IUserDataProfile | undefined> {
@@ -267,50 +244,11 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 				location,
 				title: localize('profiles.exporting', "{0}: Exporting...", PROFILES_CATEGORY.value),
 			}, async progress => {
-				const id = await this.pickProfileContentHandler(profile.name);
-				if (!id) {
-					return;
-				}
-				const profileContentHandler = this.profileContentHandlers.get(id);
-				if (!profileContentHandler) {
-					return;
-				}
-				const saveResult = await profileContentHandler.saveProfile(profile.name.replace('/', '-'), JSON.stringify(profile), CancellationToken.None);
+				const saveResult = await this.fileUserDataProfileContentHandler.saveProfile(profile.name.replace('/', '-'), JSON.stringify(profile), CancellationToken.None);
 				if (!saveResult) {
 					return;
 				}
-				const message = localize('export success', "Profile '{0}' was exported successfully.", profile.name);
-				if (profileContentHandler.extensionId) {
-					const buttons: IPromptButton<void>[] = [];
-					const link = this.productService.webUrl ? `${this.productService.webUrl}/${PROFILE_URL_AUTHORITY}/${id}/${saveResult.id}` : toUserDataProfileUri(`/${id}/${saveResult.id}`, this.productService).toString();
-					buttons.push({
-						label: localize({ key: 'copy', comment: ['&& denotes a mnemonic'] }, "&&Copy Link"),
-						run: () => this.clipboardService.writeText(link)
-					});
-					if (this.productService.webUrl) {
-						buttons.push({
-							label: localize({ key: 'open', comment: ['&& denotes a mnemonic'] }, "&&Open Link"),
-							run: async () => {
-								await this.openerService.open(link);
-							}
-						});
-					} else {
-						buttons.push({
-							label: localize({ key: 'open in', comment: ['&& denotes a mnemonic'] }, "&&Open in {0}", profileContentHandler.name),
-							run: async () => {
-								await this.openerService.open(saveResult.link.toString());
-							}
-						});
-					}
-					await this.dialogService.prompt({
-						type: Severity.Info,
-						message,
-						buttons,
-						cancelButton: localize('close', "Close")
-					});
-				} else {
-					await this.dialogService.info(message);
-				}
+				await this.dialogService.info(localize('export success', "Profile '{0}' was exported successfully.", profile.name));
 			});
 		} finally {
 			disposables.dispose();
@@ -410,27 +348,12 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 		}
 
 		if (isProfileURL(resource)) {
-			let handlerId: string, idOrUri: string | URI;
-			if (resource.authority === PROFILE_URL_AUTHORITY) {
-				idOrUri = this.uriIdentityService.extUri.basename(resource);
-				handlerId = this.uriIdentityService.extUri.basename(this.uriIdentityService.extUri.dirname(resource));
-			} else {
-				handlerId = resource.authority.substring(PROFILE_URL_AUTHORITY_PREFIX.length);
-				idOrUri = URI.parse(resource.path.substring(1));
+			// `<urlProtocol>://profile-file/<file URI>` names a profile file; the handlers that extensions
+			// registered under other ids left with the profileContentHandlers API
+			if (resource.authority === `${PROFILE_URL_AUTHORITY_PREFIX}${Schemas.file}`) {
+				return this.fileUserDataProfileContentHandler.readProfile(URI.parse(resource.path.substring(1)), CancellationToken.None);
 			}
-			await this.extensionService.activateByEvent(`onProfile:${handlerId}`);
-			const profileContentHandler = this.profileContentHandlers.get(handlerId);
-			if (profileContentHandler) {
-				return profileContentHandler.readProfile(idOrUri, CancellationToken.None);
-			}
-		}
-
-		await this.extensionService.activateByEvent('onProfile');
-		for (const profileContentHandler of this.profileContentHandlers.values()) {
-			const content = await profileContentHandler.readProfile(resource, CancellationToken.None);
-			if (content !== null) {
-				return content;
-			}
+			return null;
 		}
 
 		const context = await this.requestService.request({ type: 'GET', url: resource.toString(true), callSite: 'userDataProfileImportExportService.resolveContent' }, CancellationToken.None);
@@ -440,23 +363,6 @@ export class UserDataProfileImportExportService extends Disposable implements IU
 			const message = await asText(context);
 			throw new Error(`Failed to get profile from URL: ${resource.toString()}. Status code: ${context.res.statusCode}. Message: ${message}`);
 		}
-	}
-
-	private async pickProfileContentHandler(name: string): Promise<string | undefined> {
-		await this.extensionService.activateByEvent('onProfile');
-		if (this.profileContentHandlers.size === 1) {
-			return this.profileContentHandlers.keys().next().value;
-		}
-		const options: QuickPickItem[] = [];
-		for (const [id, profileContentHandler] of this.profileContentHandlers) {
-			options.push({ id, label: profileContentHandler.name, description: profileContentHandler.description });
-		}
-		const result = await this.quickInputService.pick(options.reverse(),
-			{
-				title: localize('select profile content handler', "Export '{0}' profile as...", name),
-				hideInput: true
-			});
-		return result?.id;
 	}
 
 	private async getProfileToImport(profileTemplate: IUserDataProfileTemplate, temp: boolean, options: IUserDataProfileOptions | undefined): Promise<IUserDataProfile | undefined> {
