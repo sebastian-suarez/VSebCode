@@ -7,7 +7,7 @@
 import { Action, IAction } from '../../../../../base/common/actions.js';
 import { disposableTimeout } from '../../../../../base/common/async.js';
 import { decodeBase64 } from '../../../../../base/common/buffer.js';
-import { Disposable, DisposableStore, type IDisposable } from '../../../../../base/common/lifecycle.js';
+import { Disposable, DisposableStore, MutableDisposable, type IDisposable } from '../../../../../base/common/lifecycle.js';
 import { isHighSurrogate } from '../../../../../base/common/strings.js';
 import { localize } from '../../../../../nls.js';
 import { NotificationPriority, Severity, type INotification, type INotificationHandle } from '../../../../../platform/notification/common/notification.js';
@@ -29,6 +29,19 @@ const MAX_OSC99_ID_LENGTH = 256;
  * another starts, so that a process cannot grow the pending state without limit either.
  */
 const MAX_OSC99_PENDING_NOTIFICATIONS = 100;
+
+/**
+ * The most notifications a terminal keeps active (shown and not yet closed) at once, with or without
+ * id; the oldest one is closed when another is shown, so that a process cannot grow the shown
+ * notifications, and the state kept for them, without limit.
+ */
+const MAX_OSC99_ACTIVE_NOTIFICATIONS = 100;
+
+/**
+ * The most buttons a notification offers; further button labels are ignored. A buttons payload of
+ * the maximum text length could otherwise define thousands of them.
+ */
+const MAX_OSC99_BUTTONS = 8;
 
 /**
  * Removes markdown links `[label](target)` from a notification text in one pass over it and
@@ -99,7 +112,7 @@ const enum Osc99PayloadType {
 }
 
 type Osc99Occasion = 'always' | 'unfocused' | 'invisible';
-type Osc99CloseReason = 'button' | 'secondary' | 'auto' | 'protocol';
+type Osc99CloseReason = 'button' | 'secondary' | 'auto' | 'protocol' | 'evicted';
 
 interface IOsc99NotificationState {
 	id: string | undefined;
@@ -117,8 +130,16 @@ interface IOsc99NotificationState {
 interface IOsc99ActiveNotification {
 	id: string | undefined;
 	handle: INotificationHandle;
-	actionStore: DisposableStore;
-	autoCloseDisposable: IDisposable | undefined;
+	/**
+	 * Owns the close listener, the action store and the auto-close timer; disposed when the
+	 * notification is released
+	 */
+	readonly store: DisposableStore;
+	/**
+	 * The actions currently shown; an update replaces them and disposes the previous ones
+	 */
+	readonly actionStore: MutableDisposable<DisposableStore>;
+	readonly autoClose: MutableDisposable<IDisposable>;
 	reportOnActivate: boolean;
 	reportOnClose: boolean;
 	focusOnActivate: boolean;
@@ -139,12 +160,29 @@ export interface IOsc99NotificationHost {
 export class TerminalNotificationHandler extends Disposable {
 	private readonly _osc99PendingNotifications = new Map<string, IOsc99NotificationState>();
 	private _osc99PendingAnonymous: IOsc99NotificationState | undefined;
-	private readonly _osc99ActiveNotifications = new Map<string, IOsc99ActiveNotification>();
+	/**
+	 * The shown notifications that have not closed yet, oldest first; eviction takes the first one
+	 */
+	private readonly _osc99ActiveNotifications = new Set<IOsc99ActiveNotification>();
+	/**
+	 * The active notifications that have an id, for updates and the protocol responses
+	 */
+	private readonly _osc99ActiveNotificationsById = new Map<string, IOsc99ActiveNotification>();
 
 	constructor(
 		private readonly _host: IOsc99NotificationHost
 	) {
 		super();
+	}
+
+	override dispose(): void {
+		// The notifications stay open; only what the handler owns for them is released
+		for (const active of this._osc99ActiveNotifications) {
+			active.store.dispose();
+		}
+		this._osc99ActiveNotifications.clear();
+		this._osc99ActiveNotificationsById.clear();
+		super.dispose();
 	}
 
 	handleSequence(data: string): boolean {
@@ -408,9 +446,10 @@ export class TerminalNotificationHandler extends Disposable {
 			label: localize('terminalNotificationSource', 'Terminal')
 		};
 		const buttons = state.buttonsPayload.length > 0 ? state.buttonsPayload.split('\u2028') : [];
-		const actionStore = this._register(new DisposableStore());
+		// Owned by the active notification below, which disposes it when the actions are replaced or
+		// the notification is released
+		const actionStore = new DisposableStore();
 
-		const handleRef: { current: INotificationHandle | undefined } = { current: undefined };
 		const activeRef: { current: IOsc99ActiveNotification | undefined } = { current: undefined };
 		const reportActivation = (buttonIndex?: number, forceFocus?: boolean) => {
 			if (forceFocus || state.focusOnActivate) {
@@ -422,7 +461,7 @@ export class TerminalNotificationHandler extends Disposable {
 		};
 
 		const primaryActions: IAction[] = [];
-		for (let i = 0; i < buttons.length; i++) {
+		for (let i = 0; i < buttons.length && primaryActions.length < MAX_OSC99_BUTTONS; i++) {
 			const label = buttons[i];
 			if (!label) {
 				continue;
@@ -432,7 +471,7 @@ export class TerminalNotificationHandler extends Disposable {
 					activeRef.current.closeReason = 'button';
 				}
 				reportActivation(i + 1);
-				handleRef.current?.close();
+				activeRef.current?.handle.close();
 			}));
 			primaryActions.push(action);
 		}
@@ -447,7 +486,7 @@ export class TerminalNotificationHandler extends Disposable {
 				if (activeRef.current) {
 					activeRef.current.closeReason = 'secondary';
 				}
-				handleRef.current?.close();
+				activeRef.current?.handle.close();
 			}
 		)));
 		secondaryActions.push(actionStore.add(new Action(
@@ -460,31 +499,31 @@ export class TerminalNotificationHandler extends Disposable {
 				if (activeRef.current) {
 					activeRef.current.closeReason = 'secondary';
 				}
-				handleRef.current?.close();
+				activeRef.current?.handle.close();
 			}
 		)));
 
 		const actions = { primary: primaryActions, secondary: secondaryActions };
 
 		if (state.id) {
-			const existing = this._osc99ActiveNotifications.get(state.id);
+			const existing = this._osc99ActiveNotificationsById.get(state.id);
 			if (existing) {
 				activeRef.current = existing;
-				handleRef.current = existing.handle;
 				existing.handle.updateMessage(message);
 				existing.handle.updateSeverity(severity);
 				existing.handle.updateActions(actions);
-				existing.actionStore.dispose();
-				existing.actionStore = actionStore;
+				existing.actionStore.value = actionStore;
 				existing.focusOnActivate = state.focusOnActivate;
 				existing.reportOnActivate = state.reportOnActivate;
 				existing.reportOnClose = state.reportOnClose;
-				existing.autoCloseDisposable?.dispose();
-				existing.autoCloseDisposable = this._scheduleOsc99AutoClose(existing, state.autoCloseMs);
+				existing.autoClose.value = this._scheduleOsc99AutoClose(existing, state.autoCloseMs);
 				return true;
 			}
 		}
 
+		this._evictOsc99NotificationsForNew();
+
+		const store = new DisposableStore();
 		const handle = this._host.notify({
 			id: state.id ? `terminal.osc99.${state.id}` : undefined,
 			severity,
@@ -493,21 +532,20 @@ export class TerminalNotificationHandler extends Disposable {
 			actions,
 			priority
 		});
-		handleRef.current = handle;
-
 		const active: IOsc99ActiveNotification = {
 			id: state.id,
 			handle,
-			actionStore,
-			autoCloseDisposable: undefined,
+			store,
+			actionStore: store.add(new MutableDisposable<DisposableStore>()),
+			autoClose: store.add(new MutableDisposable<IDisposable>()),
 			reportOnActivate: state.reportOnActivate,
 			reportOnClose: state.reportOnClose,
 			focusOnActivate: state.focusOnActivate,
 			closeReason: undefined
 		};
 		activeRef.current = active;
-		active.autoCloseDisposable = this._scheduleOsc99AutoClose(active, state.autoCloseMs);
-		this._register(handle.onDidClose(() => {
+		active.actionStore.value = actionStore;
+		store.add(handle.onDidClose(() => {
 			if (active.reportOnActivate && active.closeReason === undefined) {
 				if (active.focusOnActivate) {
 					this._host.focusTerminal();
@@ -517,17 +555,45 @@ export class TerminalNotificationHandler extends Disposable {
 			if (active.reportOnClose) {
 				this._sendOsc99CloseReport(active.id);
 			}
-			active.actionStore.dispose();
-			active.autoCloseDisposable?.dispose();
-			if (active.id) {
-				this._osc99ActiveNotifications.delete(active.id);
-			}
+			this._releaseOsc99Notification(active);
 		}));
-
+		this._osc99ActiveNotifications.add(active);
 		if (active.id) {
-			this._osc99ActiveNotifications.set(active.id, active);
+			this._osc99ActiveNotificationsById.set(active.id, active);
 		}
+		active.autoClose.value = this._scheduleOsc99AutoClose(active, state.autoCloseMs);
 		return true;
+	}
+
+	/**
+	 * Closes the oldest active notifications until another one fits under the cap. The close
+	 * listener of each one sends its close report, if requested, and releases it; a handle that
+	 * does not fire synchronously is released here.
+	 */
+	private _evictOsc99NotificationsForNew(): void {
+		while (this._osc99ActiveNotifications.size >= MAX_OSC99_ACTIVE_NOTIFICATIONS) {
+			const oldest: IOsc99ActiveNotification | undefined = this._osc99ActiveNotifications.values().next().value;
+			if (!oldest) {
+				break;
+			}
+			oldest.closeReason = 'evicted';
+			oldest.handle.close();
+			this._releaseOsc99Notification(oldest);
+		}
+	}
+
+	/**
+	 * Forgets an active notification and disposes what the handler owns for it; releasing it again
+	 * does nothing.
+	 */
+	private _releaseOsc99Notification(active: IOsc99ActiveNotification): void {
+		if (!this._osc99ActiveNotifications.delete(active)) {
+			return;
+		}
+		if (active.id && this._osc99ActiveNotificationsById.get(active.id) === active) {
+			this._osc99ActiveNotificationsById.delete(active.id);
+		}
+		active.store.dispose();
 	}
 
 	private _getOsc99NotificationMessage(state: IOsc99NotificationState): string | undefined {
@@ -568,14 +634,14 @@ export class TerminalNotificationHandler extends Disposable {
 		return disposableTimeout(() => {
 			active.closeReason = 'auto';
 			active.handle.close();
-		}, autoCloseMs, this._store);
+		}, autoCloseMs);
 	}
 
 	private _closeOsc99Notification(id: string | undefined): void {
 		if (!id) {
 			return;
 		}
-		const active = this._osc99ActiveNotifications.get(id);
+		const active = this._osc99ActiveNotificationsById.get(id);
 		if (active) {
 			active.closeReason = 'protocol';
 			active.handle.close();
@@ -599,7 +665,7 @@ export class TerminalNotificationHandler extends Disposable {
 
 	private _sendOsc99AliveResponse(id: string | undefined): void {
 		const requestId = id ?? '0';
-		const aliveIds = Array.from(this._osc99ActiveNotifications.keys()).join(',');
+		const aliveIds = Array.from(this._osc99ActiveNotificationsById.keys()).join(',');
 		this._sendOsc99Response([
 			`i=${requestId}`,
 			'p=alive'

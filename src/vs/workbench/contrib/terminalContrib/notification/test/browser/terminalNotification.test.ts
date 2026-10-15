@@ -5,7 +5,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { deepStrictEqual, strictEqual } from 'assert';
+import { Action } from '../../../../../../base/common/actions.js';
+import { timeout } from '../../../../../../base/common/async.js';
 import { Emitter, Event } from '../../../../../../base/common/event.js';
+import { DisposableTracker, setDisposableTracker, toDisposable } from '../../../../../../base/common/lifecycle.js';
+import { runWithFakedTimers } from '../../../../../../base/test/common/timeTravelScheduler.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../../base/test/common/utils.js';
 import { NotificationPriority, Severity, type INotification, type INotificationActions, type INotificationHandle, type INotificationProgress, type NotificationMessage } from '../../../../../../platform/notification/common/notification.js';
 import { sanitizeOsc99MessageText, TerminalNotificationHandler, type IOsc99NotificationHost } from '../../browser/terminalNotificationHandler.js';
@@ -19,7 +23,20 @@ class TestNotificationProgress implements INotificationProgress {
 
 class TestNotificationHandle implements INotificationHandle {
 	private readonly _onDidClose = new Emitter<void>();
-	readonly onDidClose = this._onDidClose.event;
+	/**
+	 * The close listeners currently subscribed; the production notification view item only fires
+	 * `onDidClose` and disposes its own emitters when it closes, so the actions stay owned by the
+	 * handler
+	 */
+	closeListeners = 0;
+	readonly onDidClose: Event<void> = (listener, thisArgs?, disposables?) => {
+		this.closeListeners++;
+		const subscription = this._onDidClose.event(listener, thisArgs, disposables);
+		return toDisposable(() => {
+			this.closeListeners--;
+			subscription.dispose();
+		});
+	};
 	readonly onDidChangeVisibility = Event.None;
 	readonly progress = new TestNotificationProgress();
 	closed = false;
@@ -46,7 +63,6 @@ class TestNotificationHandle implements INotificationHandle {
 	}
 
 	updateActions(actions?: INotificationActions): void {
-		this._disposeActions(this.actions);
 		this.actions = actions;
 	}
 
@@ -55,23 +71,11 @@ class TestNotificationHandle implements INotificationHandle {
 			return;
 		}
 		this.closed = true;
-		this._disposeActions(this.actions);
 		this._onDidClose.fire();
 	}
 
-	private _disposeActions(actions: INotificationActions | undefined): void {
-		for (const action of actions?.primary ?? []) {
-			const disposable = action as { dispose?: () => void };
-			if (typeof disposable.dispose === 'function') {
-				disposable.dispose();
-			}
-		}
-		for (const action of actions?.secondary ?? []) {
-			const disposable = action as { dispose?: () => void };
-			if (typeof disposable.dispose === 'function') {
-				disposable.dispose();
-			}
-		}
+	dispose(): void {
+		this._onDidClose.dispose();
 	}
 }
 
@@ -135,6 +139,7 @@ suite('Terminal OSC 99 notifications', () => {
 	teardown(() => {
 		for (const notification of host.notifications) {
 			notification.close();
+			notification.dispose();
 		}
 	});
 
@@ -364,5 +369,141 @@ suite('Terminal OSC 99 notifications', () => {
 		handler.handleSequence('u=2:p=title;Urgent');
 		strictEqual(host.notifications[0].severity, Severity.Warning);
 		strictEqual(host.notifications[0].priority, NotificationPriority.URGENT);
+	});
+
+	test('releases a closed notification', () => {
+		handler.handleSequence('i=rel:p=buttons;One');
+		handler.handleSequence('i=rel;Hello');
+		const notification = host.notifications[0];
+		const listenersBeforeClose = notification.closeListeners;
+		notification.close();
+		deepStrictEqual({ listenersBeforeClose, listenersAfterClose: notification.closeListeners }, { listenersBeforeClose: 1, listenersAfterClose: 0 });
+	});
+
+	test('evicts the oldest active notification at the cap and forgets closed ones', () => {
+		for (let i = 0; i < 150; i++) {
+			handler.handleSequence(`p=title;Anonymous ${i}`);
+		}
+		for (const notification of host.notifications) {
+			notification.close();
+		}
+		for (let i = 0; i < 100; i++) {
+			handler.handleSequence(`i=k${i}:p=title;Keyed ${i}`);
+		}
+		const closedKeyed = () => host.notifications.slice(150).map((notification, i) => notification.closed ? `k${i}` : undefined).filter(id => id !== undefined);
+		const closedBeforeOverflow = closedKeyed();
+		handler.handleSequence('i=k100:p=title;Keyed 100');
+		handler.handleSequence('i=q:p=alive;');
+		deepStrictEqual({
+			shown: host.notifications.length,
+			closedBeforeOverflow,
+			closedAfterOverflow: closedKeyed(),
+			alive: host.writes[host.writes.length - 1],
+		}, {
+			shown: 251,
+			closedBeforeOverflow: [],
+			closedAfterOverflow: ['k0'],
+			alive: '\x1b]99;i=q:p=alive;' + Array.from({ length: 100 }, (_, i) => `k${i + 1}`).join(',') + '\x1b\\',
+		});
+	});
+
+	test('does not evict on an update at the cap and keeps one close listener', () => {
+		for (let i = 0; i < 100; i++) {
+			handler.handleSequence(`i=k${i}:p=title;Keyed ${i}`);
+		}
+		handler.handleSequence('i=k5:p=body;Updated');
+		deepStrictEqual({
+			shown: host.notifications.length,
+			closed: host.notifications.filter(notification => notification.closed).length,
+			message: host.notifications[5].message,
+			closeListeners: host.notifications[5].closeListeners,
+		}, { shown: 100, closed: 0, message: 'Updated', closeListeners: 1 });
+	});
+
+	test('sends the close report and no activation report for an evicted notification', () => {
+		handler.handleSequence('i=first:c=1:a=report:p=title;First');
+		for (let i = 0; i < 100; i++) {
+			handler.handleSequence(`i=k${i}:p=title;Keyed ${i}`);
+		}
+		deepStrictEqual({
+			closed: host.notifications[0].closed,
+			writes: host.writes,
+			focusCalls: host.focusCalls,
+		}, { closed: true, writes: ['\x1b]99;i=first:p=close;\x1b\\'], focusCalls: 0 });
+	});
+
+	test('caps the buttons of a notification', async () => {
+		handler.handleSequence('i=btn:a=report:p=buttons;' + Array.from({ length: 20 }, (_, i) => `b${i}`).join('\u2028'));
+		handler.handleSequence('i=btn;Many buttons');
+		const actions = host.notifications[0].actions;
+		await actions?.primary?.[7].run();
+		deepStrictEqual({
+			labels: actions?.primary?.map(action => action.label),
+			writes: host.writes,
+		}, {
+			labels: ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7'],
+			writes: ['\x1b]99;i=btn;8\x1b\\'],
+		});
+	});
+
+	test('disposes the auto-close timers with the handler and replaces the timer on an update', () => {
+		return runWithFakedTimers({ useFakeTimers: true }, async () => {
+			handler.handleSequence('i=t:w=1000:p=title;Timed');
+			handler.handleSequence('i=t:w=5000:p=body;Later');
+			await timeout(1500);
+			const closedAfterFirstDelay = host.notifications[0].closed;
+			await timeout(4000);
+			const closedAfterSecondDelay = host.notifications[0].closed;
+			handler.handleSequence('i=u:w=1000:p=title;Orphaned');
+			handler.dispose();
+			await timeout(2000);
+			deepStrictEqual({
+				closedAfterFirstDelay,
+				closedAfterSecondDelay,
+				orphanClosed: host.notifications[1].closed,
+				orphanCloseListeners: host.notifications[1].closeListeners,
+			}, { closedAfterFirstDelay: false, closedAfterSecondDelay: true, orphanClosed: false, orphanCloseListeners: 0 });
+		});
+	});
+});
+
+suite('Terminal OSC 99 notification ownership', () => {
+	ensureNoDisposablesAreLeakedInTestSuite();
+
+	test('keeps a constant number of live disposables across show, update and close cycles', () => {
+		// The live count of the suite's tracker is not accessible, so the test installs its own
+		// tracker for the handler's lifetime (the API ensureNoDisposablesAreLeakedInTestSuite uses)
+		// and checks it for leaks itself; nothing disposable exists in the test before the swap
+		const host = new TestOsc99Host();
+		const tracker = new DisposableTracker();
+		setDisposableTracker(tracker);
+		try {
+			const liveBeforeHandler = tracker.getTrackedDisposables().length;
+			const handler = new TerminalNotificationHandler(host);
+			const liveWithHandler = tracker.getTrackedDisposables().length;
+			for (let i = 0; i < 200; i++) {
+				handler.handleSequence('i=cycle:w=60000:p=buttons;One\u2028Two');
+				handler.handleSequence('i=cycle:p=title;Title');
+				handler.handleSequence('i=cycle:p=body;Body');
+				host.notifications[host.notifications.length - 1].close();
+				handler.handleSequence('p=buttons;One');
+				handler.handleSequence('w=60000;Anonymous');
+				host.notifications[host.notifications.length - 1].close();
+			}
+			const liveAfterCycles = tracker.getTrackedDisposables();
+			handler.dispose();
+			for (const notification of host.notifications) {
+				notification.dispose();
+			}
+			deepStrictEqual({
+				shown: host.notifications.length,
+				liveAfterCycles: liveAfterCycles.length - liveWithHandler,
+				liveActionsAfterCycles: liveAfterCycles.filter(disposable => disposable instanceof Action).length,
+				liveAfterDispose: tracker.getTrackedDisposables().length - liveBeforeHandler,
+				leaks: tracker.computeLeakingDisposables()?.leaks.length ?? 0,
+			}, { shown: 400, liveAfterCycles: 0, liveActionsAfterCycles: 0, liveAfterDispose: 0, leaks: 0 });
+		} finally {
+			setDisposableTracker(null);
+		}
 	});
 });
