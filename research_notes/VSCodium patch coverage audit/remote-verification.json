@@ -1,0 +1,497 @@
+{
+	"commit": "be70704abf84fc6c7721f94478dfcccd2dc6163e",
+	"checks": [
+		{
+			"path": "patches/00-binary-fix-name.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-binary-fix-name.patch",
+			"ok": true,
+			"sha256": "eb4dda2faa88f699f8ae23398f56514c6f0ea0ae8147dd14c440f69e590ef71f"
+		},
+		{
+			"path": "patches/00-brand-remove-branding.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-brand-remove-branding.patch",
+			"ok": true,
+			"sha256": "c4dfc36ce38e31a0ef9ac43ae863d2a0ed81af3eee6a82ff2b6c0f1fe78b1caa"
+		},
+		{
+			"path": "patches/00-build-disable-esbuild.patch.no",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-esbuild.patch.no",
+			"ok": true,
+			"sha256": "a9d65cfbbf90fd748d22dd8cfff7d20293d107e928203a095d13e59d8ea5e78c"
+		},
+		{
+			"path": "patches/00-build-disable-mangle.patch.no",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-mangle.patch.no",
+			"ok": true,
+			"sha256": "9fe6e2b3e7a0fdc9e10b026951f23f8dd34b4a62f1b8a5573b93257f3314918e"
+		},
+		{
+			"path": "patches/00-build-download-extensions-from-gh.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-download-extensions-from-gh.patch",
+			"ok": true,
+			"sha256": "1dfff397f9194adb906892511d57fe1f454c0c226ed0e32c803bde781b35ed30"
+		},
+		{
+			"path": "patches/00-build-package-missing-dependencies.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-package-missing-dependencies.patch",
+			"ok": true,
+			"sha256": "e3fba1e29bf41d0c900cc16fafaefde5cc9e15a30c74b98e6689d298129aac89"
+		},
+		{
+			"path": "patches/00-build-update-electron.patch.no",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-electron.patch.no",
+			"ok": true,
+			"sha256": "92f3749395b249143fdb11b7bfe38af0da3462160acaeda44c16df9d976a7623"
+		},
+		{
+			"path": "patches/00-build-update-sourcemap-url.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-sourcemap-url.patch",
+			"ok": true,
+			"sha256": "792bb4a60bc07a78c8972d46792430aee9ffc657116e1c0f14c543cc0ffe7d89"
+		},
+		{
+			"path": "patches/00-cloud-remove.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-cloud-remove.patch",
+			"ok": true,
+			"sha256": "e1217f9be94dd7eb5ad3c8856a43fc2b32d812363f33bd093476ddb44414c2cb"
+		},
+		{
+			"path": "patches/00-community-add-announcements.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-community-add-announcements.patch",
+			"ok": true,
+			"sha256": "dbe00a16f805967c3c445b5096b69081a01d43958d425070a136314027bcce5b"
+		},
+		{
+			"path": "patches/00-copilot-disable-terminal-suggest.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-disable-terminal-suggest.patch",
+			"ok": true,
+			"sha256": "9181186263872f9915c5fe896794d544def01b5e77f86551f1fbe7790b80a270"
+		},
+		{
+			"path": "patches/00-copilot-fix-action-condition.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-fix-action-condition.patch",
+			"ok": true,
+			"sha256": "3a51b3f5ed6f7a8c43aafc50ba9410529b43db0564a2e586a516b228bf2836a7"
+		},
+		{
+			"path": "patches/00-copilot-remove-terminal-hint.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-remove-terminal-hint.patch",
+			"ok": true,
+			"sha256": "80ae6993df67c24328e50eb3f46f70fa18d0e92680de3e7ee674a694df62d752"
+		},
+		{
+			"path": "patches/00-ext-git-ai-coauthor-off.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-git-ai-coauthor-off.patch",
+			"ok": true,
+			"sha256": "f9f473bce11b1597de718dc4701bd51579d4f3c441f7b1c3d0eedefef99689e9"
+		},
+		{
+			"path": "patches/00-ext-github-authentication-use-pat.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-authentication-use-pat.patch",
+			"ok": true,
+			"sha256": "a164346b2b0e47e5796bcd36a33a0e6895ef2ffd3ff27fe0bf26a9ed522493c6"
+		},
+		{
+			"path": "patches/00-ext-github-remove-vscodedev.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-remove-vscodedev.patch",
+			"ok": true,
+			"sha256": "5fd81aec78958d582c7655a88c4ba94d6be080c09287e3ec92c091a511d2e50e"
+		},
+		{
+			"path": "patches/00-extension-disable-signature-verification.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-extension-disable-signature-verification.patch",
+			"ok": true,
+			"sha256": "02ae9bff811559a95d4db8467f6db3899c032bedbdf18c99b97e4490a3cec432"
+		},
+		{
+			"path": "patches/00-remote-add-missing-dependencies.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-missing-dependencies.patch",
+			"ok": true,
+			"sha256": "ec479d17f62c7887751056a9f2b4aa965ee31bf0dafd1247304a888a643efc6c"
+		},
+		{
+			"path": "patches/00-remote-add-url.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-url.patch",
+			"ok": true,
+			"sha256": "cfa8de5fce5b7c3c0defe00136c33459a27db52ea4e164ba5ce96d6f1dfbcfc7"
+		},
+		{
+			"path": "patches/00-remote-disable-client-validation.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-disable-client-validation.patch",
+			"ok": true,
+			"sha256": "43941aa950dfd543bae8a08b10649704576c04e3fbea18786cdd27aa5ba18e0d"
+		},
+		{
+			"path": "patches/00-remote-remove-missing-vsda.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-remove-missing-vsda.patch",
+			"ok": true,
+			"sha256": "9424d915e15bbeeb3f7ce599f7cc1c82c77e37df099c9502efe38d30be6f3eef"
+		},
+		{
+			"path": "patches/00-security-add-command-filter.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-security-add-command-filter.patch",
+			"ok": true,
+			"sha256": "04560b23d89fb063d755c4553ca2a9bfeb30d713de7604658174d4156b5fe468"
+		},
+		{
+			"path": "patches/00-settings-gallery.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-gallery.patch",
+			"ok": true,
+			"sha256": "9303f42cc04d011ef198b98df978b19ac41de5527cd07d824c272aad4f0eaf0f"
+		},
+		{
+			"path": "patches/00-settings-user-product.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-user-product.patch",
+			"ok": true,
+			"sha256": "13ac831dc73b2616c1c2de45ba8f623ebe27d2d2a20ddfc4865e05db4a528b91"
+		},
+		{
+			"path": "patches/00-telemetry-disable.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-telemetry-disable.patch",
+			"ok": true,
+			"sha256": "be7de72ef8ed64bd18d059dbaadd97071a7949a9da9d6b3d39a63203c852eb1d"
+		},
+		{
+			"path": "patches/00-tunnel-disable-recommendation.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-tunnel-disable-recommendation.patch",
+			"ok": true,
+			"sha256": "0e4bcf1233b54b989c4bd42a2f40acc0be7cb85f1dd7ab93d083f387bfdabfb3"
+		},
+		{
+			"path": "patches/00-ui-custom-font.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch",
+			"ok": true,
+			"sha256": "d85f2aa1ba99fc5c5159ebf2d605672fe1bba8a63f192fd0ea91abfa83d2d0c2"
+		},
+		{
+			"path": "patches/00-ui-improve-eol-banner.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-improve-eol-banner.patch",
+			"ok": true,
+			"sha256": "2c6329b86b8cd9377c376baeec715bcff9da9fae82112462b7718fc3d31fe049"
+		},
+		{
+			"path": "patches/00-ui-report-issue.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-report-issue.patch",
+			"ok": true,
+			"sha256": "4de02e27966c12fd7a6ec0f7162c1088d2359317daa10f2cb6a4481096126d3c"
+		},
+		{
+			"path": "patches/00-update-disable.patch.yet",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-disable.patch.yet",
+			"ok": true,
+			"sha256": "97bdcf434f5b6157dc48ebffbb6ad1e7fc57c8a8e2d66593951d021127f3a85d"
+		},
+		{
+			"path": "patches/00-update-rename-cache-path.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-rename-cache-path.patch",
+			"ok": true,
+			"sha256": "bee02db192415b84480fc22c10ae8ac601d3efbe81e0c78404dcef53750ab2a8"
+		},
+		{
+			"path": "patches/00-vsce-use-custom-lib.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-vsce-use-custom-lib.patch",
+			"ok": true,
+			"sha256": "45bccf91a0c4347d5b6c689845bcc165602bff55f19fbfb50bd3a2f31df0cc29"
+		},
+		{
+			"path": "patches/10-version-add-release.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/10-version-add-release.patch",
+			"ok": true,
+			"sha256": "a445b748e2a8c6cc587425367f8fe14763ff657828ff513f1102a1b12217b1a4"
+		},
+		{
+			"path": "patches/11-update-use-github-release.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch",
+			"ok": true,
+			"sha256": "f6112fb62dc5514887494b9c78ea63a9a29b3c21e006dc72afcd4952824016b5"
+		},
+		{
+			"path": "patches/12-update-add-cooldown.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/12-update-add-cooldown.patch",
+			"ok": true,
+			"sha256": "51ac23aa93894ce46f1aa7deabfd23b7c795c935993ed266e78aaf18aae973f2"
+		},
+		{
+			"path": "patches/20-keymap-use-custom-lib.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/20-keymap-use-custom-lib.patch",
+			"ok": true,
+			"sha256": "77eb73ad85bd983df76472dab41295ad2518406f573eed03b286b8024fe6e3eb"
+		},
+		{
+			"path": "patches/21-policy-use-custom-lib.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/21-policy-use-custom-lib.patch",
+			"ok": true,
+			"sha256": "fb16511363ee1333ff0852195bf565681ba76c691956e37ce32c4bc8ab53d97e"
+		},
+		{
+			"path": "patches/22-osproxy-use-custom-lib.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/22-osproxy-use-custom-lib.patch",
+			"ok": true,
+			"sha256": "1032868c9980657d51abb178b9814c5e460b8e0536c05a1dfedd7b73159f2ff1"
+		},
+		{
+			"path": "patches/30-build-add-missing-dependencies.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/30-build-add-missing-dependencies.patch",
+			"ok": true,
+			"sha256": "d72260710872ac417589a5dd47a3829a598d3e2954f6bcd38931ed47bab7ccac"
+		},
+		{
+			"path": "patches/40-cli-use-reh-archive.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/40-cli-use-reh-archive.patch",
+			"ok": true,
+			"sha256": "9b1ed81416f84222e569304decf7a55d7f215215757df193e87a229c45838675"
+		},
+		{
+			"path": "patches/50-build-improve-gulp-tasks.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/50-build-improve-gulp-tasks.patch",
+			"ok": true,
+			"sha256": "d5910a798a915a24719bff8feae022ec1a1e77aeb383704b9829259fee07832f"
+		},
+		{
+			"path": "patches/51-build-disable-non-ascii.patch.no",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/51-build-disable-non-ascii.patch.no",
+			"ok": true,
+			"sha256": "d73924e37c85c27493c09b5b225e8f84285d94e2832784e604d7a0d69edf483a"
+		},
+		{
+			"path": "patches/52-ext-copilot-remove-it.json",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/52-ext-copilot-remove-it.json",
+			"ok": true,
+			"sha256": "d9dd6cab4b43632a16d1231bbf38bc1b1951e89be7c79d4b0dc5e73ddd948671"
+		},
+		{
+			"path": "patches/53-ext-copilot-remove-it.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch",
+			"ok": true,
+			"sha256": "fdb4202a0e3d0a19b02f8c430ac9f793f054da435624209fb362f51ebaed8b81"
+		},
+		{
+			"path": "patches/60-security-add-option-for-malicious-ext.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/60-security-add-option-for-malicious-ext.patch",
+			"ok": true,
+			"sha256": "21d01fd845ba8598f1e6c9b6b182036aa10e5eebaba1d4422cc2f0004886ff46"
+		},
+		{
+			"path": "patches/61-extension-close-connection.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/61-extension-close-connection.patch",
+			"ok": true,
+			"sha256": "2b704345dec03b2d3338409aafba2a736fe0fe564b863c5a9c6b478a8726a6f4"
+		},
+		{
+			"path": "patches/80-ui-disable-onboarding.json",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/80-ui-disable-onboarding.json",
+			"ok": true,
+			"sha256": "f5c7977ad743cae8a840a3649caa15c5256a9b16f665f068cbbb5a4e89e9cf0f"
+		},
+		{
+			"path": "patches/81-ui-disable-onboarding.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/81-ui-disable-onboarding.patch",
+			"ok": true,
+			"sha256": "371085a05c357d927f8aa435617e651ec3d43be653b43c7603ec64ad992be570"
+		},
+		{
+			"path": "patches/alpine/reh/00-build-docker.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/alpine/reh/00-build-docker.patch",
+			"ok": true,
+			"sha256": "d7bdefc9ea0922794901740141435258e06cb72b83ef8280a6f23d0b34960c72"
+		},
+		{
+			"path": "patches/helper/settings.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/helper/settings.patch",
+			"ok": true,
+			"sha256": "ae6b5115b569efe9fa5bcbfd9ab421f72b30e96e3f5583dc5f57c1f286113dac"
+		},
+		{
+			"path": "patches/insider/19-system-extensions.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/insider/19-system-extensions.patch",
+			"ok": true,
+			"sha256": "aed931485e8ecd663b3bc75bedd369b1f24747b1b6cf9b5642b0e27fe7c846ae"
+		},
+		{
+			"path": "patches/linux/00-asset-fix-rpm-version.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-asset-fix-rpm-version.patch",
+			"ok": true,
+			"sha256": "60752bfdde0f1070fefe906fd48af3a67ee62581cb2d48eeb6a4426373b3fa8d"
+		},
+		{
+			"path": "patches/linux/00-build-improve-qemu.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-build-improve-qemu.patch",
+			"ok": true,
+			"sha256": "f8a96dacfa063a601d580938492f571900812e44ec846a8a9037f0b605b3480e"
+		},
+		{
+			"path": "patches/linux/00-cli-fix-unused.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-cli-fix-unused.patch",
+			"ok": true,
+			"sha256": "9be9a2d843b9558b676f1d97c3218740e389a3e9444e00e21e18a111a7c50580"
+		},
+		{
+			"path": "patches/linux/00-env-improve-xdg-path.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-env-improve-xdg-path.patch",
+			"ok": true,
+			"sha256": "19eaf84fa95ec6f7d7f88aaa651385bb1ec5fb55542abeaee50536fee2e2a60a"
+		},
+		{
+			"path": "patches/linux/00-log-use-state-home.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-log-use-state-home.patch",
+			"ok": true,
+			"sha256": "78850134d5189b7bb0495a3d20715075fb0f164e31f70332f5d47be923b3edb3"
+		},
+		{
+			"path": "patches/linux/00-policy-use-custom-path.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-policy-use-custom-path.patch",
+			"ok": true,
+			"sha256": "f7cf427cc48e1d494dd6402a65e45e09fec3b07715e5cf5c9d866a4ef2ed8f32"
+		},
+		{
+			"path": "patches/linux/00-terminal-cmd-in-shell.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-terminal-cmd-in-shell.patch",
+			"ok": true,
+			"sha256": "7fa5d0b32dabaa706b4e7156a5f62744566ec3fa6c7f4ec40e1b2e98fac6be5c"
+		},
+		{
+			"path": "patches/linux/31-build-fix-dependencies.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/31-build-fix-dependencies.patch",
+			"ok": true,
+			"sha256": "83cd7f23677476219e16d53aa085d51cae1c98d920638050232916ec5636f524"
+		},
+		{
+			"path": "patches/linux/41-arch-add-support.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/41-arch-add-support.patch",
+			"ok": true,
+			"sha256": "d56f88618e7e0736807b4bc3fcf857b8c7fbbfb45acd803243111cad9dec7dc7"
+		},
+		{
+			"path": "patches/linux/42-arch-add-ppc64le.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/42-arch-add-ppc64le.patch",
+			"ok": true,
+			"sha256": "52173f5f2f8dcbc27c30acc2a85754d12644f3ab85f6856561fc657d7a846e45"
+		},
+		{
+			"path": "patches/linux/43-arch-add-riscv64.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/43-arch-add-riscv64.patch",
+			"ok": true,
+			"sha256": "9de735d93c5843bcddbe5d95994725fe92fd9940fe904998a635b54456d3163e"
+		},
+		{
+			"path": "patches/linux/44-arch-add-loong64.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/44-arch-add-loong64.patch",
+			"ok": true,
+			"sha256": "6c7b522238d596c6185fe90a7525a98e2127c48f53c0118ae97b928e6d67514d"
+		},
+		{
+			"path": "patches/linux/45-arch-add-s390x.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/45-arch-add-s390x.patch",
+			"ok": true,
+			"sha256": "ac912a25d76746fe82755f8a69a74fdbbe755d1839e78b2c9315c6ebc1524011"
+		},
+		{
+			"path": "patches/linux/46-arch-add-arm32.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-arch-add-arm32.patch",
+			"ok": true,
+			"sha256": "2d9a066542960c45380923e367d5d34781d931d4ff6a4baf49490b67d817bee6"
+		},
+		{
+			"path": "patches/linux/46-deb-use-libasound2t64-compat.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-deb-use-libasound2t64-compat.patch",
+			"ok": true,
+			"sha256": "7e48436cb7d8c7710d535061519b0db6027ed29433bb1b5e5e5be38ddaee5f35"
+		},
+		{
+			"path": "patches/linux/client/00-build-disable-remote.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-build-disable-remote.patch",
+			"ok": true,
+			"sha256": "43dc9077532de1eae7ba826fd0e47e83583f920b157c6957275185bf6a448e8a"
+		},
+		{
+			"path": "patches/linux/client/00-system-support-16k-page-size.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-system-support-16k-page-size.patch",
+			"ok": true,
+			"sha256": "c4be2f9ef92351bdef118213d625d727af0c147f2586a80843c6d483c6a04e36"
+		},
+		{
+			"path": "patches/linux/reh/s390x/00-build-override-dependency.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/reh/s390x/00-build-override-dependency.patch",
+			"ok": true,
+			"sha256": "db25c7ba71d1e938d78149ecbdf1917bbb053ce9d12f8a72ecd654c6b86183de"
+		},
+		{
+			"path": "patches/osx/00-ui-update-emulated-urls.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/osx/00-ui-update-emulated-urls.patch",
+			"ok": true,
+			"sha256": "5d52e821fd4cde9f32d2592c9210467f537e2e3352c5042f56e23fc4679d733a"
+		},
+		{
+			"path": "patches/windows/00-build-min-version-win7.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-build-min-version-win7.patch",
+			"ok": true,
+			"sha256": "4ac0265f589649d5422733d5c919af7e52bd29fdf0c023eb74213934c83d1875"
+		},
+		{
+			"path": "patches/windows/00-remote-use-open-ext.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-remote-use-open-ext.patch",
+			"ok": true,
+			"sha256": "8ca0cabe25a6e10495db08680fe24d31bc6aa057d3619426db35bf5920289f2d"
+		},
+		{
+			"path": "patches/windows/41-cli-fix-update-url.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/41-cli-fix-update-url.patch",
+			"ok": true,
+			"sha256": "f0a5875a1bdbea1c755053537b68817c93c421ecaa8b8310ab7c162b4beb5aab"
+		},
+		{
+			"path": "patches/windows/59-build-replace-signature.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/59-build-replace-signature.patch",
+			"ok": true,
+			"sha256": "208c7f923d80575c5b32e09aea61c6efe27a3af4af6a186e8025dad155364cad"
+		},
+		{
+			"path": "patches/windows/70-build-contextmenu-appx.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/70-build-contextmenu-appx.patch",
+			"ok": true,
+			"sha256": "289a771ba499318ef6152530daa7791e3dd83dbce76b172e4d450a979ac9fcab"
+		},
+		{
+			"path": "patches/windows/71-build-disable-appx.patch",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/71-build-disable-appx.patch",
+			"ok": true,
+			"sha256": "1798f949cca83fc50b92b5d6abba43adda65635142b59c8c82bc34b82d5e67a9"
+		},
+		{
+			"path": "upstream/stable.json",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/upstream/stable.json",
+			"ok": true,
+			"sha256": "4f8183cc404701500edf942093946bc87371e51b0773bcac3565e0c4d56aba7b"
+		},
+		{
+			"path": "upstream/insider.json",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/upstream/insider.json",
+			"ok": true,
+			"sha256": "4f8183cc404701500edf942093946bc87371e51b0773bcac3565e0c4d56aba7b"
+		},
+		{
+			"path": "prepare_vscode.sh",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh",
+			"ok": true,
+			"sha256": "cece455bf326a21b884985caef67ab50b72020f6c765cfb9d8158b4d8eb0a4e7"
+		},
+		{
+			"path": "utils.sh",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/utils.sh",
+			"ok": true,
+			"sha256": "a0141282fddc77de175775592118fde4a04e11f3ffe214aa5826032bcb1181fc"
+		},
+		{
+			"path": "undo_telemetry.sh",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/undo_telemetry.sh",
+			"ok": true,
+			"sha256": "cd9257e894e09fcdcb6699577b89e84a15efcc2b8636477de09c5f322e3489fe"
+		},
+		{
+			"path": "product.json",
+			"url": "https://raw.githubusercontent.com/VSCodium/vscodium/be70704abf84fc6c7721f94478dfcccd2dc6163e/product.json",
+			"ok": true,
+			"sha256": "c6cd13376233ce42515a9073528fad1c6606fcca92d9c8f5e347b373d01acd2d"
+		}
+	]
+}

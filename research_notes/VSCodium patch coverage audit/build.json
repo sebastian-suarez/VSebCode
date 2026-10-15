@@ -1,0 +1,457 @@
+[
+	{
+		"path": "patches/00-binary-fix-name.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Three coordinated macOS changes: package the internal launcher as bin/<applicationName>, point the PATH-install symlink at that renamed file, and return the renamed file from the built CLI-path API. VSebCode deliberately keeps bin/code internally while installing /usr/local/bin/vsc; its package path, symlink target and CLI-path API agree. Windows and Linux already derive their launcher names from applicationName and are not changed by this patch.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-binary-fix-name.patch:5](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-binary-fix-name.patch#L5-L23)",
+			"[CLAUDE.md:19](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:19>)",
+			"[build/gulpfile.vscode.ts:272](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:272>)",
+			"[src/vs/platform/native/electron-main/nativeHostMainService.ts:559](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/native/electron-main/nativeHostMainService.ts:559>)",
+			"[src/vs/platform/native/electron-main/nativeHostMainService.ts:825](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/native/electron-main/nativeHostMainService.ts:825>)"
+		],
+		"gaps": [
+			"No port needed under the recorded internal-launcher decision. Renaming only one of the three sites would break the other callers."
+		]
+	},
+	{
+		"path": "patches/00-build-disable-esbuild.patch.no",
+		"activation": "Inactive: .patch.no does not match any production *.patch glob; no explicit activation reference was found.",
+		"effect": "Dormant patch sets the old useEsbuildTranspile switch to false. It does not affect the audited VSCodium release pipeline. The fork uses the current esbuild bundle task and no longer has build/buildConfig.ts.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[patches/00-build-disable-esbuild.patch.no:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-esbuild.patch.no#L1-L8)",
+			"[prepare_vscode.sh:146](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L146-L182)",
+			"[build/gulpfile.vscode.ts:479](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:479>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-build-disable-mangle.patch.no",
+		"activation": "Inactive: .patch.no is excluded by all production patch globs.",
+		"effect": "Dormant patch removes the older TypeScript mangler transformation, its source-map loading and the condition wrapping it. This is separate from the active 50-build-improve-gulp-tasks.patch removal of the esbuild --mangle-privates argument.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[patches/00-build-disable-mangle.patch.no:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-mangle.patch.no#L1-L32)",
+			"[prepare_vscode.sh:156](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L156-L160)",
+			"[patches/50-build-improve-gulp-tasks.patch:70](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/50-build-improve-gulp-tasks.patch#L70-L77)",
+			"[build/lib/esbuild.ts:47](</Users/sebastian.suarez/Projects/VSebCode/build/lib/esbuild.ts:47>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-build-download-extensions-from-gh.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Deletes the built-in extension downloader Marketplace branch so non-VSIX, non-platform-specific built-ins fall back to GitHub releases. VSebCode deliberately retains Marketplace built-in acquisition; explicit VSIX inputs and platform-specific GitHub assets already have their own earlier branches.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-build-download-extensions-from-gh.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-download-extensions-from-gh.patch#L1-L9)",
+			"[build/lib/builtInExtensions.ts:82](</Users/sebastian.suarez/Projects/VSebCode/build/lib/builtInExtensions.ts:82>)",
+			"[CLAUDE.md:18](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:18>)",
+			"[CLAUDE.md:94](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:94>)",
+			"[product.json:34](</Users/sebastian.suarez/Projects/VSebCode/product.json:34>)"
+		],
+		"gaps": [
+			"Keeping the Marketplace branch is a recorded decision, not incomplete removal."
+		]
+	},
+	{
+		"path": "patches/00-build-package-missing-dependencies.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Duplicates node_modules/semver/** outside node_modules.asar for ordinary filesystem consumers. The fork omits this duplication, while retaining the nearby sandbox-runtime/socks5/shell-quote/zod duplication. Static inspection does not establish a surviving non-ASAR semver consumer: src/**/*.ts has no sandbox-runtime imports, the sandbox service was removed, and the retained sandbox-runtime 0.0.1 dependency tree does not declare semver.",
+		"classification": "Unresolved",
+		"evidence": [
+			"[patches/00-build-package-missing-dependencies.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-package-missing-dependencies.patch#L1-L8)",
+			"[build/gulpfile.vscode.ts:214](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:214>)",
+			"[package-lock.json:3841](</Users/sebastian.suarez/Projects/VSebCode/package-lock.json:3841>)",
+			"[build/removed-surfaces.txt:52](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:52>)",
+			"[package.json:89](</Users/sebastian.suarez/Projects/VSebCode/package.json:89>)"
+		],
+		"gaps": [
+			"Exact packaging entry is absent. A concrete surviving standalone-process semver requirement was not established, so no packaged runtime failure is claimed.",
+			"The sandbox runtime remains in the manifest and packaging after its source consumers were removed; evaluate that residue before adding another ASAR exception."
+		]
+	},
+	{
+		"path": "patches/00-build-update-electron.patch.no",
+		"activation": "Inactive: .patch.no is excluded by production patch globs.",
+		"effect": "Dormant Electron 39.8.0 to 39.8.4 update synchronizes .npmrc, Electron asset hashes, component-governance revision and package/lock records. VSebCode now targets Electron 43.7.7; neither activating this old pin nor copying its hashes is appropriate.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[patches/00-build-update-electron.patch.no:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-electron.patch.no#L1-L203)",
+			"[prepare_vscode.sh:156](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L156-L160)",
+			"[.npmrc:2](</Users/sebastian.suarez/Projects/VSebCode/.npmrc:2>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-build-update-sourcemap-url.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Moves extension, desktop, standalone-web and REH source-map URLs from the Microsoft CDN to VSCodium GitHub sourcemap releases, keyed by quality and build commit; flattens nested map paths into slash-to-hyphen asset names and removes obsolete commented map handling. VSebCode intentionally keeps relative esbuild sourceMappingURL references with no CDN rewrite/upload; its standalone-web and REH distribution surfaces are removed.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-build-update-sourcemap-url.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-sourcemap-url.patch#L1-L60)",
+			"[CLAUDE.md:45](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:45>)",
+			"[build/removed-surfaces.txt:139](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139>)",
+			"[build/gulpfile.vscode.ts:479](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:479>)"
+		],
+		"gaps": [
+			"No need to introduce a VSCodium source-map hosting dependency."
+		]
+	},
+	{
+		"path": "patches/00-ext-git-ai-coauthor-off.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "The patch only inserts a comment saying AI CoAuthor should be off; aiCoAuthor default off is unchanged context. VSebCode removes the AI co-author code/settings along with the AI stack, covering the functional intent more strongly. The patch itself must not be described as switching a default.",
+		"classification": "Covered",
+		"evidence": [
+			"[patches/00-ext-git-ai-coauthor-off.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-git-ai-coauthor-off.patch#L1-L8)",
+			"[CLAUDE.md:69](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:69>)",
+			"[CLAUDE.md:165](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:169>)"
+		],
+		"gaps": [
+			"No aiCoAuthor/coauthor implementation or configuration was found in the surviving git extension."
+		]
+	},
+	{
+		"path": "patches/00-remote-add-missing-dependencies.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Adds tslib as a direct remote package dependency (^2.6.3, lock 2.7.0) for the remote server/extension-host distribution. VSebCode removes remote/ and its server packaging rather than producing this distribution.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-remote-add-missing-dependencies.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-missing-dependencies.patch#L1-L25)",
+			"[build/removed-surfaces.txt:28](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28>)",
+			"[build/removed-surfaces.txt:61](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:61>)",
+			"[CLAUDE.md:199](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:203>)"
+		],
+		"gaps": [
+			"Desktop remote-client compatibility does not imply shipping the deleted remote dependency tree."
+		]
+	},
+	{
+		"path": "patches/00-remote-add-url.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Writes a VSCodium GitHub release serverDownloadUrlTemplate into both desktop and REH packaged product metadata, using product quality, version, OS and architecture. VSebCode removed its own server distribution and server product fields; the surviving remote client does not establish a requirement to publish or download a VSebCode REH archive.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-remote-add-url.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-url.patch#L1-L16)",
+			"[build/removed-surfaces.txt:28](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28>)",
+			"[build/removed-surfaces.txt:61](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:61>)",
+			"[product.json:1](</Users/sebastian.suarez/Projects/VSebCode/product.json:1>)",
+			"[CLAUDE.md:199](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:203>)"
+		],
+		"gaps": [
+			"Do not restore a server feed solely to mimic the desktop packaging hunk."
+		]
+	},
+	{
+		"path": "patches/00-remote-disable-client-validation.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Adds the server --disable-client-validation option and bypasses client/server commit equality validation when the option is present, with logging. It is an optional compatibility bypass, not a blanket removal of all server security checks. Both server argument parsing and server connection targets are removed from VSebCode.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-remote-disable-client-validation.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-disable-client-validation.patch#L1-L51)",
+			"[build/removed-surfaces.txt:61](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:61>)",
+			"[CLAUDE.md:199](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:203>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-remote-remove-missing-vsda.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Removes browser vsda loading/WASM/decryption paths and replaces browser validator/sign operations with errors; removes the server vsda discovery/import and leaves a null implementation. VSebCode removed the browser sign service and server rather than preserving these unavailable-service stubs.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-remote-remove-missing-vsda.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-remove-missing-vsda.patch#L1-L128)",
+			"[build/removed-surfaces.txt:256](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:256>)",
+			"[build/removed-surfaces.txt:61](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:61>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-ui-custom-font.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Adds twelve experimental font family/size settings for the workbench, activity bar, bottom pane, sidebars, status bar and tabs, shared clamped/scaled font metrics, configuration application, CSS variables and fallback inheritance. It scales shared controls, component geometry, pane/header/notification heights, virtualized lists/trees, editor find widgets, debug/extensions/explorer/SCM/search/notebook/preferences/process/remote/testing/timeline views, terminal tab rows and modern-UI layouts; it adds metric tests and adapts layout tests. None of the central settings/metric module or the surviving component integrations is present in VSebCode. The patch spans 98 target files: 86 existing fork files, two new font files absent, and ten intentionally removed AI/session target files. Detailed behavior mapping is in build.md.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/00-ui-custom-font.patch:413](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch#L413-L634)",
+			"[patches/00-ui-custom-font.patch:2711](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch#L2711-L2882)",
+			"[patches/00-ui-custom-font.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch#L1-L412)",
+			"[patches/00-ui-custom-font.patch:2883](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch#L2883-L4501)",
+			"[src/vs/workbench/browser/media/style.css:12](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/media/style.css:12>)",
+			"[src/vs/workbench/browser/media/style.css:49](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/media/style.css:49>)",
+			"[src/vs/workbench/browser/parts/statusbar/statusbarPart.ts:124](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/parts/statusbar/statusbarPart.ts:124>)",
+			"[src/vs/workbench/contrib/files/browser/views/explorerViewer.ts:80](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/files/browser/views/explorerViewer.ts:80>)",
+			"[src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts:63](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts:63>)",
+			"[build/removed-surfaces.txt:62](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:62>)"
+		],
+		"gaps": [
+			"Optional interface/accessibility feature missing on the actively validated macOS platform as well as the other desktop platforms.",
+			"Porting only the twelve settings or font-family CSS would omit layout/virtualization behavior. Removed chat/session adaptations are intentional exclusions.",
+			"No visual rendering or font-change interaction test was run; this is source-level coverage, not a claim that the VSCodium implementation is bug-free."
+		]
+	},
+	{
+		"path": "patches/00-ui-improve-eol-banner.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Adds IBannerItem.neverShowAgain options and a generic BannerPart.show guard that reads the storage id using application/profile/workspace scope (application by default), closes and suppresses an already-dismissed banner. This patch does not create an EOL banner, write the dismissal flag or add a dismissal button. VSebCode retains the generic banner service but lacks the option and guard; its updater/EOL caller was intentionally removed.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/00-ui-improve-eol-banner.patch:19](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-improve-eol-banner.patch#L19-L62)",
+			"[src/vs/workbench/browser/parts/banner/bannerPart.ts:175](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/parts/banner/bannerPart.ts:175>)",
+			"[src/vs/workbench/services/banner/browser/bannerService.ts:12](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/services/banner/browser/bannerService.ts:12>)",
+			"[build/removed-surfaces.txt:58](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58>)"
+		],
+		"gaps": [
+			"Generic reusable suppression capability is absent; no current surviving caller was shown to require it. The updater-specific use case is intentionally out of scope."
+		]
+	},
+	{
+		"path": "patches/00-update-disable.patch.yet",
+		"activation": "Explicitly applied only when DISABLE_UPDATE=yes, before root JSON actions and root patches; Linux CI/stable/Insider publishing workflows set it. The .patch.yet suffix alone does not activate it.",
+		"effect": "Changes the product update.mode default to none. VSebCode deleted the update service/configuration and self-update distribution feed, so there is no updater to disable.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-update-disable.patch.yet:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-disable.patch.yet#L1-L9)",
+			"[prepare_vscode.sh:146](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L146-L148)",
+			"[.github/workflows/publish-stable-linux.yml:11](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L11-L20)",
+			"[build/removed-surfaces.txt:58](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-update-rename-cache-path.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Renames the Windows self-update cache directory from vscode-* to <applicationName>-*. VSebCode removed Windows updater and versioned-update packaging; the cache path has no surviving owner.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/00-update-rename-cache-path.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-rename-cache-path.patch#L1-L9)",
+			"[build/removed-surfaces.txt:58](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58>)",
+			"[CLAUDE.md:199](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:203>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-vsce-use-custom-lib.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Build effect MISSING: changes extension file-listing/packaging from @vscode/vsce 3.6.1 to @vscodium/vsce 3.6.1-258428; the lockfile removes the transitive proprietary @vscode/vsce-sign package and its optional native binaries (with incidental dependency resolution churn). VSebCode still imports @vscode/vsce in both packaging paths and locks/installs vsce-sign 2.1.0 in build/node_modules; its install script remains allowed. Runtime/packaging effect INTENTIONAL: the patch also renames the signer import, moduleignore rules and ASAR unpack exception to @vscodium/vsce-sign. VSebCode deliberately has no installed runtime signer and keeps an import that fails into its explicit unavailable-verifier path; absence in the shipped runtime is not absence from the build chain.",
+		"classification": "Partial",
+		"evidence": [
+			"[patches/00-vsce-use-custom-lib.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-vsce-use-custom-lib.patch#L1-L42)",
+			"[patches/00-vsce-use-custom-lib.patch:43](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-vsce-use-custom-lib.patch#L43-L385)",
+			"[patches/00-vsce-use-custom-lib.patch:386](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-vsce-use-custom-lib.patch#L386-L403)",
+			"[build/lib/extensions.ts:115](</Users/sebastian.suarez/Projects/VSebCode/build/lib/extensions.ts:115>)",
+			"[build/lib/extensions.ts:137](</Users/sebastian.suarez/Projects/VSebCode/build/lib/extensions.ts:137>)",
+			"[build/package.json:45](</Users/sebastian.suarez/Projects/VSebCode/build/package.json:45>)",
+			"[build/package.json:84](</Users/sebastian.suarez/Projects/VSebCode/build/package.json:84>)",
+			"[build/package-lock.json:1920](</Users/sebastian.suarez/Projects/VSebCode/build/package-lock.json:1920>)",
+			"[build/package-lock.json:1967](</Users/sebastian.suarez/Projects/VSebCode/build/package-lock.json:1967>)",
+			"[build/node_modules/@vscode/vsce-sign/LICENSE.txt:1](</Users/sebastian.suarez/Projects/VSebCode/build/node_modules/@vscode/vsce-sign/LICENSE.txt:1>)",
+			"[src/vs/platform/extensionManagement/node/extensionSignatureVerificationService.ts:69](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/node/extensionSignatureVerificationService.ts:69>)",
+			"[CLAUDE.md:26](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:26>)"
+		],
+		"gaps": [
+			"Build-only proprietary dependency cleanup is still missing. The observed build code calls listFiles; no signing invocation or shipped verifier is inferred from the dependency alone.",
+			"The installed signer carries Microsoft-specific license terms; this is dependency evidence, not a legal determination.",
+			"Do not add a runtime signer merely to copy the namespace substitutions."
+		]
+	},
+	{
+		"path": "patches/10-version-add-release.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Changes Debian version from packageVersion-linuxRevision to packageVersion, removes RPM release-token substitution, changes Snap displayed version from commit prefix to packageVersion, and strips VSCodium timestamp suffixes from vscode.version exposed to extensions. VSCodium get_repo.sh appends a four-digit day/hour suffix; the later Linux RPM patch replaces @@RELEASE@@.el8 with el8, completing the removed token replacement. VSebCode uses ordinary 1.143.0 and upstream revision conventions, so the Debian/RPM/API normalization is INAPPLICABLE to its current version scheme. The independent human-readable Snap version effect is MISSING: fork Snap still uses eight commit characters.",
+		"classification": "Partial",
+		"evidence": [
+			"[patches/10-version-add-release.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/10-version-add-release.patch#L1-L31)",
+			"[get_repo.sh:30](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/get_repo.sh#L30-L60)",
+			"[patches/linux/00-asset-fix-rpm-version.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-asset-fix-rpm-version.patch#L1-L13)",
+			"[package.json:3](</Users/sebastian.suarez/Projects/VSebCode/package.json:3>)",
+			"[build/gulpfile.vscode.linux.ts:93](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:93>)",
+			"[build/gulpfile.vscode.linux.ts:192](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:192>)",
+			"[build/gulpfile.vscode.linux.ts:259](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:259>)",
+			"[src/vs/workbench/api/common/extHost.api.impl.ts:1618](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/api/common/extHost.api.impl.ts:1618>)"
+		],
+		"gaps": [
+			"Optional Snap version presentation differs; Linux packaging validation is deferred.",
+			"No basis to adopt VSCodium timestamp versioning or its API regex wholesale."
+		]
+	},
+	{
+		"path": "patches/12-update-add-cooldown.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Product-update effect INTENTIONAL: adds update.minReleaseAge default 120h, bypass at zero, rejection for missing/invalid timestamps and rounded absolute release age gating; fork updater is deleted. Extension effect PARTIAL: adds extensions.minReleaseAge default 48h to Extension.outdated for newer versions, using rounded absolute age and zero bypass. VSCodium applies that gate on top of the upstream autoUpdateDelay path already present at its pinned base. VSebCode retains the upstream configurable 12h auto-update delay, with trusted-publisher/forceAutoUpdate bypasses and no delay for missing/future timestamps, but it has no 48h outdated gate. Manual update visibility and timestamp edge behavior therefore differ.",
+		"classification": "Partial",
+		"evidence": [
+			"[patches/12-update-add-cooldown.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/12-update-add-cooldown.patch#L1-L45)",
+			"[patches/12-update-add-cooldown.patch:46](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/12-update-add-cooldown.patch#L46-L82)",
+			"[src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts:167](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts:167>)",
+			"[src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:335](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:335>)",
+			"[src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:1221](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:1221>)",
+			"[src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:2231](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:2231>)",
+			"[build/removed-surfaces.txt:58](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58>)",
+			"[Pinned upstream already has the 12h setting](https://github.com/microsoft/vscode/blob/07f806f999227108933c2e30515b26eecc1fda74/src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts#L172-L188)"
+		],
+		"gaps": [
+			"Default ordinary-extension automatic delay is shorter than VSCodium (12h versus its additional approximately 48h gate). Setting existing extensions.autoUpdateDelay=48 would cover the ordinary auto-update waiting intent without reproducing all semantics.",
+			"The current tracked product has no trustedExtensionPublishers list; that bypass exists in code but should not be reported as configured.",
+			"The VSCodium rounded-absolute-age gate can differ by half an hour and treats future timestamps differently; no claim that its algorithm is inherently safer."
+		]
+	},
+	{
+		"path": "patches/20-keymap-use-custom-lib.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Replaces native-keymap with @vscodium/native-keymap 3.3.9-260952 throughout the manifest/lockfile, runtime import, packaging pruning, import allowlist and smoke import test. Adds build_from_source_native_keymap=no to use its prebuilt path and refreshes prebuild-install/napi-build-utils transitive resolutions. VSebCode retains native-keymap (lock 3.3.9), default build_from_source=true, upstream imports and prune patterns. The core keyboard-mapping feature still exists; the custom dependency/prebuilt build behavior is absent.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/20-keymap-use-custom-lib.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/20-keymap-use-custom-lib.patch#L1-L136)",
+			"[.npmrc:6](</Users/sebastian.suarez/Projects/VSebCode/.npmrc:6>)",
+			"[package.json:117](</Users/sebastian.suarez/Projects/VSebCode/package.json:117>)",
+			"[package.json:253](</Users/sebastian.suarez/Projects/VSebCode/package.json:253>)",
+			"[src/vs/platform/keyboardLayout/electron-main/keyboardLayoutMainService.ts:49](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/keyboardLayout/electron-main/keyboardLayoutMainService.ts:49>)",
+			"[build/.moduleignore:63](</Users/sebastian.suarez/Projects/VSebCode/build/.moduleignore:63>)"
+		],
+		"gaps": [
+			"Optional build portability/supply-chain difference, not evidence of a Microsoft online-service leak or broken keyboard layout.",
+			"Keeping open-source Microsoft tooling is allowed; changing the package is not automatically required by the removal goal."
+		]
+	},
+	{
+		"path": "patches/21-policy-use-custom-lib.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Replaces policy-watcher 1.4.0 with @vscodium/policy-watcher 1.4.0-265896 and synchronizes native binary packaging, imports, lint/test/performance fixtures and lockfile dependencies. Passes ORG_NAME to regular and AI managed-settings watcher APIs. Separately rewrites Windows ADMX registry vendor prefix and namespace, macOS PayloadOrganization/default organization, application/documentation URLs and profile description URLs. VSebCode has newer upstream watcher 1.6.0 but still uses its default Microsoft Windows prefix and renders Microsoft policy namespaces/organization/enterprise URLs. Its macOS bundle/domain is already VSebCode; AI managed-settings code is deliberately removed. Upstream 1.6.0 already supports an optional registryPath, so behavior can be implemented without downgrading to the older fork.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/21-policy-use-custom-lib.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/21-policy-use-custom-lib.patch#L1-L75)",
+			"[patches/21-policy-use-custom-lib.patch:76](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/21-policy-use-custom-lib.patch#L76-L259)",
+			"[patches/21-policy-use-custom-lib.patch:260](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/21-policy-use-custom-lib.patch#L260-L335)",
+			"[package.json:86](</Users/sebastian.suarez/Projects/VSebCode/package.json:86>)",
+			"[build/lib/policies/basePolicy.ts:39](</Users/sebastian.suarez/Projects/VSebCode/build/lib/policies/basePolicy.ts:39>)",
+			"[build/lib/policies/render.ts:57](</Users/sebastian.suarez/Projects/VSebCode/build/lib/policies/render.ts:57>)",
+			"[build/lib/policies/render.ts:175](</Users/sebastian.suarez/Projects/VSebCode/build/lib/policies/render.ts:175>)",
+			"[build/lib/policies/render.ts:193](</Users/sebastian.suarez/Projects/VSebCode/build/lib/policies/render.ts:193>)",
+			"[build/lib/policies/render.ts:263](</Users/sebastian.suarez/Projects/VSebCode/build/lib/policies/render.ts:263>)",
+			"[src/vs/platform/policy/node/nativePolicyService.ts:28](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/policy/node/nativePolicyService.ts:28>)",
+			"[src/vs/code/electron-main/main.ts:215](</Users/sebastian.suarez/Projects/VSebCode/src/vs/code/electron-main/main.ts:215>)",
+			"[node_modules/@vscode/policy-watcher/index.d.ts:20](</Users/sebastian.suarez/Projects/VSebCode/node_modules/@vscode/policy-watcher/index.d.ts:20>)",
+			"[node_modules/@vscode/policy-watcher/src/windows/RegistryPolicy.hh:24](</Users/sebastian.suarez/Projects/VSebCode/node_modules/@vscode/policy-watcher/src/windows/RegistryPolicy.hh:24>)",
+			"[product.json:19](</Users/sebastian.suarez/Projects/VSebCode/product.json:19>)"
+		],
+		"gaps": [
+			"Surviving policy metadata branding is a concrete macOS gap. Windows runtime/generator vendor prefix also remains Microsoft, although Windows validation is deferred.",
+			"Any future change must keep generated policy path and runtime watcher path aligned; the intended VSebCode vendor segment is a maintainer identity choice.",
+			"Preserve newer watcher functionality. Do not restore AI managed-settings paths, change copyright headers, or copy the VSCodium identity literally."
+		]
+	},
+	{
+		"path": "patches/22-osproxy-use-custom-lib.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Replaces @vscode/os-proxy-resolver 0.4.0 with @vscodium/os-proxy-resolver 0.4.0-265898 and native optional packages, extends packaging target selection to Linux loong64/ppc64le/riscv64, and updates exclusion/re-add rules, fetch helper, tests, native-host runtime imports and macOS universal cross-copy/single-architecture exceptions. An AI diagnostics string is also renamed. VSebCode retains upstream namespace 0.4.0 with ordinary macOS/Windows/Linux arm/arm64/x64 resolution; its packaging helper lacks the three additional Linux targets. AI diagnostics code is removed intentionally.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/22-osproxy-use-custom-lib.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/22-osproxy-use-custom-lib.patch#L1-L594)",
+			"[package.json:85](</Users/sebastian.suarez/Projects/VSebCode/package.json:85>)",
+			"[build/lib/osProxyResolver.ts:9](</Users/sebastian.suarez/Projects/VSebCode/build/lib/osProxyResolver.ts:9>)",
+			"[build/lib/osProxyResolver.ts:20](</Users/sebastian.suarez/Projects/VSebCode/build/lib/osProxyResolver.ts:20>)",
+			"[src/vs/platform/native/electron-main/nativeHostMainService.ts:1150](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/native/electron-main/nativeHostMainService.ts:1150>)",
+			"[build/darwin/create-universal-app.ts:62](</Users/sebastian.suarez/Projects/VSebCode/build/darwin/create-universal-app.ts:62>)",
+			"[build/.moduleignore:217](</Users/sebastian.suarez/Projects/VSebCode/build/.moduleignore:217>)"
+		],
+		"gaps": [
+			"Alternate-architecture resolver support is absent and Windows/Linux validation is deferred. Native proxy resolution on the active macOS architecture is already implemented using the upstream library.",
+			"The namespace change alone is not a privacy fix; preserve all packaging and universal-app rules if changing the native dependency."
+		]
+	},
+	{
+		"path": "patches/30-build-add-missing-dependencies.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Moves native tree-sitter from build devDependencies to optionalDependencies and marks it and relevant lockfile transitive records optional, allowing dependency installation to tolerate its platform-specific failure. VSebCode still has required build devDependency tree-sitter^0.22.4; only the TypeScript grammar and gulp watcher are optional.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/30-build-add-missing-dependencies.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/30-build-add-missing-dependencies.patch#L1-L43)",
+			"[build/package.json:60](</Users/sebastian.suarez/Projects/VSebCode/build/package.json:60>)",
+			"[build/package.json:73](</Users/sebastian.suarez/Projects/VSebCode/build/package.json:73>)"
+		],
+		"gaps": [
+			"Optional-dependency installation tolerance is absent. No current macOS build failure was established; this does not change shipped tree-sitter-wasm language support."
+		]
+	},
+	{
+		"path": "patches/40-cli-use-reh-archive.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Reworks the Rust CLI from Microsoft update API/archive conventions to VSCodium: configurable update/download endpoints and app/binary names, version JSON URLs by quality/OS/arch, REH-web release archive names and server entrypoint; changes callers for fallible entrypoint resolution, removes old target download-segment handling, and renames the tunnel-forwarding executable command. The associated build_cli.sh supplies VSCodium endpoints and builds/copies the tunnel CLI. VSebCode removed cli/, its tunnel extension and all REH distributions.",
+		"classification": "Intentional",
+		"evidence": [
+			"[patches/40-cli-use-reh-archive.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/40-cli-use-reh-archive.patch#L1-L321)",
+			"[build_cli.sh:12](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build_cli.sh#L12-L26)",
+			"[build/removed-surfaces.txt:19](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:19>)",
+			"[build/removed-surfaces.txt:26](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:26>)",
+			"[build/removed-surfaces.txt:28](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28>)"
+		],
+		"gaps": [
+			"Do not restore Rust tunnel/server distribution to gain these download conventions."
+		]
+	},
+	{
+		"path": "patches/50-build-improve-gulp-tasks.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Desktop build effects MISSING: separates common prepack from architecture-specific packing, disables macOS packaging stats, and stops passing --mangle-privates to minified esbuild bundles. VSebCode has a reusable -ci package task but no VSCodium -prepack/-packing split, still enables macOS stats and still requests private-property mangling. Copilot compile removal is COVERED by the fork broader AI deletion and the later VSCodium 53 removal; REH prepack/packing changes are INTENTIONAL exclusions because fork REH is gone. Active esbuild mangling removal is independent of dormant 00-build-disable-mangle.patch.no.",
+		"classification": "Partial",
+		"evidence": [
+			"[patches/50-build-improve-gulp-tasks.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/50-build-improve-gulp-tasks.patch#L1-L77)",
+			"[build/gulpfile.vscode.ts:444](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:444>)",
+			"[build/gulpfile.vscode.ts:476](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:476>)",
+			"[build/gulpfile.vscode.ts:483](</Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:483>)",
+			"[build/lib/esbuild.ts:47](</Users/sebastian.suarez/Projects/VSebCode/build/lib/esbuild.ts:47>)",
+			"[build/removed-surfaces.txt:139](</Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139>)",
+			"[CLAUDE.md:61](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:61>)"
+		],
+		"gaps": [
+			"Optional release-pipeline/build-output behavior differs. The existing client build is not shown broken by its task organization or mangling.",
+			"Copying VSCodium build.sh would fail without its renamed tasks; evaluate tasks and orchestration together."
+		]
+	},
+	{
+		"path": "patches/51-build-disable-non-ascii.patch.no",
+		"activation": "Inactive: .patch.no is excluded by production globs.",
+		"effect": "Dormant patch removes the old minifier check that errors when minified code contains non-ASCII characters. It is not part of the active VSCodium build, and the fork has moved to the newer esbuild build path.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[patches/51-build-disable-non-ascii.patch.no:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/51-build-disable-non-ascii.patch.no#L1-L23)",
+			"[prepare_vscode.sh:156](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L156-L160)",
+			"[build/lib/esbuild.ts:47](</Users/sebastian.suarez/Projects/VSebCode/build/lib/esbuild.ts:47>)"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/61-extension-close-connection.patch",
+		"activation": "Active root *.patch: all qualities and preparation host OSes, in shell-glob order after root JSON removals and before Insider/OS/user patches. Effective only for the surviving target surface.",
+		"effect": "Builds explicit request options for the extension control manifest and adds Connection: close for non-web requests before calling requestService.request. VSebCode retains the GET with timeout and callSite but does not set the connection-close header. Its control URL intentionally remains the Microsoft Marketplace control manifest, whereas VSCodium configures its own control file.",
+		"classification": "Missing",
+		"evidence": [
+			"[patches/61-extension-close-connection.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/61-extension-close-connection.patch#L1-L20)",
+			"[src/vs/platform/extensionManagement/common/extensionGalleryService.ts:1897](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionGalleryService.ts:1897>)",
+			"[src/vs/platform/extensionManagement/common/extensionGalleryService.ts:1908](</Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionGalleryService.ts:1908>)",
+			"[product.json:38](</Users/sebastian.suarez/Projects/VSebCode/product.json:38>)"
+		],
+		"gaps": [
+			"Desktop connection-reuse workaround is absent. No network stall or privacy benefit was demonstrated for the fork endpoint; the web restriction is important because browsers cannot set this connection header."
+		]
+	},
+	{
+		"path": "patches/insider/19-system-extensions.patch",
+		"activation": "Active only when VSCODE_QUALITY=insider, after all root patches and before OS/user patches.",
+		"effect": "In VSCodium Insider builds, removes the stable-quality condition from the system-extension outdated guard while retaining its product auto-update allowlist exception. That prevents unallowlisted system extensions from being considered outdated on Insider too. VSebCode has no maintained Insider distribution and intentionally removed the AI-oriented product allowlist, but its remaining guard still checks quality===stable. Its tracked product has no quality field, so an undefined-quality build is not covered by that guard either; this is not equivalent quality-independent behavior.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[patches/insider/19-system-extensions.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/insider/19-system-extensions.patch#L1-L9)",
+			"[prepare_vscode.sh:162](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L162-L168)",
+			"[src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:335](</Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts:335>)",
+			"[product.json:1](</Users/sebastian.suarez/Projects/VSebCode/product.json:1>)",
+			"[CLAUDE.md:19](</Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:19>)"
+		],
+		"gaps": [
+			"No current Insider release requirement is established. If quality-independent system-extension blocking is desired for fork development or future Insider builds, the behavior is absent and should be decided explicitly."
+		]
+	}
+]

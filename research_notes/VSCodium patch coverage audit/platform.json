@@ -1,0 +1,459 @@
+[
+	{
+		"path": "patches/alpine/reh/00-build-docker.patch",
+		"activation": "build/alpine/package_reh.sh applies patches/alpine/reh/*.patch after extracting the prepared source archive and before npm ci; used for Alpine REH and REH-web, x64/arm64. It is not an ordinary desktop patch.",
+		"effect": "For arm64 Node extraction, inspect the Docker daemon architecture and add --platform=linux/arm64 when the daemon is not aarch64; preserve arm64v8/node versus node image selection. Double the extraction maxBuffer from 100 MiB to 200 MiB. VSebCode removed the REH gulpfile, remote manifests, server resources and server entry points, so neither Node extraction nor the image-selection problem remains in its shipped desktop build.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/alpine/reh/00-build-docker.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/alpine/reh/00-build-docker.patch#L1)",
+			"[VSCodium build/alpine/package_reh.sh:15](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/alpine/package_reh.sh#L15)",
+			"[build/removed-surfaces.txt:28](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28)",
+			"[build/removed-surfaces.txt:139](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139)",
+			"[CLAUDE.md:33](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:33)"
+		],
+		"gaps": [
+			"No Alpine server product is shipped by VSebCode. This is deliberate scope divergence, not Alpine server feature parity."
+		]
+	},
+	{
+		"path": "patches/linux/00-asset-fix-rpm-version.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "Change the RPM Release field from the generated timestamp/revision plus .el8 to the literal el8; additionally mark /usr/share/%{name}/resources/app/product.json as %config(noreplace), preserving local product configuration across RPM upgrades. VSebCode still substitutes its timestamp linuxPackageRevision into @@RELEASE@@.el8 and lists the application directory without the product.json config exception.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/00-asset-fix-rpm-version.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-asset-fix-rpm-version.patch#L1)",
+			"[VSCodium prepare_vscode.sh:170](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L170)",
+			"[resources/linux/rpm/code.spec.template:3](/Users/sebastian.suarez/Projects/VSebCode/resources/linux/rpm/code.spec.template:3)",
+			"[resources/linux/rpm/code.spec.template:65](/Users/sebastian.suarez/Projects/VSebCode/resources/linux/rpm/code.spec.template:65)",
+			"[build/gulpfile.vscode.linux.ts:27](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:27)",
+			"[build/gulpfile.vscode.linux.ts:197](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:197)"
+		],
+		"gaps": [
+			"Neither RPM release normalization nor upgrade preservation of an edited product.json is present.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/00-build-improve-qemu.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. The modified code runs only when npm postinstall uses the remote dependency Docker container.",
+		"effect": "Replace the Azure-hosted qemu-user-static image used only for arm64 with tonistiigi/binfmt:latest --install all, expand eligible npm architectures to arm64, arm, ppc64, riscv64, s390x and loong64, and allow DISABLE_QEMU=true to skip registration. VSebCode removed the remote Docker installation branch entirely; npmInstallAsync now runs local npm and removes Parcel prebuilds.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/linux/00-build-improve-qemu.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-build-improve-qemu.patch#L1)",
+			"[build/npm/postinstall.ts:43](/Users/sebastian.suarez/Projects/VSebCode/build/npm/postinstall.ts:43)",
+			"[build/removed-surfaces.txt:28](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28)",
+			"[CLAUDE.md:33](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:33)",
+			"[VSCodium build/linux/package_reh.sh:28](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L28)"
+		],
+		"gaps": [
+			"No equivalent automatic binfmt registration exists; the consumer being patched was deliberately removed with remote server builds."
+		]
+	},
+	{
+		"path": "patches/linux/00-cli-fix-unused.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "Add Rust allow(unused_imports) attributes to tunnels/code_server.rs, tunnels/dev_tunnels.rs and update_service.rs so conditional changes do not fail the CLI build on unused imports. VSebCode deletes the entire Rust CLI and tunnel surface; the ordinary JavaScript desktop command remains.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/linux/00-cli-fix-unused.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-cli-fix-unused.patch#L1)",
+			"[build/removed-surfaces.txt:19](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:19)",
+			"[CLAUDE.md:32](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:32)"
+		],
+		"gaps": [
+			"No Rust CLI is shipped; suppressing its compiler warnings is unnecessary."
+		]
+	},
+	{
+		"path": "patches/linux/00-env-improve-xdg-path.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "When FLATPAK_ID is set, put Git IPC sockets and generic IPC sockets under XDG_RUNTIME_DIR/app/<FLATPAK_ID> rather than directly in XDG_RUNTIME_DIR. Git retains its non-macOS/XDG guard; the generic exported XDG_RUNTIME_DIR expression adds the Flatpak suffix. VSebCode retains the direct XDG_RUNTIME_DIR value in both places.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/00-env-improve-xdg-path.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-env-improve-xdg-path.patch#L1)",
+			"[extensions/git/src/ipc/ipcServer.ts:20](/Users/sebastian.suarez/Projects/VSebCode/extensions/git/src/ipc/ipcServer.ts:20)",
+			"[src/vs/base/parts/ipc/node/ipc.net.ts:737](/Users/sebastian.suarez/Projects/VSebCode/src/vs/base/parts/ipc/node/ipc.net.ts:737)",
+			"[src/vs/base/parts/ipc/node/ipc.net.ts:753](/Users/sebastian.suarez/Projects/VSebCode/src/vs/base/parts/ipc/node/ipc.net.ts:753)",
+			"[src/vs/base/parts/ipc/node/ipc.net.ts:791](/Users/sebastian.suarez/Projects/VSebCode/src/vs/base/parts/ipc/node/ipc.net.ts:791)"
+		],
+		"gaps": [
+			"Flatpak-specific socket placement is absent. No Flatpak runtime was exercised and no Flatpak distribution was requested.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/00-log-use-state-home.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "Introduce userStateDir/userStatePath throughout native environment and window configuration, propagate it main-to-renderer, update environment test fixtures, and route default timestamped logs to that state path. New path precedence is portable/user-state, VSCODE_APPSTATE/<product>, then XDG_STATE_HOME/<product> or ~/.local/state/<product>; source mode uses code-oss-dev. Explicit logsPath remains honored. VSebCode has none of the state-path plumbing and continues default logs under userDataPath/logs/<timestamp>.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/00-log-use-state-home.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-log-use-state-home.patch#L1)",
+			"[src/vs/platform/environment/common/environmentService.ts:24](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/environment/common/environmentService.ts:24)",
+			"[src/vs/platform/environment/common/environmentService.ts:70](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/environment/common/environmentService.ts:70)",
+			"[src/vs/platform/environment/node/environmentService.ts:16](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/environment/node/environmentService.ts:16)",
+			"[src/vs/platform/window/common/window.ts:452](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/window/common/window.ts:452)"
+		],
+		"gaps": [
+			"XDG_STATE_HOME and VSCODE_APPSTATE log placement, portable user-state and state-path propagation are absent. This comparison does not propose adopting the patch’s code-oss-dev literal.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/00-policy-use-custom-path.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. utils.sh replaces !!GLOBAL_DIRNAME!! with vscodium, or vscodium-insiders for insider builds, unless overridden.",
+		"effect": "Move the Linux system policy file from /etc/vscode/policy.json to a product-specific global directory. VSebCode still declares /etc/vscode/policy.json, and the Electron main process actually loads that constant into FilePolicyService on Linux; the renamed applicationName does not change it.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/00-policy-use-custom-path.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-policy-use-custom-path.patch#L1)",
+			"[VSCodium utils.sh:11](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/utils.sh#L11)",
+			"[VSCodium utils.sh:58](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/utils.sh#L58)",
+			"[src/vs/base/common/policy.ts:12](/Users/sebastian.suarez/Projects/VSebCode/src/vs/base/common/policy.ts:12)",
+			"[src/vs/code/electron-main/main.ts:224](/Users/sebastian.suarez/Projects/VSebCode/src/vs/code/electron-main/main.ts:224)",
+			"[product.json:4](/Users/sebastian.suarez/Projects/VSebCode/product.json:4)"
+		],
+		"gaps": [
+			"Concrete remaining Microsoft-named policy location in a surviving Linux feature. The desired fork directory is a maintainer choice, not inferred from vsc or vsebcode.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/00-terminal-cmd-in-shell.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "Set shell:true when opening the configured external Linux terminal, while retaining cwd/environment sanitization and Ghostty’s working-directory argument. This enables command strings to be interpreted by the shell instead of requiring a directly spawnable executable path. VSebCode uses the same branch and arguments but spawns without shell:true.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/00-terminal-cmd-in-shell.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-terminal-cmd-in-shell.patch#L1)",
+			"[src/vs/platform/externalTerminal/node/externalTerminalService.ts:327](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/externalTerminal/node/externalTerminalService.ts:327)"
+		],
+		"gaps": [
+			"Configured external-terminal shell-command behavior differs. No terminal integration test was run and adopting shell interpretation is not presumed desirable.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/31-build-fix-dependencies.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. ",
+		"effect": "Disable failure when generated Linux package dependencies differ from the reference lists; stop scanning the tunnel executable; remove @electron/osx-sign from the Linux build package and regenerate its lockfile with numerous transitive upgrades, removals, hoists, engine/license/integrity metadata changes and extraneous yargs subentries. VSebCode already excludes the removed tunnel, but keeps FAIL_BUILD_FOR_NEW_DEPENDENCIES=true and @electron/osx-sign for its retained macOS signing helper. Most lock refresh versions differ; entities 4.5.0 is already present. The complete lock-change families and current comparisons are recorded in platform.md.",
+		"classification": "Partial",
+		"evidence": [
+			"[VSCodium patches/linux/31-build-fix-dependencies.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/31-build-fix-dependencies.patch#L1)",
+			"[build/linux/dependencies-generator.ts:23](/Users/sebastian.suarez/Projects/VSebCode/build/linux/dependencies-generator.ts:23)",
+			"[build/linux/dependencies-generator.ts:59](/Users/sebastian.suarez/Projects/VSebCode/build/linux/dependencies-generator.ts:59)",
+			"[build/package.json:12](/Users/sebastian.suarez/Projects/VSebCode/build/package.json:12)",
+			"[build/darwin/sign.ts:9](/Users/sebastian.suarez/Projects/VSebCode/build/darwin/sign.ts:9)",
+			"[build/package-lock.json:504](/Users/sebastian.suarez/Projects/VSebCode/build/package-lock.json:504)",
+			"[build/package-lock.json:3273](/Users/sebastian.suarez/Projects/VSebCode/build/package-lock.json:3273)"
+		],
+		"gaps": [
+			"Dependency-list changes still stop a Linux package build. The Linux-specific removal of the macOS signer is not reproduced in the shared build manifest.",
+			"Transitive lockfile refresh is not proof of a user-facing bug or a requested upgrade; no install, dependency resolution or package build was performed.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/41-arch-add-support.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. Later Linux architecture patches build on these generic overrides; package_bin.sh/package_reh.sh supply the variables.",
+		"effect": "Allow alternate Electron repository, tag and version; allow alternate sysroot repository/version; enable alternate REH Node binaries from a GitHub release or configurable site/root/suffix; remove the fixed remote GCC 8.5 sysroot prefix in setup-env and enable shell tracing. The dep-list trailing comma is structural. VSebCode has no Electron repository/tag/version environment override and still fixes the sysroot repository/version in source, although it already supports VSCODE_SYSROOT_PREFIX. REH Node and Azure setup-env targets are deliberately removed.",
+		"classification": "Partial",
+		"evidence": [
+			"[VSCodium patches/linux/41-arch-add-support.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/41-arch-add-support.patch#L1)",
+			"[VSCodium build/linux/package_bin.sh:24](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L24)",
+			"[VSCodium build/linux/package_reh.sh:39](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L39)",
+			"[build/gulpfile.vscode.ts:281](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:281)",
+			"[build/lib/electronVersion.ts:14](/Users/sebastian.suarez/Projects/VSebCode/build/lib/electronVersion.ts:14)",
+			"[build/linux/debian/install-sysroot.ts:73](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/install-sysroot.ts:73)",
+			"[build/linux/debian/install-sysroot.ts:106](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/install-sysroot.ts:106)",
+			"[build/removed-surfaces.txt:15](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:15)"
+		],
+		"gaps": [
+			"Generic alternate Electron and sysroot acquisition is missing from surviving desktop tooling. Remote-specific effects are intentionally outside the product.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/42-arch-add-ppc64le.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. Stable Linux CI schedules ppc64le desktop and REH builds; npm architecture is ppc64. Package scripts select a custom sysroot and Electron source.",
+		"effect": "Add PPC64LE desktop/REH/scan targets; Debian ppc64le-to-ppc64el and RPM ppc64le naming/types; cross-compilers and glibc check triple; checksummed PPC sysroots and dependency search paths/reference lists; native proxy package mapping; ppc64le-to-ppc64 ripgrep mapping in the then-combined copilot build helper; Rust CLI platform/prerequisite selection; server library identification; extension target enum, display and matching. VSebCode has none of the added desktop targets/package architecture types/sysroot or extension target support. Its extracted ripgrep helper lists linux-ppc64 as a possible binary but lacks the ppc64le normalization. CLI/REH/pipeline parts are deliberately removed.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/42-arch-add-ppc64le.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/42-arch-add-ppc64le.patch#L1)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:153](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L153)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:336](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L336)",
+			"[VSCodium build/linux/package_bin.sh:29](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L29)",
+			"[build/gulpfile.vscode.ts:444](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:444)",
+			"[build/gulpfile.vscode.linux.ts:29](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:29)",
+			"[build/linux/debian/types.ts:6](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/types.ts:6)",
+			"[build/linux/rpm/types.ts:6](/Users/sebastian.suarez/Projects/VSebCode/build/linux/rpm/types.ts:6)",
+			"[build/lib/ripgrep.ts:17](/Users/sebastian.suarez/Projects/VSebCode/build/lib/ripgrep.ts:17)",
+			"[src/vs/platform/extensions/common/extensions.ts:336](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensions/common/extensions.ts:336)"
+		],
+		"gaps": [
+			"PPC64LE desktop/extension compatibility is not implemented; a token in ripgrep’s binary inventory is insufficient. VSCodium uses Electron 41.0.3 for this lane, not the same runtime as VSebCode.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/43-arch-add-riscv64.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. Stable Linux CI schedules riscv64 desktop and REH builds. Scripts supply custom Electron/Node releases and skip normal setup-env for this architecture.",
+		"effect": "Add RISC-V 64 desktop/REH/scan targets, Debian/RPM architecture identifiers, proxy package mapping, Debian library search paths/reference dependencies and sysroot triple, custom Node checksum, Rust CLI target/prerequisites, server loader-library identification and extension target enum/display/matching. VSebCode’s desktop targets, package architecture types, proxy mapper and extension platform set omit RISC-V; its ripgrep inventory has linux-riscv64 but no corresponding full platform build lane.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/43-arch-add-riscv64.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/43-arch-add-riscv64.patch#L1)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:145](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L145)",
+			"[VSCodium build/linux/package_bin.sh:36](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L36)",
+			"[VSCodium build/linux/package_reh.sh:50](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L50)",
+			"[build/gulpfile.vscode.ts:444](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:444)",
+			"[build/linux/debian/types.ts:6](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/types.ts:6)",
+			"[build/lib/osProxyResolver.ts:16](/Users/sebastian.suarez/Projects/VSebCode/build/lib/osProxyResolver.ts:16)",
+			"[src/vs/platform/extensionManagement/common/extensionManagement.ts:89](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionManagement.ts:89)"
+		],
+		"gaps": [
+			"Desktop support and associated packaging/extension selection are absent; CLI/server changes target intentionally removed products. VSCodium additionally replaces ripgrep after packaging, outside this patch.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/44-arch-add-loong64.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. Stable Linux CI schedules Loong64 desktop and REH builds with custom Electron, Node and ripgrep sources.",
+		"effect": "Add Loong64 desktop/REH/scan targets, Debian/RPM task architecture mappings, proxy package selection, Rust platform and prerequisite matching, server ldconfig double-float identification and extension target enum/display/matching. Unlike the PPC/RISC-V/s390x patches, this patch does not add Loong64 to Debian/RPM architecture type guards, dependency reference lists, or the sysroot installer. VSebCode has none of these added Loong64 desktop/platform effects; server/CLI surfaces are removed.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/44-arch-add-loong64.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/44-arch-add-loong64.patch#L1)",
+			"[VSCodium build/linux/package_bin.sh:41](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L41)",
+			"[VSCodium build/linux/package_reh.sh:58](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L58)",
+			"[VSCodium build/linux/loong64/ripgrep.sh:11](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/loong64/ripgrep.sh#L11)",
+			"[build/gulpfile.vscode.ts:444](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:444)",
+			"[build/gulpfile.vscode.linux.ts:29](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.linux.ts:29)",
+			"[build/lib/osProxyResolver.ts:16](/Users/sebastian.suarez/Projects/VSebCode/build/lib/osProxyResolver.ts:16)",
+			"[src/vs/platform/extensions/common/extensions.ts:336](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensions/common/extensions.ts:336)"
+		],
+		"gaps": [
+			"Loong64 support is absent. The VSCodium patch alone is not evidence that all Debian/RPM package paths are implemented; it needs its separate scripts and conditional release choices.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/45-arch-add-s390x.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. The stable workflow includes s390x in REH, but not in the desktop build matrix. The patch still adds desktop task registrations and source-level extension recognition.",
+		"effect": "Add s390x desktop/REH/scan task targets, Debian/RPM mappings/types/dependency lists, Debian library search and sysroot triple/checksum, native cross-compilers, server library identification and extension target enum/display/matching. No Rust CLI platform addition or proxy mapping occurs in this patch. VSebCode omits these added architecture effects, while deliberately removing the REH product that VSCodium’s default release workflow actually builds for s390x.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/45-arch-add-s390x.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/45-arch-add-s390x.patch#L1)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:129](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L129)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:345](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L345)",
+			"[VSCodium build/linux/package_reh.sh:63](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L63)",
+			"[build/gulpfile.vscode.ts:444](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:444)",
+			"[build/linux/debian/types.ts:6](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/types.ts:6)",
+			"[build/linux/rpm/types.ts:6](/Users/sebastian.suarez/Projects/VSebCode/build/linux/rpm/types.ts:6)",
+			"[src/vs/platform/extensions/common/extensions.ts:336](/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensions/common/extensions.ts:336)"
+		],
+		"gaps": [
+			"Missing source/task capability is recorded without claiming VSCodium ships a default s390x desktop artifact. No desired s390x expansion is inferred.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/46-arch-add-arm32.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. The new task is consumed by Linux REH armhf packaging; desktop armhf targets already exist independently.",
+		"effect": "Add only { platform: linux, arch: armhf } to REH BUILD_TARGETS. The patch does not introduce desktop ARM32 support. VSebCode removed the REH gulpfile and server product; its desktop gulpfile still lists armhf.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/linux/46-arch-add-arm32.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-arch-add-arm32.patch#L1)",
+			"[VSCodium build/linux/package_reh.sh:39](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L39)",
+			"[VSCodium .github/workflows/publish-stable-linux.yml:333](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/.github/workflows/publish-stable-linux.yml#L333)",
+			"[build/removed-surfaces.txt:139](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139)",
+			"[build/gulpfile.vscode.ts:450](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:450)"
+		],
+		"gaps": [
+			"No ARM32 remote server is shipped; do not count the existing desktop armhf target as coverage of this server patch."
+		]
+	},
+	{
+		"path": "patches/linux/46-deb-use-libasound2t64-compat.patch",
+		"activation": "OS_NAME=linux: all immediate patches/linux/*.patch are applied during source preparation, regardless of target CPU. CI client/REH/Alpine packaging then consume the prepared source archive. Runs in Debian dependency generation; the reference-list changes follow the earlier architecture additions.",
+		"effect": "Rewrite generated libasound2 (>=1.0.17) dependencies to libasound2t64 (>=1.2.12) | libasound2 (>=1.0.17) | liboss4-salsa-asound2 and update six reference dependency lists consistently. VSebCode still emits sorted raw dependencies after its libgcc-s1 filter and all three retained Debian reference lists keep libasound2 alone.",
+		"classification": "Missing",
+		"evidence": [
+			"[VSCodium patches/linux/46-deb-use-libasound2t64-compat.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-deb-use-libasound2t64-compat.patch#L1)",
+			"[build/linux/debian/calculate-deps.ts:83](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/calculate-deps.ts:83)",
+			"[build/linux/debian/dep-lists.ts:28](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/dep-lists.ts:28)",
+			"[build/linux/debian/dep-lists.ts:68](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/dep-lists.ts:68)",
+			"[build/linux/debian/dep-lists.ts:111](/Users/sebastian.suarez/Projects/VSebCode/build/linux/debian/dep-lists.ts:111)"
+		],
+		"gaps": [
+			"The compatibility alternative is absent; no Debian package-manager installation was tested.",
+			"Linux validation is deferred; this observed difference does not authorize implementation, distribution, or a broader supported architecture set."
+		]
+	},
+	{
+		"path": "patches/linux/client/00-build-disable-remote.patch",
+		"activation": "Applied by build/linux/package_bin.sh after extracting prepared sources and before its dependency reinstalls. Ordinary local build.sh does not recursively apply this directory.",
+		"effect": "Stop client packaging from installing remote and remote/web npm trees or their distro equivalents. VSebCode’s npm directory list contains none of those trees; it removed remote and private distro machinery globally. This matches the client-install effect while the wider no-server product decision is an intentional divergence.",
+		"classification": "Covered",
+		"evidence": [
+			"[VSCodium patches/linux/client/00-build-disable-remote.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-build-disable-remote.patch#L1)",
+			"[VSCodium build/linux/package_bin.sh:79](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L79)",
+			"[build/npm/dirs.ts:11](/Users/sebastian.suarez/Projects/VSebCode/build/npm/dirs.ts:11)",
+			"[build/removed-surfaces.txt:28](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:28)",
+			"[CLAUDE.md:33](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:33)"
+		],
+		"gaps": [
+			"Coverage is the absence of unwanted remote dependency installation, not support for VSCodium’s separate server packages."
+		]
+	},
+	{
+		"path": "patches/linux/client/00-system-support-16k-page-size.patch",
+		"activation": "Applied only by the CI Linux client package_bin.sh path, not the immediate OS patch loop or ordinary local build.sh. Adds the V8 flag unconditionally in that patched build.",
+		"effect": "Append --nodecommit_pooled_pages to the main/renderer JS flags to avoid the historical cppgc crash on Linux systems with 16 KiB pages. The patch itself says remove after Chromium >=134. VSebCode has no added flag, but pins Electron 43.7.7, whose official release record identifies Chromium 150.0.7871.250; the old workaround’s own sunset condition has passed.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[VSCodium patches/linux/client/00-system-support-16k-page-size.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-system-support-16k-page-size.patch#L1)",
+			"[VSCodium build/linux/package_bin.sh:79](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_bin.sh#L79)",
+			"[src/mainImpl.ts:516](/Users/sebastian.suarez/Projects/VSebCode/src/mainImpl.ts:516)",
+			"[.npmrc:2](/Users/sebastian.suarez/Projects/VSebCode/.npmrc:2)",
+			"[Electron 43.7.7 release: Chromium 150.0.7871.250](https://releases.electronjs.org/release/v43.7.7)"
+		],
+		"gaps": [
+			"Obsolescence is inferred from the patch’s explicit Chromium cutoff and the pinned runtime, not from a Linux 16 KiB execution test. This audit does not claim complete present-day 16 KiB platform validation."
+		]
+	},
+	{
+		"path": "patches/linux/reh/s390x/00-build-override-dependency.patch",
+		"activation": "build/linux/package_reh.sh applies its generic REH patches and then patches/linux/reh/${VSCODE_ARCH}; this file therefore activates only for the s390x REH build, before npm ci.",
+		"effect": "Override @vscode/l10n-dev@0.0.35 to use web-tree-sitter 0.23.0 instead of 0.20.8 and update the locked package version, integrity and license. VSebCode still pins l10n-dev 0.0.35 with web-tree-sitter 0.20.8, but does not run the architecture/server build this override serves.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/linux/reh/s390x/00-build-override-dependency.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/reh/s390x/00-build-override-dependency.patch#L1)",
+			"[VSCodium build/linux/package_reh.sh:92](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/linux/package_reh.sh#L92)",
+			"[package.json:159](/Users/sebastian.suarez/Projects/VSebCode/package.json:159)",
+			"[package-lock.json:3582](/Users/sebastian.suarez/Projects/VSebCode/package-lock.json:3582)",
+			"[package-lock.json:18184](/Users/sebastian.suarez/Projects/VSebCode/package-lock.json:18184)",
+			"[build/removed-surfaces.txt:139](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139)"
+		],
+		"gaps": [
+			"No s390x REH build exists; the unchanged desktop build-tool dependency is not proof of an active s390x failure."
+		]
+	},
+	{
+		"path": "patches/osx/00-ui-update-emulated-urls.patch",
+		"activation": "OS_NAME=osx: immediate OS patch loop. Placeholder GH_REPO_PATH defaults to VSCodium/vscodium; stable and insider download actions use different release repositories.",
+		"effect": "Change the translated/emulated macOS-build warning’s native-download links from Microsoft URLs to VSCodium stable/insiders releases. VSebCode uses a product-named urgent warning with no download action at all. It therefore avoids the Microsoft navigation but does not offer VSCodium’s replacement download convenience.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/osx/00-ui-update-emulated-urls.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/osx/00-ui-update-emulated-urls.patch#L1)",
+			"[VSCodium prepare_vscode.sh:170](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L170)",
+			"[VSCodium utils.sh:7](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/utils.sh#L7)",
+			"[src/vs/workbench/electron-browser/window.ts:257](/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/electron-browser/window.ts:257)",
+			"[CLAUDE.md:22](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:22)",
+			"[CLAUDE.md:211](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:215)"
+		],
+		"gaps": [
+			"No alternate native-build download action is provided. Publication is not requested, so no destination is presumed."
+		]
+	},
+	{
+		"path": "patches/windows/00-build-min-version-win7.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. ",
+		"effect": "Lower only the Inno Setup MinVersion gate from Windows 10 to 6.1.7600 (Windows 7). VSebCode keeps MinVersion=10.0 and pins Electron 43.7.7; official Electron support ended for Windows 7/8/8.1 beginning with Electron 23. The patch does not backport Electron or establish runtime compatibility.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[VSCodium patches/windows/00-build-min-version-win7.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-build-min-version-win7.patch#L1)",
+			"[build/win32/code.iss:29](/Users/sebastian.suarez/Projects/VSebCode/build/win32/code.iss:29)",
+			"[.npmrc:2](/Users/sebastian.suarez/Projects/VSebCode/.npmrc:2)",
+			"[Electron Windows 7/8/8.1 deprecation](https://www.electronjs.org/blog/windows-7-to-8-1-deprecation-notice)"
+		],
+		"gaps": [
+			"The exact relaxed installer gate is absent. This obsolete gate is not counted as a missing supported Windows 7 runtime.",
+			"Windows validation is deferred; the existing installer has not been compiled or exercised for this audit."
+		]
+	},
+	{
+		"path": "patches/windows/00-remote-use-open-ext.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. ",
+		"effect": "Replace the hard-coded Microsoft Remote WSL extension with VSCODE_WSL_EXTENSION_ID or jeanp413.open-remote-wsl, inject VERSION into the two packaged launchers, and pass it to wslCode.sh; change the development launcher’s extension lookup too. VSebCode removes both the WSL extension handoff and the versioned launcher. Its WSL shell script resolves the local Windows CLI path and runs the local app, matching the adopted desktop-only decision.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/windows/00-remote-use-open-ext.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-remote-use-open-ext.patch#L1)",
+			"[resources/win32/bin/code.sh:35](/Users/sebastian.suarez/Projects/VSebCode/resources/win32/bin/code.sh:35)",
+			"[scripts/code.sh:51](/Users/sebastian.suarez/Projects/VSebCode/scripts/code.sh:51)",
+			"[build/removed-surfaces.txt:30](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:30)",
+			"[CLAUDE.md:88](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:88)",
+			"[CLAUDE.md:214](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:218)"
+		],
+		"gaps": [
+			"Open Remote WSL delegation and server startup are absent by decision; local Windows launch from WSL still awaits Windows validation."
+		]
+	},
+	{
+		"path": "patches/windows/41-cli-fix-update-url.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. Extends the root CLI release-archive update changes.",
+		"effect": "Insert /user/ before latest.json in the Rust CLI’s update metadata URL so Windows looks up the user-installer release metadata layout. VSebCode has no Rust CLI or updater service/feed, so it neither issues the old request nor uses the replacement endpoint.",
+		"classification": "Intentional",
+		"evidence": [
+			"[VSCodium patches/windows/41-cli-fix-update-url.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/41-cli-fix-update-url.patch#L1)",
+			"[build/removed-surfaces.txt:19](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:19)",
+			"[build/removed-surfaces.txt:58](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58)",
+			"[CLAUDE.md:31](/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:31)"
+		],
+		"gaps": [
+			"No updater endpoint parity is intended; updates and Rust CLI were removed."
+		]
+	},
+	{
+		"path": "patches/windows/59-build-replace-signature.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. Used by desktop and REH Windows dependency PE rewriting before resource edits.",
+		"effect": "Factor Authenticode verification/removal into build/win32/signature.ts, discover the highest installed Windows Kits 10 bin/<version>/x64/signtool.exe, cache that path, retain verification-before-removal, and replace Microsoft CompanyName/LegalCopyright resources on dependencies with the configured organization. VSebCode already strips signatures before rcedit and writes Sebastian Suarez product metadata while preserving upstream copyright attribution; it still requires signtool.exe on PATH rather than discovering the SDK. Its REH target was removed.",
+		"classification": "Partial",
+		"evidence": [
+			"[VSCodium patches/windows/59-build-replace-signature.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/59-build-replace-signature.patch#L1)",
+			"[build/gulpfile.vscode.ts:363](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:363)",
+			"[build/gulpfile.vscode.ts:412](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:412)",
+			"[build/gulpfile.vscode.ts:416](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:416)",
+			"[build/removed-surfaces.txt:139](/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:139)",
+			"[VSCodium utils.sh:59](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/utils.sh#L59)"
+		],
+		"gaps": [
+			"Windows SDK signtool path discovery is missing; resource rebranding and strip-before-edit are covered. This patch removes existing signatures; it does not itself provide release signing.",
+			"Windows validation is deferred; the existing installer has not been compiled or exercised for this audit."
+		]
+	},
+	{
+		"path": "patches/windows/70-build-contextmenu-appx.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. Patch 71 runs later and disables the AppX manifest/package and installer-definition branches modified by this patch; the downloader rename survives only in an unused helper.",
+		"effect": "Adapt VSCodium’s enlarged release patch number for AppX by slicing the first digit; name AppX and context-menu DLL files from applicationName with hyphens replaced by underscores; make explorer-dll-fetcher copy the downloaded Microsoft artifact under that product-specific DLL name. In the final VSCodium path, 71 comments out the first two consumers and package.sh comments out the downloader, so these changes do not yield a shipped Windows 11 context menu. VSebCode retains the upstream names/version formatting in similarly dormant quality-gated branches and the helper.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"[VSCodium patches/windows/70-build-contextmenu-appx.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/70-build-contextmenu-appx.patch#L1)",
+			"[VSCodium patches/windows/71-build-disable-appx.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/71-build-disable-appx.patch#L1)",
+			"[VSCodium build/windows/package.sh:34](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/windows/package.sh#L34)",
+			"[VSCodium build/windows/prepare_assets.sh:7](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/windows/prepare_assets.sh#L7)",
+			"[build/gulpfile.vscode.ts:328](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:328)",
+			"[build/gulpfile.vscode.win32.ts:96](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.win32.ts:96)",
+			"[build/win32/explorer-dll-fetcher.ts:20](/Users/sebastian.suarez/Projects/VSebCode/build/win32/explorer-dll-fetcher.ts:20)",
+			"[product.json:1](/Users/sebastian.suarez/Projects/VSebCode/product.json:1)"
+		],
+		"gaps": [
+			"The helper rename is not present in VSebCode, but no standard VSCodium packaging call consumes it at this revision. This is not evidence that either product currently ships branded AppX integration.",
+			"Re-enabling stable/insider AppX packaging would require its own naming, version, CLSID and build validation; no such change is requested."
+		]
+	},
+	{
+		"path": "patches/windows/71-build-disable-appx.patch",
+		"activation": "OS_NAME=windows: all immediate patches/windows/*.patch are applied during source preparation in filename order. The final Windows platform patch overrides the manifest/package and installer-definition branches changed by 70.",
+		"effect": "Comment out bundling .build/win32/appx, generating its manifest and setting Inno AppxPackage/AppxPackageDll/AppxPackageName/CLSID definitions, disabling Windows 11 AppX context-menu integration. VSebCode reaches the same no-AppX outcome for its current product, which has no quality field: both branches run only for stable or insider. However, the code remains enabled behind those conditions, uses upstream code/code_insider filenames, and dereferences a win32ContextMenu map absent from current product.json.",
+		"classification": "Partial",
+		"evidence": [
+			"[VSCodium patches/windows/71-build-disable-appx.patch:1](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/71-build-disable-appx.patch#L1)",
+			"[VSCodium build/windows/package.sh:34](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/windows/package.sh#L34)",
+			"[VSCodium build/windows/prepare_assets.sh:7](https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/build/windows/prepare_assets.sh#L7)",
+			"[build/gulpfile.vscode.ts:134](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:134)",
+			"[build/gulpfile.vscode.ts:328](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:328)",
+			"[build/gulpfile.vscode.win32.ts:61](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.win32.ts:61)",
+			"[build/gulpfile.vscode.win32.ts:96](/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.win32.ts:96)",
+			"[product.json:1](/Users/sebastian.suarez/Projects/VSebCode/product.json:1)"
+		],
+		"gaps": [
+			"Effective no-AppX behavior is covered only for the present product configuration; durable removal/disable is absent. Switching quality could activate incomplete branches, but the audit did not build Windows or demonstrate a runtime failure.",
+			"Windows validation is deferred; the existing installer has not been compiled or exercised for this audit."
+		]
+	}
+]

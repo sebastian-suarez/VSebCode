@@ -1,0 +1,9 @@
+{
+	"method": "Direct invocation of current TypeScript policy renderer with product.json; empty policies for branding and synthetic minimal policy for registry path",
+	"macProfileOrganization": "Microsoft",
+	"macAppName": "VSebCode",
+	"macManifestAppUrl": "https://code.visualstudio.com/",
+	"windowsNamespace": "Microsoft.Policies.VSebCode",
+	"windowsRegistryPath": "Software\\Policies\\Microsoft\\VSebCode",
+	"assertionsPassed": 5
+}

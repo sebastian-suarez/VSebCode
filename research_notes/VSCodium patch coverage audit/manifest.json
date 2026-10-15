@@ -1,0 +1,1791 @@
+{
+	"vscodium_commit": "be70704abf84fc6c7721f94478dfcccd2dc6163e",
+	"vsebcode_commit": "95800bc5a6f6a286eb32d099bb772e5870cd4763",
+	"upstream": {
+		"upstream/stable.json": {
+			"tag": "1.140.0",
+			"commit": "07f806f999227108933c2e30515b26eecc1fda74"
+		},
+		"upstream/insider.json": {
+			"tag": "1.140.0",
+			"commit": "07f806f999227108933c2e30515b26eecc1fda74"
+		}
+	},
+	"files": [
+		{
+			"path": "patches/00-binary-fix-name.patch",
+			"sha256": "eb4dda2faa88f699f8ae23398f56514c6f0ea0ae8147dd14c440f69e590ef71f",
+			"bytes": 1587,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-binary-fix-name.patch",
+			"target_files": [
+				"build/gulpfile.vscode.ts",
+				"src/vs/platform/native/electron-main/nativeHostMainService.ts"
+			],
+			"hunk_count": 3,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"src/vs/platform/native/electron-main/nativeHostMainService.ts"
+			],
+			"source_lines": 23
+		},
+		{
+			"path": "patches/00-brand-remove-branding.patch",
+			"sha256": "c4dfc36ce38e31a0ef9ac43ae863d2a0ed81af3eee6a82ff2b6c0f1fe78b1caa",
+			"bytes": 176493,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-brand-remove-branding.patch",
+			"target_files": [
+				"build/win32/i18n/messages.en.isl",
+				"build/win32/i18n/messages.es.isl",
+				"build/win32/i18n/messages.it.isl",
+				"build/win32/i18n/messages.pt-br.isl",
+				"extensions/configuration-editing/src/configurationEditingMain.ts",
+				"extensions/configuration-editing/src/settingsDocumentHelper.ts",
+				"extensions/css-language-features/package.nls.json",
+				"extensions/emmet/package.nls.json",
+				"extensions/extension-editing/src/constants.ts",
+				"extensions/extension-editing/src/extensionLinter.ts",
+				"extensions/git/package.nls.json",
+				"extensions/github/package.nls.json",
+				"extensions/grunt/package.nls.json",
+				"extensions/html-language-features/client/src/htmlClient.ts",
+				"extensions/html-language-features/package.nls.json",
+				"extensions/html-language-features/schemas/package.schema.json",
+				"extensions/jake/package.nls.json",
+				"extensions/json-language-features/package.nls.json",
+				"extensions/markdown-language-features/package.nls.json",
+				"extensions/media-preview/package.nls.json",
+				"extensions/media-preview/src/audioPreview.ts",
+				"extensions/media-preview/src/imagePreview/index.ts",
+				"extensions/media-preview/src/videoPreview.ts",
+				"extensions/notebook-renderers/package.json",
+				"extensions/npm/package.nls.json",
+				"extensions/swift/syntaxes/swift.tmLanguage.json",
+				"extensions/typescript-language-features/package.nls.json",
+				"extensions/typescript-language-features/src/tsServer/versionManager.ts",
+				"extensions/typescript-language-features/src/tsServer/versionProvider.electron.ts",
+				"extensions/typescript-language-features/src/tsconfig.ts",
+				"extensions/typescript-language-features/src/typescriptServiceClient.ts",
+				"extensions/vscode-api-tests/package.json",
+				"extensions/vscode-colorize-tests/package.json",
+				"extensions/vscode-colorize-tests/test/colorize-fixtures/14119.less",
+				"extensions/vscode-colorize-tests/test/colorize-results/14119_less.json",
+				"extensions/vscode-test-resolver/package.json",
+				"extensions/vscode-test-resolver/src/download.ts",
+				"extensions/vscode-test-resolver/src/extension.ts",
+				"src/mainImpl.ts",
+				"src/vs/code/electron-main/app.ts",
+				"src/vs/editor/contrib/toggleTabFocusMode/browser/toggleTabFocusMode.ts",
+				"src/vs/platform/contextkey/common/contextkeys.ts",
+				"src/vs/platform/extensionManagement/node/extensionManagementService.ts",
+				"src/vs/platform/externalTerminal/node/externalTerminalService.ts",
+				"src/vs/platform/terminal/common/terminalPlatformConfiguration.ts",
+				"src/vs/platform/update/common/update.config.contribution.ts",
+				"src/vs/platform/update/electron-main/abstractUpdateService.ts",
+				"src/vs/server/node/server.cli.ts",
+				"src/vs/workbench/api/browser/mainThreadAuthentication.ts",
+				"src/vs/workbench/api/browser/viewsExtensionPoint.ts",
+				"src/vs/workbench/api/common/extHostApiCommands.ts",
+				"src/vs/workbench/api/common/extHostCommands.ts",
+				"src/vs/workbench/api/node/loopbackServer.ts",
+				"src/vs/workbench/api/test/browser/extHostNotebook.test.ts",
+				"src/vs/workbench/browser/actions/developerActions.ts",
+				"src/vs/workbench/browser/actions/helpActions.ts",
+				"src/vs/workbench/browser/web.factory.ts",
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/common/contextkeys.ts",
+				"src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts",
+				"src/vs/workbench/contrib/chat/browser/chatSetup/chatSetupProviders.ts",
+				"src/vs/workbench/contrib/chat/common/promptSyntax/languageProviders/promptValidator.ts",
+				"src/vs/workbench/contrib/debug/browser/debugAdapterManager.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsActions.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts",
+				"src/vs/workbench/contrib/extensions/common/extensionsFileTemplate.ts",
+				"src/vs/workbench/contrib/extensions/common/installExtensionsTool.ts",
+				"src/vs/workbench/contrib/extensions/common/searchExtensionsTool.ts",
+				"src/vs/workbench/contrib/externalUriOpener/common/configuration.ts",
+				"src/vs/workbench/contrib/localization/common/localization.contribution.ts",
+				"src/vs/workbench/contrib/localization/common/localizationsActions.ts",
+				"src/vs/workbench/contrib/mcp/browser/mcpServersView.ts",
+				"src/vs/workbench/contrib/preferences/browser/keyboardLayoutPicker.ts",
+				"src/vs/workbench/contrib/tasks/browser/abstractTaskService.ts",
+				"src/vs/workbench/contrib/tasks/common/jsonSchemaCommon.ts",
+				"src/vs/workbench/contrib/tasks/common/jsonSchema_v2.ts",
+				"src/vs/workbench/contrib/terminal/browser/terminalView.ts",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration.fish",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration.ps1",
+				"src/vs/workbench/contrib/terminal/common/terminalConfiguration.ts",
+				"src/vs/workbench/contrib/terminalContrib/autoReplies/common/terminalAutoRepliesConfiguration.ts",
+				"src/vs/workbench/contrib/terminalContrib/chatAgentTools/browser/tools/task/createAndRunTaskTool.ts",
+				"src/vs/workbench/contrib/terminalContrib/chatAgentTools/browser/tools/task/runTaskTool.ts",
+				"src/vs/workbench/contrib/terminalContrib/voice/browser/terminalVoiceActions.ts",
+				"src/vs/workbench/contrib/update/browser/update.ts",
+				"src/vs/workbench/contrib/url/browser/trustedDomainsFileSystemProvider.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.contribution.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStartedExtensionPoint.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/common/gettingStartedContent.ts",
+				"src/vs/workbench/contrib/welcomeWalkthrough/browser/editor/vs_code_editor_walkthrough.ts",
+				"src/vs/workbench/contrib/workspace/browser/workspace.contribution.ts",
+				"src/vs/workbench/electron-browser/desktop.contribution.ts",
+				"src/vs/workbench/services/extensionManagement/common/extensionManagementService.ts",
+				"src/vs/workbench/services/extensions/common/extensionsRegistry.ts",
+				"src/vs/workbench/services/extensions/electron-browser/nativeExtensionService.ts",
+				"src/vs/workbench/services/userDataProfile/browser/userDataProfileManagement.ts"
+			],
+			"hunk_count": 215,
+			"existing_target_files": [
+				"build/win32/i18n/messages.en.isl",
+				"build/win32/i18n/messages.es.isl",
+				"build/win32/i18n/messages.it.isl",
+				"build/win32/i18n/messages.pt-br.isl",
+				"extensions/configuration-editing/src/configurationEditingMain.ts",
+				"extensions/configuration-editing/src/settingsDocumentHelper.ts",
+				"extensions/css-language-features/package.nls.json",
+				"extensions/emmet/package.nls.json",
+				"extensions/extension-editing/src/constants.ts",
+				"extensions/extension-editing/src/extensionLinter.ts",
+				"extensions/git/package.nls.json",
+				"extensions/grunt/package.nls.json",
+				"extensions/html-language-features/client/src/htmlClient.ts",
+				"extensions/html-language-features/package.nls.json",
+				"extensions/html-language-features/schemas/package.schema.json",
+				"extensions/jake/package.nls.json",
+				"extensions/json-language-features/package.nls.json",
+				"extensions/markdown-language-features/package.nls.json",
+				"extensions/media-preview/package.nls.json",
+				"extensions/media-preview/src/audioPreview.ts",
+				"extensions/media-preview/src/imagePreview/index.ts",
+				"extensions/media-preview/src/videoPreview.ts",
+				"extensions/notebook-renderers/package.json",
+				"extensions/npm/package.nls.json",
+				"extensions/swift/syntaxes/swift.tmLanguage.json",
+				"extensions/typescript-language-features/package.nls.json",
+				"extensions/typescript-language-features/src/tsServer/versionManager.ts",
+				"extensions/typescript-language-features/src/tsServer/versionProvider.electron.ts",
+				"extensions/typescript-language-features/src/tsconfig.ts",
+				"extensions/typescript-language-features/src/typescriptServiceClient.ts",
+				"extensions/vscode-api-tests/package.json",
+				"extensions/vscode-colorize-tests/package.json",
+				"extensions/vscode-colorize-tests/test/colorize-fixtures/14119.less",
+				"extensions/vscode-colorize-tests/test/colorize-results/14119_less.json",
+				"src/mainImpl.ts",
+				"src/vs/code/electron-main/app.ts",
+				"src/vs/editor/contrib/toggleTabFocusMode/browser/toggleTabFocusMode.ts",
+				"src/vs/platform/contextkey/common/contextkeys.ts",
+				"src/vs/platform/extensionManagement/node/extensionManagementService.ts",
+				"src/vs/platform/externalTerminal/node/externalTerminalService.ts",
+				"src/vs/platform/terminal/common/terminalPlatformConfiguration.ts",
+				"src/vs/workbench/api/browser/mainThreadAuthentication.ts",
+				"src/vs/workbench/api/browser/viewsExtensionPoint.ts",
+				"src/vs/workbench/api/common/extHostApiCommands.ts",
+				"src/vs/workbench/api/common/extHostCommands.ts",
+				"src/vs/workbench/api/test/browser/extHostNotebook.test.ts",
+				"src/vs/workbench/browser/actions/developerActions.ts",
+				"src/vs/workbench/browser/actions/helpActions.ts",
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/common/contextkeys.ts",
+				"src/vs/workbench/contrib/debug/browser/debugAdapterManager.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsActions.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts",
+				"src/vs/workbench/contrib/extensions/common/extensionsFileTemplate.ts",
+				"src/vs/workbench/contrib/externalUriOpener/common/configuration.ts",
+				"src/vs/workbench/contrib/localization/common/localization.contribution.ts",
+				"src/vs/workbench/contrib/localization/common/localizationsActions.ts",
+				"src/vs/workbench/contrib/tasks/browser/abstractTaskService.ts",
+				"src/vs/workbench/contrib/tasks/common/jsonSchemaCommon.ts",
+				"src/vs/workbench/contrib/tasks/common/jsonSchema_v2.ts",
+				"src/vs/workbench/contrib/terminal/browser/terminalView.ts",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration-bash.sh",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration.fish",
+				"src/vs/workbench/contrib/terminal/common/scripts/shellIntegration.ps1",
+				"src/vs/workbench/contrib/terminal/common/terminalConfiguration.ts",
+				"src/vs/workbench/contrib/terminalContrib/autoReplies/common/terminalAutoRepliesConfiguration.ts",
+				"src/vs/workbench/contrib/url/browser/trustedDomainsFileSystemProvider.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.contribution.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStartedExtensionPoint.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/common/gettingStartedContent.ts",
+				"src/vs/workbench/contrib/welcomeWalkthrough/browser/editor/vs_code_editor_walkthrough.ts",
+				"src/vs/workbench/contrib/workspace/browser/workspace.contribution.ts",
+				"src/vs/workbench/electron-browser/desktop.contribution.ts",
+				"src/vs/workbench/services/extensionManagement/common/extensionManagementService.ts",
+				"src/vs/workbench/services/extensions/common/extensionsRegistry.ts",
+				"src/vs/workbench/services/extensions/electron-browser/nativeExtensionService.ts",
+				"src/vs/workbench/services/userDataProfile/browser/userDataProfileManagement.ts"
+			],
+			"source_lines": 1628
+		},
+		{
+			"path": "patches/00-build-disable-esbuild.patch.no",
+			"sha256": "a9d65cfbbf90fd748d22dd8cfff7d20293d107e928203a095d13e59d8ea5e78c",
+			"bytes": 251,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-esbuild.patch.no",
+			"target_files": [
+				"build/buildConfig.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 8
+		},
+		{
+			"path": "patches/00-build-disable-mangle.patch.no",
+			"sha256": "9fe6e2b3e7a0fdc9e10b026951f23f8dd34b4a62f1b8a5573b93257f3314918e",
+			"bytes": 1456,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-disable-mangle.patch.no",
+			"target_files": [
+				"build/lib/compilation.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"build/lib/compilation.ts"
+			],
+			"source_lines": 32
+		},
+		{
+			"path": "patches/00-build-download-extensions-from-gh.patch",
+			"sha256": "1dfff397f9194adb906892511d57fe1f454c0c226ed0e32c803bde781b35ed30",
+			"bytes": 497,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-download-extensions-from-gh.patch",
+			"target_files": [
+				"build/lib/builtInExtensions.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"build/lib/builtInExtensions.ts"
+			],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/00-build-package-missing-dependencies.patch",
+			"sha256": "e3fba1e29bf41d0c900cc16fafaefde5cc9e15a30c74b98e6689d298129aac89",
+			"bytes": 376,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-package-missing-dependencies.patch",
+			"target_files": [
+				"build/gulpfile.vscode.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts"
+			],
+			"source_lines": 8
+		},
+		{
+			"path": "patches/00-build-update-electron.patch.no",
+			"sha256": "92f3749395b249143fdb11b7bfe38af0da3462160acaeda44c16df9d976a7623",
+			"bytes": 17185,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-electron.patch.no",
+			"target_files": [
+				".npmrc",
+				"build/checksums/electron.txt",
+				"cgmanifest.json",
+				"package-lock.json",
+				"package.json"
+			],
+			"hunk_count": 6,
+			"existing_target_files": [
+				".npmrc",
+				"build/checksums/electron.txt",
+				"cgmanifest.json",
+				"package-lock.json",
+				"package.json"
+			],
+			"source_lines": 203
+		},
+		{
+			"path": "patches/00-build-update-sourcemap-url.patch",
+			"sha256": "792bb4a60bc07a78c8972d46792430aee9ffc657116e1c0f14c543cc0ffe7d89",
+			"bytes": 3825,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-build-update-sourcemap-url.patch",
+			"target_files": [
+				"build/gulpfile.extensions.ts",
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts",
+				"build/gulpfile.vscode.web.ts",
+				"build/lib/extensions.ts",
+				"build/lib/util.ts"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"build/gulpfile.extensions.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/extensions.ts",
+				"build/lib/util.ts"
+			],
+			"source_lines": 60
+		},
+		{
+			"path": "patches/00-cloud-remove.patch",
+			"sha256": "e1217f9be94dd7eb5ad3c8856a43fc2b32d812363f33bd093476ddb44414c2cb",
+			"bytes": 3093,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-cloud-remove.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/editSessions/browser/editSessionsStorageService.ts"
+			],
+			"hunk_count": 4,
+			"existing_target_files": [],
+			"source_lines": 61
+		},
+		{
+			"path": "patches/00-community-add-announcements.patch",
+			"sha256": "dbe00a16f805967c3c445b5096b69081a01d43958d425070a136314027bcce5b",
+			"bytes": 4588,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-community-add-announcements.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.contribution.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.ts"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.contribution.ts",
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.ts"
+			],
+			"source_lines": 102
+		},
+		{
+			"path": "patches/00-copilot-disable-terminal-suggest.patch",
+			"sha256": "9181186263872f9915c5fe896794d544def01b5e77f86551f1fbe7790b80a270",
+			"bytes": 1725,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-disable-terminal-suggest.patch",
+			"target_files": [
+				"extensions/terminal-suggest/src/completions/codium-insiders.ts",
+				"extensions/terminal-suggest/src/completions/codium.ts",
+				"extensions/terminal-suggest/src/terminalSuggestMain.ts"
+			],
+			"hunk_count": 4,
+			"existing_target_files": [
+				"extensions/terminal-suggest/src/terminalSuggestMain.ts"
+			],
+			"source_lines": 44
+		},
+		{
+			"path": "patches/00-copilot-fix-action-condition.patch",
+			"sha256": "3a51b3f5ed6f7a8c43aafc50ba9410529b43db0564a2e586a516b228bf2836a7",
+			"bytes": 12212,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-fix-action-condition.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/chat/browser/actions/chatActions.ts",
+				"src/vs/workbench/contrib/chat/browser/actions/chatContextActions.ts",
+				"src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts",
+				"src/vs/workbench/contrib/chat/browser/chatParticipant.contribution.ts",
+				"src/vs/workbench/contrib/chat/browser/chatSetup/chatSetupContributions.ts",
+				"src/vs/workbench/contrib/inlineChat/browser/inlineChatActions.ts",
+				"src/vs/workbench/contrib/mcp/browser/mcpServersView.ts",
+				"src/vs/workbench/contrib/scm/browser/scm.contribution.ts",
+				"src/vs/workbench/contrib/scm/browser/scmInput.ts"
+			],
+			"hunk_count": 19,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/scm/browser/scm.contribution.ts",
+				"src/vs/workbench/contrib/scm/browser/scmInput.ts"
+			],
+			"source_lines": 140
+		},
+		{
+			"path": "patches/00-copilot-remove-terminal-hint.patch",
+			"sha256": "80ae6993df67c24328e50eb3f46f70fa18d0e92680de3e7ee674a694df62d752",
+			"bytes": 3668,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-remove-terminal-hint.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/terminalContrib/inlineHint/browser/terminal.initialHint.contribution.ts"
+			],
+			"hunk_count": 6,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/terminalContrib/inlineHint/browser/terminal.initialHint.contribution.ts"
+			],
+			"source_lines": 55
+		},
+		{
+			"path": "patches/00-ext-git-ai-coauthor-off.patch",
+			"sha256": "f9f473bce11b1597de718dc4701bd51579d4f3c441f7b1c3d0eedefef99689e9",
+			"bytes": 468,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-git-ai-coauthor-off.patch",
+			"target_files": [
+				"extensions/git/src/repository.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"extensions/git/src/repository.ts"
+			],
+			"source_lines": 8
+		},
+		{
+			"path": "patches/00-ext-github-authentication-use-pat.patch",
+			"sha256": "a164346b2b0e47e5796bcd36a33a0e6895ef2ffd3ff27fe0bf26a9ed522493c6",
+			"bytes": 1430,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-authentication-use-pat.patch",
+			"target_files": [
+				"extensions/github-authentication/src/common/env.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [],
+			"source_lines": 38
+		},
+		{
+			"path": "patches/00-ext-github-remove-vscodedev.patch",
+			"sha256": "5fd81aec78958d582c7655a88c4ba94d6be080c09287e3ec92c091a511d2e50e",
+			"bytes": 7414,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-remove-vscodedev.patch",
+			"target_files": [
+				"extensions/github/package.json",
+				"extensions/github/src/commands.ts",
+				"extensions/github/src/extension.ts",
+				"extensions/github/src/remoteSourceProvider.ts"
+			],
+			"hunk_count": 11,
+			"existing_target_files": [],
+			"source_lines": 187
+		},
+		{
+			"path": "patches/00-extension-disable-signature-verification.patch",
+			"sha256": "02ae9bff811559a95d4db8467f6db3899c032bedbdf18c99b97e4490a3cec432",
+			"bytes": 1068,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-extension-disable-signature-verification.patch",
+			"target_files": [
+				"src/vs/platform/extensionManagement/node/extensionManagementService.ts"
+			],
+			"hunk_count": 3,
+			"existing_target_files": [
+				"src/vs/platform/extensionManagement/node/extensionManagementService.ts"
+			],
+			"source_lines": 18
+		},
+		{
+			"path": "patches/00-remote-add-missing-dependencies.patch",
+			"sha256": "ec479d17f62c7887751056a9f2b4aa965ee31bf0dafd1247304a888a643efc6c",
+			"bytes": 865,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-missing-dependencies.patch",
+			"target_files": [
+				"remote/package-lock.json",
+				"remote/package.json"
+			],
+			"hunk_count": 3,
+			"existing_target_files": [],
+			"source_lines": 25
+		},
+		{
+			"path": "patches/00-remote-add-url.patch",
+			"sha256": "cfa8de5fce5b7c3c0defe00136c33459a27db52ea4e164ba5ce96d6f1dfbcfc7",
+			"bytes": 1040,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-add-url.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts"
+			],
+			"source_lines": 16
+		},
+		{
+			"path": "patches/00-remote-disable-client-validation.patch",
+			"sha256": "43941aa950dfd543bae8a08b10649704576c04e3fbea18786cdd27aa5ba18e0d",
+			"bytes": 2845,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-disable-client-validation.patch",
+			"target_files": [
+				"src/vs/server/node/remoteExtensionHostAgentServer.ts",
+				"src/vs/server/node/serverEnvironmentService.ts"
+			],
+			"hunk_count": 6,
+			"existing_target_files": [],
+			"source_lines": 51
+		},
+		{
+			"path": "patches/00-remote-remove-missing-vsda.patch",
+			"sha256": "9424d915e15bbeeb3f7ce599f7cc1c82c77e37df099c9502efe38d30be6f3eef",
+			"bytes": 4966,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-remote-remove-missing-vsda.patch",
+			"target_files": [
+				"src/vs/platform/sign/browser/signService.ts",
+				"src/vs/server/node/remoteExtensionHostAgentServer.ts"
+			],
+			"hunk_count": 6,
+			"existing_target_files": [],
+			"source_lines": 128
+		},
+		{
+			"path": "patches/00-security-add-command-filter.patch",
+			"sha256": "04560b23d89fb063d755c4553ca2a9bfeb30d713de7604658174d4156b5fe468",
+			"bytes": 8114,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-security-add-command-filter.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/commands/common/commands.contribution.ts",
+				"src/vs/workbench/services/commands/common/commandService.ts",
+				"src/vs/workbench/services/commands/test/common/commandService.test.ts"
+			],
+			"hunk_count": 17,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/commands/common/commands.contribution.ts",
+				"src/vs/workbench/services/commands/common/commandService.ts",
+				"src/vs/workbench/services/commands/test/common/commandService.test.ts"
+			],
+			"source_lines": 167
+		},
+		{
+			"path": "patches/00-settings-gallery.patch",
+			"sha256": "9303f42cc04d011ef198b98df978b19ac41de5527cd07d824c272aad4f0eaf0f",
+			"bytes": 2235,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-gallery.patch",
+			"target_files": [
+				"src/vs/base/common/product.ts",
+				"src/vs/platform/extensionManagement/common/extensionGalleryManifestService.ts",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"hunk_count": 4,
+			"existing_target_files": [
+				"src/vs/base/common/product.ts",
+				"src/vs/platform/extensionManagement/common/extensionGalleryManifestService.ts",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"source_lines": 42
+		},
+		{
+			"path": "patches/00-settings-user-product.patch",
+			"sha256": "13ac831dc73b2616c1c2de45ba8f623ebe27d2d2a20ddfc4865e05db4a528b91",
+			"bytes": 3539,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-user-product.patch",
+			"target_files": [
+				"src/cli.ts",
+				"src/mainImpl.ts",
+				"src/typings/vscode-globals-product.d.ts",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"hunk_count": 10,
+			"existing_target_files": [
+				"src/cli.ts",
+				"src/mainImpl.ts",
+				"src/typings/vscode-globals-product.d.ts",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"source_lines": 108
+		},
+		{
+			"path": "patches/00-telemetry-disable.patch",
+			"sha256": "be7de72ef8ed64bd18d059dbaadd97071a7949a9da9d6b3d39a63203c852eb1d",
+			"bytes": 4031,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-telemetry-disable.patch",
+			"target_files": [
+				"src/vs/platform/telemetry/common/telemetryService.ts",
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/contrib/editTelemetry/browser/editTelemetry.contribution.ts",
+				"src/vs/workbench/contrib/preferences/common/preferencesContribution.ts",
+				"src/vs/workbench/electron-browser/desktop.contribution.ts",
+				"src/vs/workbench/services/assignment/common/assignmentService.ts"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/contrib/preferences/common/preferencesContribution.ts",
+				"src/vs/workbench/electron-browser/desktop.contribution.ts"
+			],
+			"source_lines": 59
+		},
+		{
+			"path": "patches/00-tunnel-disable-recommendation.patch",
+			"sha256": "0e4bcf1233b54b989c4bd42a2f40acc0be7cb85f1dd7ab93d083f387bfdabfb3",
+			"bytes": 706,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-tunnel-disable-recommendation.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/remoteTunnel/electron-browser/remoteTunnel.contribution.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 10
+		},
+		{
+			"path": "patches/00-ui-custom-font.patch",
+			"sha256": "d85f2aa1ba99fc5c5159ebf2d605672fe1bba8a63f192fd0ea91abfa83d2d0c2",
+			"bytes": 276426,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-custom-font.patch",
+			"target_files": [
+				"src/vs/base/browser/ui/actionbar/actionbar.css",
+				"src/vs/base/browser/ui/button/button.css",
+				"src/vs/base/browser/ui/codicons/codicon/codicon.css",
+				"src/vs/base/browser/ui/iconLabel/iconlabel.css",
+				"src/vs/base/browser/ui/inputbox/inputBox.css",
+				"src/vs/base/browser/ui/selectBox/selectBox.css",
+				"src/vs/base/browser/ui/selectBox/selectBoxCustom.ts",
+				"src/vs/base/browser/ui/splitview/paneview.css",
+				"src/vs/base/browser/ui/splitview/paneview.ts",
+				"src/vs/base/browser/ui/toggle/toggle.css",
+				"src/vs/base/browser/ui/toggle/toggle.ts",
+				"src/vs/base/common/font.ts",
+				"src/vs/base/test/browser/ui/splitview/paneview.test.ts",
+				"src/vs/base/test/common/font.test.ts",
+				"src/vs/editor/contrib/find/browser/findWidget.css",
+				"src/vs/editor/contrib/find/browser/findWidget.ts",
+				"src/vs/platform/quickinput/browser/tree/quickInputDelegate.ts",
+				"src/vs/sessions/browser/workbench.ts",
+				"src/vs/sessions/test/browser/workbench.test.ts",
+				"src/vs/workbench/browser/media/style.css",
+				"src/vs/workbench/browser/parts/activitybar/activitybarPart.ts",
+				"src/vs/workbench/browser/parts/activitybar/media/activityaction.css",
+				"src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css",
+				"src/vs/workbench/browser/parts/auxiliarybar/auxiliaryBarPart.ts",
+				"src/vs/workbench/browser/parts/auxiliarybar/media/auxiliaryBarPart.css",
+				"src/vs/workbench/browser/parts/editor/editorTabsControl.ts",
+				"src/vs/workbench/browser/parts/editor/media/editortabscontrol.css",
+				"src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css",
+				"src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css",
+				"src/vs/workbench/browser/parts/editor/multiEditorTabsControl.ts",
+				"src/vs/workbench/browser/parts/media/paneCompositePart.css",
+				"src/vs/workbench/browser/parts/notifications/notificationsViewer.ts",
+				"src/vs/workbench/browser/parts/panel/media/panelpart.css",
+				"src/vs/workbench/browser/parts/panel/panelPart.ts",
+				"src/vs/workbench/browser/parts/sidebar/media/sidebarpart.css",
+				"src/vs/workbench/browser/parts/sidebar/sidebarPart.ts",
+				"src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css",
+				"src/vs/workbench/browser/parts/statusbar/statusbarPart.ts",
+				"src/vs/workbench/browser/parts/views/media/paneviewlet.css",
+				"src/vs/workbench/browser/parts/views/treeView.ts",
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/browser/workbench.ts",
+				"src/vs/workbench/contrib/callHierarchy/browser/callHierarchyTree.ts",
+				"src/vs/workbench/contrib/chat/browser/agentSessions/agentSessionsViewer.ts",
+				"src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatChangesSummaryPart.ts",
+				"src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatMultiDiffContentPart.ts",
+				"src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatReferencesContentPart.ts",
+				"src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatTodoListWidget.ts",
+				"src/vs/workbench/contrib/chat/browser/widget/chatContentParts/chatTreeContentPart.ts",
+				"src/vs/workbench/contrib/chat/browser/widgetHosts/viewPane/media/chatViewPane.css",
+				"src/vs/workbench/contrib/codeEditor/browser/outline/documentSymbolsTree.ts",
+				"src/vs/workbench/contrib/codeEditor/browser/suggestEnabledInput/suggestEnabledInput.ts",
+				"src/vs/workbench/contrib/comments/browser/commentsTreeViewer.ts",
+				"src/vs/workbench/contrib/debug/browser/breakpointsView.ts",
+				"src/vs/workbench/contrib/debug/browser/callStackView.ts",
+				"src/vs/workbench/contrib/debug/browser/callStackWidget.ts",
+				"src/vs/workbench/contrib/debug/browser/debugHover.ts",
+				"src/vs/workbench/contrib/debug/browser/loadedScriptsView.ts",
+				"src/vs/workbench/contrib/debug/browser/media/debugToolBar.css",
+				"src/vs/workbench/contrib/debug/browser/media/debugViewlet.css",
+				"src/vs/workbench/contrib/debug/browser/variablesView.ts",
+				"src/vs/workbench/contrib/debug/browser/watchExpressionsView.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionFeaturesTab.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsList.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsViewer.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsViewlet.ts",
+				"src/vs/workbench/contrib/extensions/browser/media/extension.css",
+				"src/vs/workbench/contrib/extensions/browser/media/extensionActions.css",
+				"src/vs/workbench/contrib/files/browser/media/explorerviewlet.css",
+				"src/vs/workbench/contrib/files/browser/views/explorerView.ts",
+				"src/vs/workbench/contrib/files/browser/views/explorerViewer.ts",
+				"src/vs/workbench/contrib/files/browser/views/media/openeditors.css",
+				"src/vs/workbench/contrib/files/browser/views/openEditorsView.ts",
+				"src/vs/workbench/contrib/files/test/browser/explorerFindProvider.test.ts",
+				"src/vs/workbench/contrib/markers/browser/markersTreeViewer.ts",
+				"src/vs/workbench/contrib/modernUI/browser/modernUI.contribution.ts",
+				"src/vs/workbench/contrib/notebook/browser/contrib/notebookVariables/notebookVariablesTree.ts",
+				"src/vs/workbench/contrib/notebook/browser/contrib/outline/notebookOutline.ts",
+				"src/vs/workbench/contrib/preferences/browser/tocTree.ts",
+				"src/vs/workbench/contrib/processExplorer/browser/processExplorerControl.ts",
+				"src/vs/workbench/contrib/remote/browser/remote.ts",
+				"src/vs/workbench/contrib/scm/browser/media/scm.css",
+				"src/vs/workbench/contrib/scm/browser/scmHistoryViewPane.ts",
+				"src/vs/workbench/contrib/scm/browser/scmRepositoriesViewPane.ts",
+				"src/vs/workbench/contrib/scm/browser/scmViewPane.ts",
+				"src/vs/workbench/contrib/search/browser/media/searchview.css",
+				"src/vs/workbench/contrib/search/browser/searchResultsView.ts",
+				"src/vs/workbench/contrib/search/browser/searchView.ts",
+				"src/vs/workbench/contrib/search/browser/searchWidget.ts",
+				"src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts",
+				"src/vs/workbench/contrib/testing/browser/testCoverageView.ts",
+				"src/vs/workbench/contrib/testing/browser/testResultsView/testResultsOutput.ts",
+				"src/vs/workbench/contrib/testing/browser/testingExplorerView.ts",
+				"src/vs/workbench/contrib/timeline/browser/timelinePane.ts",
+				"src/vs/workbench/contrib/typeHierarchy/browser/typeHierarchyTree.ts",
+				"src/vs/workbench/contrib/welcomeAgentSessions/browser/agentSessionsWelcome.ts",
+				"src/vs/workbench/test/browser/notificationsList.test.ts",
+				"src/vs/workbench/test/browser/notificationsToasts.test.ts"
+			],
+			"hunk_count": 272,
+			"existing_target_files": [
+				"src/vs/base/browser/ui/actionbar/actionbar.css",
+				"src/vs/base/browser/ui/button/button.css",
+				"src/vs/base/browser/ui/codicons/codicon/codicon.css",
+				"src/vs/base/browser/ui/iconLabel/iconlabel.css",
+				"src/vs/base/browser/ui/inputbox/inputBox.css",
+				"src/vs/base/browser/ui/selectBox/selectBox.css",
+				"src/vs/base/browser/ui/selectBox/selectBoxCustom.ts",
+				"src/vs/base/browser/ui/splitview/paneview.css",
+				"src/vs/base/browser/ui/splitview/paneview.ts",
+				"src/vs/base/browser/ui/toggle/toggle.css",
+				"src/vs/base/browser/ui/toggle/toggle.ts",
+				"src/vs/base/test/browser/ui/splitview/paneview.test.ts",
+				"src/vs/editor/contrib/find/browser/findWidget.css",
+				"src/vs/editor/contrib/find/browser/findWidget.ts",
+				"src/vs/platform/quickinput/browser/tree/quickInputDelegate.ts",
+				"src/vs/workbench/browser/media/style.css",
+				"src/vs/workbench/browser/parts/activitybar/activitybarPart.ts",
+				"src/vs/workbench/browser/parts/activitybar/media/activityaction.css",
+				"src/vs/workbench/browser/parts/activitybar/media/activitybarpart.css",
+				"src/vs/workbench/browser/parts/auxiliarybar/auxiliaryBarPart.ts",
+				"src/vs/workbench/browser/parts/auxiliarybar/media/auxiliaryBarPart.css",
+				"src/vs/workbench/browser/parts/editor/editorTabsControl.ts",
+				"src/vs/workbench/browser/parts/editor/media/editortabscontrol.css",
+				"src/vs/workbench/browser/parts/editor/media/editortitlecontrol.css",
+				"src/vs/workbench/browser/parts/editor/media/multieditortabscontrol.css",
+				"src/vs/workbench/browser/parts/editor/multiEditorTabsControl.ts",
+				"src/vs/workbench/browser/parts/media/paneCompositePart.css",
+				"src/vs/workbench/browser/parts/notifications/notificationsViewer.ts",
+				"src/vs/workbench/browser/parts/panel/media/panelpart.css",
+				"src/vs/workbench/browser/parts/panel/panelPart.ts",
+				"src/vs/workbench/browser/parts/sidebar/media/sidebarpart.css",
+				"src/vs/workbench/browser/parts/sidebar/sidebarPart.ts",
+				"src/vs/workbench/browser/parts/statusbar/media/statusbarpart.css",
+				"src/vs/workbench/browser/parts/statusbar/statusbarPart.ts",
+				"src/vs/workbench/browser/parts/views/media/paneviewlet.css",
+				"src/vs/workbench/browser/parts/views/treeView.ts",
+				"src/vs/workbench/browser/workbench.contribution.ts",
+				"src/vs/workbench/browser/workbench.ts",
+				"src/vs/workbench/contrib/callHierarchy/browser/callHierarchyTree.ts",
+				"src/vs/workbench/contrib/codeEditor/browser/outline/documentSymbolsTree.ts",
+				"src/vs/workbench/contrib/codeEditor/browser/suggestEnabledInput/suggestEnabledInput.ts",
+				"src/vs/workbench/contrib/comments/browser/commentsTreeViewer.ts",
+				"src/vs/workbench/contrib/debug/browser/breakpointsView.ts",
+				"src/vs/workbench/contrib/debug/browser/callStackView.ts",
+				"src/vs/workbench/contrib/debug/browser/callStackWidget.ts",
+				"src/vs/workbench/contrib/debug/browser/debugHover.ts",
+				"src/vs/workbench/contrib/debug/browser/loadedScriptsView.ts",
+				"src/vs/workbench/contrib/debug/browser/media/debugToolBar.css",
+				"src/vs/workbench/contrib/debug/browser/media/debugViewlet.css",
+				"src/vs/workbench/contrib/debug/browser/variablesView.ts",
+				"src/vs/workbench/contrib/debug/browser/watchExpressionsView.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionFeaturesTab.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsList.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsViewer.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsViewlet.ts",
+				"src/vs/workbench/contrib/extensions/browser/media/extension.css",
+				"src/vs/workbench/contrib/extensions/browser/media/extensionActions.css",
+				"src/vs/workbench/contrib/files/browser/media/explorerviewlet.css",
+				"src/vs/workbench/contrib/files/browser/views/explorerView.ts",
+				"src/vs/workbench/contrib/files/browser/views/explorerViewer.ts",
+				"src/vs/workbench/contrib/files/browser/views/media/openeditors.css",
+				"src/vs/workbench/contrib/files/browser/views/openEditorsView.ts",
+				"src/vs/workbench/contrib/files/test/browser/explorerFindProvider.test.ts",
+				"src/vs/workbench/contrib/markers/browser/markersTreeViewer.ts",
+				"src/vs/workbench/contrib/modernUI/browser/modernUI.contribution.ts",
+				"src/vs/workbench/contrib/notebook/browser/contrib/notebookVariables/notebookVariablesTree.ts",
+				"src/vs/workbench/contrib/notebook/browser/contrib/outline/notebookOutline.ts",
+				"src/vs/workbench/contrib/preferences/browser/tocTree.ts",
+				"src/vs/workbench/contrib/processExplorer/browser/processExplorerControl.ts",
+				"src/vs/workbench/contrib/remote/browser/remote.ts",
+				"src/vs/workbench/contrib/scm/browser/media/scm.css",
+				"src/vs/workbench/contrib/scm/browser/scmHistoryViewPane.ts",
+				"src/vs/workbench/contrib/scm/browser/scmRepositoriesViewPane.ts",
+				"src/vs/workbench/contrib/scm/browser/scmViewPane.ts",
+				"src/vs/workbench/contrib/search/browser/media/searchview.css",
+				"src/vs/workbench/contrib/search/browser/searchResultsView.ts",
+				"src/vs/workbench/contrib/search/browser/searchView.ts",
+				"src/vs/workbench/contrib/search/browser/searchWidget.ts",
+				"src/vs/workbench/contrib/terminal/browser/terminalTabsList.ts",
+				"src/vs/workbench/contrib/testing/browser/testCoverageView.ts",
+				"src/vs/workbench/contrib/testing/browser/testResultsView/testResultsOutput.ts",
+				"src/vs/workbench/contrib/testing/browser/testingExplorerView.ts",
+				"src/vs/workbench/contrib/timeline/browser/timelinePane.ts",
+				"src/vs/workbench/contrib/typeHierarchy/browser/typeHierarchyTree.ts",
+				"src/vs/workbench/test/browser/notificationsList.test.ts",
+				"src/vs/workbench/test/browser/notificationsToasts.test.ts"
+			],
+			"source_lines": 4501
+		},
+		{
+			"path": "patches/00-ui-improve-eol-banner.patch",
+			"sha256": "2c6329b86b8cd9377c376baeec715bcff9da9fae82112462b7718fc3d31fe049",
+			"bytes": 3108,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-improve-eol-banner.patch",
+			"target_files": [
+				"src/vs/workbench/browser/parts/banner/bannerPart.ts",
+				"src/vs/workbench/services/banner/browser/bannerService.ts"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"src/vs/workbench/browser/parts/banner/bannerPart.ts",
+				"src/vs/workbench/services/banner/browser/bannerService.ts"
+			],
+			"source_lines": 62
+		},
+		{
+			"path": "patches/00-ui-report-issue.patch",
+			"sha256": "4de02e27966c12fd7a6ec0f7162c1088d2359317daa10f2cb6a4481096126d3c",
+			"bytes": 5741,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-report-issue.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/extensions/electron-browser/extensionsSlowActions.ts",
+				"src/vs/workbench/contrib/issue/browser/baseIssueReporterService.ts",
+				"src/vs/workbench/contrib/issue/browser/issueReporterModel.ts",
+				"src/vs/workbench/contrib/issue/browser/issueReporterPage.ts"
+			],
+			"hunk_count": 9,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/extensions/electron-browser/extensionsSlowActions.ts",
+				"src/vs/workbench/contrib/issue/browser/baseIssueReporterService.ts",
+				"src/vs/workbench/contrib/issue/browser/issueReporterModel.ts",
+				"src/vs/workbench/contrib/issue/browser/issueReporterPage.ts"
+			],
+			"source_lines": 92
+		},
+		{
+			"path": "patches/00-update-disable.patch.yet",
+			"sha256": "97bdcf434f5b6157dc48ebffbb6ad1e7fc57c8a8e2d66593951d021127f3a85d",
+			"bytes": 499,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-disable.patch.yet",
+			"target_files": [
+				"src/vs/platform/update/common/update.config.contribution.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/00-update-rename-cache-path.patch",
+			"sha256": "bee02db192415b84480fc22c10ae8ac601d3efbe81e0c78404dcef53750ab2a8",
+			"bytes": 710,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-update-rename-cache-path.patch",
+			"target_files": [
+				"src/vs/platform/update/electron-main/updateService.win32.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/00-vsce-use-custom-lib.patch",
+			"sha256": "45bccf91a0c4347d5b6c689845bcc165602bff55f19fbfb50bd3a2f31df0cc29",
+			"bytes": 15949,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-vsce-use-custom-lib.patch",
+			"target_files": [
+				"build/.moduleignore",
+				"build/gulpfile.vscode.ts",
+				"build/lib/extensions.ts",
+				"build/package-lock.json",
+				"build/package.json",
+				"src/vs/platform/extensionManagement/node/extensionSignatureVerificationService.ts"
+			],
+			"hunk_count": 23,
+			"existing_target_files": [
+				"build/.moduleignore",
+				"build/gulpfile.vscode.ts",
+				"build/lib/extensions.ts",
+				"build/package-lock.json",
+				"build/package.json",
+				"src/vs/platform/extensionManagement/node/extensionSignatureVerificationService.ts"
+			],
+			"source_lines": 403
+		},
+		{
+			"path": "patches/10-version-add-release.patch",
+			"sha256": "a445b748e2a8c6cc587425367f8fe14763ff657828ff513f1102a1b12217b1a4",
+			"bytes": 1625,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/10-version-add-release.patch",
+			"target_files": [
+				"build/gulpfile.vscode.linux.ts",
+				"src/vs/workbench/api/common/extHost.api.impl.ts"
+			],
+			"hunk_count": 4,
+			"existing_target_files": [
+				"build/gulpfile.vscode.linux.ts",
+				"src/vs/workbench/api/common/extHost.api.impl.ts"
+			],
+			"source_lines": 31
+		},
+		{
+			"path": "patches/11-update-use-github-release.patch",
+			"sha256": "f6112fb62dc5514887494b9c78ea63a9a29b3c21e006dc72afcd4952824016b5",
+			"bytes": 31977,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch",
+			"target_files": [
+				"src/vs/platform/update/common/update.ts",
+				"src/vs/platform/update/electron-main/abstractUpdateService.ts",
+				"src/vs/platform/update/electron-main/updateService.darwin.ts",
+				"src/vs/platform/update/electron-main/updateService.linux.ts",
+				"src/vs/platform/update/electron-main/updateService.win32.ts",
+				"src/vs/platform/update/electron-main/win32UpdateType.ts",
+				"src/vs/platform/update/test/electron-main/abstractUpdateService.test.ts"
+			],
+			"hunk_count": 49,
+			"existing_target_files": [],
+			"source_lines": 658
+		},
+		{
+			"path": "patches/12-update-add-cooldown.patch",
+			"sha256": "51ac23aa93894ce46f1aa7deabfd23b7c795c935993ed266e78aaf18aae973f2",
+			"bytes": 3897,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/12-update-add-cooldown.patch",
+			"target_files": [
+				"src/vs/platform/update/common/update.config.contribution.ts",
+				"src/vs/platform/update/electron-main/abstractUpdateService.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts"
+			],
+			"hunk_count": 5,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts"
+			],
+			"source_lines": 82
+		},
+		{
+			"path": "patches/20-keymap-use-custom-lib.patch",
+			"sha256": "77eb73ad85bd983df76472dab41295ad2518406f573eed03b286b8024fe6e3eb",
+			"bytes": 6052,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/20-keymap-use-custom-lib.patch",
+			"target_files": [
+				".npmrc",
+				"build/.moduleignore",
+				"eslint.config.js",
+				"package-lock.json",
+				"package.json",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/keyboardLayout/electron-main/keyboardLayoutMainService.ts"
+			],
+			"hunk_count": 15,
+			"existing_target_files": [
+				".npmrc",
+				"build/.moduleignore",
+				"eslint.config.js",
+				"package-lock.json",
+				"package.json",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/keyboardLayout/electron-main/keyboardLayoutMainService.ts"
+			],
+			"source_lines": 136
+		},
+		{
+			"path": "patches/21-policy-use-custom-lib.patch",
+			"sha256": "fb16511363ee1333ff0852195bf565681ba76c691956e37ce32c4bc8ab53d97e",
+			"bytes": 21469,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/21-policy-use-custom-lib.patch",
+			"target_files": [
+				"build/.moduleignore",
+				"build/lib/policies/basePolicy.ts",
+				"build/lib/policies/render.ts",
+				"eslint.config.js",
+				"package-lock.json",
+				"package.json",
+				"src/vs/base/test/node/uri.perf.data.txt",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/policy/node/nativeManagedSettingsService.ts",
+				"src/vs/platform/policy/node/nativePolicyService.ts",
+				"src/vs/platform/policy/test/node/nativeManagedSettingsService.test.ts"
+			],
+			"hunk_count": 30,
+			"existing_target_files": [
+				"build/.moduleignore",
+				"build/lib/policies/basePolicy.ts",
+				"build/lib/policies/render.ts",
+				"eslint.config.js",
+				"package-lock.json",
+				"package.json",
+				"src/vs/base/test/node/uri.perf.data.txt",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/policy/node/nativePolicyService.ts"
+			],
+			"source_lines": 335
+		},
+		{
+			"path": "patches/22-osproxy-use-custom-lib.patch",
+			"sha256": "1032868c9980657d51abb178b9814c5e460b8e0536c05a1dfedd7b73159f2ff1",
+			"bytes": 32319,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/22-osproxy-use-custom-lib.patch",
+			"target_files": [
+				"build/.moduleignore",
+				"build/darwin/create-universal-app.ts",
+				"build/darwin/verify-macho.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/lib/test/osProxyResolver.test.ts",
+				"package-lock.json",
+				"package.json",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/native/electron-main/nativeHostMainService.ts",
+				"src/vs/workbench/contrib/chat/electron-browser/actions/networkDiagnosticsAction.ts"
+			],
+			"hunk_count": 28,
+			"existing_target_files": [
+				"build/.moduleignore",
+				"build/darwin/create-universal-app.ts",
+				"build/darwin/verify-macho.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/lib/test/osProxyResolver.test.ts",
+				"package-lock.json",
+				"package.json",
+				"src/vs/platform/environment/test/node/nativeModules.integrationTest.ts",
+				"src/vs/platform/native/electron-main/nativeHostMainService.ts"
+			],
+			"source_lines": 594
+		},
+		{
+			"path": "patches/30-build-add-missing-dependencies.patch",
+			"sha256": "d72260710872ac417589a5dd47a3829a598d3e2954f6bcd38931ed47bab7ccac",
+			"bytes": 1523,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/30-build-add-missing-dependencies.patch",
+			"target_files": [
+				"build/package-lock.json",
+				"build/package.json"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"build/package-lock.json",
+				"build/package.json"
+			],
+			"source_lines": 43
+		},
+		{
+			"path": "patches/40-cli-use-reh-archive.patch",
+			"sha256": "9b1ed81416f84222e569304decf7a55d7f215215757df193e87a229c45838675",
+			"bytes": 12098,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/40-cli-use-reh-archive.patch",
+			"target_files": [
+				"cli/src/commands/serve_web.rs",
+				"cli/src/constants.rs",
+				"cli/src/options.rs",
+				"cli/src/tunnels/agent_host.rs",
+				"cli/src/tunnels/code_server.rs",
+				"cli/src/tunnels/paths.rs",
+				"cli/src/update_service.rs",
+				"extensions/tunnel-forwarding/src/extension.ts"
+			],
+			"hunk_count": 23,
+			"existing_target_files": [],
+			"source_lines": 321
+		},
+		{
+			"path": "patches/50-build-improve-gulp-tasks.patch",
+			"sha256": "d5910a798a915a24719bff8feae022ec1a1e77aeb383704b9829259fee07832f",
+			"bytes": 3338,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/50-build-improve-gulp-tasks.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/esbuild.ts"
+			],
+			"hunk_count": 10,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/lib/esbuild.ts"
+			],
+			"source_lines": 77
+		},
+		{
+			"path": "patches/51-build-disable-non-ascii.patch.no",
+			"sha256": "d73924e37c85c27493c09b5b225e8f84285d94e2832784e604d7a0d69edf483a",
+			"bytes": 1091,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/51-build-disable-non-ascii.patch.no",
+			"target_files": [
+				"build/lib/optimize.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 23
+		},
+		{
+			"path": "patches/52-ext-copilot-remove-it.json",
+			"sha256": "d9dd6cab4b43632a16d1231bbf38bc1b1951e89be7c79d4b0dc5e73ddd948671",
+			"bytes": 12755,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/52-ext-copilot-remove-it.json",
+			"target_files": [],
+			"hunk_count": 0,
+			"existing_target_files": [],
+			"source_lines": 184
+		},
+		{
+			"path": "patches/53-ext-copilot-remove-it.patch",
+			"sha256": "fdb4202a0e3d0a19b02f8c430ac9f793f054da435624209fb362f51ebaed8b81",
+			"bytes": 212528,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts",
+				"build/npm/dirs.ts",
+				"build/npm/postinstall.ts",
+				"package-lock.json",
+				"package.json",
+				"remote/package-lock.json",
+				"remote/package.json",
+				"src/vs/platform/agentHost/node/agentHostBootstrap.ts",
+				"src/vs/platform/agentHost/node/agentHostContributions.ts",
+				"src/vs/platform/agentHost/node/agentHostMain.ts",
+				"src/vs/platform/agentHost/node/agentHostServerMain.ts",
+				"src/vs/platform/agentHost/node/agentHostServices.ts",
+				"src/vs/platform/agentHost/node/agentHostSessionTitleController.ts",
+				"src/vs/platform/agentHost/node/agentHostTelemetryReporter.ts",
+				"src/vs/platform/agentHost/node/agentHostTurnTelemetryContext.ts",
+				"src/vs/platform/agentHost/node/agentService.ts",
+				"src/vs/platform/agentHost/node/copilot/prompts/promptRegistry.ts",
+				"src/vs/platform/agentHost/node/copilot/prompts/toolInstructions.ts",
+				"src/vs/platform/agentHost/node/copilot/sessionCustomizationDiscovery.ts",
+				"src/vs/platform/agentHost/node/protocolServerHandler.ts",
+				"src/vs/platform/agentHost/node/shared/copilotApiService.ts",
+				"src/vs/platform/agentHost/test/node/agentHostServices.test.ts",
+				"src/vs/platform/agentHost/test/node/agentServiceTestUtils.ts",
+				"src/vs/platform/agentHost/test/node/mockAgent.ts",
+				"src/vs/platform/agentHost/test/node/protocolServerHandler.test.ts",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"hunk_count": 154,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/npm/dirs.ts",
+				"build/npm/postinstall.ts",
+				"package-lock.json",
+				"package.json",
+				"src/vs/platform/product/common/product.ts"
+			],
+			"source_lines": 4589
+		},
+		{
+			"path": "patches/60-security-add-option-for-malicious-ext.patch",
+			"sha256": "21d01fd845ba8598f1e6c9b6b182036aa10e5eebaba1d4422cc2f0004886ff46",
+			"bytes": 1482,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/60-security-add-option-for-malicious-ext.patch",
+			"target_files": [
+				"src/vs/platform/extensionManagement/common/extensionGalleryService.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"src/vs/platform/extensionManagement/common/extensionGalleryService.ts",
+				"src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts"
+			],
+			"source_lines": 27
+		},
+		{
+			"path": "patches/61-extension-close-connection.patch",
+			"sha256": "2b704345dec03b2d3338409aafba2a736fe0fe564b863c5a9c6b478a8726a6f4",
+			"bytes": 944,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/61-extension-close-connection.patch",
+			"target_files": [
+				"src/vs/platform/extensionManagement/common/extensionGalleryService.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"src/vs/platform/extensionManagement/common/extensionGalleryService.ts"
+			],
+			"source_lines": 20
+		},
+		{
+			"path": "patches/80-ui-disable-onboarding.json",
+			"sha256": "f5c7977ad743cae8a840a3649caa15c5256a9b16f665f068cbbb5a4e89e9cf0f",
+			"bytes": 108,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/80-ui-disable-onboarding.json",
+			"target_files": [],
+			"hunk_count": 0,
+			"existing_target_files": [],
+			"source_lines": 8
+		},
+		{
+			"path": "patches/81-ui-disable-onboarding.patch",
+			"sha256": "371085a05c357d927f8aa435617e651ec3d43be653b43c7603ec64ad992be570",
+			"bytes": 3085,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/81-ui-disable-onboarding.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/startupPage.ts",
+				"src/vs/workbench/workbench.common.main.ts"
+			],
+			"hunk_count": 5,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/welcomeGettingStarted/browser/startupPage.ts",
+				"src/vs/workbench/workbench.common.main.ts"
+			],
+			"source_lines": 67
+		},
+		{
+			"path": "patches/alpine/reh/00-build-docker.patch",
+			"sha256": "d7bdefc9ea0922794901740141435258e06cb72b83ef8280a6f23d0b34960c72",
+			"bytes": 1241,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/alpine/reh/00-build-docker.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 23
+		},
+		{
+			"path": "patches/helper/settings.patch",
+			"sha256": "ae6b5115b569efe9fa5bcbfd9ab421f72b30e96e3f5583dc5f57c1f286113dac",
+			"bytes": 706,
+			"scope": "privacy",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/helper/settings.patch",
+			"target_files": [
+				".vscode/settings.json"
+			],
+			"hunk_count": 3,
+			"existing_target_files": [
+				".vscode/settings.json"
+			],
+			"source_lines": 25
+		},
+		{
+			"path": "patches/insider/19-system-extensions.patch",
+			"sha256": "aed931485e8ecd663b3bc75bedd369b1f24747b1b6cf9b5642b0e27fe7c846ae",
+			"bytes": 896,
+			"scope": "build",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/insider/19-system-extensions.patch",
+			"target_files": [
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"src/vs/workbench/contrib/extensions/browser/extensionsWorkbenchService.ts"
+			],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/linux/00-asset-fix-rpm-version.patch",
+			"sha256": "60752bfdde0f1070fefe906fd48af3a67ee62581cb2d48eeb6a4426373b3fa8d",
+			"bytes": 558,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-asset-fix-rpm-version.patch",
+			"target_files": [
+				"resources/linux/rpm/code.spec.template"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"resources/linux/rpm/code.spec.template"
+			],
+			"source_lines": 14
+		},
+		{
+			"path": "patches/linux/00-build-improve-qemu.patch",
+			"sha256": "f8a96dacfa063a601d580938492f571900812e44ec846a8a9037f0b605b3480e",
+			"bytes": 907,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-build-improve-qemu.patch",
+			"target_files": [
+				"build/npm/postinstall.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"build/npm/postinstall.ts"
+			],
+			"source_lines": 15
+		},
+		{
+			"path": "patches/linux/00-cli-fix-unused.patch",
+			"sha256": "9be9a2d843b9558b676f1d97c3218740e389a3e9444e00e21e18a111a7c50580",
+			"bytes": 1060,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-cli-fix-unused.patch",
+			"target_files": [
+				"cli/src/tunnels/code_server.rs",
+				"cli/src/tunnels/dev_tunnels.rs",
+				"cli/src/update_service.rs"
+			],
+			"hunk_count": 3,
+			"existing_target_files": [],
+			"source_lines": 26
+		},
+		{
+			"path": "patches/linux/00-env-improve-xdg-path.patch",
+			"sha256": "19eaf84fa95ec6f7d7f88aaa651385bb1ec5fb55542abeaee50536fee2e2a60a",
+			"bytes": 1279,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-env-improve-xdg-path.patch",
+			"target_files": [
+				"extensions/git/src/ipc/ipcServer.ts",
+				"src/vs/base/parts/ipc/node/ipc.net.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"extensions/git/src/ipc/ipcServer.ts",
+				"src/vs/base/parts/ipc/node/ipc.net.ts"
+			],
+			"source_lines": 22
+		},
+		{
+			"path": "patches/linux/00-log-use-state-home.patch",
+			"sha256": "78850134d5189b7bb0495a3d20715075fb0f164e31f70332f5d47be923b3edb3",
+			"bytes": 7099,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-log-use-state-home.patch",
+			"target_files": [
+				"src/vs/platform/environment/common/environment.ts",
+				"src/vs/platform/environment/common/environmentService.ts",
+				"src/vs/platform/environment/node/environmentService.ts",
+				"src/vs/platform/environment/node/userStatePath.ts",
+				"src/vs/platform/userDataProfile/test/common/userDataProfileService.test.ts",
+				"src/vs/platform/userDataProfile/test/electron-main/userDataProfileMainService.test.ts",
+				"src/vs/platform/window/common/window.ts",
+				"src/vs/platform/windows/electron-main/windowsMainService.ts",
+				"src/vs/workbench/services/environment/electron-browser/environmentService.ts",
+				"src/vs/workbench/services/workingCopy/test/electron-browser/workingCopyBackupService.test.ts"
+			],
+			"hunk_count": 13,
+			"existing_target_files": [
+				"src/vs/platform/environment/common/environment.ts",
+				"src/vs/platform/environment/common/environmentService.ts",
+				"src/vs/platform/environment/node/environmentService.ts",
+				"src/vs/platform/userDataProfile/test/common/userDataProfileService.test.ts",
+				"src/vs/platform/userDataProfile/test/electron-main/userDataProfileMainService.test.ts",
+				"src/vs/platform/window/common/window.ts",
+				"src/vs/platform/windows/electron-main/windowsMainService.ts",
+				"src/vs/workbench/services/environment/electron-browser/environmentService.ts",
+				"src/vs/workbench/services/workingCopy/test/electron-browser/workingCopyBackupService.test.ts"
+			],
+			"source_lines": 142
+		},
+		{
+			"path": "patches/linux/00-policy-use-custom-path.patch",
+			"sha256": "f7cf427cc48e1d494dd6402a65e45e09fec3b07715e5cf5c9d866a4ef2ed8f32",
+			"bytes": 411,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-policy-use-custom-path.patch",
+			"target_files": [
+				"src/vs/base/common/policy.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"src/vs/base/common/policy.ts"
+			],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/linux/00-terminal-cmd-in-shell.patch",
+			"sha256": "7fa5d0b32dabaa706b4e7156a5f62744566ec3fa6c7f4ec40e1b2e98fac6be5c",
+			"bytes": 823,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/00-terminal-cmd-in-shell.patch",
+			"target_files": [
+				"src/vs/platform/externalTerminal/node/externalTerminalService.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"src/vs/platform/externalTerminal/node/externalTerminalService.ts"
+			],
+			"source_lines": 13
+		},
+		{
+			"path": "patches/linux/31-build-fix-dependencies.patch",
+			"sha256": "83cd7f23677476219e16d53aa085d51cae1c98d920638050232916ec5636f524",
+			"bytes": 31779,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/31-build-fix-dependencies.patch",
+			"target_files": [
+				"build/linux/dependencies-generator.ts",
+				"build/package-lock.json",
+				"build/package.json"
+			],
+			"hunk_count": 77,
+			"existing_target_files": [
+				"build/linux/dependencies-generator.ts",
+				"build/package-lock.json",
+				"build/package.json"
+			],
+			"source_lines": 801
+		},
+		{
+			"path": "patches/linux/41-arch-add-support.patch",
+			"sha256": "d56f88618e7e0736807b4bc3fcf857b8c7fbbfb45acd803243111cad9dec7dc7",
+			"bytes": 6196,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/41-arch-add-support.patch",
+			"target_files": [
+				"build/azure-pipelines/linux/setup-env.sh",
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/electronVersion.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts"
+			],
+			"hunk_count": 9,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/lib/electronVersion.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts"
+			],
+			"source_lines": 114
+		},
+		{
+			"path": "patches/linux/42-arch-add-ppc64le.patch",
+			"sha256": "52173f5f2f8dcbc27c30acc2a85754d12644f3ab85f6856561fc657d7a846e45",
+			"bytes": 16005,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/42-arch-add-ppc64le.patch",
+			"target_files": [
+				"build/azure-pipelines/linux/setup-env.sh",
+				"build/azure-pipelines/linux/verify-glibc-requirements.sh",
+				"build/checksums/vscode-sysroot.txt",
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/copilot.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/dep-lists.ts",
+				"build/linux/rpm/types.ts",
+				"cli/src/update_service.rs",
+				"cli/src/util/prereqs.rs",
+				"resources/server/bin/helpers/check-requirements-linux.sh",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"hunk_count": 29,
+			"existing_target_files": [
+				"build/checksums/vscode-sysroot.txt",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/dep-lists.ts",
+				"build/linux/rpm/types.ts",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"source_lines": 372
+		},
+		{
+			"path": "patches/linux/43-arch-add-riscv64.patch",
+			"sha256": "9de735d93c5843bcddbe5d95994725fe92fd9940fe904998a635b54456d3163e",
+			"bytes": 9104,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/43-arch-add-riscv64.patch",
+			"target_files": [
+				"build/checksums/nodejs.txt",
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/types.ts",
+				"cli/src/update_service.rs",
+				"cli/src/util/prereqs.rs",
+				"resources/server/bin/helpers/check-requirements-linux.sh",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"hunk_count": 24,
+			"existing_target_files": [
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/osProxyResolver.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/types.ts",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"source_lines": 221
+		},
+		{
+			"path": "patches/linux/44-arch-add-loong64.patch",
+			"sha256": "6c7b522238d596c6185fe90a7525a98e2127c48f53c0118ae97b928e6d67514d",
+			"bytes": 5070,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/44-arch-add-loong64.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/osProxyResolver.ts",
+				"cli/src/update_service.rs",
+				"cli/src/util/prereqs.rs",
+				"resources/server/bin/helpers/check-requirements-linux.sh",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"hunk_count": 18,
+			"existing_target_files": [
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/lib/osProxyResolver.ts",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"source_lines": 116
+		},
+		{
+			"path": "patches/linux/45-arch-add-s390x.patch",
+			"sha256": "ac912a25d76746fe82755f8a69a74fdbbe755d1839e78b2c9315c6ebc1524011",
+			"bytes": 12926,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/45-arch-add-s390x.patch",
+			"target_files": [
+				"build/azure-pipelines/linux/setup-env.sh",
+				"build/checksums/vscode-sysroot.txt",
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/dep-lists.ts",
+				"build/linux/rpm/types.ts",
+				"resources/server/bin/helpers/check-requirements-linux.sh",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"hunk_count": 19,
+			"existing_target_files": [
+				"build/checksums/vscode-sysroot.txt",
+				"build/gulpfile.scan.ts",
+				"build/gulpfile.vscode.linux.ts",
+				"build/gulpfile.vscode.ts",
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts",
+				"build/linux/debian/install-sysroot.ts",
+				"build/linux/debian/types.ts",
+				"build/linux/rpm/dep-lists.ts",
+				"build/linux/rpm/types.ts",
+				"src/vs/platform/extensionManagement/common/extensionManagement.ts",
+				"src/vs/platform/extensions/common/extensions.ts"
+			],
+			"source_lines": 304
+		},
+		{
+			"path": "patches/linux/46-arch-add-arm32.patch",
+			"sha256": "2d9a066542960c45380923e367d5d34781d931d4ff6a4baf49490b67d817bee6",
+			"bytes": 311,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-arch-add-arm32.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 8
+		},
+		{
+			"path": "patches/linux/46-deb-use-libasound2t64-compat.patch",
+			"sha256": "7e48436cb7d8c7710d535061519b0db6027ed29433bb1b5e5e5be38ddaee5f35",
+			"bytes": 2121,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/46-deb-use-libasound2t64-compat.patch",
+			"target_files": [
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts"
+			],
+			"hunk_count": 7,
+			"existing_target_files": [
+				"build/linux/debian/calculate-deps.ts",
+				"build/linux/debian/dep-lists.ts"
+			],
+			"source_lines": 43
+		},
+		{
+			"path": "patches/linux/client/00-build-disable-remote.patch",
+			"sha256": "43dc9077532de1eae7ba826fd0e47e83583f920b157c6957275185bf6a448e8a",
+			"bytes": 464,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-build-disable-remote.patch",
+			"target_files": [
+				"build/npm/dirs.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"build/npm/dirs.ts"
+			],
+			"source_lines": 14
+		},
+		{
+			"path": "patches/linux/client/00-system-support-16k-page-size.patch",
+			"sha256": "c4be2f9ef92351bdef118213d625d727af0c147f2586a80843c6d483c6a04e36",
+			"bytes": 740,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/client/00-system-support-16k-page-size.patch",
+			"target_files": [
+				"src/mainImpl.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"src/mainImpl.ts"
+			],
+			"source_lines": 17
+		},
+		{
+			"path": "patches/linux/reh/s390x/00-build-override-dependency.patch",
+			"sha256": "db25c7ba71d1e938d78149ecbdf1917bbb053ce9d12f8a72ecd654c6b86183de",
+			"bytes": 1030,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/linux/reh/s390x/00-build-override-dependency.patch",
+			"target_files": [
+				"package-lock.json",
+				"package.json"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"package-lock.json",
+				"package.json"
+			],
+			"source_lines": 26
+		},
+		{
+			"path": "patches/osx/00-ui-update-emulated-urls.patch",
+			"sha256": "5d52e821fd4cde9f32d2592c9210467f537e2e3352c5042f56e23fc4679d733a",
+			"bytes": 762,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/osx/00-ui-update-emulated-urls.patch",
+			"target_files": [
+				"src/vs/workbench/electron-browser/window.ts"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"src/vs/workbench/electron-browser/window.ts"
+			],
+			"source_lines": 11
+		},
+		{
+			"path": "patches/windows/00-build-min-version-win7.patch",
+			"sha256": "4ac0265f589649d5422733d5c919af7e52bd29fdf0c023eb74213934c83d1875",
+			"bytes": 271,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-build-min-version-win7.patch",
+			"target_files": [
+				"build/win32/code.iss"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [
+				"build/win32/code.iss"
+			],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/windows/00-remote-use-open-ext.patch",
+			"sha256": "8ca0cabe25a6e10495db08680fe24d31bc6aa057d3619426db35bf5920289f2d",
+			"bytes": 3173,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/00-remote-use-open-ext.patch",
+			"target_files": [],
+			"hunk_count": 7,
+			"existing_target_files": [],
+			"source_lines": 73
+		},
+		{
+			"path": "patches/windows/41-cli-fix-update-url.patch",
+			"sha256": "f0a5875a1bdbea1c755053537b68817c93c421ecaa8b8310ab7c162b4beb5aab",
+			"bytes": 320,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/41-cli-fix-update-url.patch",
+			"target_files": [
+				"cli/src/update_service.rs"
+			],
+			"hunk_count": 1,
+			"existing_target_files": [],
+			"source_lines": 9
+		},
+		{
+			"path": "patches/windows/59-build-replace-signature.patch",
+			"sha256": "208c7f923d80575c5b32e09aea61c6efe27a3af4af6a186e8025dad155364cad",
+			"bytes": 7623,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/59-build-replace-signature.patch",
+			"target_files": [
+				"build/gulpfile.reh.ts",
+				"build/gulpfile.vscode.ts",
+				"build/win32/signature.ts"
+			],
+			"hunk_count": 11,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts"
+			],
+			"source_lines": 198
+		},
+		{
+			"path": "patches/windows/70-build-contextmenu-appx.patch",
+			"sha256": "289a771ba499318ef6152530daa7791e3dd83dbce76b172e4d450a979ac9fcab",
+			"bytes": 2228,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/70-build-contextmenu-appx.patch",
+			"target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/gulpfile.vscode.win32.ts",
+				"build/win32/explorer-dll-fetcher.ts"
+			],
+			"hunk_count": 4,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/gulpfile.vscode.win32.ts",
+				"build/win32/explorer-dll-fetcher.ts"
+			],
+			"source_lines": 37
+		},
+		{
+			"path": "patches/windows/71-build-disable-appx.patch",
+			"sha256": "1798f949cca83fc50b92b5d6abba43adda65635142b59c8c82bc34b82d5e67a9",
+			"bytes": 4394,
+			"scope": "platform",
+			"url": "https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/windows/71-build-disable-appx.patch",
+			"target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/gulpfile.vscode.win32.ts"
+			],
+			"hunk_count": 2,
+			"existing_target_files": [
+				"build/gulpfile.vscode.ts",
+				"build/gulpfile.vscode.win32.ts"
+			],
+			"source_lines": 64
+		}
+	]
+}

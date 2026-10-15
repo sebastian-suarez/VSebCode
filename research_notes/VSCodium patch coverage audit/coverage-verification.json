@@ -1,0 +1,26 @@
+{
+	"rows": 76,
+	"uniquePaths": 76,
+	"manifestPaths": 76,
+	"classificationCounts": {
+		"Partial": 11,
+		"Covered": 14,
+		"Missing": 21,
+		"Intentional": 20,
+		"Inapplicable": 9,
+		"Unresolved": 1
+	},
+	"deletionActions": [
+		{
+			"path": "patches/52-ext-copilot-remove-it.json",
+			"targets": 177,
+			"present": []
+		},
+		{
+			"path": "patches/80-ui-disable-onboarding.json",
+			"targets": 1,
+			"present": []
+		}
+	],
+	"schemaAndExactAssignmentChecks": "passed"
+}

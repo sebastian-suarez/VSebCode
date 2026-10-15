@@ -1,0 +1,358 @@
+[
+	{
+		"path": "patches/00-brand-remove-branding.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Rebrands strings across 99 target files: installer status text; built-in extension metadata, descriptions and prompts; editor/workbench configuration, terminal/shell integration, diagnostics, walkthroughs, issue/extension UX; also rewrites developer documentation/comments/test labels. Mixed functional hunks remove the branded dynamic-auth loopback logos, Open Tunnel and Generate New Workspace welcome entries, Copilot setup steps/constants, the generic desktop pickColorTheme step, and the web Settings Sync walkthrough; an AI search tool description changes Marketplace to OpenVSX. VSebCode uses its own product identity, product-service/env.appName substitutions or neutral text for surviving UI; 20 targets are absent after feature removal. Chat, tunnel, Settings Sync, loopback auth, server/web-only and updater effects are covered by broader removal. Developer/test/comment wording and Starting VS Code debug logging intentionally remain. The generic pickColorTheme walkthrough remains, so the whole mixed patch is not literally covered.",
+		"classification": "Partial",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-brand-remove-branding.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-brand-remove-branding.patch#L731-L742",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-brand-remove-branding.patch#L1326-L1446",
+			"/Users/sebastian.suarez/Projects/VSebCode/product.json:2",
+			"/Users/sebastian.suarez/Projects/VSebCode/extensions/css-language-features/package.nls.json:5",
+			"/Users/sebastian.suarez/Projects/VSebCode/extensions/media-preview/src/audioPreview.ts:87",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/common/gettingStartedContent.ts:184",
+			"/Users/sebastian.suarez/Projects/VSebCode/docs/reviews/phase-5-branding-rejected.md:18",
+			"/Users/sebastian.suarez/Projects/VSebCode/docs/reviews/phase-5-branding-rejected.md:32",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:23",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:34"
+		],
+		"gaps": [
+			"The benign Choose your theme walkthrough at gettingStartedContent.ts:198 is a literal VSCodium UI difference, not Microsoft/AI functionality or a privacy leak. Its removal has not been requested. Branding of developer comments/tests/logs is intentionally outside the maintainer strings policy. Icons are separately pending and are not implemented by this text patch."
+		]
+	},
+	{
+		"path": "patches/00-cloud-remove.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Deletes the Cloud Changes sign-in action registration and its Turn on Cloud Changes command/menu implementation, not the full feature. VSebCode deletes the entire editSessions contribution, exceeding the patch’s UI-only removal.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-cloud-remove.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:70",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:173",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/workbench.common.main.ts:1"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-community-add-announcements.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Adds a welcome-page announcements list (at most five entries), built-in announcement injection, cached per-page fetch of announcements-extra.json from the configured GitHub repository (master or insider branch), fallback to built-ins, and a machine-scoped workbench.welcomePage.extraAnnouncements setting defaulting true with usesOnlineServices tag. VSebCode has neither list, setting nor fetch. This adds a community communication feature and a network request; it is not a telemetry-removal patch.",
+		"classification": "Missing",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-community-add-announcements.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-community-add-announcements.patch#L49-L99",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L244-L247",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.ts:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/browser/gettingStarted.contribution.ts:1"
+		],
+		"gaps": [
+			"Optional VSCodium community feature absent; no evidence it is required for VSebCode’s removal goals. Adoption would require a project announcement source and a decision to introduce the feed."
+		]
+	},
+	{
+		"path": "patches/00-copilot-disable-terminal-suggest.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Despite its filename, this patch does not disable terminal suggestions or remove Copilot: it adds codium and codium-insiders CLI completion specs by reusing the upstream code spec and registers both. VSebCode instead has and registers its own vsc completion, reuses option groups, filters --add-mcp/--max-memory/--sync/--telemetry, and offers no removed subcommands. No VSebCode Insiders distribution is defined. The code/code-insiders/code-tunnel specs are intentionally retained as third-party-tool completions.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-disable-terminal-suggest.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/extensions/terminal-suggest/src/completions/vsc.ts:6",
+			"/Users/sebastian.suarez/Projects/VSebCode/extensions/terminal-suggest/src/terminalSuggestMain.ts:23",
+			"/Users/sebastian.suarez/Projects/VSebCode/extensions/terminal-suggest/src/terminalSuggestMain.ts:72",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:53"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-copilot-fix-action-condition.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Defaults chat.disableAIFeatures to true and adds AI-disabled context guards to chat/view/setup/teardown, attach-selection, inline-chat, MCP and SCM generate-commit actions. These are defaults and visibility/enablement gates, not removal. VSebCode removes chat/inline-chat/MCP implementations and their API/service stack; surviving SCM code has no corresponding chat generator. Seven of nine patch targets are deleted. The removal covers these effects without retaining an opt-in AI mode.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-fix-action-condition.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:34",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:68",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/scm/browser/scmInput.ts:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/scm/browser/scm.contribution.ts:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:38"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-copilot-remove-terminal-hint.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Removes the terminal Copilot CLI promotion, sending the copilot command when clicked, related telemetry event and entitlement/telemetry injections; lets the ordinary suggestions hint depend on terminal suggestion enablement alone. VSebCode has the same independent suggestions hint and lacks the promotion and injections.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-copilot-remove-terminal-hint.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminalContrib/inlineHint/browser/terminal.initialHint.contribution.ts:201",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminalContrib/inlineHint/browser/terminal.initialHint.contribution.ts:256"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-ext-github-authentication-use-pat.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Forces GitHub authentication’s supported-client and hosted-GHE checks false, routing away from official OAuth clients toward PAT paths. VSebCode deletes the GitHub authentication extension entirely. The Microsoft/GitHub account surface is removed; this does not mean PAT login was implemented. Generic third-party authentication-provider infrastructure remains by decision.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-authentication-use-pat.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:21",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:183"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-ext-github-remove-vscodedev.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Removes built-in GitHub copy/open vscode.dev commands and menu entries, continue-edit-session contribution, share-provider registration and checkout-on-vscode.dev action. VSebCode deletes the entire GitHub integration extension, covering all four target files.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ext-github-remove-vscodedev.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:22",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:183"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-extension-disable-signature-verification.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Forces verifySignature=false for native gallery downloads, bypassing signature verification rather than removing the proprietary module. VSebCode deliberately uses a narrower adaptation: @vscode/vsce-sign is absent from the root runtime dependencies and root lockfile (build-tool dependencies are a separate scope); failed optional module loading returns undefined; the native install gate accepts undefined without labeling it Success. When verification is enabled in a packaged build, explicit verification failures and unsigned extensions that require repository signatures still fail, with the existing Linux ARMHF exception. Archive/manifest identity validation remains.",
+		"classification": "Intentional",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-extension-disable-signature-verification.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:26",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/node/extensionSignatureVerificationService.ts:69",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/node/extensionManagementService.ts:341",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/node/extensionDownloader.ts:64",
+			"/Users/sebastian.suarez/Projects/VSebCode/package.json:73"
+		],
+		"gaps": [
+			"The unconditional VSCodium verification bypass is deliberately not copied. No missing privacy-removal work is established by the difference."
+		]
+	},
+	{
+		"path": "patches/00-security-add-command-filter.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Adds application-scoped commands.filters with ask/off/on values, default-denies workbench.action.terminal.newLocal, updates its cached filter when configuration changes, rejects off, prompts Yes/No for ask and allows on/unlisted commands through CommandService. Test hunks adapt constructor setup but do not add behavioral filter assertions. VSebCode has no filter setting, cache or prompt; NewLocal is registered and creates a terminal. Existing terminal process creation/relaunch nevertheless calls its workspace-trust gate, which blocks denied local launches unless the explicit allow-in-untrusted-workspace setting/resolver exception applies.",
+		"classification": "Missing",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-security-add-command-filter.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-security-add-command-filter.patch#L15-L103",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/services/commands/common/commandService.ts:52",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminal/electron-browser/terminalRemote.ts:15",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts:1621",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts:1885",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/terminal/browser/terminalInstance.ts:1983"
+		],
+		"gaps": [
+			"Optional command-level allow/deny/ask capability and VSCodium’s default NewLocal denial are absent. This is a hardening/UX choice; static absence does not demonstrate a current remote-code-execution exploit, and it must not be confused with removal of existing workspace-trust checks."
+		]
+	},
+	{
+		"path": "patches/00-settings-gallery.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Adds itemUrl and latestUrlTemplate product fields, allows a custom latest-version URL instead of a serviceUrl-derived URL, and reads six VSCODE_GALLERY_* environment overrides (service/control/item/latest/extension/resource) in the _VSCODE product branch. VSebCode already supports itemUrl and its product deliberately configures Microsoft Marketplace; its newer gallery manifest code still derives the latest URL and has no latestUrlTemplate or those environment overrides. Product sandbox configuration is inherited from the parent branch, not separately patched.",
+		"classification": "Partial",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-gallery.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-gallery.patch#L5-L42",
+			"/Users/sebastian.suarez/Projects/VSebCode/product.json:34",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionGalleryManifestService.ts:12",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionGalleryManifestService.ts:44",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/product/common/product.ts:31",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:18"
+		],
+		"gaps": [
+			"Generic custom latest-endpoint and environment override capabilities are absent. Default OpenVSX switching is intentionally not desired; missing runtime override controls are distinct from that Marketplace choice and are optional customization parity."
+		]
+	},
+	{
+		"path": "patches/00-settings-user-product.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Loads <userDataPath>/product.json from desktop main and CLI into a new global, then recursively merges it into the bundled product in the _VSCODE product branch before development-name/version adjustments; arrays replace arrays. CLI uses getUserDataPath with empty parsed arguments, while desktop uses its resolved userDataPath. VSebCode neither loads this file nor performs the recursive merge. Its existing repository-adjacent product.overrides.json is a shallow Object.assign only under VSCODE_DEV, so it is not equivalent packaged per-user customization.",
+		"classification": "Missing",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-user-product.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-user-product.patch#L24-L35",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-settings-user-product.patch#L50-L108",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/bootstrap-meta.ts:21",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/product/common/product.ts:31",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/cli.ts:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/mainImpl.ts:1"
+		],
+		"gaps": [
+			"Optional packaged per-user product override absent. This is a separate capability from developer product.overrides.json. Identity and gallery changes remain maintainer decisions; no copy of the unrestricted merge is implied."
+		]
+	},
+	{
+		"path": "patches/00-telemetry-disable.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Changes defaults only: telemetry level off, enableTelemetry false, edit statistics false, crash reporting false, experiments false, command-palette natural-language search false, and Settings natural-language search false. VSebCode goes further for telemetry/experiments/edit statistics: sender implementations and settings are deleted, wrappers are no-ops at TelemetryLevel.NONE, and explicit local crash capture has empty submitURL/uploadToServer=false. The Settings search flag remains true, but its provider now performs local TF-IDF ranking without Microsoft search. The command-palette experimental NLP flag remains registered with default true even though the consuming implementation was removed; its type fields remain too.",
+		"classification": "Partial",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-telemetry-disable.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-telemetry-disable.patch#L15-L59",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:257",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/services/telemetry/electron-browser/telemetryService.ts:20",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/mainImpl.ts:506",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/preferences/common/preferencesContribution.ts:112",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/preferences/browser/preferencesSearch.ts:403",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/workbench.contribution.ts:544",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/browser/quickaccess.ts:32",
+			"/Users/sebastian.suarez/Projects/VSebCode/docs/reviews/phase-5-branding-rejected.md:42"
+		],
+		"gaps": [
+			"The command-palette enableNaturalLanguageSearch registration/type is an orphan cleanup gap; the VSCodium false default was not applied, but there is no live Microsoft request implied by the true value. Adjacent askChatLocation and showAskInChat settings are additional orphaned AI UX, recorded in markdown. The local Settings-search true default is not a service leak."
+		]
+	},
+	{
+		"path": "patches/00-tunnel-disable-recommendation.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Returns false from the tunnel recommendation path if product.remoteExtension is absent, preventing a missing extension recommendation configuration from being used. VSebCode deletes the entire remoteTunnel contribution/platform and product tunnel integration, so the recommendation is gone rather than guarded.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-tunnel-disable-recommendation.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:51",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:82",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:178"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/00-ui-report-issue.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Rebrands slow-extension issue/version text, source selectors, external issue-handler wording and issue model/version fields; replaces the Azure duplicate_candidates title/body POST with title-only GitHub issue search in the configured fork repo; changes guidance link to that repo and rebrands outdated-version acknowledgment. VSebCode uses product-derived names and its own reportIssueUrl, public GitHub GET search through IRequestService, and no Azure duplicate service. Both legacy reporter and newer overlay use the shared issue search. Updater acknowledgment and upstream guidance link are removed rather than redirected to an uncreated fork wiki.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/00-ui-report-issue.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/issueFormService.ts:120",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/baseIssueReporterService.ts:861",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/baseIssueReporterService.ts:1001",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/baseIssueReporterService.ts:1104",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/issueReporterOverlay.ts:1100",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/issueReporterModel.ts:101",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/issue/browser/issueReporterPage.ts:10",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/electron-browser/extensionsSlowActions.ts:155",
+			"/Users/sebastian.suarez/Projects/VSebCode/product.json:25"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/11-update-use-github-release.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Replaces Microsoft update-feed construction with VSCodium quality/platform/architecture/target latest.json feeds, semantic/build-version comparison and no automatic checks in manual mode, and marks update requests NO_FETCH_TELEMETRY. macOS first checks release JSON then drives Electron autoUpdater; Linux surfaces available downloads; Windows distinguishes archive, system, user and MSI, uses product-named caches and MSI/msiexec paths alongside installer handling. Adds update platform/architecture/target types and adjusts a test subclass signature. VSebCode deletes all seven target files with the entire updater, settings/feed product fields, installer update protocol and versioned layout. Alternative GitHub self-updating would reintroduce an explicitly removed surface.",
+		"classification": "Intentional",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch#L51-L204",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch#L205-L372",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/11-update-use-github-release.patch#L373-L658",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:58",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:92",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:112",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:31"
+		],
+		"gaps": [
+			"No updater implementation gap under the maintainer’s chosen product scope. Windows installer execution validation remains deferred; Linux and Windows are not validated by this static audit."
+		]
+	},
+	{
+		"path": "patches/52-ext-copilot-remove-it.json",
+		"activation": "Active in every normal prepare_vscode.sh run through patches/*.json, before any top-level textual patch. utils.sh apply_actions removes each listed path and fails when the expected source path is absent.",
+		"effect": "Declarative remove actions delete 177 paths, including the built-in Copilot extension and selected agent-host provider, prompts, tool, telemetry and test implementations. All 177 listed paths are absent in VSebCode. Its broader complete agentHost/chat removal exceeds this selected-file removal list.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/52-ext-copilot-remove-it.json#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:14",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:34",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:98",
+			"/Users/sebastian.suarez/Projects/VSebCode/CLAUDE.md:162"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/53-ext-copilot-remove-it.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Completes the preceding removal list: drops Copilot compile/watch/build/setup lanes, npm directory and .claude symlink; removes Copilot/Anthropic/OpenAI SDKs and their platform/transitive lockfile entries from root/remote manifests; removes runtime package/version validation, prebuild packaging/ripgrep shim, Copilot/agent-SDK/dictation product stamps and runtime copilotVersions fallback. In surviving VSCodium agentHost code it unregisters Claude/Codex/OTel providers/services, disables generated titles and GitHub context enrichment, empties telemetry reporting and turn capture, removes prompt/configuration/customization-discovery machinery, disables OTEL diagnostics handlers/capability, replaces Anthropic SDK-only types in retained CAPI plumbing, and adapts tests/mocks. The diff also rearranges some unchanged ESLint lock entries and retains generic ripgrep/MXC packaging filters; these are not AI reintroductions. VSebCode deletes 21 of 27 target files, including all agentHost and remote packaging; six surviving build/npm/package/product files have none of the removed AI dependencies, lanes or stamps. Generic ripgrep filtering has moved to build/lib/ripgrep.ts; MXC is absent with its own removed surface.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L44-L172",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L1208-L1248",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L1747-L2237",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L2238-L2980",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L2981-L4325",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/53-ext-copilot-remove-it.patch#L4569-L4589",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:28",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:160",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/gulpfile.vscode.ts:189",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/npm/dirs.ts:10",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/npm/postinstall.ts:228",
+			"/Users/sebastian.suarez/Projects/VSebCode/package.json:73",
+			"/Users/sebastian.suarez/Projects/VSebCode/package-lock.json:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/product/common/product.ts:31",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:34"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/60-security-add-option-for-malicious-ext.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Adds machine-scoped extensions.excludeUnsafes defaulting true. Setting it false returns an empty malicious/deprecated/search control manifest before the request, opting out of the control feed. This patch does not introduce malicious-extension protection; the protection already exists. VSebCode keeps fetching its configured Marketplace control manifest and processing malicious/deprecated/search/autoUpdate data, but provides no equivalent opt-out setting.",
+		"classification": "Missing",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/60-security-add-option-for-malicious-ext.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/60-security-add-option-for-malicious-ext.patch#L5-L27",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/platform/extensionManagement/common/extensionGalleryService.ts:1897",
+			"/Users/sebastian.suarez/Projects/VSebCode/product.json:38",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/extensions/browser/extensions.contribution.ts:1"
+		],
+		"gaps": [
+			"Optional control-feed opt-out absent. Do not describe it as missing malicious-extension protection or recommend disabling the feed to improve security. Porting the old return shape would also need the newer autoUpdate field."
+		]
+	},
+	{
+		"path": "patches/80-ui-disable-onboarding.json",
+		"activation": "Active in every normal prepare_vscode.sh run through top-level patches/*.json, before textual patches; deletes welcomeOnboarding before the 81 startup/import cleanup patch.",
+		"effect": "Deletes src/vs/workbench/contrib/welcomeOnboarding. That entire directory is absent in VSebCode; the ordinary welcome/getting-started feature remains separately.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/80-ui-disable-onboarding.json#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:95",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/browser/startupPage.ts:75"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/81-ui-disable-onboarding.patch",
+		"activation": "Active in every normal prepare_vscode.sh run: top-level patches/*.patch loop after top-level JSON removals, before insider, OS and user patches; utils.sh substitutes product/repository placeholders before git apply.",
+		"effect": "Removes onboarding service injection/import and startup tryShowOnboarding short-circuit; drops the welcomeOnboarding contribution import from workbench.common.main. VSebCode likewise has no onboarding call or import, and startup proceeds into ordinary walkthrough/welcome/readme logic. This is distinct from removing all welcome content or themes.",
+		"classification": "Covered",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/81-ui-disable-onboarding.patch#L1",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/browser/startupPage.ts:78",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/contrib/welcomeGettingStarted/browser/startupPage.ts:102",
+			"/Users/sebastian.suarez/Projects/VSebCode/src/vs/workbench/workbench.common.main.ts:1",
+			"/Users/sebastian.suarez/Projects/VSebCode/build/removed-surfaces.txt:95"
+		],
+		"gaps": []
+	},
+	{
+		"path": "patches/helper/settings.patch",
+		"activation": "Development helper only, explicitly invoked with git apply --reject by VSCodium dev patch/merge/update scripts; not selected by the normal nonrecursive prepare_vscode.sh patch loop.",
+		"effect": "Comments out repository workspace settings for TypeScript/JavaScript/Rust format-on-save and trimming whitespace/final newlines so VSCodium patch editing does not reformat patch targets. It changes neither editor product defaults nor user telemetry settings. Normal prepare only globs top-level *.patch; this nested helper is called by dev/patch.sh, dev/update_patches.sh and dev/merge-patches.sh. VSebCode keeps its own development formatting settings and is a source fork rather than this patch-maintenance workspace.",
+		"classification": "Inapplicable",
+		"evidence": [
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/patches/helper/settings.patch#L1",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/prepare_vscode.sh#L156-L160",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/dev/patch.sh#L33-L34",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/dev/update_patches.sh#L95-L98",
+			"https://github.com/VSCodium/vscodium/blob/be70704abf84fc6c7721f94478dfcccd2dc6163e/dev/merge-patches.sh#L28-L30",
+			"/Users/sebastian.suarez/Projects/VSebCode/.vscode/settings.json:14",
+			"/Users/sebastian.suarez/Projects/VSebCode/.vscode/settings.json:21"
+		],
+		"gaps": []
+	}
+]
