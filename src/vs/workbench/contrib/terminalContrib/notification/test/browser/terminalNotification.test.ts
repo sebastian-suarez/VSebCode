@@ -8,10 +8,10 @@ import { deepStrictEqual, strictEqual } from 'assert';
 import { Action } from '../../../../../../base/common/actions.js';
 import { timeout } from '../../../../../../base/common/async.js';
 import { Emitter, Event } from '../../../../../../base/common/event.js';
-import { DisposableTracker, setDisposableTracker, toDisposable } from '../../../../../../base/common/lifecycle.js';
+import { DisposableStore, DisposableTracker, setDisposableTracker, toDisposable } from '../../../../../../base/common/lifecycle.js';
 import { runWithFakedTimers } from '../../../../../../base/test/common/timeTravelScheduler.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../../base/test/common/utils.js';
-import { NotificationPriority, Severity, type INotification, type INotificationActions, type INotificationHandle, type INotificationProgress, type NotificationMessage } from '../../../../../../platform/notification/common/notification.js';
+import { NoOpNotification, NotificationPriority, Severity, type INotification, type INotificationActions, type INotificationHandle, type INotificationProgress, type NotificationMessage } from '../../../../../../platform/notification/common/notification.js';
 import { sanitizeOsc99MessageText, TerminalNotificationHandler, type IOsc99NotificationHost } from '../../browser/terminalNotificationHandler.js';
 
 class TestNotificationProgress implements INotificationProgress {
@@ -21,21 +21,30 @@ class TestNotificationProgress implements INotificationProgress {
 	done(): void { }
 }
 
+/**
+ * Closes like the production notification view item, which only fires `onDidClose`, so the actions
+ * stay owned by the handler; unlike it, the handle keeps its emitter after closing, so that a close
+ * listener left subscribed stays countable.
+ */
 class TestNotificationHandle implements INotificationHandle {
 	private readonly _onDidClose = new Emitter<void>();
 	/**
-	 * The close listeners currently subscribed; the production notification view item only fires
-	 * `onDidClose` and disposes its own emitters when it closes, so the actions stay owned by the
-	 * handler
+	 * The close listeners currently subscribed
 	 */
 	closeListeners = 0;
 	readonly onDidClose: Event<void> = (listener, thisArgs?, disposables?) => {
 		this.closeListeners++;
-		const subscription = this._onDidClose.event(listener, thisArgs, disposables);
-		return toDisposable(() => {
+		const subscription = this._onDidClose.event(listener, thisArgs);
+		const counted = toDisposable(() => {
 			this.closeListeners--;
 			subscription.dispose();
 		});
+		if (disposables instanceof DisposableStore) {
+			disposables.add(counted);
+		} else if (Array.isArray(disposables)) {
+			disposables.push(counted);
+		}
+		return counted;
 	};
 	readonly onDidChangeVisibility = Event.None;
 	readonly progress = new TestNotificationProgress();
@@ -432,8 +441,10 @@ suite('Terminal OSC 99 notifications', () => {
 		}, { closed: true, writes: ['\x1b]99;i=first:p=close;\x1b\\'], focusCalls: 0 });
 	});
 
-	test('caps the buttons of a notification', async () => {
-		handler.handleSequence('i=btn:a=report:p=buttons;' + Array.from({ length: 20 }, (_, i) => `b${i}`).join('\u2028'));
+	test('caps the buttons of a notification and reports their payload positions', async () => {
+		// Empty labels make no buttons, so the eighth button is the tenth label
+		const labels = Array.from({ length: 20 }, (_, i) => i === 0 || i === 2 ? '' : `b${i}`);
+		handler.handleSequence('i=btn:a=report:p=buttons;' + labels.join('\u2028'));
 		handler.handleSequence('i=btn;Many buttons');
 		const actions = host.notifications[0].actions;
 		await actions?.primary?.[7].run();
@@ -441,8 +452,60 @@ suite('Terminal OSC 99 notifications', () => {
 			labels: actions?.primary?.map(action => action.label),
 			writes: host.writes,
 		}, {
-			labels: ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7'],
-			writes: ['\x1b]99;i=btn;8\x1b\\'],
+			labels: ['b1', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'b9'],
+			writes: ['\x1b]99;i=btn;10\x1b\\'],
+		});
+	});
+
+	test('forgets a notification the user closed, so that it does not count toward the cap', () => {
+		for (let i = 0; i < 100; i++) {
+			handler.handleSequence(`i=k${i}:p=title;Keyed ${i}`);
+		}
+		host.notifications[50].close();
+		handler.handleSequence('i=k100:p=title;Keyed 100');
+		handler.handleSequence('i=q:p=alive;');
+		deepStrictEqual({
+			closed: host.notifications.map((notification, i) => notification.closed ? `k${i}` : undefined).filter(id => id !== undefined),
+			alive: host.writes[host.writes.length - 1],
+		}, {
+			closed: ['k50'],
+			alive: '\x1b]99;i=q:p=alive;' + Array.from({ length: 101 }, (_, i) => `k${i}`).filter(id => id !== 'k50').join(',') + '\x1b\\',
+		});
+	});
+
+	test('releases evicted notifications whose close neither fires nor succeeds and still reports them', () => {
+		class ThrowingCloseNotification extends NoOpNotification {
+			constructor(private readonly _onClose: () => void) {
+				super();
+			}
+			override close(): void {
+				this._onClose();
+				throw new Error('closing failed');
+			}
+		}
+		const failing = new class extends TestOsc99Host {
+			closeCalls = 0;
+			private _shown = 0;
+			override notify(_notification: INotification): INotificationHandle {
+				// The first ten handles throw on close, the others never fire onDidClose
+				return this._shown++ < 10 ? new ThrowingCloseNotification(() => this.closeCalls++) : new NoOpNotification();
+			}
+		}();
+		const failingHandler = store.add(new TerminalNotificationHandler(failing));
+		for (let i = 0; i < 150; i++) {
+			failingHandler.handleSequence(`i=k${i}:c=1:p=title;Keyed ${i}`);
+		}
+		failingHandler.handleSequence('i=q:p=alive;');
+		deepStrictEqual({
+			closeCalls: failing.closeCalls,
+			warnings: failing.logMessages.length,
+			closeReports: failing.writes.slice(0, -1),
+			alive: failing.writes[failing.writes.length - 1],
+		}, {
+			closeCalls: 10,
+			warnings: 10,
+			closeReports: Array.from({ length: 50 }, (_, i) => `\x1b]99;i=k${i}:p=close;\x1b\\`),
+			alive: '\x1b]99;i=q:p=alive;' + Array.from({ length: 100 }, (_, i) => `k${i + 50}`).join(',') + '\x1b\\',
 		});
 	});
 
@@ -478,7 +541,6 @@ suite('Terminal OSC 99 notification ownership', () => {
 		const tracker = new DisposableTracker();
 		setDisposableTracker(tracker);
 		try {
-			const liveBeforeHandler = tracker.getTrackedDisposables().length;
 			const handler = new TerminalNotificationHandler(host);
 			const liveWithHandler = tracker.getTrackedDisposables().length;
 			for (let i = 0; i < 200; i++) {
@@ -499,7 +561,7 @@ suite('Terminal OSC 99 notification ownership', () => {
 				shown: host.notifications.length,
 				liveAfterCycles: liveAfterCycles.length - liveWithHandler,
 				liveActionsAfterCycles: liveAfterCycles.filter(disposable => disposable instanceof Action).length,
-				liveAfterDispose: tracker.getTrackedDisposables().length - liveBeforeHandler,
+				liveAfterDispose: tracker.getTrackedDisposables().length,
 				leaks: tracker.computeLeakingDisposables()?.leaks.length ?? 0,
 			}, { shown: 400, liveAfterCycles: 0, liveActionsAfterCycles: 0, liveAfterDispose: 0, leaks: 0 });
 		} finally {

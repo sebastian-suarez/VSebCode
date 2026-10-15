@@ -7,6 +7,7 @@
 import { Action, IAction } from '../../../../../base/common/actions.js';
 import { disposableTimeout } from '../../../../../base/common/async.js';
 import { decodeBase64 } from '../../../../../base/common/buffer.js';
+import { getErrorMessage } from '../../../../../base/common/errors.js';
 import { Disposable, DisposableStore, MutableDisposable, type IDisposable } from '../../../../../base/common/lifecycle.js';
 import { isHighSurrogate } from '../../../../../base/common/strings.js';
 import { localize } from '../../../../../nls.js';
@@ -139,6 +140,9 @@ interface IOsc99ActiveNotification {
 	 * The actions currently shown; an update replaces them and disposes the previous ones
 	 */
 	readonly actionStore: MutableDisposable<DisposableStore>;
+	/**
+	 * The auto-close timer, if requested; an update replaces it
+	 */
 	readonly autoClose: MutableDisposable<IDisposable>;
 	reportOnActivate: boolean;
 	reportOnClose: boolean;
@@ -523,7 +527,6 @@ export class TerminalNotificationHandler extends Disposable {
 
 		this._evictOsc99NotificationsForNew();
 
-		const store = new DisposableStore();
 		const handle = this._host.notify({
 			id: state.id ? `terminal.osc99.${state.id}` : undefined,
 			severity,
@@ -532,6 +535,7 @@ export class TerminalNotificationHandler extends Disposable {
 			actions,
 			priority
 		});
+		const store = new DisposableStore();
 		const active: IOsc99ActiveNotification = {
 			id: state.id,
 			handle,
@@ -567,8 +571,9 @@ export class TerminalNotificationHandler extends Disposable {
 
 	/**
 	 * Closes the oldest active notifications until another one fits under the cap. The close
-	 * listener of each one sends its close report, if requested, and releases it; a handle that
-	 * does not fire synchronously is released here.
+	 * listener of each one sends its close report, if requested, and releases it; for a handle that
+	 * does not fire `onDidClose` synchronously, or whose `close` throws, the report and the release
+	 * happen here, so that every iteration shrinks the active notifications.
 	 */
 	private _evictOsc99NotificationsForNew(): void {
 		while (this._osc99ActiveNotifications.size >= MAX_OSC99_ACTIVE_NOTIFICATIONS) {
@@ -577,8 +582,18 @@ export class TerminalNotificationHandler extends Disposable {
 				break;
 			}
 			oldest.closeReason = 'evicted';
-			oldest.handle.close();
-			this._releaseOsc99Notification(oldest);
+			try {
+				oldest.handle.close();
+			} catch (error) {
+				this._host.logWarn(`Failed to close an evicted OSC 99 notification: ${getErrorMessage(error)}`);
+			}
+			if (this._osc99ActiveNotifications.has(oldest)) {
+				// The close listener did not run
+				if (oldest.reportOnClose) {
+					this._sendOsc99CloseReport(oldest.id);
+				}
+				this._releaseOsc99Notification(oldest);
+			}
 		}
 	}
 
