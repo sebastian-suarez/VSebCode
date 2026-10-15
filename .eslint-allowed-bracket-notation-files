@@ -17,7 +17,6 @@
 # Build, CI, and scripts (48 files)
 build/darwin/create-dmg.ts
 build/darwin/create-universal-app.ts
-build/darwin/sign-server.ts
 build/darwin/sign.ts
 build/darwin/verify-macho.ts
 build/gulpfile.vscode.linux.ts
