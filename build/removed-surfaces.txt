@@ -24,6 +24,9 @@ extensions/mermaid-markdown-features/preview-src/chat/
 extensions/microsoft-authentication/
 extensions/prompt-basics/
 extensions/tunnel-forwarding/
+extensions/vscode-test-resolver/
+remote/
+resources/server/
 resources/win32/versioned/
 scripts/chat-simulation/
 scripts/mock-policy-server/
@@ -52,6 +55,7 @@ src/vs/platform/telemetry/test/browser/
 src/vs/platform/update/
 src/vs/platform/userDataSync/
 src/vs/platform/webContentExtractor/
+src/vs/server/
 src/vs/sessions/
 src/vs/workbench/contrib/agentsVoice/
 src/vs/workbench/contrib/bracketPairColorizer2Telemetry/
@@ -192,6 +196,12 @@ scripts/code-web.js
 scripts/code-web.sh
 scripts/generate-definitelytyped.sh
 scripts/sync-agent-host-protocol.ts
+scripts/test-remote-integration.bat
+scripts/test-remote-integration.sh
+src/bootstrap-import.ts
+src/bootstrap-server.ts
+src/server-cli.ts
+src/server-main.ts
 src/typings/copilot-api.d.ts
 src/vs/base/common/defaultAccount.ts
 src/vs/base/common/managedSettings.ts
@@ -249,12 +259,6 @@ src/vs/platform/telemetry/test/common/telemetryLogAppender.test.ts
 src/vs/platform/windows/electron-main/agentsWindow.ts
 src/vs/platform/windows/test/electron-main/agentsWindow.test.ts
 src/vs/platform/workspace/common/editSessions.ts
-src/vs/server/node/agentHostChannel.ts
-src/vs/server/node/server.cliAgent.ts
-src/vs/server/node/serverAgentHostManager.ts
-src/vs/server/test/node/agentHostChannel.test.ts
-src/vs/server/test/node/server.cliAgent.test.ts
-src/vs/server/test/node/serverAgentHostManager.test.ts
 src/vs/workbench/api/browser/mainThreadAgentEditorComments.ts
 src/vs/workbench/api/browser/mainThreadAiEmbeddingVector.ts
 src/vs/workbench/api/browser/mainThreadAiRelatedInformation.ts
