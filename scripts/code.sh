@@ -7,10 +7,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	ROOT=$(dirname "$(dirname "$(realpath "$0")")")
 else
 	ROOT=$(dirname "$(dirname "$(readlink -f $0)")")
-	# If the script is running in Docker using the WSL2 engine, powershell.exe won't exist
-	if grep -qi Microsoft /proc/version && type powershell.exe > /dev/null 2>&1; then
-		IN_WSL=true
-	fi
 fi
 
 function code() {
@@ -52,35 +48,7 @@ function code() {
 	exec "$CODE" . $DISABLE_TEST_EXTENSION "$@"
 }
 
-function code-wsl()
-{
-	HOST_IP=$(echo "" | powershell.exe -noprofile -Command "& {(Get-NetIPAddress | Where-Object {\$_.InterfaceAlias -like '*WSL*' -and \$_.AddressFamily -eq 'IPv4'}).IPAddress | Write-Host -NoNewline}")
-	export DISPLAY="$HOST_IP:0"
-
-	# in a wsl shell
-	local NAME=$(node -p "require('$ROOT/product.json').nameShort")
-	ELECTRON="$ROOT/.build/electron/$NAME.exe"
-	if [ -f "$ELECTRON"  ]; then
-		local CWD=$(pwd)
-		cd $ROOT
-		export WSLENV=ELECTRON_RUN_AS_NODE/w:VSCODE_DEV/w:$WSLENV
-		local WSL_EXT_ID="ms-vscode-remote.remote-wsl"
-		local WSL_EXT_WLOC=$(echo "" | VSCODE_DEV=1 ELECTRON_RUN_AS_NODE=1 "$ELECTRON" "out/cli.js" --locate-extension $WSL_EXT_ID)
-		cd $CWD
-		if [ -n "$WSL_EXT_WLOC" ]; then
-			# replace \r\n with \n in WSL_EXT_WLOC
-			local WSL_CODE=$(wslpath -u "${WSL_EXT_WLOC%%[[:cntrl:]]}")/scripts/wslCode-dev.sh
-			$WSL_CODE "$ROOT" "$@"
-			exit $?
-		else
-			echo "Remote WSL not installed, trying to run $NAME in WSL."
-		fi
-	fi
-}
-
-if [ "$IN_WSL" == "true" ] && [ -z "$DISPLAY" ]; then
-	code-wsl "$@"
-elif [ -f /mnt/wslg/versions.txt ]; then
+if [ -f /mnt/wslg/versions.txt ]; then
 	code --disable-gpu "$@"
 elif [ -f /.dockerenv ] || { [[ "$OSTYPE" == "linux"* ]] && [ -n "${GITHUB_ENVIRONMENT_ID:-}" ]; }; then
 	# Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=1263267
