@@ -4,15 +4,13 @@ Language server host for typescript using vscode's sync-api in the browser.
 
 ## Getting up and running
 
-To test this out, you'll need three shells:
+From the repository root, install dependencies with `npm install`, then keep `npm run watch-web` running to build the browser extensions. Start a desktop development window in another shell:
 
-1. `npm i` for vscode itself
-2. `npm run watch-web` for the web side
-3. `node <root>/scripts/code-web.js --coi`
+```sh
+./scripts/code.sh --enable-coi --extensionDevelopmentPath="$PWD/extensions/typescript-language-features" --extensionDevelopmentKind=web
+```
 
-The last command will open a browser window. You'll want to add `?vscode-coi=`
-to the end. This is for enabling shared array buffers. So, for example:
-`http://localhost:8080/?vscode-coi=`.
+This runs the extension's browser entry in the desktop web worker host. Cross-origin isolation enables shared array buffers for the language server.
 
 ### Working on type acquisition
 

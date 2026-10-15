@@ -16,7 +16,6 @@ The `src/vs/` core is partitioned into ordered layers — each may only import f
 3. **`editor`** — Monaco Editor core (no `node` or `electron-*` dependencies)
 4. **`workbench`** — Full VS Code workbench, panels, views, and framework
 5. **`code`** — Desktop app entry point (Electron main, shared process, CLI)
-6. **`server`** — Server app entry point for remote development
 
 ## Target Environments
 
@@ -51,7 +50,8 @@ Only code referenced from entry point files is loaded:
 
 - `workbench.common.main.ts` — shared dependencies
 - `workbench.desktop.main.ts` — desktop-only
-- `workbench.web.main.ts` — web-only
+
+The desktop also starts a web worker extension host for browser extensions. Shared `browser` modules and the browser unit-test runner remain part of the desktop development environment.
 
 ## Dependency Injection
 

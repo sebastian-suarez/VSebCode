@@ -76,7 +76,7 @@ Rules:
 - Product fields: `serverApplicationName`, `serverDataFolderName`, `serverLicense`, `serverLicensePrompt`, `serverLicenseUrl`, `serverGreeting`, `serverDocumentationUrl`, `webUrl`, `webEndpointUrlTemplate`, `webviewContentExternalBaseUrlTemplate` and `webExtensionTips` leave `product.json` and `IProductConfiguration` (an identity change the maintainer approved with option C); the surviving readers keep their desktop branch.
 - Every deleted folder or file is listed in `build/removed-surfaces.txt`; the old `src/vs/server/node/*` agent host entries become covered by the `src/vs/server/` folder entry.
 
-Confirm first (ask):
+Scope confirmed for execution on 2026-10-15: option C includes the server-dependent test resolver, its remote test modes, the Remote - WSL server handoff and the standalone server Node component (E-1, E-2 and E-4). The maintainer separately confirmed the recommended area F cleanup (E-3). The options below preserve the original scope discussion.
 
 - E-1. Delete `extensions/vscode-test-resolver` and `scripts/test-remote-integration.*` together with the smoke harness's `--remote` mode: the resolver starts `scripts/code-server.*` or downloads a server, so it cannot run without one. Recommendation: delete.
 - E-2. `resources/win32/bin/code.sh` hands WSL invocations to Microsoft's closed Remote - WSL extension, which installs a server matching the client commit; `scripts/code.sh` has a `code-wsl` development path and `build/gulpfile.vscode.ts` fills `@@SERVERDATAFOLDER@@` for it. Recommendation: remove the branch, the development path and the placeholder, and keep the launcher's fallback, which opens the Windows application from WSL; verified statically, like the installer.

@@ -9,6 +9,7 @@ VSebCode is a fork of Code - OSS, the open-source repository (`microsoft/vscode`
 - Self-update. VSebCode does not check for or install updates.
 - Settings Sync and Cloud Changes.
 - Remote Tunnels and the Rust CLI, with its `tunnel` and `serve-web` commands.
+- The remote server and the standalone web editor. This fork ships the desktop application.
 - The Microsoft and GitHub account providers and the built-in `github` extension.
 - Microsoft's repository tooling: the GitHub workflows and the Azure Pipelines and 1ES build configuration.
 
@@ -19,7 +20,7 @@ VSebCode is a fork of Code - OSS, the open-source repository (`microsoft/vscode`
 - The authentication API, so extensions can still provide accounts.
 - The inline completion API, so extensions can still show inline suggestions.
 - The Integrated Browser.
-- The remote server and the web build.
+- Browser extensions in the desktop web worker extension host.
 
 Help links in the user interface still open the upstream documentation, which describes the features VSebCode keeps.
 
@@ -33,7 +34,7 @@ npm run compile-client
 ./scripts/code.sh
 ```
 
-`npm install` also installs the dependencies of `build/`, `remote/` and the built-in extensions. `npm run compile-client` compiles the editor and the built-in extensions. `./scripts/code.sh` starts VSebCode from the sources; it downloads Electron and the built-in extensions listed in `product.json` when they are missing. Run the unit tests with `./scripts/test.sh`. On Windows, use `scripts\code.bat` and `scripts\test.bat`.
+`npm install` also installs the dependencies of `build/` and the built-in extensions. `npm run compile-client` compiles the editor and the built-in extensions. `./scripts/code.sh` starts VSebCode from the sources; it downloads Electron and the built-in extensions listed in `product.json` when they are missing. Run the unit tests with `./scripts/test.sh`. On Windows, use `scripts\code.bat` and `scripts\test.bat`.
 
 To build a packaged application, run the packaging task for your platform, for example `npm run gulp vscode-darwin-arm64` or `npm run gulp vscode-linux-x64`.
 

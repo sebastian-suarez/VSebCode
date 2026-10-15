@@ -18,11 +18,8 @@ To test changes:
 # Test transpile
 node build/next/index.ts transpile --out out-test
 
-# Test bundle (server-web target to test the auth fix)
-node build/next/index.ts bundle --nls --target server-web --out out-vscode-reh-web-test
-
-# Verify product config was injected
-grep -l "serverLicense" out-vscode-reh-web-test/vs/code/browser/workbench/workbench.js
+# Test the desktop bundle
+node build/next/index.ts bundle --nls --target desktop --out out-desktop-test
 ```
 
 ---
@@ -65,7 +62,7 @@ In [build/gulpfile.vscode.ts](../../build/gulpfile.vscode.ts), the `core-ci` tas
 - `runEsbuildTranspile()` → transpile command
 - `runEsbuildBundle()` → bundle command
 
-Desktop, server, server-web, and standalone web packaging use the same `runEsbuildBundle()` helper. Minified bundles enable `--minify --mangle-privates --nls`. Local server and web builds generate API proposal names and the shared build date explicitly instead of compiling an intermediate production tree.
+Desktop packaging uses `runEsbuildBundle()`. Minified bundles enable `--minify --mangle-privates --nls`. The server and standalone web targets have been removed. `compile-web` still builds browser extensions for the desktop web worker host.
 
 The canonical production entry points and product/built-in-extension injection live in [build/next/index.ts](../../build/next/index.ts); curated resource lists and copied-script minification live in [resources.ts](../../build/next/resources.ts). Build targets and bootstrap entry points are shared with packaging through [build/lib/esbuild.ts](../../build/lib/esbuild.ts), so package metadata is injected into the same files the bundler emits. Gulp still orchestrates compilation, extension builds, packaging, and translations; there is no separate legacy production bundle/minify chain.
 
@@ -79,7 +76,7 @@ Do not remove shared tooling based on its age:
 
 [bundle.ts](../../build/next/bundle.ts) holds the shared ESM options for normal entries (`neutral`) and Node bootstraps (`node`). Both compile TypeScript source directly with esbuild, which emits, scopes, and minifies the helpers each input needs. Their JS and CSS banners contain only the Microsoft copyright comment; do not append executable `tslib` to them. Esbuild does not parse banner text, so it cannot tree-shake it, minify it, or protect it from name/export collisions.
 
-- Desktop, server, server-web, and web entries do not consume the old banner's helpers or initialization. The public workbench embedder exports are defined in their source entry points, not in tslib. Removing the banner intentionally removes its accidental 32 helper exports and default export, not any source-defined API.
+- Desktop entries do not consume the old banner's helpers or initialization. Source-defined exports remain in their entry modules.
 - Explicit tslib imports still follow normal bundler resolution: package imports remain external, while explicitly bundled helpers can be tree-shaken. Already-generated JavaScript retains its own helper definitions.
 - Non-minified bundles also omit the redundant library but retain readable esbuild-generated helpers. Development transpilation and standalone CommonJS preloads do not use the removed banner.
 - The removed compiled-JavaScript pipeline stripped TypeScript boilerplate and replaced it with a tslib banner. Direct-from-TypeScript bundles instead use esbuild's scoped, tree-shaken helpers.
@@ -93,7 +90,7 @@ node --test build/next/test/bundle.test.ts build/next/test/nls-sourcemap.test.ts
 
 ### Production SVG Optimization
 
-`bundle --minify` finishes every `.svg` file in the completed output tree through `optimizeSvgFiles()`. This runs after esbuild output writes, curated resource copying, standalone compilation, and additional web bundles, but before the bundle command resolves and downstream packaging computes checksums/integrity. Desktop, server-web, and standalone web share this stage; server outputs with no SVGs are a no-op.
+`bundle --minify` finishes every `.svg` file in the completed output tree through `optimizeSvgFiles()`. This runs after esbuild output writes, curated resource copying, standalone compilation, and additional web bundles, but before the bundle command resolves and downstream packaging computes checksums/integrity. Desktop packaging uses this stage.
 
 - The stage and its direct `svgo` / `@types/svgo` dependencies belong to the new build tooling. It does not import the legacy optimizer, gulp, or the gulp facade.
 - SVGO is pinned to **2.8.3**, matching the legacy `gulp-svgmin` dependency. Use its single-pass `preset-default`, not a newly upgraded optimizer or a discovered external config.
@@ -105,7 +102,7 @@ Focused validation (no client compilation required):
 
 ```bash
 node --test build/next/test/svg.test.ts build/next/test/transpile.test.ts
-node build/next/index.ts bundle --minify --nls --target server-web --out out-svg-test
+node build/next/index.ts bundle --minify --nls --target desktop --out out-svg-test
 ```
 
 The `[svg]` build log reports actual input/output byte counts. These are uncompressed asset-size savings, not a startup or latency measurement. When changing the optimizer configuration, also compare representative rendered icons, themed illustrations, and animations.
@@ -122,44 +119,9 @@ The `[svg]` build log reports actual input/output byte counts. These are uncompr
 
 **Why post-processing doesn't work:** By the time we post-process the bundled output, the comment placeholder has already been stripped.
 
-### 2. Authorization Error: "Unauthorized client refused"
+### Product Metadata and Desktop Entry Points
 
-**Root cause:** Missing product configuration in browser bundle.
-
-**Flow:**
-1. Browser loads with empty product config (placeholder was stripped)
-2. `productService.serverLicense` is empty/undefined
-3. Browser's `SignService.vsda()` can't decrypt vsda WASM (needs serverLicense as key)
-4. Browser's `sign()` returns original challenge instead of signed value
-5. Server validates signature → fails
-6. Server is in built mode (no `VSCODE_DEV`) → rejects connection
-
-**Fix:** The `fileContentMapperPlugin` now runs during `onLoad`, replacing placeholders before esbuild strips them.
-
-### 3. Build-Time Placeholders
-
-Two placeholders that need injection:
-
-| Placeholder | Location | Purpose |
-|-------------|----------|---------|
-| `/*BUILD->INSERT_PRODUCT_CONFIGURATION*/` | `src/vs/platform/product/common/product.ts` | Product config (commit, version, serverLicense, etc.) |
-| `/*BUILD->INSERT_BUILTIN_EXTENSIONS*/` | `src/vs/workbench/services/extensionManagement/browser/builtinExtensionsScannerService.ts` | List of built-in extensions |
-
-### 4. Server-web Target Specifics
-
-- Removes `webEndpointUrlTemplate` from product config in `fileContentMapperPlugin()`
-- Uses `.build/extensions` for builtin extensions (not `.build/web/extensions`)
-- Bundles the browser shell `vs/code/browser/workbench/workbench`, which statically imports the web workbench. Do not also emit `vs/workbench/workbench.web.main.internal` as a separate server-web entry; standalone `web` still needs that entry.
-
-### 5. Entry Point Parity with Old Build
-
-**Problem:** The desktop target had `keyboardMapEntryPoints` as separate esbuild entry points, producing `layout.contribution.darwin.js`, `layout.contribution.linux.js`, and `layout.contribution.win.js` as standalone files in the output.
-
-**Root cause:** In the old build (`gulpfile.vscode.ts`), `vscodeEntryPoints` does NOT include `buildfile.keyboardMaps`. These files are only separate entry points for server-web (`gulpfile.reh.ts`) and web (`gulpfile.vscode.web.ts`). For desktop, they're imported as dependencies of `workbench.desktop.main` and get bundled into it.
-
-**Fix:** Removed `...keyboardMapEntryPoints` from the `desktop` case in `getEntryPointsForTarget()`. Keep for `server-web` and `web`.
-
-**Lesson:** Keep target-specific entry points in `getEntryPointsForTarget()` in [build/next/index.ts](../../build/next/index.ts). Desktop keyboard layouts are bundled dependencies, not additional entry points.
+Product metadata is injected before esbuild removes placeholder comments. The desktop entry points include the browser workers and Electron process bootstraps; browser keyboard layout defaults are bundled dependencies. There is no standalone hosted-workbench entry or built-in web-extension injection.
 
 ### 6. NLS Output File Parity
 
@@ -167,13 +129,13 @@ Two placeholders that need injection:
 
 ### Translated Message Cache Identity
 
-Desktop, server, and server-web packaging compute `nlsMetadataHash` from the commit, ordered NLS keys, and default messages, and stamp it into the product configuration. Native bootstrap and remote language-pack resolution pass this identity to `resolveNLSConfiguration()`, so a cached localized startup does not read or hash the NLS tables. Products without the new field retain the legacy commit-based cache path. Different target tables get separate caches; identical tables at the same commit reuse one cache.
+Desktop packaging computes `nlsMetadataHash` from the commit, ordered NLS keys, and default messages, and stamp it into the product configuration. Native bootstrap passes this identity to `resolveNLSConfiguration()`, so a cached localized startup does not read or hash the NLS tables. Products without the new field retain the legacy commit-based cache path. Different target tables get separate caches; identical tables at the same commit reuse one cache.
 
 ### 7. Resource Copying: Transpile vs Bundle
 
 **Problem:** The new build used curated, specific resource pattern lists (e.g., `desktopResourcePatterns`) for **both** transpile/dev and production/bundle builds. Team members kept discovering missing resources because every new non-TS file in `src/` required manually adding its pattern.
 
-**Root cause:** The old gulp build uses `gulp.src('src/**')` for dev/transpile — a catch-all glob that streams **every file** in `src/`. Non-TS files bypass the compiler via `tsFilter` + `tsFilter.restore` and land in `out/` untouched. This is inherently complete. The old build only uses curated resource lists for **production packaging** (`vscodeResourceIncludes`, `serverResourceIncludes` in the gulpfiles).
+**Root cause:** The old gulp build uses `gulp.src('src/**')` for dev/transpile — a catch-all glob that streams **every file** in `src/`. Non-TS files bypass the compiler via `tsFilter` + `tsFilter.restore` and land in `out/` untouched. This is inherently complete. The old build only uses curated resource lists for **production packaging** (`vscodeResourceIncludes` in the desktop gulpfile).
 
 **Fix:**
 - **Transpile/dev path** (`transpile` command, `--watch` mode): Now uses `copyAllNonTsFiles()` which copies ALL non-TS files from `src/` to the output, matching old `gulp.src('src/**')` behavior. No curated patterns needed.
@@ -187,7 +149,7 @@ Desktop, server, and server-web packaging compute `nlsMetadataHash` from the com
 
 [resources.ts](../../build/next/resources.ts) owns the per-target resource patterns. `bundle --minify` minifies each selected JavaScript resource while copying it from `src/`; it does not traverse or re-minify bundled/generated outputs. Without `--minify`, copying remains byte-for-byte. Transpile, watch, and incremental development builds still use the separate unmodified copy path.
 
-The current JavaScript inventory is `vs/workbench/contrib/webview/browser/pre/service-worker.js` for desktop, server-web, and standalone web; server-only selects no JavaScript resources. The processing policy applies to JavaScript resources, not that filename, so additional scripts selected by the resource patterns receive the same handling.
+The current JavaScript inventory is `vs/workbench/contrib/webview/browser/pre/service-worker.js` for desktop. The processing policy applies to JavaScript resources, not that filename, so additional scripts selected by the resource patterns receive the same handling.
 
 - Minification does not bundle, wrap, force an output module format, or tree-shake the scripts. A resolver bypasses the repository's `package.json` module-type inference, so classic globals/top-level `this` and CommonJS contexts are preserved; explicit ESM imports/exports remain ESM.
 - Legal comments and ordinary leading copyright/license headers are retained.
@@ -220,26 +182,18 @@ This repairs production debugging/source publication, not startup performance.
 
 ---
 
-## Testing the Fix
+## Testing the Desktop Package
 
 ```bash
-# Build server-web with new system
-node build/next/index.ts bundle --nls --target server-web --out out-vscode-reh-web-min
-
-# Package it (uses gulp task)
-npm run gulp vscode-reh-web-darwin-arm64-min
-
-# Run server
-./vscode-server-darwin-arm64-web/bin/code-server-oss --connection-token dev-token
-
-# Open browser - should connect without "Unauthorized client refused"
+node build/next/index.ts bundle --nls --target desktop --out out-desktop-test
+npm run gulp vscode-darwin-arm64
 ```
 
----
+Also run `npm run compile-web` and start a browser extension using `--extensionDevelopmentKind=web` to verify the desktop worker host.
 
 ## Production Build Responsibilities
 
-1. **`BUILD_INSERT_PACKAGE_CONFIGURATION`** - Server bootstrap files ([bootstrap-meta.ts](../../src/bootstrap-meta.ts)) have this marker for package.json injection. It is handled by [inlineMeta.ts](../../build/lib/inlineMeta.ts) during packaging.
+1. **`BUILD_INSERT_PACKAGE_CONFIGURATION`** - Native bootstrap files ([bootstrap-meta.ts](../../src/bootstrap-meta.ts)) have this marker for package.json injection. It is handled by [inlineMeta.ts](../../build/lib/inlineMeta.ts) during packaging.
 
 2. **Mangling** - TypeScript private/protected-name mangling is intentionally retired. Esbuild still minifies bundle-local identifiers. `--mangle-privates` and [private-to-property.ts](../../build/next/private-to-property.ts) lower native `#private` fields, except in extension-host bundles; they are not the removed TypeScript-to-TypeScript pass.
 
@@ -277,11 +231,11 @@ The following measurements and action items describe the initial migration, not 
 |----------|-------|-------------|
 | **CSS files** | 291 | `copyCssFiles()` copies ALL `.css` from `src/` to the output. The old bundler inlines CSS into the main `.css` bundle (e.g., `workbench.desktop.main.css`) and never ships individual CSS files. These individual files ARE needed at runtime because the new ESM system uses `import './foo.css'` resolved by an import map. |
 | **Vendor JS files** | 3 | `dompurify.js`, `marked.js`, `semver.js` — listed in `commonResourcePatterns`. The old bundler inlines these into the main bundle. The new system keeps them as separate files because they're plain JS (not TS). They're needed. |
-| **Web workbench bundle** | 1 | `vs/code/browser/workbench/workbench.js` (15.4 MB). This is the web workbench entry point bundle. It should NOT be in a desktop build — the old build explicitly excludes `out-build/vs/code/browser/**`. The `desktopResourcePatterns` in index.ts includes `vs/code/browser/workbench/*.html` and `callback.html` which is correct, but the actual bundle gets written by the esbuild desktop bundle step because the desktop entry points include web entry points. |
+| **Web workbench bundle** | 1 | `vs/code/browser/workbench/workbench.js` (15.4 MB). This is the web workbench entry point bundle. It should NOT be in a desktop build — the old build explicitly excludes `out-build/vs/code/browser/**`. This measurement predates the removal of the standalone web editor. |
 | **Web workbench internal** | 1 | `vs/workbench/workbench.web.main.internal.js` (15.4 MB). Similar: shouldn't ship in a desktop build. It's output by the esbuild bundler. |
 | **Keyboard layout contributions** | 3 | `layout.contribution.{darwin,linux,win}.js` — the old bundler inlines these into the main bundle. These are new separate files from the esbuild bundler. |
 | **NLS files** | 2 | `nls.messages.js` (new) and `nls.metadata.json` (new). The old build has `nls.messages.json` and `nls.keys.json` but not a `.js` version or metadata. The `.js` version is produced by the NLS plugin. |
-| **HTML files** | 2 | `vs/code/browser/workbench/workbench.html` and `callback.html` — correctly listed in `desktopResourcePatterns` (these are needed for desktop's built-in web server). |
+| **HTML files (historical)** | 2 | The hosted-workbench HTML files were removed in phase 7. |
 | **SVG loading spinners** | 3 | `loading-dark.svg`, `loading-hc.svg`, `loading.svg` in `vs/workbench/contrib/extensions/browser/media/`. The old build only copies `theme-icon.png` and `language-icon.svg` from that folder; the new build's `desktopResourcePatterns` uses `*.svg` which is broader. |
 | **codicon.ttf (duplicate)** | 1 | At `vs/base/browser/ui/codicons/codicon/codicon.ttf`. The old build copies this to `out/media/codicon.ttf` only. The new build has BOTH: the copy in `out/media/` (from esbuild's `file` loader) AND the original path (from `commonResourcePatterns`). Duplicate. |
 | **PSReadLine.psm1** | 1 | `vs/workbench/contrib/terminal/common/scripts/psreadline/PSReadLine.psm1` — the old build uses `*.psm1` in `terminal/common/scripts/` (non-recursive?). The new build uses `**/*.psm1` (recursive), picking up this subdirectory file. Check if it's needed. |
