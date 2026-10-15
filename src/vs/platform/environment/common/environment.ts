@@ -81,7 +81,6 @@ export interface IEnvironmentService {
 	// --- telemetry/exp
 	disableTelemetry: boolean;
 	disableExperiments: boolean;
-	serviceMachineIdResource: URI;
 
 	// --- Policy
 	policyFile?: URI;

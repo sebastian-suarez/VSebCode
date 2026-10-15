@@ -164,7 +164,6 @@ class StandaloneEnvironmentService implements IEnvironmentService {
 	readonly verbose: boolean = false;
 	readonly isBuilt: boolean = false;
 	readonly disableTelemetry: boolean = false;
-	readonly serviceMachineIdResource: URI = URI.from({ scheme: 'monaco', authority: 'serviceMachineIdResource' });
 	readonly policyFile?: URI | undefined = undefined;
 }
 

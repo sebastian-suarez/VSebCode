@@ -548,7 +548,6 @@ export const TestEnvironmentService: IBrowserWorkbenchEnvironmentService & { arg
 	stateResource: joinPath(testUserRoamingDataHome, 'State', 'storage.json'),
 	keyboardLayoutResource: joinPath(testUserRoamingDataHome, 'keyboardLayout.json'),
 	untitledWorkspacesHome: joinPath(testUserRoamingDataHome, 'Workspaces'),
-	serviceMachineIdResource: joinPath(testUserRoamingDataHome, 'machineid'),
 	logsHome: testLogsHome,
 	windowLogsPath: testLogsHome,
 	logFile: joinPath(testLogsHome, 'window.log'),
