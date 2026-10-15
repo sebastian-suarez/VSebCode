@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -34,12 +35,6 @@ export interface IUpdateRequest {
 export interface IStorageItemsChangeEvent {
 	readonly changed?: Map<string, string>;
 	readonly deleted?: Set<string>;
-}
-
-export function isStorageItemsChangeEvent(thing: unknown): thing is IStorageItemsChangeEvent {
-	const candidate = thing as IStorageItemsChangeEvent | undefined;
-
-	return candidate?.changed instanceof Map || candidate?.deleted instanceof Set;
 }
 
 export interface IStorageDatabase {

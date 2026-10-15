@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -11,7 +12,6 @@ import { IStateReadService, IStateService } from '../../state/node/state.js';
 import { IUriIdentityService } from '../../uriIdentity/common/uriIdentity.js';
 import { IUserDataProfilesService, UserDataProfilesService as BaseUserDataProfilesService, StoredUserDataProfile, StoredProfileAssociations } from '../common/userDataProfile.js';
 import { isString } from '../../../base/common/types.js';
-import { SaveStrategy, StateService } from '../../state/node/stateService.js';
 
 type StoredUserDataProfileState = StoredUserDataProfile & { location: URI | string };
 
@@ -72,22 +72,4 @@ export class UserDataProfilesService extends UserDataProfilesReadonlyService imp
 			this.stateService.removeItem(UserDataProfilesService.PROFILE_ASSOCIATIONS_KEY);
 		}
 	}
-}
-
-export class ServerUserDataProfilesService extends UserDataProfilesService implements IUserDataProfilesService {
-
-	constructor(
-		@IUriIdentityService uriIdentityService: IUriIdentityService,
-		@INativeEnvironmentService environmentService: INativeEnvironmentService,
-		@IFileService fileService: IFileService,
-		@ILogService logService: ILogService,
-	) {
-		super(new StateService(SaveStrategy.IMMEDIATE, environmentService, logService, fileService), uriIdentityService, environmentService, fileService, logService);
-	}
-
-	override async init(): Promise<void> {
-		await (this.stateService as StateService).init();
-		return super.init();
-	}
-
 }

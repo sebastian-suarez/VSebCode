@@ -13,17 +13,13 @@ import { SyncDescriptor } from '../../../../platform/instantiation/common/descri
 import { Registry } from '../../../../platform/registry/common/platform.js';
 import { IWorkbenchContribution, WorkbenchPhase, registerWorkbenchContribution2 } from '../../../common/contributions.js';
 import { SignOutOfAccountAction } from './actions/signOutOfAccountAction.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../../services/environment/browser/environmentService.js';
 import { Extensions, IExtensionFeatureTableRenderer, IExtensionFeaturesRegistry, IRenderedData, IRowData, ITableData } from '../../../services/extensionManagement/common/extensionFeatures.js';
 import { ManageTrustedExtensionsForAccountAction } from './actions/manageTrustedExtensionsForAccountAction.js';
 import { ManageAccountPreferencesForExtensionAction } from './actions/manageAccountPreferencesForExtensionAction.js';
 import { IAuthenticationUsageService } from '../../../services/authentication/browser/authenticationUsageService.js';
 import { ManageAccountsAction } from './actions/manageAccountsAction.js';
 
-const codeExchangeProxyCommand = CommandsRegistry.registerCommand('workbench.getCodeExchangeProxyEndpoints', function (accessor, _) {
-	const environmentService = accessor.get(IBrowserWorkbenchEnvironmentService);
-	return environmentService.options?.codeExchangeProxyEndpoints;
-});
+const codeExchangeProxyCommand = CommandsRegistry.registerCommand('workbench.getCodeExchangeProxyEndpoints', () => undefined);
 
 class AuthenticationDataRenderer extends Disposable implements IExtensionFeatureTableRenderer {
 

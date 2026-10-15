@@ -42,7 +42,6 @@ import { DidChangeUserDataProfileEvent, IUserDataProfileService } from '../../us
 import { IPolicyService, NullPolicyService } from '../../../../platform/policy/common/policy.js';
 import { IUserDataProfile, IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { IJSONEditingService } from '../common/jsonEditing.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../environment/browser/environmentService.js';
 import { workbenchConfigurationNodeBase } from '../../../common/configuration.js';
 import { mainWindow } from '../../../../base/browser/window.js';
 import { runWhenWindowIdle } from '../../../../base/browser/dom.js';
@@ -110,7 +109,6 @@ export class WorkspaceService extends Disposable implements IWorkbenchConfigurat
 
 	constructor(
 		{ remoteAuthority, configurationCache }: { remoteAuthority?: string; configurationCache: IConfigurationCache },
-		environmentService: IBrowserWorkbenchEnvironmentService,
 		private readonly userDataProfileService: IUserDataProfileService,
 		private readonly userDataProfilesService: IUserDataProfilesService,
 		private readonly fileService: IFileService,
@@ -125,7 +123,7 @@ export class WorkspaceService extends Disposable implements IWorkbenchConfigurat
 
 		this.initRemoteUserConfigurationBarrier = new Barrier();
 		this.completeWorkspaceBarrier = new Barrier();
-		this.defaultConfiguration = this._register(new DefaultConfiguration(userDataProfileService.currentProfile.id, configurationCache, environmentService, logService));
+		this.defaultConfiguration = this._register(new DefaultConfiguration(userDataProfileService.currentProfile.id, configurationCache, logService));
 		this.policyConfiguration = policyService instanceof NullPolicyService ? new NullPolicyConfiguration() : this._register(new PolicyConfiguration(this.defaultConfiguration, policyService, logService));
 		this.configurationCache = configurationCache;
 		this._configuration = new Configuration(this.defaultConfiguration.configurationModel, this.policyConfiguration.configurationModel, ConfigurationModel.createEmptyModel(logService), ConfigurationModel.createEmptyModel(logService), ConfigurationModel.createEmptyModel(logService), ConfigurationModel.createEmptyModel(logService), new ResourceMap(), ConfigurationModel.createEmptyModel(logService), new ResourceMap<ConfigurationModel>(), this.workspace, logService);

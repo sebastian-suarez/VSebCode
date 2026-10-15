@@ -14,7 +14,6 @@ import { IProductService } from '../../../../platform/product/common/productServ
 import { ISecretStorageService } from '../../../../platform/secrets/common/secrets.js';
 import { IAuthenticationAccessService } from './authenticationAccessService.js';
 import { AuthenticationProviderInformation, AuthenticationSession, AuthenticationSessionAccount, AuthenticationSessionsChangeEvent, IAuthenticationCreateSessionOptions, IAuthenticationGetSessionsOptions, IAuthenticationProvider, IAuthenticationService, IAuthenticationWwwAuthenticateRequest, isAuthenticationWwwAuthenticateRequest } from '../common/authentication.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../environment/browser/environmentService.js';
 import { ActivationKind, IExtensionService } from '../../extensions/common/extensions.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { IJSONSchema } from '../../../../base/common/jsonSchema.js';
@@ -106,7 +105,6 @@ export class AuthenticationService extends Disposable implements IAuthentication
 	constructor(
 		@IExtensionService private readonly _extensionService: IExtensionService,
 		@IAuthenticationAccessService authenticationAccessService: IAuthenticationAccessService,
-		@IBrowserWorkbenchEnvironmentService private readonly _environmentService: IBrowserWorkbenchEnvironmentService,
 		@ILogService private readonly _logService: ILogService
 	) {
 		super();
@@ -125,23 +123,12 @@ export class AuthenticationService extends Disposable implements IAuthentication
 			});
 		}));
 
-		this._registerEnvContributedAuthenticationProviders();
 		this._registerAuthenticationExtensionPointHandler();
 	}
 
 	private _declaredProviders: AuthenticationProviderInformation[] = [];
 	get declaredProviders(): AuthenticationProviderInformation[] {
 		return this._declaredProviders;
-	}
-
-	private _registerEnvContributedAuthenticationProviders(): void {
-		if (!this._environmentService.options?.authenticationProviders?.length) {
-			return;
-		}
-		for (const provider of this._environmentService.options.authenticationProviders) {
-			this.registerDeclaredAuthenticationProvider(provider);
-			this.registerAuthenticationProvider(provider.id, provider);
-		}
 	}
 
 	private _registerAuthenticationExtensionPointHandler(): void {

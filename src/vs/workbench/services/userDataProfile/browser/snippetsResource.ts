@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -16,7 +17,7 @@ import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uri
 import { IUserDataProfile, ProfileResourceType } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { API_OPEN_EDITOR_COMMAND_ID } from '../../../browser/parts/editor/editorCommands.js';
 import { ITreeItemCheckboxState, TreeItemCollapsibleState } from '../../../common/views.js';
-import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceInitializer, IProfileResourceTreeItem, IUserDataProfileService } from '../common/userDataProfile.js';
+import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceTreeItem } from '../common/userDataProfile.js';
 
 interface ISnippetsContent {
 	snippets: IStringDictionary<string>;
@@ -36,29 +37,6 @@ function toSnippetResource(extUri: IExtUri, snippetsHome: URI, key: string): URI
 		return undefined;
 	}
 	return resource;
-}
-
-export class SnippetsResourceInitializer implements IProfileResourceInitializer {
-
-	constructor(
-		@IUserDataProfileService private readonly userDataProfileService: IUserDataProfileService,
-		@IFileService private readonly fileService: IFileService,
-		@IUriIdentityService private readonly uriIdentityService: IUriIdentityService,
-		@ILogService private readonly logService: ILogService,
-	) {
-	}
-
-	async initialize(content: string): Promise<void> {
-		const snippetsContent: ISnippetsContent = JSON.parse(content);
-		for (const key in snippetsContent.snippets) {
-			const resource = toSnippetResource(this.uriIdentityService.extUri, this.userDataProfileService.currentProfile.snippetsHome, key);
-			if (!resource) {
-				this.logService.warn(`SnippetsResourceInitializer: Ignoring snippet with key '${key}' as it escapes the snippets folder.`);
-				continue;
-			}
-			await this.fileService.writeFile(resource, VSBuffer.fromString(snippetsContent.snippets[key]));
-		}
-	}
 }
 
 export class SnippetsResource implements IProfileResource {

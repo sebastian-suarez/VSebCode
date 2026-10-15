@@ -15,7 +15,7 @@ import { ConfigurationEditingErrorCode } from '../../common/configurationEditing
 import { IFileService } from '../../../../../platform/files/common/files.js';
 import { IWorkspaceContextService, WorkbenchState, IWorkspaceFoldersChangeEvent, ISingleFolderWorkspaceIdentifier, IWorkspaceIdentifier } from '../../../../../platform/workspace/common/workspace.js';
 import { ConfigurationTarget, IConfigurationService, IConfigurationChangeEvent } from '../../../../../platform/configuration/common/configuration.js';
-import { workbenchInstantiationService, RemoteFileSystemProvider, TestEnvironmentService, TestTextFileService } from '../../../../test/browser/workbenchTestServices.js';
+import { workbenchInstantiationService, RemoteFileSystemProvider, TestEnvironmentService, TestRemoteAgentService, TestTextFileService } from '../../../../test/browser/workbenchTestServices.js';
 import { TestInstantiationService } from '../../../../../platform/instantiation/test/common/instantiationServiceMock.js';
 import { ITextFileService } from '../../../textfile/common/textfiles.js';
 import { ITextModelService } from '../../../../../editor/common/services/resolverService.js';
@@ -30,7 +30,6 @@ import { FileService } from '../../../../../platform/files/common/fileService.js
 import { NullLogService } from '../../../../../platform/log/common/log.js';
 import { IRemoteAgentEnvironment } from '../../../../../platform/remote/common/remoteAgentEnvironment.js';
 import { APPLY_ALL_PROFILES_SETTING, IConfigurationCache } from '../../common/configuration.js';
-import { SignService } from '../../../../../platform/sign/browser/signService.js';
 import { FileUserDataProvider } from '../../../../../platform/userData/common/fileUserDataProvider.js';
 import { IKeybindingEditingService, KeybindingsEditingService } from '../../../keybinding/common/keybindingEditing.js';
 import { IWorkbenchEnvironmentService } from '../../../environment/common/environmentService.js';
@@ -39,11 +38,8 @@ import { VSBuffer } from '../../../../../base/common/buffer.js';
 import { Event } from '../../../../../base/common/event.js';
 import { UriIdentityService } from '../../../../../platform/uriIdentity/common/uriIdentityService.js';
 import { InMemoryFileSystemProvider } from '../../../../../platform/files/common/inMemoryFilesystemProvider.js';
-import { BrowserWorkbenchEnvironmentService, IBrowserWorkbenchEnvironmentService } from '../../../environment/browser/environmentService.js';
-import { RemoteAgentService } from '../../../remote/browser/remoteAgentService.js';
-import { RemoteAuthorityResolverService } from '../../../../../platform/remote/browser/remoteAuthorityResolverService.js';
+import { IBrowserWorkbenchEnvironmentService } from '../../../environment/browser/environmentService.js';
 import { hash } from '../../../../../base/common/hash.js';
-import { TestProductService } from '../../../../test/common/workbenchTestServices.js';
 import { IUserDataProfilesService, toUserDataProfile, UserDataProfilesService } from '../../../../../platform/userDataProfile/common/userDataProfile.js';
 import { NullPolicyService } from '../../../../../platform/policy/common/policy.js';
 import { FilePolicyService } from '../../../../../platform/policy/common/filePolicyService.js';
@@ -51,7 +47,6 @@ import { runWithFakedTimers } from '../../../../../base/test/common/timeTravelSc
 import { UserDataProfileService } from '../../../userDataProfile/common/userDataProfileService.js';
 import { IUserDataProfileService } from '../../../userDataProfile/common/userDataProfile.js';
 import { TasksSchemaProperties } from '../../../../contrib/tasks/common/tasks.js';
-import { RemoteSocketFactoryService } from '../../../../../platform/remote/common/remoteSocketFactoryService.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
 import { PolicyCategory } from '../../../../../base/common/policy.js';
 
@@ -94,17 +89,10 @@ suite('WorkspaceContextService - Folder', () => {
 		const userDataProfileService = disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile));
 		testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			userDataProfileService,
 			userDataProfilesService,
 			fileService,
-			disposables.add(new RemoteAgentService(
-				new RemoteSocketFactoryService(),
-				userDataProfileService,
-				environmentService,
-				TestProductService,
-				disposables.add(new RemoteAuthorityResolverService(false, undefined, undefined, undefined, TestProductService, logService)),
-				new SignService(TestProductService), new NullLogService())),
+			new TestRemoteAgentService(),
 			uriIdentityService,
 			new NullLogService(),
 			new NullPolicyService()));
@@ -150,11 +138,10 @@ suite('WorkspaceContextService - Folder', () => {
 		const userDataProfileService = disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile));
 		const testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			userDataProfileService,
 			userDataProfilesService,
 			fileService,
-			disposables.add(new RemoteAgentService(new RemoteSocketFactoryService(), userDataProfileService, environmentService, TestProductService, disposables.add(new RemoteAuthorityResolverService(false, undefined, undefined, undefined, TestProductService, logService)), new SignService(TestProductService), new NullLogService())),
+			new TestRemoteAgentService(),
 			uriIdentityService,
 			new NullLogService(),
 			new NullPolicyService()));
@@ -182,11 +169,10 @@ suite('WorkspaceContextService - Folder', () => {
 		const userDataProfileService = disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile));
 		const testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			userDataProfileService,
 			userDataProfilesService,
 			fileService,
-			disposables.add(new RemoteAgentService(new RemoteSocketFactoryService(), userDataProfileService, environmentService, TestProductService, disposables.add(new RemoteAuthorityResolverService(false, undefined, undefined, undefined, TestProductService, logService)), new SignService(TestProductService), new NullLogService())),
+			new TestRemoteAgentService(),
 			uriIdentityService,
 			new NullLogService(),
 			new NullPolicyService()));
@@ -232,14 +218,13 @@ suite('WorkspaceContextService - Workspace', () => {
 
 		const instantiationService = workbenchInstantiationService(undefined, disposables);
 		const environmentService = TestEnvironmentService;
-		const remoteAgentService = disposables.add(disposables.add(instantiationService.createInstance(RemoteAgentService)));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)),
 			userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
 
@@ -294,14 +279,13 @@ suite('WorkspaceContextService - Workspace Editing', () => {
 
 		const instantiationService = workbenchInstantiationService(undefined, disposables);
 		const environmentService = TestEnvironmentService;
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)),
 			userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
 
@@ -500,7 +484,7 @@ suite('WorkspaceContextService - Workspace Editing', () => {
 
 suite('WorkspaceService - Initialization', () => {
 
-	let configResource: URI, testObject: WorkspaceService, fileService: IFileService, environmentService: BrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
+	let configResource: URI, testObject: WorkspaceService, fileService: IFileService, environmentService: IBrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
 	const configurationRegistry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration);
 	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
 
@@ -542,7 +526,7 @@ suite('WorkspaceService - Initialization', () => {
 
 		const instantiationService = workbenchInstantiationService(undefined, disposables);
 		environmentService = TestEnvironmentService;
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
@@ -550,7 +534,6 @@ suite('WorkspaceService - Initialization', () => {
 		userDataProfileService = instantiationService.stub(IUserDataProfileService, disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)));
 		testObject = disposables.add(new WorkspaceService(
 			{ configurationCache: new ConfigurationCache() },
-			environmentService,
 			userDataProfileService,
 			userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
 		instantiationService.stub(IFileService, fileService);
@@ -822,15 +805,14 @@ suite('WorkspaceConfigurationService - Folder', () => {
 		instantiationService = workbenchInstantiationService(undefined, disposables);
 		environmentService = TestEnvironmentService;
 		environmentService.policyFile = joinPath(folder, 'policies.json');
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		userDataProfileService = instantiationService.stub(IUserDataProfileService, disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)));
 		workspaceService = testObject = disposables.add(new WorkspaceService(
-			{ configurationCache: new ConfigurationCache() },
-			environmentService, userDataProfileService, userDataProfilesService,
+			{ configurationCache: new ConfigurationCache() }, userDataProfileService, userDataProfilesService,
 			fileService, remoteAgentService, uriIdentityService, new NullLogService(),
 			disposables.add(new FilePolicyService(environmentService.policyFile, fileService, logService))));
 		instantiationService.stub(IFileService, fileService);
@@ -1739,15 +1721,14 @@ suite('WorkspaceConfigurationService - Profiles', () => {
 		instantiationService = workbenchInstantiationService(undefined, disposables);
 		environmentService = TestEnvironmentService;
 		environmentService.policyFile = joinPath(folder, 'policies.json');
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		userDataProfileService = instantiationService.stub(IUserDataProfileService, disposables.add(new UserDataProfileService(toUserDataProfile('custom', 'custom', joinPath(environmentService.userRoamingDataHome, 'profiles', 'temp'), joinPath(environmentService.cacheHome, 'profilesCache')))));
 		workspaceService = testObject = disposables.add(new WorkspaceService(
-			{ configurationCache: new ConfigurationCache() },
-			environmentService, userDataProfileService, userDataProfilesService,
+			{ configurationCache: new ConfigurationCache() }, userDataProfileService, userDataProfilesService,
 			fileService, remoteAgentService, uriIdentityService, new NullLogService(),
 			disposables.add(new FilePolicyService(environmentService.policyFile, fileService, logService))));
 		instantiationService.stub(IFileService, fileService);
@@ -2033,7 +2014,7 @@ suite('WorkspaceConfigurationService - Profiles', () => {
 
 suite('WorkspaceConfigurationService-Multiroot', () => {
 
-	let workspaceContextService: IWorkspaceContextService, jsonEditingServce: IJSONEditingService, testObject: WorkspaceService, fileService: IFileService, environmentService: BrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
+	let workspaceContextService: IWorkspaceContextService, jsonEditingServce: IJSONEditingService, testObject: WorkspaceService, fileService: IFileService, environmentService: IBrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
 	const configurationRegistry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration);
 	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
 
@@ -2106,15 +2087,14 @@ suite('WorkspaceConfigurationService-Multiroot', () => {
 
 		const instantiationService = workbenchInstantiationService(undefined, disposables);
 		environmentService = TestEnvironmentService;
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		userDataProfileService = instantiationService.stub(IUserDataProfileService, disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)));
 		const workspaceService = disposables.add(new WorkspaceService(
-			{ configurationCache: new ConfigurationCache() },
-			environmentService, userDataProfileService, userDataProfilesService,
+			{ configurationCache: new ConfigurationCache() }, userDataProfileService, userDataProfilesService,
 			fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
 
 		instantiationService.stub(IFileService, fileService);
@@ -2798,7 +2778,7 @@ suite('WorkspaceConfigurationService - Remote Folder', () => {
 
 	let testObject: WorkspaceService, folder: URI,
 		machineSettingsResource: URI, remoteSettingsResource: URI, fileSystemProvider: InMemoryFileSystemProvider, resolveRemoteEnvironment: () => void,
-		instantiationService: TestInstantiationService, fileService: IFileService, environmentService: BrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
+		instantiationService: TestInstantiationService, fileService: IFileService, environmentService: IBrowserWorkbenchEnvironmentService, userDataProfileService: IUserDataProfileService;
 	const remoteAuthority = 'configuraiton-tests';
 	const configurationRegistry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration);
 	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
@@ -2859,7 +2839,7 @@ suite('WorkspaceConfigurationService - Remote Folder', () => {
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, new NullLogService()))));
 		userDataProfileService = instantiationService.stub(IUserDataProfileService, disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile)));
-		testObject = disposables.add(new WorkspaceService({ configurationCache, remoteAuthority }, environmentService, userDataProfileService, userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
+		testObject = disposables.add(new WorkspaceService({ configurationCache, remoteAuthority }, userDataProfileService, userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), new NullPolicyService()));
 		instantiationService.stub(IWorkspaceContextService, testObject);
 		instantiationService.stub(IConfigurationService, testObject);
 		instantiationService.stub(IEnvironmentService, environmentService);

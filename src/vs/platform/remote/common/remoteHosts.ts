@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -53,14 +54,6 @@ export function parseAuthorityWithPort(authority: string): { host: string; port:
 	const { host, port } = parseAuthority(authority);
 	if (typeof port === 'undefined') {
 		throw new Error(`Invalid remote authority: ${authority}. It must either be a remote of form <remoteName>+<arg> or a remote host of form <host>:<port>.`);
-	}
-	return { host, port };
-}
-
-export function parseAuthorityWithOptionalPort(authority: string, defaultPort: number): { host: string; port: number } {
-	let { host, port } = parseAuthority(authority);
-	if (typeof port === 'undefined') {
-		port = defaultPort;
 	}
 	return { host, port };
 }

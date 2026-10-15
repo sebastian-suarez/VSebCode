@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -74,38 +75,4 @@ export interface IRecordingService {
 	 * where this isn't applicable.
 	 */
 	openScreenCapturePermissionSettings(): void;
-}
-
-/**
- * Browser fallback — recording not available in web.
- */
-export class BrowserRecordingService implements IRecordingService {
-	readonly _serviceBrand: undefined;
-	readonly isSupported = false;
-	readonly state = RecordingState.Idle;
-	readonly onDidChangeState = Event.None;
-
-	getSupportedFormats(): { mimeType: string; label: string; extension: string }[] {
-		return [];
-	}
-
-	async startRecording(_mimeType?: string): Promise<void> {
-		throw new Error('Recording is not supported in web browsers.');
-	}
-
-	async stopRecording(): Promise<IRecordingData | undefined> {
-		return undefined;
-	}
-
-	discardRecording(): void {
-		// No-op
-	}
-
-	async getScreenCapturePermissionStatus(): Promise<'granted'> {
-		return 'granted';
-	}
-
-	openScreenCapturePermissionSettings(): void {
-		// No-op
-	}
 }

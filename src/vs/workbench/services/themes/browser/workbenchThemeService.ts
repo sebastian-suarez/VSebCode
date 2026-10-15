@@ -158,12 +158,6 @@ export class WorkbenchThemeService extends Disposable implements IWorkbenchTheme
 
 		const defaultColorMap = colorThemeSetting === ThemeSettingDefaults.COLOR_THEME_LIGHT ? COLOR_THEME_LIGHT_INITIAL_COLORS : colorThemeSetting === ThemeSettingDefaults.COLOR_THEME_DARK ? COLOR_THEME_DARK_INITIAL_COLORS : undefined;
 		if (!themeData) {
-			const initialColorTheme = environmentService.options?.initialColorTheme;
-			if (initialColorTheme) {
-				themeData = ColorThemeData.createUnloadedThemeForThemeType(initialColorTheme.themeType, initialColorTheme.colors ?? defaultColorMap);
-			}
-		}
-		if (!themeData) {
 			const colorScheme = this.settings.getPreferredColorScheme() ?? (isWeb ? ColorScheme.LIGHT : ColorScheme.DARK);
 			themeData = ColorThemeData.createUnloadedThemeForThemeType(colorScheme, defaultColorMap);
 		}

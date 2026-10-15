@@ -30,7 +30,6 @@ import { IInstantiationService } from '../../../../platform/instantiation/common
 import { IHostService } from '../../../services/host/browser/host.js';
 import { IUserDataProfilesEditor } from '../common/userDataProfile.js';
 import { IURLService } from '../../../../platform/url/common/url.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../../services/environment/browser/environmentService.js';
 import { Extensions as DndExtensions, IDragAndDropContributionRegistry, IResourceDropHandler } from '../../../../platform/dnd/browser/dnd.js';
 import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uriIdentity.js';
 import { ITextEditorService } from '../../../services/textfile/common/textEditorService.js';
@@ -55,7 +54,6 @@ export class UserDataProfilesWorkbenchContribution extends Disposable implements
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
 		@ILifecycleService private readonly lifecycleService: ILifecycleService,
 		@IURLService private readonly urlService: IURLService,
-		@IBrowserWorkbenchEnvironmentService environmentService: IBrowserWorkbenchEnvironmentService
 	) {
 		super();
 
@@ -80,10 +78,6 @@ export class UserDataProfilesWorkbenchContribution extends Disposable implements
 		}
 
 		this.reportWorkspaceProfileInfo();
-
-		if (environmentService.options?.profileToPreview) {
-			lifecycleService.when(LifecyclePhase.Restored).then(() => this.handleURL(URI.revive(environmentService.options!.profileToPreview!)));
-		}
 
 		this.registerDropHandler();
 	}

@@ -90,7 +90,6 @@ export const POLICY_SETTING_TAG = 'hasPolicy';
 export const WORKSPACE_TRUST_SETTING_TAG = 'workspaceTrust';
 export const REQUIRE_TRUSTED_WORKSPACE_SETTING_TAG = 'requireTrustedWorkspace';
 export const ADVANCED_SETTING_TAG = 'advanced';
-export const KEYBOARD_LAYOUT_OPEN_PICKER = 'workbench.action.openKeyboardLayoutPicker';
 
 export const ENABLE_LANGUAGE_FILTER = true;
 

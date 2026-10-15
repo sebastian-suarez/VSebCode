@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -12,29 +13,10 @@ import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uri
 import { IUserDataProfile, ProfileResourceType } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { API_OPEN_EDITOR_COMMAND_ID } from '../../../browser/parts/editor/editorCommands.js';
 import { ITreeItemCheckboxState, TreeItemCollapsibleState } from '../../../common/views.js';
-import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceInitializer, IProfileResourceTreeItem, IUserDataProfileService } from '../common/userDataProfile.js';
+import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceTreeItem } from '../common/userDataProfile.js';
 
 interface ITasksResourceContent {
 	tasks: string | null;
-}
-
-export class TasksResourceInitializer implements IProfileResourceInitializer {
-
-	constructor(
-		@IUserDataProfileService private readonly userDataProfileService: IUserDataProfileService,
-		@IFileService private readonly fileService: IFileService,
-		@ILogService private readonly logService: ILogService,
-	) {
-	}
-
-	async initialize(content: string): Promise<void> {
-		const tasksContent: ITasksResourceContent = JSON.parse(content);
-		if (!tasksContent.tasks) {
-			this.logService.info(`Initializing Profile: No tasks to apply...`);
-			return;
-		}
-		await this.fileService.writeFile(this.userDataProfileService.currentProfile.tasksResource, VSBuffer.fromString(tasksContent.tasks));
-	}
 }
 
 export class TasksResource implements IProfileResource {

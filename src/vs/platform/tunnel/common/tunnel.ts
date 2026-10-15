@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -90,31 +91,6 @@ export interface ProvidedPortAttributes {
 
 export interface PortAttributesProvider {
 	providePortAttributes(ports: number[], pid: number | undefined, commandLine: string | undefined, token: CancellationToken): Promise<ProvidedPortAttributes[]>;
-}
-
-export interface ITunnel {
-	remoteAddress: { port: number; host: string };
-
-	/**
-	 * The complete local address(ex. localhost:1234)
-	 */
-	localAddress: string;
-
-	/**
-	 * @deprecated Use privacy instead
-	 */
-	public?: boolean;
-
-	privacy?: string;
-
-	protocol?: string;
-
-	/**
-	 * Implementers of Tunnel should fire onDidDispose when dispose is called.
-	 */
-	readonly onDidDispose: Event<void>;
-
-	dispose(): Promise<void> | void;
 }
 
 export interface ISharedTunnelsService {

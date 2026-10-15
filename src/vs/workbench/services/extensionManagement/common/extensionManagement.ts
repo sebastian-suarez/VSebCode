@@ -6,7 +6,7 @@
 
 import { Event } from '../../../../base/common/event.js';
 import { createDecorator, refineServiceDecorator } from '../../../../platform/instantiation/common/instantiation.js';
-import { IExtension, ExtensionType, IExtensionManifest, IExtensionIdentifier } from '../../../../platform/extensions/common/extensions.js';
+import { IExtension, IExtensionManifest, IExtensionIdentifier } from '../../../../platform/extensions/common/extensions.js';
 import { IExtensionManagementService, IGalleryExtension, ILocalExtension, InstallOptions, InstallExtensionEvent, DidUninstallExtensionEvent, InstallExtensionResult, Metadata, UninstallExtensionEvent, DidUpdateExtensionMetadata, InstallExtensionInfo } from '../../../../platform/extensionManagement/common/extensionManagement.js';
 import { URI } from '../../../../base/common/uri.js';
 import { IMarkdownString } from '../../../../base/common/htmlContent.js';
@@ -185,29 +185,4 @@ export interface IWorkbenchExtensionEnablementService {
 	 * Updates the enablement state of the extensions when workspace trust changes.
 	 */
 	updateExtensionsEnablementsWhenWorkspaceTrustChanges(): Promise<void>;
-}
-
-export interface IScannedExtension extends IExtension {
-	readonly metadata?: Metadata;
-}
-
-export type ScanOptions = { readonly skipInvalidExtensions?: boolean };
-
-export const IWebExtensionsScannerService = createDecorator<IWebExtensionsScannerService>('IWebExtensionsScannerService');
-export interface IWebExtensionsScannerService {
-	readonly _serviceBrand: undefined;
-
-	scanSystemExtensions(): Promise<IExtension[]>;
-	scanUserExtensions(profileLocation: URI, options?: ScanOptions): Promise<IScannedExtension[]>;
-	scanExtensionsUnderDevelopment(): Promise<IExtension[]>;
-	scanExistingExtension(extensionLocation: URI, extensionType: ExtensionType, profileLocation: URI): Promise<IScannedExtension | null>;
-
-	addExtension(location: URI, metadata: Metadata, profileLocation: URI): Promise<IScannedExtension>;
-	addExtensionFromGallery(galleryExtension: IGalleryExtension, metadata: Metadata, profileLocation: URI): Promise<IScannedExtension>;
-	removeExtension(extension: IScannedExtension, profileLocation: URI): Promise<void>;
-	copyExtensions(fromProfileLocation: URI, toProfileLocation: URI, filter: (extension: IScannedExtension) => boolean): Promise<void>;
-
-	updateMetadata(extension: IScannedExtension, metaData: Partial<Metadata>, profileLocation: URI): Promise<IScannedExtension>;
-
-	scanExtensionManifest(extensionLocation: URI): Promise<IExtensionManifest | null>;
 }

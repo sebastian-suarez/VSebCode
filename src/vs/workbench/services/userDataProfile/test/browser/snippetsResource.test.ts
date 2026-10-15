@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -17,8 +18,7 @@ import { ILogService, NullLogService } from '../../../../../platform/log/common/
 import { IUriIdentityService } from '../../../../../platform/uriIdentity/common/uriIdentity.js';
 import { UriIdentityService } from '../../../../../platform/uriIdentity/common/uriIdentityService.js';
 import { IUserDataProfile } from '../../../../../platform/userDataProfile/common/userDataProfile.js';
-import { SnippetsResource, SnippetsResourceInitializer } from '../../browser/snippetsResource.js';
-import { IUserDataProfileService } from '../../common/userDataProfile.js';
+import { SnippetsResource } from '../../browser/snippetsResource.js';
 
 const ROOT = URI.file('tests').with({ scheme: 'vscode-tests' });
 
@@ -64,38 +64,31 @@ suite('SnippetsResource', () => {
 	});
 
 	for (const scheme of [ROOT.scheme, Schemas.vscodeUserData]) {
-		for (const operation of ['apply', 'initialize'] as const) {
-			test(`${operation} ignores windows style path traversal keys before writing (${scheme})`, async () => {
-				if (scheme !== ROOT.scheme) {
-					disposables.add(fileService.registerProvider(scheme, disposables.add(new InMemoryFileSystemProvider())));
+		test(`apply ignores windows style path traversal keys before writing (${scheme})`, async () => {
+			if (scheme !== ROOT.scheme) {
+				disposables.add(fileService.registerProvider(scheme, disposables.add(new InMemoryFileSystemProvider())));
+			}
+			const targetProfile = { ...profile, snippetsHome: snippetsHome.with({ scheme }) };
+			const writeFile = sinon.spy(fileService, 'writeFile');
+			const content = JSON.stringify({
+				snippets: {
+					'javascript.json': '{}',
+					'../../../../outside.json': 'ignored',
+					'..\\..\\..\\..\\outside.json': 'ignored',
+					'..\\..\\..\\..\\..\\nested\\outside.json': 'ignored',
+					'..\\\\..\\\\..\\\\..\\\\outside.json': 'ignored',
+					'..\\..\\..\\..\\tmp\\PROBE_snippets': 'ignored',
+					['..\\'.repeat(12) + 'outside.json']: 'ignored',
 				}
-				const targetProfile = { ...profile, snippetsHome: snippetsHome.with({ scheme }) };
-				const writeFile = sinon.spy(fileService, 'writeFile');
-				const content = JSON.stringify({
-					snippets: {
-						'javascript.json': '{}',
-						'../../../../outside.json': 'ignored',
-						'..\\..\\..\\..\\outside.json': 'ignored',
-						'..\\..\\..\\..\\..\\nested\\outside.json': 'ignored',
-						'..\\\\..\\\\..\\\\..\\\\outside.json': 'ignored',
-						'..\\..\\..\\..\\tmp\\PROBE_snippets': 'ignored',
-						['..\\'.repeat(12) + 'outside.json']: 'ignored',
-					}
-				});
-
-				if (operation === 'apply') {
-					await instantiationService.createInstance(SnippetsResource).apply(content, targetProfile);
-				} else {
-					instantiationService.stub(IUserDataProfileService, { currentProfile: targetProfile });
-					await instantiationService.createInstance(SnippetsResourceInitializer).initialize(content);
-				}
-
-				assert.deepStrictEqual(
-					writeFile.args.map(([resource]) => resource.toString()),
-					[joinPath(targetProfile.snippetsHome, 'javascript.json').toString()]
-				);
 			});
-		}
+
+			await instantiationService.createInstance(SnippetsResource).apply(content, targetProfile);
+
+			assert.deepStrictEqual(
+				writeFile.args.map(([resource]) => resource.toString()),
+				[joinPath(targetProfile.snippetsHome, 'javascript.json').toString()]
+			);
+		});
 	}
 
 	test('apply writes in-bounds key even alongside a traversal key', async () => {

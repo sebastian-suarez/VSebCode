@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,7 +14,7 @@ import { isWindows } from '../../../../common/platform.js';
 import { URI } from '../../../../common/uri.js';
 import { generateUuid } from '../../../../common/uuid.js';
 import { Promises } from '../../../../node/pfs.js';
-import { isStorageItemsChangeEvent, IStorageDatabase, IStorageItemsChangeEvent, Storage } from '../../common/storage.js';
+import { IStorageDatabase, IStorageItemsChangeEvent, Storage } from '../../common/storage.js';
 import { ISQLiteStorageDatabaseOptions, SQLiteStorageDatabase } from '../../node/storage.js';
 import { runWithFakedTimers } from '../../../../test/common/timeTravelScheduler.js';
 import { flakySuite, getRandomTestPath } from '../../../../test/node/testUtils.js';
@@ -183,12 +184,6 @@ flakySuite('Storage Library', function () {
 			// Nothing happens if changing to same value
 			database.fireDidChangeItemsExternal({ deleted });
 			strictEqual(changes.size, 0);
-
-			strictEqual(isStorageItemsChangeEvent({ changed }), true);
-			strictEqual(isStorageItemsChangeEvent({ deleted }), true);
-			strictEqual(isStorageItemsChangeEvent({ changed, deleted }), true);
-			strictEqual(isStorageItemsChangeEvent(undefined), false);
-			strictEqual(isStorageItemsChangeEvent({ changed: 'yes', deleted: false }), false);
 
 			await storage.close();
 		});

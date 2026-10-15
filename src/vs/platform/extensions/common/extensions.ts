@@ -9,7 +9,6 @@ import * as strings from '../../../base/common/strings.js';
 import { URI } from '../../../base/common/uri.js';
 import { ILocalizedString } from '../../action/common/action.js';
 import { ExtensionKind } from '../../environment/common/environment.js';
-import { createDecorator } from '../../instantiation/common/instantiation.js';
 import { getRemoteName } from '../../remote/common/remoteHosts.js';
 
 const USER_MANIFEST_CACHE_FILE_PREFIX = 'extensions.user';
@@ -550,10 +549,4 @@ export function isResolverExtension(manifest: IExtensionManifest, remoteAuthorit
 
 export function parseEnabledApiProposalNames(enabledApiProposals: string[]): string[] {
 	return enabledApiProposals.map(proposal => proposal.split('@')[0]);
-}
-
-export const IBuiltinExtensionsScannerService = createDecorator<IBuiltinExtensionsScannerService>('IBuiltinExtensionsScannerService');
-export interface IBuiltinExtensionsScannerService {
-	readonly _serviceBrand: undefined;
-	scanBuiltinExtensions(): Promise<IExtension[]>;
 }

@@ -21,7 +21,7 @@ import { observableValue } from '../../../base/common/observable.js';
 import { posix, win32 } from '../../../base/common/path.js';
 import { IProcessEnvironment, isWindows, OperatingSystem } from '../../../base/common/platform.js';
 import { env } from '../../../base/common/process.js';
-import { basename, isEqual } from '../../../base/common/resources.js';
+import { basename, isEqual, joinPath } from '../../../base/common/resources.js';
 import { newWriteableStream, ReadableStreamEvents } from '../../../base/common/stream.js';
 import { ThemeIcon } from '../../../base/common/themables.js';
 import { assertReturnsDefined, upcast } from '../../../base/common/types.js';
@@ -67,7 +67,7 @@ import { ConfirmResult, IDialogService, IFileDialogService, IOpenDialogOptions, 
 import { TestDialogService } from '../../../platform/dialogs/test/common/testDialogService.js';
 import { IEditorOptions, IResourceEditorInput, IResourceEditorInputIdentifier, ITextEditorOptions, ITextResourceEditorInput } from '../../../platform/editor/common/editor.js';
 import { IEnvironmentService } from '../../../platform/environment/common/environment.js';
-import { IExtensionManagementParticipant, IExtensionsControlManifest, IGalleryExtension, IGalleryMetadata, ILocalExtension, InstallExtensionInfo, InstallExtensionResult, InstallExtensionSummary, InstallOptions, Metadata, UninstallExtensionInfo, UninstallOptions } from '../../../platform/extensionManagement/common/extensionManagement.js';
+import { IExtensionManagementParticipant, IExtensionsControlManifest, IGalleryExtension, ILocalExtension, InstallExtensionInfo, InstallExtensionResult, InstallExtensionSummary, InstallOptions, Metadata, UninstallExtensionInfo, UninstallOptions } from '../../../platform/extensionManagement/common/extensionManagement.js';
 import { ExtensionType, IExtension, IExtensionDescription, IRelaxedExtensionManifest, TargetPlatform } from '../../../platform/extensions/common/extensions.js';
 import { FileOperationError, FileSystemProviderCapabilities, FileType, IFileChange, IFileDeleteOptions, IFileOpenOptions, IFileOverwriteOptions, IFileReadStreamOptions, IFileService, IFileStatWithMetadata, IFileSystemProvider, IFileSystemProviderWithFileReadStreamCapability, IFileWriteOptions, IStat, IWatchOptions } from '../../../platform/files/common/files.js';
 import { FileService } from '../../../platform/files/common/fileService.js';
@@ -150,9 +150,9 @@ import { EditorGroupLayout, GroupDirection, GroupOrientation, GroupsArrangement,
 import { IEditorPaneService } from '../../services/editor/common/editorPaneService.js';
 import { IEditorResolverService } from '../../services/editor/common/editorResolverService.js';
 import { IEditorsChangeEvent, IEditorService, IRevertAllEditorsOptions, ISaveEditorsOptions, ISaveEditorsResult, IVisibleEditorsChangeEvent, PreferredGroup } from '../../services/editor/common/editorService.js';
-import { BrowserWorkbenchEnvironmentService } from '../../services/environment/browser/environmentService.js';
+import { IBrowserWorkbenchEnvironmentService } from '../../services/environment/browser/environmentService.js';
 import { IWorkbenchEnvironmentService } from '../../services/environment/common/environmentService.js';
-import { EnablementState, IExtensionManagementServer, IResourceExtension, IScannedExtension, IWebExtensionsScannerService, IWorkbenchExtensionEnablementService, IWorkbenchExtensionManagementService } from '../../services/extensionManagement/common/extensionManagement.js';
+import { EnablementState, IExtensionManagementServer, IResourceExtension, IWorkbenchExtensionEnablementService, IWorkbenchExtensionManagementService } from '../../services/extensionManagement/common/extensionManagement.js';
 import { IExtensionService } from '../../services/extensions/common/extensions.js';
 import { BrowserElevatedFileService } from '../../services/files/browser/elevatedFileService.js';
 import { IElevatedFileService } from '../../services/files/common/elevatedFileService.js';
@@ -533,11 +533,39 @@ export class TestEncodingOracle extends EncodingOracle {
 	protected override set encodingOverrides(overrides: IEncodingOverride[]) { }
 }
 
-class TestEnvironmentServiceWithArgs extends BrowserWorkbenchEnvironmentService {
-	args = [];
-}
+const testUserRoamingDataHome = URI.file('/User').with({ scheme: Schemas.vscodeUserData });
+const testLogsHome = URI.file('tests').with({ scheme: 'vscode-tests' });
 
-export const TestEnvironmentService = new TestEnvironmentServiceWithArgs(URI.file('tests').with({ scheme: 'vscode-tests' }), Object.create(null), TestProductService);
+export const TestEnvironmentService: IBrowserWorkbenchEnvironmentService & { args: string[] } = {
+	_serviceBrand: undefined,
+	args: [],
+	userRoamingDataHome: testUserRoamingDataHome,
+	argvResource: joinPath(testUserRoamingDataHome, 'argv.json'),
+	cacheHome: joinPath(testUserRoamingDataHome, 'caches'),
+	workspaceStorageHome: joinPath(testUserRoamingDataHome, 'workspaceStorage'),
+	appSharedDataHome: joinPath(testUserRoamingDataHome, 'sharedData'),
+	localHistoryHome: joinPath(testUserRoamingDataHome, 'History'),
+	stateResource: joinPath(testUserRoamingDataHome, 'State', 'storage.json'),
+	keyboardLayoutResource: joinPath(testUserRoamingDataHome, 'keyboardLayout.json'),
+	untitledWorkspacesHome: joinPath(testUserRoamingDataHome, 'Workspaces'),
+	serviceMachineIdResource: joinPath(testUserRoamingDataHome, 'machineid'),
+	logsHome: testLogsHome,
+	windowLogsPath: testLogsHome,
+	logFile: joinPath(testLogsHome, 'window.log'),
+	extHostLogsPath: joinPath(testLogsHome, 'exthost'),
+	debugExtensionHost: { port: null, break: false },
+	isExtensionDevelopment: false,
+	disableExtensions: false,
+	debugRenderer: false,
+	webviewExternalEndpoint: '',
+	disableTelemetry: false,
+	disableExperiments: false,
+	verbose: false,
+	skipWelcome: false,
+	disableWorkspaceTrust: true,
+	expectsResolverExtension: false,
+	isBuilt: !!TestProductService.commit
+};
 
 export class TestProgressService implements IProgressService {
 
@@ -2094,37 +2122,6 @@ export class TestWorkbenchExtensionManagementService implements IWorkbenchExtens
 	trustPublishers(): void { }
 	untrustPublishers(): void { }
 	async requestPublisherTrust(extensions: InstallExtensionInfo[]): Promise<void> { }
-}
-
-
-
-export class TestWebExtensionsScannerService implements IWebExtensionsScannerService {
-	_serviceBrand: undefined;
-	onDidChangeProfile = Event.None;
-	async scanSystemExtensions(): Promise<IExtension[]> { return []; }
-	async scanUserExtensions(): Promise<IScannedExtension[]> { return []; }
-	async scanExtensionsUnderDevelopment(): Promise<IExtension[]> { return []; }
-	async copyExtensions(): Promise<void> {
-		throw new Error('Method not implemented.');
-	}
-	scanExistingExtension(extensionLocation: URI, extensionType: ExtensionType): Promise<IScannedExtension | null> {
-		throw new Error('Method not implemented.');
-	}
-	addExtension(location: URI, metadata?: Partial<IGalleryMetadata & { isApplicationScoped: boolean; isMachineScoped: boolean; isBuiltin: boolean; isSystem: boolean; updated: boolean; preRelease: boolean; installedTimestamp: number }> | undefined): Promise<IExtension> {
-		throw new Error('Method not implemented.');
-	}
-	addExtensionFromGallery(galleryExtension: IGalleryExtension, metadata?: Partial<IGalleryMetadata & { isApplicationScoped: boolean; isMachineScoped: boolean; isBuiltin: boolean; isSystem: boolean; updated: boolean; preRelease: boolean; installedTimestamp: number }> | undefined): Promise<IExtension> {
-		throw new Error('Method not implemented.');
-	}
-	removeExtension(): Promise<void> {
-		throw new Error('Method not implemented.');
-	}
-	updateMetadata(extension: IScannedExtension, metaData: Partial<Metadata>, profileLocation: URI): Promise<IScannedExtension> {
-		throw new Error('Method not implemented.');
-	}
-	scanExtensionManifest(extensionLocation: URI): Promise<Readonly<IRelaxedExtensionManifest> | null> {
-		throw new Error('Method not implemented.');
-	}
 }
 
 export async function workbenchTeardown(instantiationService: IInstantiationService): Promise<void> {

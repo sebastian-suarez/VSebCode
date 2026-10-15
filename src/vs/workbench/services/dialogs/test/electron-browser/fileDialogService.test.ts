@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -28,14 +29,14 @@ import { IWorkspacesService } from '../../../../../platform/workspaces/common/wo
 import { ISimpleFileDialog } from '../../browser/simpleFileDialog.js';
 import { FileDialogService } from '../../electron-browser/fileDialogService.js';
 import { IEditorService } from '../../../editor/common/editorService.js';
-import { BrowserWorkbenchEnvironmentService } from '../../../environment/browser/environmentService.js';
 import { IWorkbenchEnvironmentService } from '../../../environment/common/environmentService.js';
 import { IHistoryService } from '../../../history/common/history.js';
 import { IHostService } from '../../../host/browser/host.js';
 import { IPathService } from '../../../path/common/pathService.js';
-import { BrowserWorkspaceEditingService } from '../../../workspaces/browser/workspaceEditingService.js';
+import { NativeWorkspaceEditingService } from '../../../workspaces/electron-browser/workspaceEditingService.js';
 import { IWorkspaceEditingService } from '../../../workspaces/common/workspaceEditing.js';
 import { workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
+import { TestNativeHostService } from '../../../../test/electron-browser/workbenchTestServices.js';
 import { IRemoteAgentService } from '../../../remote/common/remoteAgentService.js';
 
 class TestFileDialogService extends FileDialogService {
@@ -82,11 +83,14 @@ suite('FileDialogService', function () {
 
 	setup(async function () {
 		disposables.add(instantiationService = workbenchInstantiationService(undefined, disposables));
+		instantiationService.stub(INativeHostService, new TestNativeHostService());
 		const configurationService = new TestConfigurationService();
 		await configurationService.setUserConfiguration('files', { simpleDialog: { enable: true } });
 		instantiationService.stub(IConfigurationService, configurationService);
 
 	});
+
+	teardown(() => sinon.restore());
 
 	test('Local - open/save workspaces availableFilesystems', async function () {
 		class TestSimpleFileDialog implements ISimpleFileDialog {
@@ -105,7 +109,7 @@ suite('FileDialogService', function () {
 
 		const dialogService = instantiationService.createInstance(TestFileDialogService, new TestSimpleFileDialog());
 		instantiationService.set(IFileDialogService, dialogService);
-		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(BrowserWorkspaceEditingService));
+		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(NativeWorkspaceEditingService));
 		assert.strictEqual((await workspaceService.pickNewWorkspacePath())?.path.startsWith(testFile.path), true);
 		assert.strictEqual(await dialogService.pickWorkspaceAndOpen({}), undefined);
 	});
@@ -131,7 +135,7 @@ suite('FileDialogService', function () {
 		} as IPathService);
 		const dialogService = instantiationService.createInstance(TestFileDialogService, new TestSimpleFileDialog());
 		instantiationService.set(IFileDialogService, dialogService);
-		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(BrowserWorkspaceEditingService));
+		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(NativeWorkspaceEditingService));
 		assert.strictEqual((await workspaceService.pickNewWorkspacePath())?.path.startsWith(testFile.path), true);
 		assert.strictEqual(await dialogService.pickWorkspaceAndOpen({}), undefined);
 	});
@@ -153,7 +157,7 @@ suite('FileDialogService', function () {
 			dispose(): void { }
 		}
 
-		instantiationService.set(IWorkbenchEnvironmentService, new class extends mock<BrowserWorkbenchEnvironmentService>() {
+		instantiationService.set(IWorkbenchEnvironmentService, new class extends mock<IWorkbenchEnvironmentService>() {
 			override get remoteAuthority() {
 				return 'testRemote';
 			}
@@ -164,7 +168,7 @@ suite('FileDialogService', function () {
 		} as IPathService);
 		const dialogService = instantiationService.createInstance(TestFileDialogService, new TestSimpleFileDialog());
 		instantiationService.set(IFileDialogService, dialogService);
-		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(BrowserWorkspaceEditingService));
+		const workspaceService: IWorkspaceEditingService = disposables.add(instantiationService.createInstance(NativeWorkspaceEditingService));
 		assert.strictEqual((await workspaceService.pickNewWorkspacePath())?.path.startsWith(testFile.path), true);
 		assert.strictEqual(await dialogService.pickWorkspaceAndOpen({}), undefined);
 	});
@@ -179,7 +183,7 @@ suite('FileDialogService', function () {
 			}
 			dispose(): void { }
 		}
-		instantiationService.set(IWorkbenchEnvironmentService, new class extends mock<BrowserWorkbenchEnvironmentService>() {
+		instantiationService.set(IWorkbenchEnvironmentService, new class extends mock<IWorkbenchEnvironmentService>() {
 			override get remoteAuthority() {
 				return 'testRemote';
 			}

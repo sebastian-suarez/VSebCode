@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -7,11 +8,6 @@ import * as nls from '../../../../nls.js';
 import { Action } from '../../../../base/common/actions.js';
 import { ILoggerService, LogLevel, LogLevelToLocalizedString, isLogLevel } from '../../../../platform/log/common/log.js';
 import { IQuickInputButton, IQuickInputService, IQuickPickItem, IQuickPickSeparator } from '../../../../platform/quickinput/common/quickInput.js';
-import { URI } from '../../../../base/common/uri.js';
-import { IFileService } from '../../../../platform/files/common/files.js';
-import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
-import { dirname, basename, isEqual } from '../../../../base/common/resources.js';
-import { IEditorService } from '../../../services/editor/common/editorService.js';
 import { IOutputChannelDescriptor, IOutputService, isMultiSourceOutputChannelDescriptor, isSingleSourceOutputChannelDescriptor } from '../../../services/output/common/output.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
@@ -157,68 +153,3 @@ export class SetLogLevelAction extends Action {
 	}
 
 }
-
-export class OpenWindowSessionLogFileAction extends Action {
-
-	static readonly ID = 'workbench.action.openSessionLogFile';
-	static readonly TITLE = nls.localize2('openSessionLogFile', "Open Window Log File (Session)...");
-
-	constructor(id: string, label: string,
-		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
-		@IFileService private readonly fileService: IFileService,
-		@IQuickInputService private readonly quickInputService: IQuickInputService,
-		@IEditorService private readonly editorService: IEditorService,
-	) {
-		super(id, label);
-	}
-
-	override async run(): Promise<void> {
-		const sessionResult = await this.quickInputService.pick(
-			this.getSessions().then(sessions => sessions.map((s, index): IQuickPickItem => ({
-				id: s.toString(),
-				label: basename(s),
-				description: index === 0 ? nls.localize('current', "Current") : undefined
-			}))),
-			{
-				canPickMany: false,
-				placeHolder: nls.localize('sessions placeholder', "Select Session")
-			});
-		if (sessionResult) {
-			const logFileResult = await this.quickInputService.pick(
-				this.getLogFiles(URI.parse(sessionResult.id!)).then(logFiles => logFiles.map((s): IQuickPickItem => ({
-					id: s.toString(),
-					label: basename(s)
-				}))),
-				{
-					canPickMany: false,
-					placeHolder: nls.localize('log placeholder', "Select Log file")
-				});
-			if (logFileResult) {
-				return this.editorService.openEditor({ resource: URI.parse(logFileResult.id!), options: { pinned: true } }).then(() => undefined);
-			}
-		}
-	}
-
-	private async getSessions(): Promise<URI[]> {
-		const logsPath = this.environmentService.logsHome.with({ scheme: this.environmentService.logFile.scheme });
-		const result: URI[] = [logsPath];
-		const stat = await this.fileService.resolve(dirname(logsPath));
-		if (stat.children) {
-			result.push(...stat.children
-				.filter(stat => !isEqual(stat.resource, logsPath) && stat.isDirectory && /^\d{8}T\d{6}$/.test(stat.name))
-				.sort()
-				.reverse()
-				.map(d => d.resource));
-		}
-		return result;
-	}
-
-	private async getLogFiles(session: URI): Promise<URI[]> {
-		const stat = await this.fileService.resolve(session);
-		if (stat.children) {
-			return stat.children.filter(stat => !stat.isDirectory).map(stat => stat.resource);
-		}
-		return [];
-	}
-}
-

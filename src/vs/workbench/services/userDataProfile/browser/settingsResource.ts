@@ -7,7 +7,7 @@
 import { VSBuffer } from '../../../../base/common/buffer.js';
 import { FileOperationError, FileOperationResult, IFileService } from '../../../../platform/files/common/files.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceInitializer, IProfileResourceTreeItem, IUserDataProfileService } from '../common/userDataProfile.js';
+import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceTreeItem } from '../common/userDataProfile.js';
 import { ITreeItemCheckboxState, TreeItemCollapsibleState } from '../../../common/views.js';
 import { IUserDataProfile, ProfileResourceType } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { API_OPEN_EDITOR_COMMAND_ID } from '../../../browser/parts/editor/editorCommands.js';
@@ -17,25 +17,6 @@ import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uri
 
 interface ISettingsContent {
 	settings: string | null;
-}
-
-export class SettingsResourceInitializer implements IProfileResourceInitializer {
-
-	constructor(
-		@IUserDataProfileService private readonly userDataProfileService: IUserDataProfileService,
-		@IFileService private readonly fileService: IFileService,
-		@ILogService private readonly logService: ILogService,
-	) {
-	}
-
-	async initialize(content: string): Promise<void> {
-		const settingsContent: ISettingsContent = JSON.parse(content);
-		if (settingsContent.settings === null) {
-			this.logService.info(`Initializing Profile: No settings to apply...`);
-			return;
-		}
-		await this.fileService.writeFile(this.userDataProfileService.currentProfile.settingsResource, VSBuffer.fromString(settingsContent.settings));
-	}
 }
 
 export class SettingsResource implements IProfileResource {

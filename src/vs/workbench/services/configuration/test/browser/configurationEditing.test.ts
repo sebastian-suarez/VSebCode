@@ -11,7 +11,7 @@ import { Event } from '../../../../../base/common/event.js';
 import { Registry } from '../../../../../platform/registry/common/platform.js';
 import { IEnvironmentService } from '../../../../../platform/environment/common/environment.js';
 import { IWorkspaceContextService } from '../../../../../platform/workspace/common/workspace.js';
-import { TestEnvironmentService, TestTextFileService, workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
+import { TestEnvironmentService, TestRemoteAgentService, TestTextFileService, workbenchInstantiationService } from '../../../../test/browser/workbenchTestServices.js';
 import * as uuid from '../../../../../base/common/uuid.js';
 import { IConfigurationRegistry, Extensions as ConfigurationExtensions } from '../../../../../platform/configuration/common/configurationRegistry.js';
 import { WorkspaceService } from '../../browser/configurationService.js';
@@ -38,8 +38,6 @@ import { toDisposable } from '../../../../../base/common/lifecycle.js';
 import { InMemoryFileSystemProvider } from '../../../../../platform/files/common/inMemoryFilesystemProvider.js';
 import { joinPath } from '../../../../../base/common/resources.js';
 import { VSBuffer } from '../../../../../base/common/buffer.js';
-import { RemoteAgentService } from '../../../remote/browser/remoteAgentService.js';
-import { getSingleFolderWorkspaceIdentifier } from '../../../../../platform/workspaces/common/workspaceIdentifier.js';
 import { IUserDataProfilesService, UserDataProfilesService } from '../../../../../platform/userDataProfile/common/userDataProfile.js';
 import { hash } from '../../../../../base/common/hash.js';
 import { FilePolicyService } from '../../../../../platform/policy/common/filePolicyService.js';
@@ -119,18 +117,17 @@ suite('ConfigurationEditing', () => {
 		const uriIdentityService = disposables.add(new UriIdentityService(fileService));
 		const userDataProfilesService = instantiationService.stub(IUserDataProfilesService, disposables.add(new UserDataProfilesService(environmentService, fileService, uriIdentityService, logService)));
 		userDataProfileService = disposables.add(new UserDataProfileService(userDataProfilesService.defaultProfile));
-		const remoteAgentService = disposables.add(instantiationService.createInstance(RemoteAgentService));
+		const remoteAgentService = new TestRemoteAgentService();
 		disposables.add(fileService.registerProvider(Schemas.vscodeUserData, disposables.add(new FileUserDataProvider(ROOT.scheme, fileSystemProvider, Schemas.vscodeUserData, userDataProfilesService, uriIdentityService, logService))));
 		instantiationService.stub(IFileService, fileService);
 		instantiationService.stub(IRemoteAgentService, remoteAgentService);
-		workspaceService = disposables.add(new WorkspaceService({ configurationCache: new ConfigurationCache() }, environmentService, userDataProfileService, userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), disposables.add(new FilePolicyService(environmentService.policyFile, fileService, logService))));
+		workspaceService = disposables.add(new WorkspaceService({ configurationCache: new ConfigurationCache() }, userDataProfileService, userDataProfilesService, fileService, remoteAgentService, uriIdentityService, new NullLogService(), disposables.add(new FilePolicyService(environmentService.policyFile, fileService, logService))));
 		await workspaceService.initialize({
 			id: hash(workspaceFolder.toString()).toString(16),
 			uri: workspaceFolder
 		});
 		instantiationService.stub(IWorkspaceContextService, workspaceService);
 
-		await workspaceService.initialize(getSingleFolderWorkspaceIdentifier(workspaceFolder));
 		instantiationService.stub(IConfigurationService, workspaceService);
 		instantiationService.stub(IKeybindingEditingService, disposables.add(instantiationService.createInstance(KeybindingsEditingService)));
 		instantiationService.stub(ITextFileService, disposables.add(instantiationService.createInstance(TestTextFileService)));

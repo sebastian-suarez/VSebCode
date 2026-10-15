@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -11,7 +12,6 @@ import { IQuickInputService, IQuickPickItem } from '../../../../platform/quickin
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
 import { IEditorService } from '../../../services/editor/common/editorService.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../../services/environment/browser/environmentService.js';
 import { isCodeEditor } from '../../../../editor/browser/editorBrowser.js';
 import { isEqual } from '../../../../base/common/resources.js';
 import { createScanner, SyntaxKind } from '../../../../base/common/json.js';
@@ -180,12 +180,8 @@ export async function readTrustedDomains(accessor: ServicesAccessor): Promise<IS
 export function readStaticTrustedDomains(accessor: ServicesAccessor): IStaticTrustedDomains {
 	const storageService = accessor.get(IStorageService);
 	const productService = accessor.get(IProductService);
-	const environmentService = accessor.get(IBrowserWorkbenchEnvironmentService);
 
-	const defaultTrustedDomains = [
-		...productService.linkProtectionTrustedDomains ?? [],
-		...environmentService.options?.additionalTrustedDomains ?? []
-	];
+	const defaultTrustedDomains = [...productService.linkProtectionTrustedDomains ?? []];
 
 	let trustedDomains: string[] = [];
 	try {

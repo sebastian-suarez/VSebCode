@@ -47,18 +47,6 @@ export interface IExtensionResourceLoaderService {
 	getExtensionGalleryResourceURL(galleryExtension: { publisher: string; name: string; version: string; targetPlatform?: TargetPlatform }, path?: string): Promise<URI | undefined>;
 }
 
-export function migratePlatformSpecificExtensionGalleryResourceURL(resource: URI, targetPlatform: TargetPlatform): URI | undefined {
-	if (resource.query !== `target=${targetPlatform}`) {
-		return undefined;
-	}
-	const paths = resource.path.split('/');
-	if (!paths[3]) {
-		return undefined;
-	}
-	paths[3] = `${paths[3]}+${targetPlatform}`;
-	return resource.with({ query: null, path: paths.join('/') });
-}
-
 export abstract class AbstractExtensionResourceLoaderService extends Disposable implements IExtensionResourceLoaderService {
 
 	readonly _serviceBrand: undefined;

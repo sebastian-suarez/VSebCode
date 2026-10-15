@@ -6,7 +6,7 @@
 
 import { localize, localize2 } from '../../../nls.js';
 import product from '../../../platform/product/common/product.js';
-import { isMacintosh, isLinux, language, isWeb } from '../../../base/common/platform.js';
+import { isMacintosh, isLinux, language } from '../../../base/common/platform.js';
 import { ITelemetryService } from '../../../platform/telemetry/common/telemetry.js';
 import { IOpenerService } from '../../../platform/opener/common/opener.js';
 import { URI } from '../../../base/common/uri.js';
@@ -123,7 +123,7 @@ class OpenTipsAndTricksUrlAction extends Action2 {
 class OpenDocumentationUrlAction extends Action2 {
 
 	static readonly ID = 'workbench.action.openDocumentationUrl';
-	static readonly AVAILABLE = !!(isWeb ? product.serverDocumentationUrl : product.documentationUrl);
+	static readonly AVAILABLE = !!product.documentationUrl;
 
 	constructor() {
 		super({
@@ -145,7 +145,7 @@ class OpenDocumentationUrlAction extends Action2 {
 	run(accessor: ServicesAccessor): void {
 		const productService = accessor.get(IProductService);
 		const openerService = accessor.get(IOpenerService);
-		const url = isWeb ? productService.serverDocumentationUrl : productService.documentationUrl;
+		const url = productService.documentationUrl;
 
 		if (url) {
 			openerService.open(URI.parse(url));
@@ -242,7 +242,7 @@ class OpenRequestFeatureUrlAction extends Action2 {
 class OpenLicenseUrlAction extends Action2 {
 
 	static readonly ID = 'workbench.action.openLicenseUrl';
-	static readonly AVAILABLE = !!(isWeb ? product.serverLicense : product.licenseUrl);
+	static readonly AVAILABLE = !!product.licenseUrl;
 
 	constructor() {
 		super({
@@ -264,7 +264,7 @@ class OpenLicenseUrlAction extends Action2 {
 	run(accessor: ServicesAccessor): void {
 		const productService = accessor.get(IProductService);
 		const openerService = accessor.get(IOpenerService);
-		const url = isWeb ? productService.serverLicenseUrl : productService.licenseUrl;
+		const url = productService.licenseUrl;
 
 		if (url) {
 			if (language) {

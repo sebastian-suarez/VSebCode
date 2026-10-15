@@ -10,7 +10,7 @@ import { alert } from '../../base/browser/ui/aria/aria.js';
 import { EventType, addDisposableListener, getClientArea, size, IDimension, isAncestorUsingFlowTo, computeScreenAwareSize, getActiveDocument, getWindows, getActiveWindow, isActiveDocument, getWindow, getWindowId, getActiveElement, Dimension } from '../../base/browser/dom.js';
 import { onDidChangeFullscreen, isFullscreen, isWCOEnabled } from '../../base/browser/browser.js';
 import { isWindows, isLinux, isMacintosh, isWeb, isIOS } from '../../base/common/platform.js';
-import { EditorInputCapabilities, GroupIdentifier, isResourceEditorInput, IUntypedEditorInput, pathsToEditors } from '../common/editor.js';
+import { EditorInputCapabilities, isResourceEditorInput, IUntypedEditorInput, pathsToEditors } from '../common/editor.js';
 import { SidebarPart } from './parts/sidebar/sidebarPart.js';
 import { PanelPart } from './parts/panel/panelPart.js';
 import { Position, Parts, PartOpensMaximizedOptions, IWorkbenchLayoutService, positionFromString, positionToString, partOpensMaximizedFromString, PanelAlignment, ActivityBarPosition, LayoutSettings, MULTI_WINDOW_PARTS, SINGLE_WINDOW_PARTS, ZenModeSettings, EditorTabsMode, EditorActionsLocation, shouldShowCustomTitleBar, isHorizontal, isMultiWindowPart, IPartVisibilityChangeEvent, isFloatingTopEdgeExposed, ModernUIDensity } from '../services/layout/browser/layoutService.js';
@@ -24,7 +24,7 @@ import { getMenuBarVisibility, IPath, hasNativeTitlebar, hasCustomTitlebar, Titl
 import { IHostService } from '../services/host/browser/host.js';
 import { IBrowserWorkbenchEnvironmentService } from '../services/environment/browser/environmentService.js';
 import { IEditorService } from '../services/editor/common/editorService.js';
-import { EditorGroupLayout, GroupActivationReason, GroupOrientation, GroupsOrder, IEditorGroupsService } from '../services/editor/common/editorGroupsService.js';
+import { GroupActivationReason, GroupOrientation, GroupsOrder, IEditorGroupsService } from '../services/editor/common/editorGroupsService.js';
 import { SerializableGrid, ISerializableView, ISerializedGrid, Orientation, ISerializedNode, ISerializedLeafNode, Direction, IViewSize, Sizing } from '../../base/browser/ui/grid/grid.js';
 import { Part } from './part.js';
 import { IStatusbarService } from '../services/statusbar/browser/statusbar.js';
@@ -37,11 +37,9 @@ import { IThemeService } from '../../platform/theme/common/themeService.js';
 import { isHighContrast } from '../../platform/theme/common/theme.js';
 import { WINDOW_ACTIVE_BORDER, WINDOW_INACTIVE_BORDER } from '../common/theme.js';
 import { LineNumbersType } from '../../editor/common/config/editorOptions.js';
-import { URI } from '../../base/common/uri.js';
 import { IViewDescriptorService, ViewContainerLocation } from '../common/views.js';
 import { DiffEditorInput } from '../common/editor/diffEditorInput.js';
 import { mark } from '../../base/common/performance.js';
-import { IExtensionService } from '../services/extensions/common/extensions.js';
 import { ILogService } from '../../platform/log/common/log.js';
 import { DeferredPromise, Promises } from '../../base/common/async.js';
 import { IBannerService } from '../services/banner/browser/bannerService.js';
@@ -68,14 +66,8 @@ interface ILayoutRuntimeState {
 	};
 }
 
-interface IEditorToOpen {
-	readonly editor: IUntypedEditorInput;
-	readonly viewColumn?: number;
-}
-
 interface ILayoutInitializationState {
 	readonly views: {
-		readonly defaults: string[] | undefined;
 		readonly containerToRestore: {
 			sideBar?: string;
 			panel?: string;
@@ -84,10 +76,7 @@ interface ILayoutInitializationState {
 	};
 	readonly editor: {
 		readonly restoreEditors: boolean;
-		readonly editorsToOpen: Promise<IEditorToOpen[]>;
-	};
-	readonly layout?: {
-		readonly editors?: EditorGroupLayout;
+		readonly editorsToOpen: Promise<IUntypedEditorInput[]>;
 	};
 }
 
@@ -119,16 +108,10 @@ enum LayoutClasses {
 	MODERN_UI_TABS = 'modern-ui-tabs'
 }
 
-interface IPathToOpen extends IPath {
-	readonly viewColumn?: number;
-}
-
 interface IInitialEditorsState {
-	readonly filesToOpenOrCreate?: IPathToOpen[];
-	readonly filesToDiff?: IPathToOpen[];
-	readonly filesToMerge?: IPathToOpen[];
-
-	readonly layout?: EditorGroupLayout;
+	readonly filesToOpenOrCreate?: IPath[];
+	readonly filesToDiff?: IPath[];
+	readonly filesToMerge?: IPath[];
 }
 
 const COMMAND_CENTER_SETTINGS = [
@@ -289,7 +272,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 	private statusBarPartView!: ISerializableView;
 
 	private environmentService!: IBrowserWorkbenchEnvironmentService;
-	private extensionService!: IExtensionService;
 	private configurationService!: IConfigurationService;
 	private storageService!: IStorageService;
 	private hostService!: IHostService;
@@ -328,7 +310,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		this.contextService = accessor.get(IWorkspaceContextService);
 		this.storageService = accessor.get(IStorageService);
 		this.themeService = accessor.get(IThemeService);
-		this.extensionService = accessor.get(IExtensionService);
 		this.logService = accessor.get(ILogService);
 		this.telemetryService = accessor.get(ITelemetryService);
 		this.auxiliaryWindowService = accessor.get(IAuxiliaryWindowService);
@@ -766,15 +747,11 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 			this.logService.trace('Initial editor state', initialEditorsState);
 		}
 		const initialLayoutState: ILayoutInitializationState = {
-			layout: {
-				editors: initialEditorsState?.layout
-			},
 			editor: {
 				restoreEditors: this.shouldRestoreEditors(this.contextService, initialEditorsState),
 				editorsToOpen: this.resolveEditorsToOpen(fileService, initialEditorsState),
 			},
 			views: {
-				defaults: this.getDefaultLayoutViews(this.environmentService, this.storageService),
 				containerToRestore: {}
 			}
 		};
@@ -848,24 +825,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		this.updateWindowBorder(true);
 	}
 
-	private getDefaultLayoutViews(environmentService: IBrowserWorkbenchEnvironmentService, storageService: IStorageService): string[] | undefined {
-		const defaultLayout = environmentService.options?.defaultLayout;
-		if (!defaultLayout) {
-			return undefined;
-		}
-
-		if (!defaultLayout.force && !storageService.isNew(StorageScope.WORKSPACE)) {
-			return undefined;
-		}
-
-		const { views } = defaultLayout;
-		if (views?.length) {
-			return views.map(view => view.id);
-		}
-
-		return undefined;
-	}
-
 	private shouldRestoreEditors(contextService: IWorkspaceContextService, initialEditorsState: IInitialEditorsState | undefined): boolean {
 
 		// Restore editors based on a set of rules:
@@ -890,20 +849,18 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		return this.state.initialization.editor.restoreEditors;
 	}
 
-	private async resolveEditorsToOpen(fileService: IFileService, initialEditorsState: IInitialEditorsState | undefined): Promise<IEditorToOpen[]> {
+	private async resolveEditorsToOpen(fileService: IFileService, initialEditorsState: IInitialEditorsState | undefined): Promise<IUntypedEditorInput[]> {
 		if (initialEditorsState) {
 
 			// Merge editor (single)
 			const filesToMerge = coalesce(await pathsToEditors(initialEditorsState.filesToMerge, fileService, this.logService));
 			if (filesToMerge.length === 4 && isResourceEditorInput(filesToMerge[0]) && isResourceEditorInput(filesToMerge[1]) && isResourceEditorInput(filesToMerge[2]) && isResourceEditorInput(filesToMerge[3])) {
 				return [{
-					editor: {
-						input1: { resource: filesToMerge[0].resource },
-						input2: { resource: filesToMerge[1].resource },
-						base: { resource: filesToMerge[2].resource },
-						result: { resource: filesToMerge[3].resource },
-						options: { pinned: true }
-					}
+					input1: { resource: filesToMerge[0].resource },
+					input2: { resource: filesToMerge[1].resource },
+					base: { resource: filesToMerge[2].resource },
+					result: { resource: filesToMerge[3].resource },
+					options: { pinned: true }
 				}];
 			}
 
@@ -911,28 +868,14 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 			const filesToDiff = coalesce(await pathsToEditors(initialEditorsState.filesToDiff, fileService, this.logService));
 			if (filesToDiff.length === 2) {
 				return [{
-					editor: {
-						original: { resource: filesToDiff[0].resource },
-						modified: { resource: filesToDiff[1].resource },
-						options: { pinned: true }
-					}
+					original: { resource: filesToDiff[0].resource },
+					modified: { resource: filesToDiff[1].resource },
+					options: { pinned: true }
 				}];
 			}
 
 			// Normal editor (multiple)
-			const filesToOpenOrCreate: IEditorToOpen[] = [];
-			const resolvedFilesToOpenOrCreate = await pathsToEditors(initialEditorsState.filesToOpenOrCreate, fileService, this.logService);
-			for (let i = 0; i < resolvedFilesToOpenOrCreate.length; i++) {
-				const resolvedFileToOpenOrCreate = resolvedFilesToOpenOrCreate[i];
-				if (resolvedFileToOpenOrCreate) {
-					filesToOpenOrCreate.push({
-						editor: resolvedFileToOpenOrCreate,
-						viewColumn: initialEditorsState.filesToOpenOrCreate?.[i].viewColumn // take over `viewColumn` from initial state
-					});
-				}
-			}
-
-			return filesToOpenOrCreate;
+			return coalesce(await pathsToEditors(initialEditorsState.filesToOpenOrCreate, fileService, this.logService));
 		}
 
 		// Empty workbench configured to open untitled file if empty
@@ -941,38 +884,16 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 				return []; // do not open any empty untitled file if we restored groups/editors from previous session
 			}
 
-			return [{
-				editor: { resource: undefined } // open empty untitled file
-			}];
+			return [{ resource: undefined }];
 		}
 
 		return [];
 	}
 
-	private _openedDefaultEditors: boolean = false;
-	get openedDefaultEditors() { return this._openedDefaultEditors; }
+	readonly openedDefaultEditors = false;
 
 	private getInitialEditorsState(): IInitialEditorsState | undefined {
 
-		// Check for editors / editor layout from `defaultLayout` options first
-		const defaultLayout = this.environmentService.options?.defaultLayout;
-		if ((defaultLayout?.editors?.length || defaultLayout?.layout?.editors) && (defaultLayout.force || this.storageService.isNew(StorageScope.WORKSPACE))) {
-			this._openedDefaultEditors = true;
-
-			return {
-				layout: defaultLayout.layout?.editors,
-				filesToOpenOrCreate: defaultLayout?.editors?.map(editor => {
-					return {
-						viewColumn: editor.viewColumn,
-						fileUri: URI.revive(editor.uri),
-						openOnlyIfExists: editor.openOnlyIfExists,
-						options: editor.options
-					};
-				})
-			};
-		}
-
-		// Then check for files to open, create or diff/merge from main side
 		const { filesToOpenOrCreate, filesToDiff, filesToMerge } = this.environmentService;
 		if (filesToOpenOrCreate || filesToDiff || filesToMerge) {
 			return { filesToOpenOrCreate, filesToDiff, filesToMerge };
@@ -1008,11 +929,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 			await this.editorGroupService.whenReady;
 			mark('code/restoreEditors/editorGroupsReady');
 
-			// apply editor layout if any
-			if (this.state.initialization.layout?.editors) {
-				this.editorGroupService.mainPart.applyLayout(this.state.initialization.layout.editors);
-			}
-
 			// then see for editors to open as instructed
 			// it is important that we trigger this from
 			// the overall restore flow to reduce possible
@@ -1027,33 +943,8 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 
 			let openEditorsPromise: Promise<unknown> | undefined = undefined;
 			if (editors.length) {
-
-				// we have to map editors to their groups as instructed
-				// by the input. this is important to ensure that we open
-				// the editors in the groups they belong to.
-
-				const editorGroupsInVisualOrder = this.editorGroupService.mainPart.getGroups(GroupsOrder.GRID_APPEARANCE);
-				const mapEditorsToGroup = new Map<GroupIdentifier, Set<IUntypedEditorInput>>();
-
-				for (const editor of editors) {
-					const group = editorGroupsInVisualOrder[(editor.viewColumn ?? 1) - 1]; // viewColumn is index+1 based
-
-					let editorsByGroup = mapEditorsToGroup.get(group.id);
-					if (!editorsByGroup) {
-						editorsByGroup = new Set<IUntypedEditorInput>();
-						mapEditorsToGroup.set(group.id, editorsByGroup);
-					}
-
-					editorsByGroup.add(editor.editor);
-				}
-
-				openEditorsPromise = Promise.all(Array.from(mapEditorsToGroup).map(async ([groupId, editors]) => {
-					try {
-						await this.editorService.openEditors(Array.from(editors), groupId, { validateTrust: true });
-					} catch (error) {
-						this.logService.error(error);
-					}
-				}));
+				const group = this.editorGroupService.mainPart.getGroups(GroupsOrder.GRID_APPEARANCE)[0];
+				openEditorsPromise = this.editorService.openEditors(editors, group.id, { validateTrust: true }).catch(error => this.logService.error(error));
 			}
 
 			// do not block the overall layout ready flow from potentially
@@ -1071,82 +962,9 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 			);
 		})());
 
-		// Restore default views (only when `IDefaultLayout` is provided)
-		const restoreDefaultViewsPromise = (async () => {
-			if (this.state.initialization.views.defaults?.length) {
-				mark('code/willOpenDefaultViews');
-
-				const locationsRestored: { id: string; order: number }[] = [];
-
-				const tryOpenView = (view: { id: string; order: number }): boolean => {
-					const location = this.viewDescriptorService.getViewLocationById(view.id);
-					if (location !== null) {
-						const container = this.viewDescriptorService.getViewContainerByViewId(view.id);
-						if (container) {
-							if (view.order >= (locationsRestored?.[location]?.order ?? 0)) {
-								locationsRestored[location] = { id: container.id, order: view.order };
-							}
-
-							const containerModel = this.viewDescriptorService.getViewContainerModel(container);
-							containerModel.setCollapsed(view.id, false);
-							containerModel.setVisible(view.id, true);
-
-							return true;
-						}
-					}
-
-					return false;
-				};
-
-				const defaultViews = [...this.state.initialization.views.defaults].reverse().map((v, index) => ({ id: v, order: index }));
-
-				let i = defaultViews.length;
-				while (i) {
-					i--;
-					if (tryOpenView(defaultViews[i])) {
-						defaultViews.splice(i, 1);
-					}
-				}
-
-				// If we still have views left over, wait until all extensions have been registered and try again
-				if (defaultViews.length) {
-					await this.extensionService.whenInstalledExtensionsRegistered();
-
-					let i = defaultViews.length;
-					while (i) {
-						i--;
-						if (tryOpenView(defaultViews[i])) {
-							defaultViews.splice(i, 1);
-						}
-					}
-				}
-
-				// If we opened a view in the sidebar, stop any restore there
-				if (locationsRestored[ViewContainerLocation.Sidebar]) {
-					this.state.initialization.views.containerToRestore.sideBar = locationsRestored[ViewContainerLocation.Sidebar].id;
-				}
-
-				// If we opened a view in the panel, stop any restore there
-				if (locationsRestored[ViewContainerLocation.Panel]) {
-					this.state.initialization.views.containerToRestore.panel = locationsRestored[ViewContainerLocation.Panel].id;
-				}
-
-				// If we opened a view in the auxiliary bar, stop any restore there
-				if (locationsRestored[ViewContainerLocation.AuxiliaryBar]) {
-					this.state.initialization.views.containerToRestore.auxiliaryBar = locationsRestored[ViewContainerLocation.AuxiliaryBar].id;
-				}
-
-				mark('code/didOpenDefaultViews');
-			}
-		})();
-		layoutReadyPromises.push(restoreDefaultViewsPromise);
-
 		// Restore Sidebar
 		layoutReadyPromises.push((async () => {
 
-			// Restoring views could mean that sidebar already
-			// restored, as such we need to test again
-			await restoreDefaultViewsPromise;
 			if (!this.state.initialization.views.containerToRestore.sideBar) {
 				return;
 			}
@@ -1161,9 +979,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		// Restore Panel
 		layoutReadyPromises.push((async () => {
 
-			// Restoring views could mean that panel already
-			// restored, as such we need to test again
-			await restoreDefaultViewsPromise;
 			if (!this.state.initialization.views.containerToRestore.panel) {
 				return;
 			}
@@ -1178,9 +993,6 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		// Restore Auxiliary Bar
 		layoutReadyPromises.push((async () => {
 
-			// Restoring views could mean that auxbar already
-			// restored, as such we need to test again
-			await restoreDefaultViewsPromise;
 			if (!this.state.initialization.views.containerToRestore.auxiliaryBar) {
 				return;
 			}

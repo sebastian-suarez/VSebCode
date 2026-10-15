@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -7,7 +8,7 @@ import * as browser from './browser.js';
 import { BrowserFeatures } from './canIUse.js';
 import { hasModifierKeys, IKeyboardEvent, StandardKeyboardEvent } from './keyboardEvent.js';
 import { IMouseEvent, StandardMouseEvent } from './mouseEvent.js';
-import { AbstractIdleValue, IntervalTimer, TimeoutTimer, _runWhenIdle, IdleDeadline } from '../common/async.js';
+import { AbstractIdleValue, IntervalTimer, _runWhenIdle, IdleDeadline } from '../common/async.js';
 import { BugIndicatingError, onUnexpectedError } from '../common/errors.js';
 import * as event from '../common/event.js';
 import { KeyCode } from '../common/keyCodes.js';
@@ -571,52 +572,6 @@ export class AnimationFrameScheduler implements IDisposable {
 	isScheduled(): boolean {
 		return this.pendingRunner.value !== undefined;
 	}
-}
-
-/**
- * Add a throttled listener. `handler` is fired at most every 8.33333ms or with the next animation frame (if browser supports it).
- */
-export interface IEventMerger<R, E> {
-	(lastEvent: R | null, currentEvent: E): R;
-}
-
-const MINIMUM_TIME_MS = 8;
-function DEFAULT_EVENT_MERGER<T>(_lastEvent: unknown, currentEvent: T) {
-	return currentEvent;
-}
-
-class TimeoutThrottledDomListener<R, E extends Event> extends Disposable {
-
-	constructor(node: Node, type: string, handler: (event: R) => void, eventMerger: IEventMerger<R, E> = DEFAULT_EVENT_MERGER as IEventMerger<R, E>, minimumTimeMs: number = MINIMUM_TIME_MS) {
-		super();
-
-		let lastEvent: R | null = null;
-		let lastHandlerTime = 0;
-		const timeout = this._register(new TimeoutTimer());
-
-		const invokeHandler = () => {
-			lastHandlerTime = (new Date()).getTime();
-			handler(<R>lastEvent);
-			lastEvent = null;
-		};
-
-		this._register(addDisposableListener(node, type, (e) => {
-
-			lastEvent = eventMerger(lastEvent, e);
-			const elapsedTime = (new Date()).getTime() - lastHandlerTime;
-
-			if (elapsedTime >= minimumTimeMs) {
-				timeout.cancel();
-				invokeHandler();
-			} else {
-				timeout.setIfNotSet(invokeHandler, minimumTimeMs - elapsedTime);
-			}
-		}));
-	}
-}
-
-export function addDisposableThrottledListener<R, E extends Event = Event>(node: any, type: string, handler: (event: R) => void, eventMerger?: IEventMerger<R, E>, minimumTimeMs?: number): IDisposable {
-	return new TimeoutThrottledDomListener<R, E>(node, type, handler, eventMerger, minimumTimeMs);
 }
 
 export function getComputedStyle(el: HTMLElement): CSSStyleDeclaration {
@@ -1829,70 +1784,6 @@ export function triggerUpload(): Promise<FileList | undefined> {
 	});
 }
 
-export enum DetectedFullscreenMode {
-
-	/**
-	 * The document is fullscreen, e.g. because an element
-	 * in the document requested to be fullscreen.
-	 */
-	DOCUMENT = 1,
-
-	/**
-	 * The browser is fullscreen, e.g. because the user enabled
-	 * native window fullscreen for it.
-	 */
-	BROWSER
-}
-
-export interface IDetectedFullscreen {
-
-	/**
-	 * Figure out if the document is fullscreen or the browser.
-	 */
-	mode: DetectedFullscreenMode;
-
-	/**
-	 * Whether we know for sure that we are in fullscreen mode or
-	 * it is a guess.
-	 */
-	guess: boolean;
-}
-
-export function detectFullscreen(targetWindow: Window): IDetectedFullscreen | null {
-
-	// Browser fullscreen: use DOM APIs to detect
-	// eslint-disable-next-line local/code-no-any-casts
-	if (targetWindow.document.fullscreenElement || (<any>targetWindow.document).webkitFullscreenElement || (<any>targetWindow.document).webkitIsFullScreen) {
-		return { mode: DetectedFullscreenMode.DOCUMENT, guess: false };
-	}
-
-	// There is no standard way to figure out if the browser
-	// is using native fullscreen. Via checking on screen
-	// height and comparing that to window height, we can guess
-	// it though.
-
-	if (targetWindow.innerHeight === targetWindow.screen.height) {
-		// if the height of the window matches the screen height, we can
-		// safely assume that the browser is fullscreen because no browser
-		// chrome is taking height away (e.g. like toolbars).
-		return { mode: DetectedFullscreenMode.BROWSER, guess: false };
-	}
-
-	if (platform.isMacintosh || platform.isLinux) {
-		// macOS and Linux do not properly report `innerHeight`, only Windows does
-		if (targetWindow.outerHeight === targetWindow.screen.height && targetWindow.outerWidth === targetWindow.screen.width) {
-			// if the height of the browser matches the screen height, we can
-			// only guess that we are in fullscreen. It is also possible that
-			// the user has turned off taskbars in the OS and the browser is
-			// simply able to span the entire size of the screen.
-			return { mode: DetectedFullscreenMode.BROWSER, guess: true };
-		}
-	}
-
-	// Not in fullscreen
-	return null;
-}
-
 type ModifierKey = 'alt' | 'ctrl' | 'shift' | 'meta';
 
 export interface IModifierKeyStatus {
@@ -2077,12 +1968,6 @@ export class ModifierKeyEmitter extends event.Emitter<IModifierKeyStatus> {
 		super.dispose();
 		this._subscriptions.dispose();
 	}
-}
-
-export function getCookieValue(name: string): string | undefined {
-	const match = document.cookie.match('(^|[^;]+)\\s*' + name + '\\s*=\\s*([^;]+)'); // See https://stackoverflow.com/a/25490531
-
-	return match ? match.pop() : undefined;
 }
 
 export interface IDragAndDropObserverCallbacks {

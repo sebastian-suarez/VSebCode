@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Schemas } from '../../../../base/common/network.js';
-import { env } from '../../../../base/common/process.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { IWorkspaceContextService, IWorkspaceFolder } from '../../../../platform/workspace/common/workspace.js';
 import { IConfigurationResolverService } from '../../../services/configurationResolver/common/configurationResolver.js';
@@ -20,7 +19,6 @@ import { IRemoteAgentService } from '../../../services/remote/common/remoteAgent
 import { debounce } from '../../../../base/common/decorators.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
 import { isUriComponents, URI } from '../../../../base/common/uri.js';
-import { ITerminalInstanceService } from './terminal.js';
 import { Disposable } from '../../../../base/common/lifecycle.js';
 import { deepClone } from '../../../../base/common/objects.js';
 import { isString, type SingleOrMany } from '../../../../base/common/types.js';
@@ -353,46 +351,5 @@ export abstract class BaseTerminalProfileResolverService extends Disposable impl
 			return true;
 		}
 		return false;
-	}
-}
-
-export class BrowserTerminalProfileResolverService extends BaseTerminalProfileResolverService {
-
-	constructor(
-		@IConfigurationResolverService configurationResolverService: IConfigurationResolverService,
-		@IConfigurationService configurationService: IConfigurationService,
-		@IHistoryService historyService: IHistoryService,
-		@ITerminalLogService logService: ITerminalLogService,
-		@ITerminalInstanceService terminalInstanceService: ITerminalInstanceService,
-		@ITerminalProfileService terminalProfileService: ITerminalProfileService,
-		@IWorkspaceContextService workspaceContextService: IWorkspaceContextService,
-		@IRemoteAgentService remoteAgentService: IRemoteAgentService
-	) {
-		super(
-			{
-				getDefaultSystemShell: async (remoteAuthority, os) => {
-					const backend = await terminalInstanceService.getBackend(remoteAuthority);
-					if (!remoteAuthority || !backend) {
-						// Just return basic values, this is only for serverless web and wouldn't be used
-						return os === OperatingSystem.Windows ? 'pwsh' : 'bash';
-					}
-					return backend.getDefaultSystemShell(os);
-				},
-				getEnvironment: async (remoteAuthority) => {
-					const backend = await terminalInstanceService.getBackend(remoteAuthority);
-					if (!remoteAuthority || !backend) {
-						return env;
-					}
-					return backend.getEnvironment();
-				}
-			},
-			configurationService,
-			configurationResolverService,
-			historyService,
-			logService,
-			terminalProfileService,
-			workspaceContextService,
-			remoteAgentService
-		);
 	}
 }

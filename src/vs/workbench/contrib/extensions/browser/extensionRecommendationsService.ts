@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -22,7 +23,6 @@ import { ConfigBasedRecommendations } from './configBasedRecommendations.js';
 import { IExtensionRecommendationNotificationService } from '../../../../platform/extensionRecommendations/common/extensionRecommendations.js';
 import { CancelablePromise, timeout } from '../../../../base/common/async.js';
 import { URI } from '../../../../base/common/uri.js';
-import { WebRecommendations } from './webRecommendations.js';
 import { IExtensionsWorkbenchService } from '../common/extensions.js';
 import { areSameExtensions } from '../../../../platform/extensionManagement/common/extensionManagementUtil.js';
 import { RemoteRecommendations } from './remoteRecommendations.js';
@@ -40,7 +40,6 @@ export class ExtensionRecommendationsService extends Disposable implements IExte
 	private readonly configBasedRecommendations: ConfigBasedRecommendations;
 	private readonly exeBasedRecommendations: ExeBasedRecommendations;
 	private readonly keymapRecommendations: KeymapRecommendations;
-	private readonly webRecommendations: WebRecommendations;
 	private readonly languageRecommendations: LanguageRecommendations;
 	private readonly remoteRecommendations: RemoteRecommendations;
 
@@ -70,7 +69,6 @@ export class ExtensionRecommendationsService extends Disposable implements IExte
 		this.configBasedRecommendations = this._register(instantiationService.createInstance(ConfigBasedRecommendations));
 		this.exeBasedRecommendations = this._register(instantiationService.createInstance(ExeBasedRecommendations));
 		this.keymapRecommendations = this._register(instantiationService.createInstance(KeymapRecommendations));
-		this.webRecommendations = this._register(instantiationService.createInstance(WebRecommendations));
 		this.languageRecommendations = this._register(instantiationService.createInstance(LanguageRecommendations));
 		this.remoteRecommendations = this._register(instantiationService.createInstance(RemoteRecommendations));
 
@@ -103,7 +101,6 @@ export class ExtensionRecommendationsService extends Disposable implements IExte
 			this.fileBasedRecommendations.activate(),
 			this.keymapRecommendations.activate(),
 			this.languageRecommendations.activate(),
-			this.webRecommendations.activate(),
 			this.remoteRecommendations.activate()
 		]);
 
@@ -133,7 +130,6 @@ export class ExtensionRecommendationsService extends Disposable implements IExte
 			...this.workspaceRecommendations.recommendations,
 			...this.keymapRecommendations.recommendations,
 			...this.languageRecommendations.recommendations,
-			...this.webRecommendations.recommendations,
 		];
 
 		for (const { extension, reason } of allRecommendations) {
@@ -160,7 +156,6 @@ export class ExtensionRecommendationsService extends Disposable implements IExte
 		const recommendations = [
 			...this.configBasedRecommendations.otherRecommendations,
 			...this.exeBasedRecommendations.otherRecommendations,
-			...this.webRecommendations.recommendations
 		];
 
 		const extensionIds = this.toExtensionIds(recommendations);

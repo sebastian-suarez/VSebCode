@@ -96,10 +96,6 @@ export interface IUserDataProfileImportExportService {
 	createTroubleshootProfile(): Promise<void>;
 }
 
-export interface IProfileResourceInitializer {
-	initialize(content: string): Promise<void>;
-}
-
 export interface IProfileResource {
 	getContent(profile: IUserDataProfile): Promise<string>;
 	apply(content: string, profile: IUserDataProfile): Promise<void>;

@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -10,7 +11,6 @@ import { LifecyclePhase } from '../../../services/lifecycle/common/lifecycle.js'
 import { IQuickInputService } from '../../../../platform/quickinput/common/quickInput.js';
 import { Registry } from '../../../../platform/registry/common/platform.js';
 import { Extensions as WorkbenchExtensions, IWorkbenchContributionsRegistry, WorkbenchPhase, registerWorkbenchContribution2 } from '../../../common/contributions.js';
-import { ExternalUriResolverContribution } from './externalUriResolver.js';
 import { manageTrustedDomainSettingsCommand } from './trustedDomains.js';
 import { TrustedDomainsFileSystemProvider } from './trustedDomainsFileSystemProvider.js';
 import { OpenerValidatorContributions } from './trustedDomainsValidator.js';
@@ -73,11 +73,6 @@ Registry.as<IWorkbenchContributionsRegistry>(WorkbenchExtensions.Workbench).regi
 registerWorkbenchContribution2(
 	TrustedDomainsFileSystemProvider.ID,
 	TrustedDomainsFileSystemProvider,
-	WorkbenchPhase.BlockRestore // registration only
-);
-registerWorkbenchContribution2(
-	ExternalUriResolverContribution.ID,
-	ExternalUriResolverContribution,
 	WorkbenchPhase.BlockRestore // registration only
 );
 

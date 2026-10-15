@@ -366,6 +366,7 @@ src/vs/workbench/contrib/debug/browser/extensionHostDebugService.ts
 src/vs/workbench/contrib/debug/node/telemetryApp.ts
 src/vs/workbench/contrib/extensions/browser/browserRuntimeExtensionsEditor.ts
 src/vs/workbench/contrib/extensions/browser/extensions.web.contribution.ts
+src/vs/workbench/contrib/extensions/browser/webRecommendations.ts
 src/vs/workbench/contrib/extensions/common/installExtensionsTool.ts
 src/vs/workbench/contrib/extensions/common/searchExtensionsTool.ts
 src/vs/workbench/contrib/issue/browser/issue.contribution.ts
@@ -433,6 +434,7 @@ src/vs/workbench/services/configuration/test/common/managedSettingsPresentation.
 src/vs/workbench/services/configurationResolver/browser/configurationResolverService.ts
 src/vs/workbench/services/dialogs/browser/fileDialogService.ts
 src/vs/workbench/services/encryption/browser/encryptionService.ts
+src/vs/workbench/services/environment/test/browser/environmentService.test.ts
 src/vs/workbench/services/extensionManagement/browser/builtinExtensionsScannerService.ts
 src/vs/workbench/services/extensionManagement/browser/extensionGalleryManifestService.ts
 src/vs/workbench/services/extensionManagement/browser/extensionsProfileScannerService.ts

@@ -758,23 +758,3 @@ export abstract class AbstractTimerService implements ITimerService {
 
 	protected abstract _extendStartupInfo(info: Writeable<IStartupMetrics>): Promise<void>;
 }
-
-
-export class TimerService extends AbstractTimerService {
-
-	protected _isInitialStartup(): boolean {
-		return false;
-	}
-	protected _didUseCachedData(): boolean {
-		return false;
-	}
-	protected async _getWindowCount(): Promise<number> {
-		return 1;
-	}
-	protected async _extendStartupInfo(info: Writeable<IStartupMetrics>): Promise<void> {
-		info.isVMLikelyhood = 0;
-		info.isARM64Emulated = false;
-		info.platform = navigator.userAgent;
-		info.release = navigator.appVersion;
-	}
-}

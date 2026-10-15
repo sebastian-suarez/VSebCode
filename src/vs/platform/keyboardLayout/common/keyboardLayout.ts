@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -81,80 +82,6 @@ export interface IKeyboardLayoutService {
 	getAllKeyboardLayouts(): IKeyboardLayoutInfo[];
 	getKeyboardMapper(): IKeyboardMapper;
 	validateCurrentKeyboardMapping(keyboardEvent: IKeyboardEvent): void;
-}
-
-export function areKeyboardLayoutsEqual(a: IKeyboardLayoutInfo | null, b: IKeyboardLayoutInfo | null): boolean {
-	if (!a || !b) {
-		return false;
-	}
-
-	if ((<IWindowsKeyboardLayoutInfo>a).name && (<IWindowsKeyboardLayoutInfo>b).name && (<IWindowsKeyboardLayoutInfo>a).name === (<IWindowsKeyboardLayoutInfo>b).name) {
-		return true;
-	}
-
-	if ((<IMacKeyboardLayoutInfo>a).id && (<IMacKeyboardLayoutInfo>b).id && (<IMacKeyboardLayoutInfo>a).id === (<IMacKeyboardLayoutInfo>b).id) {
-		return true;
-	}
-
-	if ((<ILinuxKeyboardLayoutInfo>a).model &&
-		(<ILinuxKeyboardLayoutInfo>b).model &&
-		(<ILinuxKeyboardLayoutInfo>a).model === (<ILinuxKeyboardLayoutInfo>b).model &&
-		(<ILinuxKeyboardLayoutInfo>a).layout === (<ILinuxKeyboardLayoutInfo>b).layout
-	) {
-		return true;
-	}
-
-	return false;
-}
-
-export function parseKeyboardLayoutDescription(layout: IKeyboardLayoutInfo | null): { label: string; description: string } {
-	if (!layout) {
-		return { label: '', description: '' };
-	}
-
-	if ((<IWindowsKeyboardLayoutInfo>layout).name) {
-		// windows
-		const windowsLayout = <IWindowsKeyboardLayoutInfo>layout;
-		return {
-			label: windowsLayout.text,
-			description: ''
-		};
-	}
-
-	if ((<IMacKeyboardLayoutInfo>layout).id) {
-		const macLayout = <IMacKeyboardLayoutInfo>layout;
-		if (macLayout.localizedName) {
-			return {
-				label: macLayout.localizedName,
-				description: ''
-			};
-		}
-
-		if (/^com\.apple\.keylayout\./.test(macLayout.id)) {
-			return {
-				label: macLayout.id.replace(/^com\.apple\.keylayout\./, '').replace(/-/g, ' '),
-				description: ''
-			};
-		}
-		if (/^.*inputmethod\./.test(macLayout.id)) {
-			return {
-				label: macLayout.id.replace(/^.*inputmethod\./, '').replace(/[-\.]/g, ' '),
-				description: `Input Method (${macLayout.lang})`
-			};
-		}
-
-		return {
-			label: macLayout.lang,
-			description: ''
-		};
-	}
-
-	const linuxLayout = <ILinuxKeyboardLayoutInfo>layout;
-
-	return {
-		label: linuxLayout.layout,
-		description: ''
-	};
 }
 
 export function getKeyboardLayoutId(layout: IKeyboardLayoutInfo): string {

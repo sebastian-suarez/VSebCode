@@ -28,7 +28,6 @@ import { isEmptyObject, isObject } from '../../../../base/common/types.js';
 import { DefaultConfiguration as BaseDefaultConfiguration } from '../../../../platform/configuration/common/configurations.js';
 import { IJSONEditingService } from '../common/jsonEditing.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
-import { IBrowserWorkbenchEnvironmentService } from '../../environment/browser/environmentService.js';
 
 export class DefaultConfiguration extends BaseDefaultConfiguration {
 
@@ -41,14 +40,10 @@ export class DefaultConfiguration extends BaseDefaultConfiguration {
 	constructor(
 		cacheScope: string,
 		private readonly configurationCache: IConfigurationCache,
-		environmentService: IBrowserWorkbenchEnvironmentService,
 		logService: ILogService,
 	) {
 		super(logService);
 		this.cacheKey = { type: 'defaults', key: `${cacheScope}-configurationDefaultsOverrides` };
-		if (environmentService.options?.configurationDefaults) {
-			this.configurationRegistry.registerDefaultConfigurations([{ overrides: environmentService.options.configurationDefaults as IStringDictionary<IStringDictionary<unknown>> }]);
-		}
 	}
 
 	protected override getConfigurationDefaultOverrides(): IStringDictionary<unknown> {

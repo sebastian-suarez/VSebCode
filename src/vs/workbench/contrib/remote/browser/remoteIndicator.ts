@@ -244,12 +244,6 @@ export class RemoteStatusIndicator extends Disposable implements IWorkbenchContr
 		// Update indicator when formatter changes as it may have an impact on the remote label
 		this._register(this.labelService.onDidChangeFormatters(() => this.updateRemoteStatusIndicator()));
 
-		// Update based on remote indicator changes if any
-		const remoteIndicator = this.environmentService.options?.windowIndicator;
-		if (remoteIndicator && remoteIndicator.onDidChange) {
-			this._register(remoteIndicator.onDidChange(() => this.updateRemoteStatusIndicator()));
-		}
-
 		// Listen to changes of the connection
 		if (this.remoteAuthority) {
 			const connection = this.remoteAgentService.getConnection();
@@ -472,18 +466,6 @@ export class RemoteStatusIndicator extends Disposable implements IWorkbenchContr
 	}
 
 	private updateRemoteStatusIndicator(): void {
-
-		// Remote Indicator: show if provided via options, e.g. by the web embedder API
-		const remoteIndicator = this.environmentService.options?.windowIndicator;
-		if (remoteIndicator) {
-			let remoteIndicatorLabel = remoteIndicator.label.trim();
-			if (!remoteIndicatorLabel.startsWith('$(')) {
-				remoteIndicatorLabel = `$(remote) ${remoteIndicatorLabel}`; // ensure the indicator has a codicon
-			}
-
-			this.renderRemoteStatusIndicator(truncate(remoteIndicatorLabel, RemoteStatusIndicator.REMOTE_STATUS_LABEL_MAX_LENGTH), remoteIndicator.tooltip, remoteIndicator.command);
-			return;
-		}
 
 		// Show for remote windows on the desktop
 		if (this.remoteAuthority) {

@@ -5,7 +5,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as dom from '../../../../base/browser/dom.js';
-import { parentOriginHash } from '../../../../base/browser/iframe.js';
 import { mainWindow } from '../../../../base/browser/window.js';
 import { Barrier } from '../../../../base/common/async.js';
 import { VSBuffer } from '../../../../base/common/buffer.js';
@@ -23,7 +22,6 @@ import { ILabelService } from '../../../../platform/label/common/label.js';
 import { ILayoutService } from '../../../../platform/layout/browser/layoutService.js';
 import { ILogService, ILoggerService } from '../../../../platform/log/common/log.js';
 import { IProductService } from '../../../../platform/product/common/productService.js';
-import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { ITelemetryService } from '../../../../platform/telemetry/common/telemetry.js';
 import { IUserDataProfilesService } from '../../../../platform/userDataProfile/common/userDataProfile.js';
 import { WebWorkerDescriptor } from '../../../../platform/webWorker/browser/webWorkerDescriptor.js';
@@ -71,7 +69,6 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 		@IUserDataProfilesService private readonly _userDataProfilesService: IUserDataProfilesService,
 		@IProductService private readonly _productService: IProductService,
 		@ILayoutService private readonly _layoutService: ILayoutService,
-		@IStorageService private readonly _storageService: IStorageService,
 		@IWebWorkerService private readonly _webWorkerService: IWebWorkerService,
 		@IDefaultLogLevelsService private readonly _defaultLogLevelsService: IDefaultLogLevelsService,
 	) {
@@ -92,35 +89,6 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 		const suffix = `?${suffixSearchParams.toString()}`;
 
 		const iframeModulePath: AppResourcePath = `vs/workbench/services/extensions/worker/webWorkerExtensionHostIframe.html`;
-		if (platform.isWeb) {
-			const webEndpointUrlTemplate = this._productService.webEndpointUrlTemplate;
-			const commit = this._productService.commit;
-			const quality = this._productService.quality;
-			if (webEndpointUrlTemplate && commit && quality) {
-				// Try to keep the web worker extension host iframe origin stable by storing it in workspace storage
-				const key = 'webWorkerExtensionHostIframeStableOriginUUID';
-				let stableOriginUUID = this._storageService.get(key, StorageScope.WORKSPACE);
-				if (typeof stableOriginUUID === 'undefined') {
-					stableOriginUUID = generateUuid();
-					this._storageService.store(key, stableOriginUUID, StorageScope.WORKSPACE, StorageTarget.MACHINE);
-				}
-				const hash = await parentOriginHash(mainWindow.origin, stableOriginUUID);
-				const baseUrl = (
-					webEndpointUrlTemplate
-						.replace('{{uuid}}', `v--${hash}`) // using `v--` as a marker to require `parentOrigin`/`salt` verification
-						.replace('{{commit}}', commit)
-						.replace('{{quality}}', quality)
-				);
-
-				const res = new URL(`${baseUrl}/out/${iframeModulePath}${suffix}`);
-				res.searchParams.set('parentOrigin', mainWindow.origin);
-				res.searchParams.set('salt', stableOriginUUID);
-				return res.toString();
-			}
-
-			console.warn(`The web worker extension host is started in a same-origin iframe!`);
-		}
-
 		const relativeExtensionHostIframeSrc = this._webWorkerService.getWorkerUrl(new WebWorkerDescriptor({
 			esmModuleLocation: FileAccess.asBrowserUri(iframeModulePath),
 			esmModuleLocationBundler: new URL(`../worker/webWorkerExtensionHostIframe.html`, import.meta.url),
@@ -226,9 +194,7 @@ export class WebWorkerExtensionHost extends Disposable implements IExtensionHost
 			throw barrierError;
 		}
 
-		// Send over message ports for extension API
-		const messagePorts = this._environmentService.options?.messagePorts ?? new Map();
-		iframe.contentWindow!.postMessage({ type: 'vscode.init', data: messagePorts }, '*', [...messagePorts.values()]);
+		iframe.contentWindow!.postMessage({ type: 'vscode.init', data: new Map<string, MessagePort>() }, '*');
 
 		port.onmessage = (event) => {
 			const { data } = event;

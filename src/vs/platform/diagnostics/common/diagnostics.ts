@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -96,37 +97,6 @@ export interface IWorkspaceInformation extends IWorkspace {
 export function isRemoteDiagnosticError(x: unknown): x is IRemoteDiagnosticError {
 	const candidate = x as IRemoteDiagnosticError | undefined;
 	return !!candidate?.hostName && !!candidate?.errorMessage;
-}
-
-export class NullDiagnosticsService implements IDiagnosticsService {
-	_serviceBrand: undefined;
-
-	async getPerformanceInfo(mainProcessInfo: IMainProcessDiagnostics, remoteInfo: (IRemoteDiagnosticInfo | IRemoteDiagnosticError)[], options?: { skipCache?: boolean; unbounded?: boolean }): Promise<PerformanceInfo> {
-		return {};
-	}
-
-	async getSystemInfo(mainProcessInfo: IMainProcessDiagnostics, remoteInfo: (IRemoteDiagnosticInfo | IRemoteDiagnosticError)[]): Promise<SystemInfo> {
-		return {
-			processArgs: 'nullProcessArgs',
-			gpuStatus: 'nullGpuStatus',
-			screenReader: 'nullScreenReader',
-			remoteData: [],
-			os: 'nullOs',
-			memory: 'nullMemory',
-			vmHint: 'nullVmHint',
-		};
-	}
-
-	async getDiagnostics(mainProcessInfo: IMainProcessDiagnostics, remoteInfo: (IRemoteDiagnosticInfo | IRemoteDiagnosticError)[]): Promise<string> {
-		return '';
-	}
-
-	async getWorkspaceFileExtensions(workspace: IWorkspace): Promise<{ extensions: string[] }> {
-		return { extensions: [] };
-	}
-
-	async reportWorkspaceStats(workspace: IWorkspaceInformation): Promise<void> { }
-
 }
 
 export interface IWindowDiagnostics {

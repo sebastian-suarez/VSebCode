@@ -392,7 +392,6 @@ export interface IPtyService {
 
 	// #endregion
 }
-export const IPtyService = createDecorator<IPtyService>('ptyService');
 
 export interface IPtyServiceContribution {
 	handleProcessReady(persistentProcessId: number, process: ITerminalChildProcess): void;

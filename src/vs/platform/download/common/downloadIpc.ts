@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { Event } from '../../../base/common/event.js';
 import { URI } from '../../../base/common/uri.js';
-import { IURITransformer } from '../../../base/common/uriIpc.js';
-import { IChannel, IServerChannel } from '../../../base/parts/ipc/common/ipc.js';
+import { IServerChannel } from '../../../base/parts/ipc/common/ipc.js';
 import { IDownloadService } from './download.js';
 
 export class DownloadServiceChannel implements IServerChannel {
@@ -22,21 +22,5 @@ export class DownloadServiceChannel implements IServerChannel {
 			case 'download': return this.service.download(URI.revive(args[0]), URI.revive(args[1]), args[2] ?? 'downloadIpc');
 		}
 		throw new Error('Invalid call');
-	}
-}
-
-export class DownloadServiceChannelClient implements IDownloadService {
-
-	declare readonly _serviceBrand: undefined;
-
-	constructor(private channel: IChannel, private getUriTransformer: () => IURITransformer | null) { }
-
-	async download(from: URI, to: URI, _callSite?: string): Promise<void> {
-		const uriTransformer = this.getUriTransformer();
-		if (uriTransformer) {
-			from = uriTransformer.transformOutgoingURI(from);
-			to = uriTransformer.transformOutgoingURI(to);
-		}
-		await this.channel.call('download', [from, to]);
 	}
 }

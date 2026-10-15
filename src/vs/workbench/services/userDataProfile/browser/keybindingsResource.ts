@@ -1,12 +1,13 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { VSBuffer } from '../../../../base/common/buffer.js';
 import { FileOperationError, FileOperationResult, IFileService } from '../../../../platform/files/common/files.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
-import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceInitializer, IProfileResourceTreeItem, IUserDataProfileService } from '../common/userDataProfile.js';
+import { IProfileResource, IProfileResourceChildTreeItem, IProfileResourceTreeItem } from '../common/userDataProfile.js';
 import { platform, Platform } from '../../../../base/common/platform.js';
 import { ITreeItemCheckboxState, TreeItemCollapsibleState } from '../../../common/views.js';
 import { IUserDataProfile, ProfileResourceType } from '../../../../platform/userDataProfile/common/userDataProfile.js';
@@ -18,25 +19,6 @@ import { IUriIdentityService } from '../../../../platform/uriIdentity/common/uri
 interface IKeybindingsResourceContent {
 	platform: Platform;
 	keybindings: string | null;
-}
-
-export class KeybindingsResourceInitializer implements IProfileResourceInitializer {
-
-	constructor(
-		@IUserDataProfileService private readonly userDataProfileService: IUserDataProfileService,
-		@IFileService private readonly fileService: IFileService,
-		@ILogService private readonly logService: ILogService,
-	) {
-	}
-
-	async initialize(content: string): Promise<void> {
-		const keybindingsContent: IKeybindingsResourceContent = JSON.parse(content);
-		if (keybindingsContent.keybindings === null) {
-			this.logService.info(`Initializing Profile: No keybindings to apply...`);
-			return;
-		}
-		await this.fileService.writeFile(this.userDataProfileService.currentProfile.keybindingsResource, VSBuffer.fromString(keybindingsContent.keybindings));
-	}
 }
 
 export class KeybindingsResource implements IProfileResource {
