@@ -19,7 +19,9 @@ import { IUriIdentityService } from '../../../../../platform/uriIdentity/common/
 import { UriIdentityService } from '../../../../../platform/uriIdentity/common/uriIdentityService.js';
 import { UserDataProfileImportExportService } from '../../browser/userDataProfileImportExportService.js';
 
-const PROFILE = { name: 'Team' };
+// The local file and the HTTP response carry different profiles, so that every result shows its source
+const LOCAL_PROFILE = { name: 'Local' };
+const REMOTE_PROFILE = { name: 'Remote' };
 
 suite('UserDataProfileImportExportService', () => {
 
@@ -32,7 +34,7 @@ suite('UserDataProfileImportExportService', () => {
 		const instantiationService = disposables.add(new TestInstantiationService());
 		const fileService = disposables.add(new FileService(new NullLogService()));
 		disposables.add(fileService.registerProvider('file', disposables.add(new InMemoryFileSystemProvider())));
-		await fileService.writeFile(URI.file('/profiles/team.code-profile'), VSBuffer.fromString(JSON.stringify(PROFILE)));
+		await fileService.writeFile(URI.file('/profiles/team.code-profile'), VSBuffer.fromString(JSON.stringify(LOCAL_PROFILE)));
 
 		instantiationService.stub(IFileService, fileService);
 		instantiationService.stub(IUriIdentityService, disposables.add(new UriIdentityService(fileService)));
@@ -40,7 +42,7 @@ suite('UserDataProfileImportExportService', () => {
 		instantiationService.stub(IRequestService, {
 			async request(options: IRequestOptions): Promise<IRequestContext> {
 				requestedUrls.push(options.url ?? '');
-				return { res: { headers: {}, statusCode: 200 }, stream: bufferToStream(VSBuffer.fromString(JSON.stringify(PROFILE))) };
+				return { res: { headers: {}, statusCode: 200 }, stream: bufferToStream(VSBuffer.fromString(JSON.stringify(REMOTE_PROFILE))) };
 			}
 		});
 		testObject = disposables.add(instantiationService.createInstance(UserDataProfileImportExportService));
@@ -63,11 +65,11 @@ suite('UserDataProfileImportExportService', () => {
 			mixedCaseOtherProfileLink: await resolve('VSeBcOdE://profile-github/abc123'),
 			requestedUrls,
 		}, {
-			https: 'Team',
-			profileNamedHost: 'Team',
-			profileFileLink: 'Team',
+			https: 'Remote',
+			profileNamedHost: 'Remote',
+			profileFileLink: 'Local',
 			otherProfileLink: 'error: This profile link is not supported.',
-			mixedCaseProfileFileLink: 'Team',
+			mixedCaseProfileFileLink: 'Local',
 			mixedCaseOtherProfileLink: 'error: This profile link is not supported.',
 			requestedUrls: ['https://example.org/team.code-profile', 'https://profile-share.example.org/team.code-profile'],
 		});
