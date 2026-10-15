@@ -10,8 +10,9 @@ import * as vscode from 'vscode';
 import type { ILogger } from '../../logging';
 import type { LinkPresentationKind } from './linkPresentationBuilders';
 
-// The kinds this extension produces: the package also knows the `session` kind, which the
-// product has no presentation provider for
+// A kind of the linkPresentation API, whether this extension's resolvers or another extension's
+// provider produced the presentation; the package also declares the `session` kind, which the
+// API does not offer
 export type LinkPresentation = Omit<MarkdownLinkPresentation, 'kind'> & {
 	readonly kind: LinkPresentationKind;
 	readonly isLoading?: boolean;
