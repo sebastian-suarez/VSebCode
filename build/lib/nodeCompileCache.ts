@@ -9,7 +9,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-const nodeCompileCacheKinds = ['main', 'extension-host', 'shared-process', 'pty-host', 'agent-host'] as const;
+const nodeCompileCacheKinds = ['main', 'extension-host', 'shared-process', 'pty-host'] as const;
 const nodeCompileCacheTagPattern = /^v\d+\.\d+\.\d+-(arm64|x64)-[0-9a-f]{8}$/;
 const nodeCompileCacheEntryPattern = /^[0-9a-f]{8}$/;
 
