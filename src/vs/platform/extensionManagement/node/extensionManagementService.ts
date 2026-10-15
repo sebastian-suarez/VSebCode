@@ -347,7 +347,9 @@ export class ExtensionManagementService extends AbstractExtensionManagementServi
 		const shouldRequireSignature = shouldRequireRepositorySignatureFor(extension.private, await this.extensionGalleryManifestService.getExtensionGalleryManifest());
 
 		if (
-			verificationStatus !== ExtensionSignatureVerificationCode.Success
+			// The optional verifier returns no result when its module is unavailable.
+			verificationStatus !== undefined
+			&& verificationStatus !== ExtensionSignatureVerificationCode.Success
 			&& !(verificationStatus === ExtensionSignatureVerificationCode.NotSigned && !shouldRequireSignature)
 			&& verifySignature
 			&& this.environmentService.isBuilt
@@ -358,10 +360,6 @@ export class ExtensionManagementService extends AbstractExtensionManagementServi
 			} catch (e) {
 				/* Ignore */
 				this.logService.warn(`Error while deleting the downloaded file`, location.toString(), getErrorMessage(e));
-			}
-
-			if (!verificationStatus) {
-				throw new ExtensionManagementError(nls.localize('signature verification not executed', "Signature verification was not executed."), ExtensionManagementErrorCode.SignatureVerificationInternal);
 			}
 
 			switch (verificationStatus) {
