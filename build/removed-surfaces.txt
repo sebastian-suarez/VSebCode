@@ -257,6 +257,7 @@ src/vs/workbench/api/browser/mainThreadEmbeddings.ts
 src/vs/workbench/api/browser/mainThreadLanguageModelTools.ts
 src/vs/workbench/api/browser/mainThreadLanguageModels.ts
 src/vs/workbench/api/browser/mainThreadMcp.ts
+src/vs/workbench/api/browser/mainThreadProfileContentHandlers.ts
 src/vs/workbench/api/browser/mainThreadSpeech.ts
 src/vs/workbench/api/common/extHostAgentEditorComments.ts
 src/vs/workbench/api/common/extHostAiRelatedInformation.ts
@@ -275,6 +276,7 @@ src/vs/workbench/api/common/extHostEmbeddingVector.ts
 src/vs/workbench/api/common/extHostLanguageModelTools.ts
 src/vs/workbench/api/common/extHostLanguageModels.ts
 src/vs/workbench/api/common/extHostMcp.ts
+src/vs/workbench/api/common/extHostProfileContentHandler.ts
 src/vs/workbench/api/common/extHostSpeech.ts
 src/vs/workbench/api/common/extHostXaaAuthProvider.ts
 src/vs/workbench/api/node/extHostAuthentication.ts
@@ -421,6 +423,7 @@ src/vscode-dts/vscode.proposed.languageModelToolSupportsModel.d.ts
 src/vscode-dts/vscode.proposed.mappedEditsProvider.d.ts
 src/vscode-dts/vscode.proposed.mcpServerDefinitions.d.ts
 src/vscode-dts/vscode.proposed.mcpToolDefinitions.d.ts
+src/vscode-dts/vscode.proposed.profileContentHandlers.d.ts
 src/vscode-dts/vscode.proposed.speech.d.ts
 src/vscode-dts/vscode.proposed.toolInvocationApproveCombination.d.ts
 src/vscode-dts/vscode.proposed.toolProgress.d.ts
