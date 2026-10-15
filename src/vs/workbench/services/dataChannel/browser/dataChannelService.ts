@@ -68,7 +68,6 @@ export const linkPresentationProviderKinds: LinkPresentationKind[] = [
 	'commit',
 	'file',
 	'folder',
-	'session',
 	'repository',
 	'branch',
 ];

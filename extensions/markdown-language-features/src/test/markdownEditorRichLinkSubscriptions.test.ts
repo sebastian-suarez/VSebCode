@@ -28,10 +28,10 @@ suite('Markdown editor rich link subscriptions', () => {
 		watchers = [];
 		updates = [];
 		errors = [];
-		const rules: readonly vscode.LinkPresentationRule[] = [{ id: 'test', uriPattern: /^https:\/\/example\.com\//g, kind: 'session' }];
+		const rules: readonly vscode.LinkPresentationRule[] = [{ id: 'test', uriPattern: /^https:\/\/example\.com\//g, kind: 'commit' }];
 		Object.defineProperty(vscode.window, 'linkPresentationRules', { configurable: true, get: () => rules });
 		vscode.window.createLinkPresentationWatcher = () => {
-			const watcher = new TestWatcher({ kind: 'session', title: 'Current title' });
+			const watcher = new TestWatcher({ kind: 'commit', title: 'Current title' });
 			watchers.push(watcher);
 			return watcher;
 		};
@@ -55,18 +55,18 @@ suite('Markdown editor rich link subscriptions', () => {
 		await settle();
 		assert.deepStrictEqual(updates, [{
 			subscriptionId: 'first',
-			presentation: { kind: 'session', title: 'Current title' },
+			presentation: { kind: 'commit', title: 'Current title' },
 		}]);
-		watchers[0].update({ kind: 'session', title: 'Changed title', isLoading: true });
+		watchers[0].update({ kind: 'commit', title: 'Changed title', isLoading: true });
 		assert.deepStrictEqual(updates[1], {
 			subscriptionId: 'first',
-			presentation: { kind: 'session', title: 'Changed title', isLoading: true },
+			presentation: { kind: 'commit', title: 'Changed title', isLoading: true },
 		});
 		controller.updateSubscriptions({ subscribe: [{ subscriptionId: 'second', href }], unsubscribe: [] });
 		await settle();
 		assert.deepStrictEqual(updates[2], {
 			subscriptionId: 'second',
-			presentation: { kind: 'session', title: 'Current title' },
+			presentation: { kind: 'commit', title: 'Current title' },
 		}, 'a subscription must receive a snapshot even when the URL is already watched');
 		assert.deepStrictEqual(errors, []);
 	});
@@ -81,9 +81,9 @@ suite('Markdown editor rich link subscriptions', () => {
 		await settle();
 		assert.deepStrictEqual(watchers.map(watcher => watcher.disposed), [true, false, false]);
 		const count = updates.length;
-		watchers[0].update({ kind: 'session', title: 'Old update' });
+		watchers[0].update({ kind: 'commit', title: 'Old update' });
 		assert.strictEqual(updates.length, count);
-		watchers[1].update({ kind: 'session', title: 'Other update' });
+		watchers[1].update({ kind: 'commit', title: 'Other update' });
 		assert.strictEqual(updates.at(-1)?.subscriptionId, 'other');
 		assert.ok(updates.some(value => value.subscriptionId === 'replacement' && value.presentation?.title === 'Current title'));
 	});

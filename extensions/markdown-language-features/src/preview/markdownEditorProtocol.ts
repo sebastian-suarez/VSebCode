@@ -70,7 +70,7 @@ const linkStatus = z.object({
 const richLinkPresentationUpdate = z.object({
 	subscriptionId: z.string(),
 	presentation: z.optional(z.object({
-		kind: z.enum(['resource', 'issue', 'pullRequest', 'commit', 'file', 'folder', 'session', 'repository', 'branch']),
+		kind: z.enum(['resource', 'issue', 'pullRequest', 'commit', 'file', 'folder', 'repository', 'branch']),
 		title: z.optional(z.string()),
 		detail: z.optional(z.string()),
 		reference: z.optional(z.string()),

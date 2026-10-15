@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { LinkPresentation } from '@vscode/markdown-editor';
 import type { IObservable } from '@vscode/observables';
 import * as vscode from 'vscode';
 import { buildLoadingLinkPresentation, buildWorkspaceLookupFailurePresentation, buildWorkspaceResourcePresentation } from './linkPresentationBuilders';
-import { createAsyncLinkPresentation, type LinkPresentationResolver, type LinkPresentationResolverContext } from './linkPresentationResolver';
+import { createAsyncLinkPresentation, type LinkPresentation, type LinkPresentationResolver, type LinkPresentationResolverContext } from './linkPresentationResolver';
 
 export class WorkspaceLinkPresentationResolver implements LinkPresentationResolver {
 	readonly refreshOnInterval = true;

@@ -16,7 +16,6 @@ declare module 'vscode' {
 		| 'commit'
 		| 'file'
 		| 'folder'
-		| 'session'
 		| 'repository'
 		| 'branch';
 

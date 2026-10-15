@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -7,8 +8,12 @@ import type { LinkPresentation as MarkdownLinkPresentation } from '@vscode/markd
 import { derived, observableValue, type IObservable, type ISettableObservable } from '@vscode/observables';
 import * as vscode from 'vscode';
 import type { ILogger } from '../../logging';
+import type { LinkPresentationKind } from './linkPresentationBuilders';
 
-export type LinkPresentation = MarkdownLinkPresentation & {
+// The kinds this extension produces: the package also knows the `session` kind, which the
+// product has no presentation provider for
+export type LinkPresentation = Omit<MarkdownLinkPresentation, 'kind'> & {
+	readonly kind: LinkPresentationKind;
 	readonly isLoading?: boolean;
 };
 
