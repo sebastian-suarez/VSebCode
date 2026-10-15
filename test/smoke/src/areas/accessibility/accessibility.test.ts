@@ -4,10 +4,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Application, Logger, Quality } from '../../../../automation';
+import { Application, Logger } from '../../../../automation';
 import { installAllHandlers } from '../../utils';
 
-export function setup(logger: Logger, opts: { web?: boolean }, quality: Quality) {
+export function setup(logger: Logger) {
 	describe('Accessibility', function () {
 
 		// Increase timeout for accessibility scans
@@ -27,7 +27,7 @@ export function setup(logger: Logger, opts: { web?: boolean }, quality: Quality)
 
 		describe('Workbench', function () {
 
-			(opts.web ? it.skip : it)('workbench has no accessibility violations', async function () {
+			it('workbench has no accessibility violations', async function () {
 				// Wait for workbench to be fully loaded
 				await app.code.waitForElement('.monaco-workbench');
 

@@ -1,16 +1,12 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { Viewlet } from './viewlet';
 import { Code } from './code';
-import { ncp } from 'ncp';
-import { promisify } from 'util';
 import { Commands } from './workbench';
-import path = require('path');
-import fs = require('fs');
-
 
 export class Extensions extends Viewlet {
 
@@ -89,14 +85,5 @@ export class Extensions extends Viewlet {
 				}
 			}
 		}
-	}
-}
-
-export async function copyExtension(repoPath: string, extensionsPath: string, extId: string): Promise<void> {
-	const dest = path.join(extensionsPath, extId);
-	if (!fs.existsSync(dest)) {
-		const orig = path.join(repoPath, 'extensions', extId);
-
-		return promisify(ncp)(orig, dest);
 	}
 }

@@ -253,16 +253,16 @@ app.on('ready', async () => {
 	session.defaultSession.setSpellCheckerLanguages([]);
 	session.defaultSession.setSpellCheckerEnabled(false);
 	const outDir = args.build ? 'out-build' : 'out';
-	const [{ createRemoteResourceRequestHandler }, { getRemoteResourceResponseHeaders }] = await Promise.all([
-		import(url.pathToFileURL(path.join(__dirname, `../../../${outDir}/vs/platform/protocol/electron-main/remoteResourceProtocol.js`)).href),
-		import(url.pathToFileURL(path.join(__dirname, `../../../${outDir}/vs/server/node/remoteResourceResponse.js`)).href),
-	]);
+	const { createRemoteResourceRequestHandler } = await import(url.pathToFileURL(path.join(__dirname, `../../../${outDir}/vs/platform/protocol/electron-main/remoteResourceProtocol.js`)).href);
 	/** @type {import('http').IncomingHttpHeaders | undefined} */
 	let remoteResourceRequestHeaders;
 	const remoteResourceServer = http.createServer((request, response) => {
 		remoteResourceRequestHeaders = request.headers;
 		response.writeHead(200, {
-			...getRemoteResourceResponseHeaders(request.headers.origin, () => false),
+			'Content-Security-Policy': `default-src 'none'; sandbox`,
+			'X-Content-Type-Options': 'nosniff',
+			'Vary': 'Origin',
+			...(request.headers.origin === 'vscode-file://vscode-app' ? { 'Access-Control-Allow-Origin': request.headers.origin } : {}),
 			'Content-Type': 'image/svg+xml',
 		});
 		response.write('<svg xmlns="http://www.w3.org/2000/svg">');

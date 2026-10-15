@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import minimist from 'minimist';
@@ -7,7 +8,6 @@ import minimist from 'minimist';
 const [, , ...args] = process.argv;
 export const opts = minimist(args, {
 	string: [
-		'browser',
 		'build',
 		'wait-time',
 		'test-repo',
@@ -16,9 +16,6 @@ export const opts = minimist(args, {
 	],
 	boolean: [
 		'verbose',
-		'remote',
-		'web',
-		'headless',
 		'video',
 		'autostart',
 		'dev'
@@ -28,12 +25,8 @@ export const opts = minimist(args, {
 	}
 }) as {
 	verbose?: boolean;
-	remote?: boolean;
-	headless?: boolean;
-	web?: boolean;
 	build?: string;
 	dev?: boolean;
-	browser?: 'chromium' | 'webkit' | 'firefox' | 'chromium-msedge' | 'chromium-chrome' | undefined;
 	electronArgs?: string;
 	video?: boolean;
 	autostart?: boolean;

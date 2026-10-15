@@ -95,9 +95,8 @@
 		const builtin = require('module').builtinModules.filter(mod => !mod.startsWith('_') && !mod.startsWith('electron/js2c/')).sort();
 		const dependencies = Object.keys(require('../../../package.json').dependencies).sort();
 		const optionalDependencies = Object.keys(require('../../../package.json').optionalDependencies).sort();
-		const dependenciesRemote = Object.keys(require('../../../remote/package.json').dependencies).sort();
 
-		for (const name of new Set([].concat(builtin, dependencies, optionalDependencies, dependenciesRemote))) {
+		for (const name of new Set([].concat(builtin, dependencies, optionalDependencies))) {
 			if (unsupportedRendererModules.has(name)) {
 				continue;
 			}

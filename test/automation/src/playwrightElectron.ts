@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -30,7 +31,7 @@ export async function launch(options: LaunchOptions): Promise<{ electronProcess:
 
 	return {
 		electronProcess,
-		driver: new PlaywrightDriver(electron, context, page, undefined /* no server process */, Promise.resolve() /* Window is open already */, options, videoStartedAt)
+		driver: new PlaywrightDriver(electron, context, page, options, videoStartedAt)
 	};
 }
 

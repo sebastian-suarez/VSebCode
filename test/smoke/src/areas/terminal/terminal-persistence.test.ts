@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -32,9 +33,6 @@ export function setup(options?: { skipSuite: boolean }) {
 				it(`restores completed output exactly once and in order after ${reconnect}`, async function () {
 					this.timeout(60000);
 					const app = this.app as Application;
-					if (app.remote || app.web) {
-						this.skip();
-					}
 
 					const count = 100;
 					const readSequence = (buffer: string[]) => buffer.flatMap(line => {

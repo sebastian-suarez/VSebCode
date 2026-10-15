@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -12,11 +13,11 @@ const minimist = require('minimist');
 
 const [, , ...args] = process.argv;
 const opts = minimist(args, {
-	boolean: ['web', 'fail-zero'],
+	boolean: ['fail-zero'],
 	string: ['f', 'g']
 });
 
-const suite = opts.web ? 'Browser Smoke Tests' : 'Desktop Smoke Tests';
+const suite = 'Desktop Smoke Tests';
 
 const options = {
 	color: true,
@@ -81,7 +82,7 @@ mocha.run(failures => {
 			console.log(`
 #############################################
 #
-# Log files of client & server are stored into
+# Application log files are stored into
 # '${logPath}'.
 #
 # Logs of the smoke test runner are stored into

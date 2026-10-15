@@ -1,17 +1,16 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import * as playwright from '@playwright/test';
 import type { Protocol } from 'playwright-core/types/protocol';
-import { dirname, join } from 'path';
-import { promises, readFileSync } from 'fs';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 import { IWindowDriver } from './driver';
 import { measureAndLog } from './logger';
 import { LaunchOptions } from './code';
-import { teardown } from './processes';
-import { ChildProcess } from 'child_process';
 import type { AxeResults, RunOptions } from 'axe-core';
 
 // Load axe-core source for injection into pages (works with Electron)
@@ -65,11 +64,9 @@ export class PlaywrightDriver {
 	};
 
 	constructor(
-		private readonly application: playwright.Browser | playwright.ElectronApplication,
+		private readonly application: playwright.ElectronApplication,
 		private readonly context: playwright.BrowserContext,
 		private _currentPage: playwright.Page,
-		private readonly serverProcess: ChildProcess | undefined,
-		private readonly whenLoaded: Promise<unknown>,
 		private readonly options: LaunchOptions,
 		/**
 		 * Wall-clock time sampled when the first recorded page was created, used to
@@ -100,33 +97,23 @@ export class PlaywrightDriver {
 
 	/** Resize the current window and return its previous size. */
 	async resizeWindow(size: { width: number; height: number }): Promise<{ width: number; height: number }> {
-		if ('browserWindow' in this.application) {
-			const window = await this.application.browserWindow(this.page);
-			try {
-				return await window.evaluate((window, size) => {
-					const [width, height] = window.getSize();
-					window.setSize(size.width, size.height);
-					return { width, height };
-				}, size);
-			} finally {
-				await window.dispose();
-			}
+		const window = await this.application.browserWindow(this.page);
+		try {
+			return await window.evaluate((window, size) => {
+				const [width, height] = window.getSize();
+				window.setSize(size.width, size.height);
+				return { width, height };
+			}, size);
+		} finally {
+			await window.dispose();
 		}
-		const previous = this.page.viewportSize() ?? await this.page.evaluate(() => ({ width: window.innerWidth, height: window.innerHeight }));
-		await this.page.setViewportSize(size);
-		return previous;
 	}
 
 	/**
-	 * Get all open windows/pages.
-	 * For Electron apps, returns all Electron windows.
-	 * For browser contexts, returns all pages.
+	 * Get all open Electron windows.
 	 */
 	getAllWindows(): playwright.Page[] {
-		if ('windows' in this.application) {
-			return (this.application as playwright.ElectronApplication).windows();
-		}
-		return this.context.pages();
+		return this.application.windows();
 	}
 
 	/**
@@ -572,10 +559,6 @@ export class PlaywrightDriver {
 		}
 	}
 
-	async didFinishLoad(): Promise<void> {
-		await this.whenLoaded;
-	}
-
 	/**
 	 * Stamps the current document so that {@link waitForWindowReload} can tell the
 	 * document apart from the one that a window reload will bring up.
@@ -697,36 +680,11 @@ export class PlaywrightDriver {
 			// Ignore
 		}
 
-		// Web: Extract client logs
-		if (this.options.web) {
-			try {
-				await measureAndLog(() => this.saveWebClientLogs(), 'saveWebClientLogs()', this.options.logger);
-			} catch (error) {
-				this.options.logger.log(`Error saving web client logs (${error})`);
-			}
-		}
-
 		//  exit via `close` method
 		try {
 			await measureAndLog(() => this.application.close(), 'playwright.close()', this.options.logger);
 		} catch (error) {
 			this.options.logger.log(`Error closing application (${error})`);
-		}
-
-		// Server: via `teardown`
-		if (this.serverProcess) {
-			await measureAndLog(() => teardown(this.serverProcess!, this.options.logger), 'teardown server process', this.options.logger);
-		}
-	}
-
-	private async saveWebClientLogs(): Promise<void> {
-		const logs = await this.getLogs();
-
-		for (const log of logs) {
-			const absoluteLogsPath = join(this.options.logsPath, log.relativePath);
-
-			await promises.mkdir(dirname(absoluteLogsPath), { recursive: true });
-			await promises.writeFile(absoluteLogsPath, log.contents);
 		}
 	}
 

@@ -73,12 +73,13 @@ const out = args.build ? 'out-build' : 'out';
 const src = path.join(REPO_ROOT, out);
 const baseUrl = pathToFileURL(src);
 
-//@ts-ignore
-const requiredNodeVersion = semver.parse(/^target="(.*)"$/m.exec(fs.readFileSync(path.join(REPO_ROOT, 'remote', '.npmrc'), 'utf8'))[1]);
+const requiredNodeVersion = semver.parse(fs.readFileSync(path.join(REPO_ROOT, '.nvmrc'), 'utf8').trim());
 const currentNodeVersion = semver.parse(process.version);
-//@ts-ignore
-if (currentNodeVersion?.major < requiredNodeVersion?.major) {
-	console.error(`node.js unit tests require a major node.js version of ${requiredNodeVersion?.major} (your version is: ${currentNodeVersion?.major})`);
+if (!requiredNodeVersion || !currentNodeVersion) {
+	throw new Error('Cannot determine the Node.js version from .nvmrc or the current runtime.');
+}
+if (currentNodeVersion.major !== requiredNodeVersion.major) {
+	console.error(`node.js unit tests require a major node.js version of ${requiredNodeVersion.major} (your version is: ${currentNodeVersion.major})`);
 	process.exit(1);
 }
 

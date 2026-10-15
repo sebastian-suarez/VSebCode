@@ -34,7 +34,6 @@ const rootPath = path.join(__dirname, '..', '..', '..');
 const [, , ...args] = process.argv;
 const opts = minimist(args, {
 	string: [
-		'browser',
 		'build',
 		'stable-build',
 		'wait-time',
@@ -43,9 +42,6 @@ const opts = minimist(args, {
 	],
 	boolean: [
 		'verbose',
-		'remote',
-		'web',
-		'headless',
 		'tracing',
 		'skip-stable-build'
 	],
@@ -54,46 +50,15 @@ const opts = minimist(args, {
 	}
 }) as {
 	verbose?: boolean;
-	remote?: boolean;
-	headless?: boolean;
-	web?: boolean;
 	tracing?: boolean;
 	'skip-stable-build'?: boolean;
 	build?: string;
 	'stable-build'?: string;
-	browser?: 'chromium' | 'webkit' | 'firefox' | 'chromium-msedge' | 'chromium-chrome';
 	electronArgs?: string;
 };
 
-const logsRootPath = (() => {
-	const logsParentPath = path.join(rootPath, '.build', 'logs');
-
-	let logsName: string;
-	if (opts.web) {
-		logsName = 'smoke-tests-browser';
-	} else if (opts.remote) {
-		logsName = 'smoke-tests-remote';
-	} else {
-		logsName = 'smoke-tests-electron';
-	}
-
-	return path.join(logsParentPath, logsName);
-})();
-
-const crashesRootPath = (() => {
-	const crashesParentPath = path.join(rootPath, '.build', 'crashes');
-
-	let crashesName: string;
-	if (opts.web) {
-		crashesName = 'smoke-tests-browser';
-	} else if (opts.remote) {
-		crashesName = 'smoke-tests-remote';
-	} else {
-		crashesName = 'smoke-tests-electron';
-	}
-
-	return path.join(crashesParentPath, crashesName);
-})();
+const logsRootPath = path.join(rootPath, '.build', 'logs', 'smoke-tests-electron');
+const crashesRootPath = path.join(rootPath, '.build', 'crashes', 'smoke-tests-electron');
 
 const logger = createLogger();
 
@@ -121,16 +86,6 @@ try {
 	logger.log(`Error enabling graceful-fs: ${error}`);
 }
 
-function getTestTypeSuffix(): string {
-	if (opts.web) {
-		return 'browser';
-	} else if (opts.remote) {
-		return 'remote';
-	} else {
-		return 'electron';
-	}
-}
-
 function getTmpDir(): string {
 	const tmpDir = os.tmpdir();
 	if (process.platform === 'win32') {
@@ -143,7 +98,7 @@ function getTmpDir(): string {
 	return tmpDir;
 }
 
-const testDataPath = path.join(getTmpDir(), `vscsmoke-${getTestTypeSuffix()}`);
+const testDataPath = path.join(getTmpDir(), 'vscsmoke-electron');
 if (fs.existsSync(testDataPath)) {
 	fs.rmSync(testDataPath, { recursive: true, force: true, maxRetries: 10, retryDelay: 1000 });
 }
@@ -169,7 +124,6 @@ function fail(errorMessage): void {
 	process.exit(1);
 }
 
-let quality: Quality;
 let version: string | undefined;
 
 function parseVersion(version: string): { major: number; minor: number; patch: number } {
@@ -201,59 +155,25 @@ function parseQuality(): Quality {
 //
 // #### Electron Smoke Tests ####
 //
-if (!opts.web) {
-	let testCodePath = opts.build;
-	let electronPath: string | undefined;
+const testCodePath = opts.build;
+let electronPath: string;
 
-	if (testCodePath) {
-		electronPath = getBuildElectronPath(testCodePath);
-		version = getBuildVersion(testCodePath);
-	} else {
-		testCodePath = getDevElectronPath();
-		electronPath = testCodePath;
-		process.env.VSCODE_REPOSITORY = rootPath;
-		process.env.VSCODE_DEV = '1';
-		process.env.VSCODE_CLI = '1';
-	}
-
-	if (!fs.existsSync(electronPath || '')) {
-		fail(`Cannot find VSCode at ${electronPath}. Please run VSCode once first (scripts/code.sh, scripts\\code.bat) and try again.`);
-	}
-
-	quality = parseQuality();
-
-	if (opts.remote) {
-		logger.log(`Running desktop remote smoke tests against ${electronPath}`);
-	} else {
-		logger.log(`Running desktop smoke tests against ${electronPath}`);
-	}
+if (testCodePath) {
+	electronPath = getBuildElectronPath(testCodePath);
+	version = getBuildVersion(testCodePath);
+} else {
+	electronPath = getDevElectronPath();
+	process.env.VSCODE_REPOSITORY = rootPath;
+	process.env.VSCODE_DEV = '1';
+	process.env.VSCODE_CLI = '1';
 }
 
-//
-// #### Web Smoke Tests ####
-//
-else {
-	const testCodeServerPath = opts.build || process.env.VSCODE_REMOTE_SERVER_PATH;
-
-	if (typeof testCodeServerPath === 'string') {
-		if (!fs.existsSync(testCodeServerPath)) {
-			fail(`Cannot find Code server at ${testCodeServerPath}.`);
-		} else {
-			logger.log(`Running web smoke tests against ${testCodeServerPath}`);
-		}
-	}
-
-	if (!testCodeServerPath) {
-		process.env.VSCODE_REPOSITORY = rootPath;
-		process.env.VSCODE_DEV = '1';
-		process.env.VSCODE_CLI = '1';
-
-		logger.log(`Running web smoke out of sources`);
-	}
-
-	quality = parseQuality();
+if (!fs.existsSync(electronPath)) {
+	fail(`Cannot find VSCode at ${electronPath}. Please run VSCode once first (scripts/code.sh, scripts\\code.bat) and try again.`);
 }
 
+const quality = parseQuality();
+logger.log(`Running desktop smoke tests against ${electronPath}`);
 logger.log(`VS Code product quality: ${quality}.`);
 
 const userDataDir = path.join(testDataPath, 'd');
@@ -304,21 +224,18 @@ async function setup(): Promise<void> {
 	logger.log('Test data path:', testDataPath);
 	logger.log('Preparing smoketest setup...');
 
-	if (!opts.web && !opts.remote && opts.build && !opts['skip-stable-build']) {
-		// only enabled when running with --build and not in web or remote
+	if (opts.build && !opts['skip-stable-build']) {
 		await measureAndLog(() => ensureStableCode(), 'ensureStableCode', logger);
 	}
 	await measureAndLog(() => setupRepository(), 'setupRepository', logger);
 
-	if (!opts.web && !opts.remote) {
-		for (const extension of ['vscode-smoketest-ext-host', 'vscode-smoketest-language-pack-de']) {
-			const smokeExtensionPath = path.join(rootPath, 'test', 'smoke', 'extensions', extension);
-			const destination = path.join(extensionsPath, extension);
-			if (fs.existsSync(destination)) {
-				fs.rmSync(destination, { recursive: true, force: true });
-			}
-			fs.cpSync(smokeExtensionPath, destination, { recursive: true });
+	for (const extension of ['vscode-smoketest-ext-host', 'vscode-smoketest-language-pack-de']) {
+		const smokeExtensionPath = path.join(rootPath, 'test', 'smoke', 'extensions', extension);
+		const destination = path.join(extensionsPath, extension);
+		if (fs.existsSync(destination)) {
+			fs.rmSync(destination, { recursive: true, force: true });
 		}
+		fs.cpSync(smokeExtensionPath, destination, { recursive: true });
 	}
 
 	logger.log('Smoketest setup done!\n');
@@ -340,11 +257,7 @@ before(async function () {
 		logsPath: path.join(logsRootPath, 'suite_unknown'),
 		crashesPath: path.join(crashesRootPath, 'suite_unknown'),
 		verbose: opts.verbose,
-		remote: opts.remote,
-		web: opts.web,
 		tracing: opts.tracing || !!process.env.BUILD_ARTIFACTSTAGINGDIRECTORY || !!process.env.GITHUB_WORKSPACE,
-		headless: opts.headless,
-		browser: opts.browser,
 		extraArgs: (opts.electronArgs || '').split(' ').map(arg => arg.trim()).filter(arg => !!arg)
 	};
 	this.defaultOptions = options;
@@ -363,22 +276,22 @@ after(async function () {
 	}
 });
 
-describe(`VSCode Smoke Tests (${opts.web ? 'Web' : 'Electron'})`, () => {
-	if (!opts.web) { setupDataLossTests(() => { return { stableCodePath: opts['stable-build'], stableCodeVersion: opts['stable-version'] } /* Do not change, deferred for a reason! */; }, logger); }
+describe('VSCode Smoke Tests (Electron)', () => {
+	setupDataLossTests(() => { return { stableCodePath: opts['stable-build'], stableCodeVersion: opts['stable-version'] } /* Do not change, deferred for a reason! */; }, logger);
 	setupPreferencesTests(logger);
 	setupSearchTests(logger);
-	if (!opts.web) { setupNotebookTests(logger); }
+	setupNotebookTests(logger);
 	setupLanguagesTests(logger);
 	setupTerminalTests(logger);
 	setupTaskTests(logger);
 	setupStatusbarTests(logger);
 	if (quality !== Quality.Dev && quality !== Quality.OSS) { setupExtensionTests(logger); }
-	if (!opts.web && !opts.remote) { setupExtensionHostRestartTests(logger); }
-	if (!(opts.web && process.platform === 'win32' /* TODO@bpasero flaky */)) { setupMultirootTests(logger); }
-	if (!opts.web && !opts.remote && quality !== Quality.Dev && quality !== Quality.OSS) { setupLocalizationTests(logger); }
-	if (!opts.web && !opts.remote) { setupLaunchTests(logger); }
-	if (!opts.web && !opts.remote) { setupBrowserViewTests(logger); }
+	setupExtensionHostRestartTests(logger);
+	setupMultirootTests(logger);
+	if (quality !== Quality.Dev && quality !== Quality.OSS) { setupLocalizationTests(logger); }
+	setupLaunchTests(logger);
+	setupBrowserViewTests(logger);
 	// Native policy fixtures modify OS state outside the test profile; opt in only on disposable runners so you don't break your own machine.
-	if (!opts.web && !opts.remote && process.env.VSCODE_SMOKE_TEST_POLICY === '1') { setupPolicyTests(logger); }
-	setupAccessibilityTests(logger, opts, quality);
+	if (process.env.VSCODE_SMOKE_TEST_POLICY === '1') { setupPolicyTests(logger); }
+	setupAccessibilityTests(logger);
 });

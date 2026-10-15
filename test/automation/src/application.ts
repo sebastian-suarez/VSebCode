@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -39,14 +40,6 @@ export class Application {
 
 	get logger(): Logger {
 		return this.options.logger;
-	}
-
-	get remote(): boolean {
-		return !!this.options.remote;
-	}
-
-	get web(): boolean {
-		return !!this.options.web;
 	}
 
 	private _workspacePathOrFolder: string | undefined;
@@ -133,25 +126,7 @@ export class Application {
 	private async checkWindowReady(code: Code): Promise<void> {
 
 		// We need a rendered workbench
-		await measureAndLog(() => code.didFinishLoad(), 'Application#checkWindowReady: wait for navigation to be committed', this.logger);
 		await measureAndLog(() => code.waitForElement('.monaco-workbench'), 'Application#checkWindowReady: wait for .monaco-workbench element', this.logger);
 		await measureAndLog(() => code.whenWorkbenchRestored(), 'Application#checkWorkbenchRestored', this.logger);
-
-		// Remote but not web: wait for a remote connection state change
-		if (this.remote) {
-			await measureAndLog(() => code.waitForTextContent('.monaco-workbench .statusbar-item[id="status.host"]', undefined, statusHostLabel => {
-				this.logger.log(`checkWindowReady: remote indicator text is ${statusHostLabel}`);
-
-				// The absence of "Opening Remote" is not a strict
-				// indicator for a successful connection, but we
-				// want to avoid hanging here until timeout because
-				// this method is potentially called from a location
-				// that has no tracing enabled making it hard to
-				// diagnose this. As such, as soon as the connection
-				// state changes away from the "Opening Remote..." one
-				// we return.
-				return !statusHostLabel.includes('Opening Remote');
-			}, 300 /* = 30s of retry */), 'Application#checkWindowReady: wait for remote indicator', this.logger);
-		}
 	}
 }

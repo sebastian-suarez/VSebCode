@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -8,7 +9,6 @@ import * as os from 'os';
 import * as playwright from 'playwright';
 import { IElement, ILocaleInfo, ILocalizedStrings, ILogFile } from './driver';
 import { Logger, measureAndLog } from './logger';
-import { launch as launchPlaywrightBrowser } from './playwrightBrowser';
 import { PlaywrightDriver } from './playwrightDriver';
 import { launch as launchPlaywrightElectron } from './playwrightElectron';
 import { teardown } from './processes';
@@ -30,12 +30,8 @@ export interface LaunchOptions {
 	verbose?: boolean;
 	useInMemorySecretStorage?: boolean;
 	readonly extraArgs?: string[];
-	readonly remote?: boolean;
-	readonly web?: boolean;
 	readonly tracing?: boolean;
 	snapshots?: boolean;
-	readonly headless?: boolean;
-	readonly browser?: 'chromium' | 'webkit' | 'firefox' | 'chromium-msedge' | 'chromium-chrome';
 	readonly quality: Quality;
 	version: { major: number; minor: number; patch: number };
 	readonly extensionDevelopmentPath?: string;
@@ -55,23 +51,23 @@ interface ICodeInstance {
 
 const instances = new Set<ICodeInstance>();
 
-function registerInstance(process: cp.ChildProcess, logger: Logger, type: 'electron' | 'server'): { safeToKill: Promise<void> } {
+function registerInstance(process: cp.ChildProcess, logger: Logger): { safeToKill: Promise<void> } {
 	const instance = { kill: () => teardown(process, logger) };
 	instances.add(instance);
 
 	const safeToKill = new Promise<void>(resolve => {
 		process.stdout?.on('data', data => {
 			const output = data.toString();
-			if (output.indexOf('calling app.quit()') >= 0 && type === 'electron') {
+			if (output.indexOf('calling app.quit()') >= 0) {
 				setTimeout(() => resolve(), 500 /* give Electron some time to actually terminate fully */);
 			}
-			logger.log(`[${type}] stdout: ${output}`);
+			logger.log(`[electron] stdout: ${output}`);
 		});
-		process.stderr?.on('data', error => logger.log(`[${type}] stderr: ${error}`));
+		process.stderr?.on('data', error => logger.log(`[electron] stderr: ${error}`));
 	});
 
 	process.once('exit', (code, signal) => {
-		logger.log(`[${type}] Process terminated (pid: ${process.pid}, code: ${code}, signal: ${signal})`);
+		logger.log(`[electron] Process terminated (pid: ${process.pid}, code: ${code}, signal: ${signal})`);
 
 		instances.delete(instance);
 	});
@@ -101,21 +97,11 @@ export async function launch(options: LaunchOptions): Promise<Code> {
 		throw new Error('Smoke test process has terminated, refusing to spawn Code');
 	}
 
-	// Browser smoke tests
-	if (options.web) {
-		const { serverProcess, driver } = await measureAndLog(() => launchPlaywrightBrowser(options), 'launch playwright (browser)', options.logger);
-		registerInstance(serverProcess, options.logger, 'server');
-
-		return new Code(driver, options.logger, serverProcess, undefined, options.quality, options.version);
-	}
-
 	// Electron smoke tests (playwright)
-	else {
-		const { electronProcess, driver } = await measureAndLog(() => launchPlaywrightElectron(options), 'launch playwright (electron)', options.logger);
-		const { safeToKill } = registerInstance(electronProcess, options.logger, 'electron');
+	const { electronProcess, driver } = await measureAndLog(() => launchPlaywrightElectron(options), 'launch playwright (electron)', options.logger);
+	const { safeToKill } = registerInstance(electronProcess, options.logger);
 
-		return new Code(driver, options.logger, electronProcess, safeToKill, options.quality, options.version);
-	}
+	return new Code(driver, options.logger, electronProcess, safeToKill, options.quality, options.version);
 }
 
 export class Code {
@@ -126,7 +112,7 @@ export class Code {
 		driver: PlaywrightDriver,
 		readonly logger: Logger,
 		private readonly mainProcess: cp.ChildProcess,
-		private readonly safeToKill: Promise<void> | undefined,
+		private readonly safeToKill: Promise<void>,
 		readonly quality: Quality,
 		readonly version: { major: number; minor: number; patch: number }
 	) {
@@ -179,10 +165,6 @@ export class Code {
 		await this.driver.sendKeybinding(keybinding, accept);
 	}
 
-	async didFinishLoad(): Promise<void> {
-		return this.driver.didFinishLoad();
-	}
-
 	async exit(): Promise<void> {
 		return measureAndLog(() => new Promise<void>(resolve => {
 			const pid = this.mainProcess.pid!;
@@ -193,7 +175,7 @@ export class Code {
 			this.driver.close();
 
 			let safeToKill = false;
-			this.safeToKill?.then(() => {
+			this.safeToKill.then(() => {
 				this.logger.log('Smoke test exit(): safeToKill() called');
 				safeToKill = true;
 			});

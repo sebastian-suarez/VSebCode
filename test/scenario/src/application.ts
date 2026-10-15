@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -68,7 +69,6 @@ function fail(errorMessage): void {
 	process.exit(1);
 }
 
-let quality: Quality;
 let version: string | undefined;
 
 /**
@@ -179,77 +179,43 @@ function findInstalledBuild(): string | undefined {
 	});
 }
 
-if (!opts.web) {
-	let testCodePath = opts.build;
-	let electronPath: string | undefined;
+let testCodePath = opts.build;
+let electronPath: string;
 
-	if (!testCodePath && !opts.dev) {
-		testCodePath = findInstalledBuild();
-		if (testCodePath) {
-			// `getApplication` launches whatever `opts.build` names, so record the
-			// choice there rather than only in this block.
-			opts.build = testCodePath;
-			logger.log(`No target given, using the installed build at ${testCodePath}. Pass --dev to run this checkout instead.`);
-		}
-	}
-
+if (!testCodePath && !opts.dev) {
+	testCodePath = findInstalledBuild();
 	if (testCodePath) {
-		electronPath = getBuildElectronPath(testCodePath);
-		version = getBuildVersion(testCodePath);
-	} else {
-		testCodePath = getDevElectronPath();
-		electronPath = testCodePath;
-		process.env.VSCODE_REPOSITORY = rootPath;
-		process.env.VSCODE_DEV = '1';
-		process.env.VSCODE_CLI = '1';
-	}
-
-	if (!fs.existsSync(electronPath || '')) {
-		fail(`Cannot find VS Code at ${electronPath}. Install VS Code Insiders, pass --build <app-root>, or build this checkout and pass --dev.`);
-	}
-
-	// Windows applies a downloaded update by swapping the executable during
-	// startup, so the launched process exits before it ever shows a window and
-	// the failure reads as a crash. Insiders updates daily, so say what is
-	// actually wrong instead of leaving a 60s timeout to be misread.
-	if (electronPath && fs.existsSync(path.join(path.dirname(electronPath), `new_${path.basename(electronPath)}`))) {
-		fail(`${electronPath} has a downloaded update waiting to be applied, and it exits during startup to install it instead of opening a window. Start and quit VS Code once to apply the update, then run this again.`);
-	}
-
-	quality = parseQuality(testCodePath ? readBuildQuality(testCodePath) : undefined);
-
-	if (opts.remote) {
-		logger.log(`Running desktop remote smoke tests against ${electronPath}`);
-	} else {
-		logger.log(`Running desktop smoke tests against ${electronPath}`);
+		// `getApplication` launches whatever `opts.build` names, so record the
+		// choice there rather than only in this block.
+		opts.build = testCodePath;
+		logger.log(`No target given, using the installed build at ${testCodePath}. Pass --dev to run this checkout instead.`);
 	}
 }
 
-//
-// #### Web Smoke Tests ####
-//
-else {
-	const testCodeServerPath = opts.build || process.env.VSCODE_REMOTE_SERVER_PATH;
-
-	if (typeof testCodeServerPath === 'string') {
-		if (!fs.existsSync(testCodeServerPath)) {
-			fail(`Cannot find Code server at ${testCodeServerPath}.`);
-		} else {
-			logger.log(`Running web smoke tests against ${testCodeServerPath}`);
-		}
-	}
-
-	if (!testCodeServerPath) {
-		process.env.VSCODE_REPOSITORY = rootPath;
-		process.env.VSCODE_DEV = '1';
-		process.env.VSCODE_CLI = '1';
-
-		logger.log(`Running web smoke out of sources`);
-	}
-
-	quality = parseQuality();
+if (testCodePath) {
+	electronPath = getBuildElectronPath(testCodePath);
+	version = getBuildVersion(testCodePath);
+} else {
+	electronPath = getDevElectronPath();
+	process.env.VSCODE_REPOSITORY = rootPath;
+	process.env.VSCODE_DEV = '1';
+	process.env.VSCODE_CLI = '1';
 }
 
+if (!fs.existsSync(electronPath)) {
+	fail(`Cannot find VS Code at ${electronPath}. Install VS Code Insiders, pass --build <app-root>, or build this checkout and pass --dev.`);
+}
+
+// Windows applies a downloaded update by swapping the executable during
+// startup, so the launched process exits before it ever shows a window and
+// the failure reads as a crash. Insiders updates daily, so say what is
+// actually wrong instead of leaving a 60s timeout to be misread.
+if (fs.existsSync(path.join(path.dirname(electronPath), `new_${path.basename(electronPath)}`))) {
+	fail(`${electronPath} has a downloaded update waiting to be applied, and it exits during startup to install it instead of opening a window. Start and quit VS Code once to apply the update, then run this again.`);
+}
+
+const quality = parseQuality(testCodePath ? readBuildQuality(testCodePath) : undefined);
+logger.log(`Running desktop smoke tests against ${electronPath}`);
 logger.log(`VS Code product quality: ${quality}.`);
 
 export function getProductVersion(): string {
@@ -274,9 +240,6 @@ export function assertNoProfileOverrides(extraArgs: string[] | undefined): void 
 }
 
 export async function getApplication({ recordVideo, workspacePath, userSettings, extraArgs, extraEnv }: ApplicationLaunchOptions = {}) {
-	if (opts.web && extraArgs?.length) {
-		throw new Error('Per-run extraArgs are not supported by the web automation launcher.');
-	}
 	assertNoProfileOverrides(extraArgs);
 	// The from-source environment is resolved once at module load, which is also
 	// where the Electron path is validated. Re-applying it here would set
@@ -299,11 +262,7 @@ export async function getApplication({ recordVideo, workspacePath, userSettings,
 		crashesPath: crashesRootPath,
 		videosPath: (recordVideo || opts.video) ? videoRootPath : undefined,
 		verbose: opts.verbose,
-		remote: opts.remote,
-		web: opts.web,
 		tracing: true,
-		headless: opts.headless,
-		browser: opts.browser,
 		extraArgs: [
 			...(opts.electronArgs || '').split(' ').map(arg => arg.trim()).filter(arg => !!arg),
 			...(extraArgs ?? [])
@@ -312,7 +271,7 @@ export async function getApplication({ recordVideo, workspacePath, userSettings,
 		extraEnv,
 	});
 	try {
-		await preseedUserData(application.userDataPath, userSettings, !!opts.web,
+		await preseedUserData(application.userDataPath, userSettings,
 			[...(extraArgs ?? []), ...(opts.electronArgs ?? '').split(' ')].includes('--agents'));
 		await application.start();
 		return application;
@@ -331,25 +290,23 @@ async function removeProfileData(userDataPath: string | undefined): Promise<void
 	if (!userDataPath) {
 		return;
 	}
-	for (const profilePath of [userDataPath, `${userDataPath}-server`]) {
-		try {
-			await fs.promises.rm(profilePath, { recursive: true, force: true, maxRetries: 10 });
-		} catch (error) {
-			logger.log(`Failed to remove test profile '${profilePath}': ${error}`);
-		}
+	try {
+		await fs.promises.rm(userDataPath, { recursive: true, force: true, maxRetries: 10 });
+	} catch (error) {
+		logger.log(`Failed to remove test profile '${userDataPath}': ${error}`);
 	}
 }
 
-async function preseedUserData(userDataDir: string | undefined, userSettings: Record<string, JSONValue> | undefined, web: boolean, agents: boolean): Promise<void> {
+async function preseedUserData(userDataDir: string | undefined, userSettings: Record<string, JSONValue> | undefined, agents: boolean): Promise<void> {
 	if (!userDataDir) {
 		throw new Error('Cannot pre-seed the isolated test profile without a user data directory.');
 	}
 
-	const userDir = path.join(userDataDir, ...(web ? ['data', 'User'] : ['User']));
+	const userDir = path.join(userDataDir, 'User');
 	fs.mkdirSync(userDir, { recursive: true });
 	if (userSettings) {
 		fs.writeFileSync(path.join(userDir, 'settings.json'), JSON.stringify(userSettings, undefined, 2));
-		if (agents && !web) {
+		if (agents) {
 			const agentsUserDir = path.join(userDir, 'profiles', 'builtin', 'agents');
 			fs.mkdirSync(agentsUserDir, { recursive: true });
 			fs.writeFileSync(path.join(agentsUserDir, 'settings.json'), JSON.stringify(userSettings, undefined, 2));
