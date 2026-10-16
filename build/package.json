@@ -42,7 +42,7 @@
     "@types/xml2js": "0.0.33",
     "@vscode/iconv-lite-umd": "0.7.1",
     "@vscode/ripgrep-universal": "^1.18.0",
-    "@vscode/vsce": "3.6.1",
+    "@vscodium/vsce": "3.6.1-258428",
     "ansi-colors": "^3.2.3",
     "byline": "^5.0.0",
     "debug": "^4.3.2",
@@ -57,7 +57,6 @@
     "svgo": "2.8.4",
     "ternary-stream": "^3.0.0",
     "through2": "^4.0.2",
-    "tree-sitter": "^0.22.4",
     "vscode-universal-bundler": "^0.1.3",
     "yauzl": "^3.3.1",
     "zx": "^8.8.5"
@@ -71,6 +70,7 @@
     "test": "node --test '{lib,next}/**/*.test.ts' '../.eslint-plugin-local/tests/*.test.ts'"
   },
   "optionalDependencies": {
+    "tree-sitter": "^0.22.4",
     "tree-sitter-typescript": "^0.23.2",
     "vscode-gulp-watch": "^5.0.3"
   },
@@ -81,7 +81,6 @@
     "yauzl": "^3.3.1"
   },
   "allowScripts": {
-    "@vscode/vsce-sign@2.1.0": true,
     "esbuild@0.27.2": true,
     "fsevents@2.3.3": true,
     "keytar@7.9.0": true,

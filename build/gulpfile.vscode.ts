@@ -207,7 +207,6 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 				// and node-pty blocks the pty host on `ConnectNamedPipe`.
 				'**/node-pty/package.json',
 				'**/*.wasm',
-				'**/@vscode/vsce-sign/bin/*',
 			], [
 				'**/*.mk',
 			], [
