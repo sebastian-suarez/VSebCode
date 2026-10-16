@@ -60,11 +60,11 @@ fsevents/test/**
 !@vscode/tree-sitter-wasm/wasm/tree-sitter-powershell.wasm
 !@vscode/tree-sitter-wasm/wasm/tree-sitter-bash.wasm
 
-native-keymap/binding.gyp
-native-keymap/build/**
-native-keymap/src/**
-native-keymap/deps/**
-!native-keymap/build/Release/*.node
+@vscodium/native-keymap/binding.gyp
+@vscodium/native-keymap/build/**
+@vscodium/native-keymap/src/**
+@vscodium/native-keymap/deps/**
+!@vscodium/native-keymap/build/Release/*.node
 
 native-is-elevated/binding.gyp
 native-is-elevated/build/**
@@ -214,16 +214,19 @@ zone.js/dist/**
 @xterm/xterm-addon-*/out/**
 @xterm/xterm-addon-*/out-test/**
 
-# @vscode/os-proxy-resolver platform binaries - selected target is re-added during packaging
-@vscode/os-proxy-resolver-darwin-arm64/**
-@vscode/os-proxy-resolver-darwin-x64/**
-@vscode/os-proxy-resolver-linux-arm-gnueabihf/**
-@vscode/os-proxy-resolver-linux-arm64-gnu/**
-@vscode/os-proxy-resolver-linux-arm64-musl/**
-@vscode/os-proxy-resolver-linux-x64-gnu/**
-@vscode/os-proxy-resolver-linux-x64-musl/**
-@vscode/os-proxy-resolver-win32-arm64-msvc/**
-@vscode/os-proxy-resolver-win32-x64-msvc/**
+# @vscodium/os-proxy-resolver platform binaries - selected target is re-added during packaging
+@vscodium/os-proxy-resolver-darwin-arm64/**
+@vscodium/os-proxy-resolver-darwin-x64/**
+@vscodium/os-proxy-resolver-linux-arm-gnueabihf/**
+@vscodium/os-proxy-resolver-linux-arm64-gnu/**
+@vscodium/os-proxy-resolver-linux-arm64-musl/**
+@vscodium/os-proxy-resolver-linux-loong64-gnu/**
+@vscodium/os-proxy-resolver-linux-ppc64le-gnu/**
+@vscodium/os-proxy-resolver-linux-riscv64-gnu/**
+@vscodium/os-proxy-resolver-linux-x64-gnu/**
+@vscodium/os-proxy-resolver-linux-x64-musl/**
+@vscodium/os-proxy-resolver-win32-arm64-msvc/**
+@vscodium/os-proxy-resolver-win32-x64-msvc/**
 
 # es5-ext is quarantined protestware (sonatype-2022-2248). It is only consumed
 # in websocket's browser.js inside a try/catch with a globalThis fallback,

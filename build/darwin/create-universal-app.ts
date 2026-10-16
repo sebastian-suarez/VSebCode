@@ -59,8 +59,8 @@ async function main(buildDir?: string) {
 	// keeps both.
 	for (const plat of ['darwin-x64', 'darwin-arm64']) {
 		for (const base of nodeModulesBases) {
-			// @vscode/os-proxy-resolver-{platform} packages
-			crossCopyPlatformDir(x64AppPath, arm64AppPath, path.join(base, '@vscode', `os-proxy-resolver-${plat}`));
+			// @vscodium/os-proxy-resolver-{platform} packages
+			crossCopyPlatformDir(x64AppPath, arm64AppPath, path.join(base, '@vscodium', `os-proxy-resolver-${plat}`));
 			// @vscode/ripgrep-universal/bin/{platform} (rg binary)
 			crossCopyPlatformDir(x64AppPath, arm64AppPath, path.join(base, '@vscode', 'ripgrep-universal', 'bin', plat));
 		}
@@ -70,10 +70,10 @@ async function main(buildDir?: string) {
 		'**/CodeResources',
 		'**/Credits.rtf',
 		'**/policies/{*.mobileconfig,**/*.plist}',
-		'**/node_modules/@vscode/os-proxy-resolver-darwin-x64/**',
-		'**/node_modules/@vscode/os-proxy-resolver-darwin-arm64/**',
-		'**/node_modules.asar.unpacked/@vscode/os-proxy-resolver-darwin-x64/**',
-		'**/node_modules.asar.unpacked/@vscode/os-proxy-resolver-darwin-arm64/**',
+		'**/node_modules/@vscodium/os-proxy-resolver-darwin-x64/**',
+		'**/node_modules/@vscodium/os-proxy-resolver-darwin-arm64/**',
+		'**/node_modules.asar.unpacked/@vscodium/os-proxy-resolver-darwin-x64/**',
+		'**/node_modules.asar.unpacked/@vscodium/os-proxy-resolver-darwin-arm64/**',
 		'**/node_modules/@vscode/ripgrep-universal/bin/darwin-x64/**',
 		'**/node_modules/@vscode/ripgrep-universal/bin/darwin-arm64/**',
 		'**/node_modules.asar.unpacked/@vscode/ripgrep-universal/bin/darwin-x64/**',
@@ -93,8 +93,8 @@ async function main(buildDir?: string) {
 		// them as arch-unique. Paths here are ASAR-internal (top level, no `node_modules`
 		// prefix). Over-covering is harmless: the allowlist is only consulted for files
 		// that are actually unique to one arch.
-		singleArchFiles: '{**/@vscode/ripgrep-universal/bin/darwin-*,**/@vscode/ripgrep-universal/bin/darwin-*/**,**/@vscode/os-proxy-resolver-darwin-*,**/@vscode/os-proxy-resolver-darwin-*/**}',
-		x64ArchFiles: '{*/kerberos.node,**/node_modules/@vscode/ripgrep-universal/bin/darwin-*/*,**/node_modules.asar.unpacked/@vscode/ripgrep-universal/bin/darwin-*/*,**/node_modules/@vscode/os-proxy-resolver-darwin-*/**,**/node_modules.asar.unpacked/@vscode/os-proxy-resolver-darwin-*/**}',
+		singleArchFiles: '{**/@vscode/ripgrep-universal/bin/darwin-*,**/@vscode/ripgrep-universal/bin/darwin-*/**,**/@vscodium/os-proxy-resolver-darwin-*,**/@vscodium/os-proxy-resolver-darwin-*/**}',
+		x64ArchFiles: '{*/kerberos.node,**/node_modules/@vscode/ripgrep-universal/bin/darwin-*/*,**/node_modules.asar.unpacked/@vscode/ripgrep-universal/bin/darwin-*/*,**/node_modules/@vscodium/os-proxy-resolver-darwin-*/**,**/node_modules.asar.unpacked/@vscodium/os-proxy-resolver-darwin-*/**}',
 		filesToSkipComparison: (file: string) => {
 			for (const expected of filesToSkip) {
 				if (minimatch(file, expected)) {

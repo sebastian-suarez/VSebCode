@@ -28,8 +28,8 @@ const FILES_TO_SKIP = [
 	'**/node_modules/@vscode/ripgrep-universal/bin/darwin-*/**',
 	'**/node_modules.asar.unpacked/@vscode/ripgrep-universal/bin/darwin-*/**',
 	// OS proxy resolver: universal app has separate x64 and arm64 packages
-	'**/node_modules/@vscode/os-proxy-resolver-darwin-*/**',
-	'**/node_modules.asar.unpacked/@vscode/os-proxy-resolver-darwin-*/**'
+	'**/node_modules/@vscodium/os-proxy-resolver-darwin-*/**',
+	'**/node_modules.asar.unpacked/@vscodium/os-proxy-resolver-darwin-*/**'
 ];
 
 

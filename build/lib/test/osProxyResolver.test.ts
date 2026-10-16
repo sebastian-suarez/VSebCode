@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -14,13 +15,13 @@ import { ensureOSProxyResolverPlatformPackage, getOSProxyResolverExcludeFilter, 
 suite('osProxyResolver', () => {
 	test('selects the target platform package', () => {
 		assert.deepStrictEqual(getOSProxyResolverPlatformFiles('darwin', 'x64'), [
-			'node_modules/@vscode/os-proxy-resolver-darwin-x64/**',
+			'node_modules/@vscodium/os-proxy-resolver-darwin-x64/**',
 		]);
 		assert.deepStrictEqual(getOSProxyResolverPlatformFiles('linux', 'armhf'), [
-			'node_modules/@vscode/os-proxy-resolver-linux-arm-gnueabihf/**',
+			'node_modules/@vscodium/os-proxy-resolver-linux-arm-gnueabihf/**',
 		]);
 		assert.deepStrictEqual(getOSProxyResolverPlatformFiles('win32', 'arm64'), [
-			'node_modules/@vscode/os-proxy-resolver-win32-arm64-msvc/**',
+			'node_modules/@vscodium/os-proxy-resolver-win32-arm64-msvc/**',
 		]);
 		assert.deepStrictEqual(getOSProxyResolverPlatformFiles('alpine', 'arm64'), []);
 	});
@@ -30,36 +31,42 @@ suite('osProxyResolver', () => {
 			'**',
 			...osProxyResolverPlatforms
 				.filter(platform => platform !== 'darwin-x64')
-				.map(platform => `!**/node_modules/@vscode/os-proxy-resolver-${platform}/**`),
+				.map(platform => `!**/node_modules/@vscodium/os-proxy-resolver-${platform}/**`),
 		]);
 		assert.deepStrictEqual(getOSProxyResolverExcludeFilter('alpine', 'arm64'), [
 			'**',
-			...osProxyResolverPlatforms.map(platform => `!**/node_modules/@vscode/os-proxy-resolver-${platform}/**`),
+			...osProxyResolverPlatforms.map(platform => `!**/node_modules/@vscodium/os-proxy-resolver-${platform}/**`),
 		]);
 	});
 
 	test('excludes the musl packages from the glibc linux targets', () => {
 		assert.deepStrictEqual(getOSProxyResolverExcludeFilter('linux', 'x64'), [
 			'**',
-			'!**/node_modules/@vscode/os-proxy-resolver-darwin-arm64/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-darwin-x64/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-arm-gnueabihf/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-arm64-gnu/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-arm64-musl/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-x64-musl/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-win32-arm64-msvc/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-win32-x64-msvc/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-darwin-arm64/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-darwin-x64/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-arm-gnueabihf/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-arm64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-arm64-musl/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-loong64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-ppc64le-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-riscv64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-x64-musl/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-win32-arm64-msvc/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-win32-x64-msvc/**',
 		]);
 		assert.deepStrictEqual(getOSProxyResolverExcludeFilter('linux', 'arm64'), [
 			'**',
-			'!**/node_modules/@vscode/os-proxy-resolver-darwin-arm64/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-darwin-x64/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-arm-gnueabihf/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-arm64-musl/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-x64-gnu/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-linux-x64-musl/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-win32-arm64-msvc/**',
-			'!**/node_modules/@vscode/os-proxy-resolver-win32-x64-msvc/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-darwin-arm64/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-darwin-x64/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-arm-gnueabihf/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-arm64-musl/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-loong64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-ppc64le-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-riscv64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-x64-gnu/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-linux-x64-musl/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-win32-arm64-msvc/**',
+			'!**/node_modules/@vscodium/os-proxy-resolver-win32-x64-msvc/**',
 		]);
 	});
 
@@ -68,7 +75,7 @@ suite('osProxyResolver', () => {
 		const lockFilePath = path.join(import.meta.dirname, '..', '..', '..', 'package-lock.json');
 		const lockFile = JSON.parse(fs.readFileSync(lockFilePath, 'utf8'));
 		const lockedPlatforms = Object.keys(lockFile.packages)
-			.map(key => /(?:^|\/)node_modules\/@vscode\/os-proxy-resolver-(?<platform>.+)$/.exec(key)?.groups?.platform)
+			.map(key => /(?:^|\/)node_modules\/@vscodium\/os-proxy-resolver-(?<platform>.+)$/.exec(key)?.groups?.platform)
 			.filter(platform => platform !== undefined)
 			.sort();
 
@@ -82,7 +89,7 @@ suite('osProxyResolver', () => {
 			fs.mkdirSync(nodeModulesRoot, { recursive: true });
 			fs.writeFileSync(path.join(repoRoot, 'package-lock.json'), JSON.stringify({
 				packages: {
-					'node_modules/@vscode/os-proxy-resolver-darwin-x64': {
+					'node_modules/@vscodium/os-proxy-resolver-darwin-x64': {
 						version: '0.2.0',
 					}
 				}
@@ -99,7 +106,7 @@ suite('osProxyResolver', () => {
 				}
 			});
 
-			assert(fs.existsSync(path.join(nodeModulesRoot, '@vscode', 'os-proxy-resolver-darwin-x64', 'os_proxy_resolver.node')));
+			assert(fs.existsSync(path.join(nodeModulesRoot, '@vscodium', 'os-proxy-resolver-darwin-x64', 'os_proxy_resolver.node')));
 		} finally {
 			fs.rmSync(repoRoot, { recursive: true, force: true });
 		}

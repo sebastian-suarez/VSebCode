@@ -1522,7 +1522,7 @@ export default defineConfig(
 						'node:module',
 						'node:url',
 						'node:v8',
-						'native-keymap',
+						'@vscodium/native-keymap',
 						'net',
 						'node-pty',
 						'os',

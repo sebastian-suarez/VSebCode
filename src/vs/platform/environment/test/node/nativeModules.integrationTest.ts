@@ -43,12 +43,12 @@ flakySuite('Native Modules (all platforms)', () => {
 	});
 
 	test('native-keymap', async () => {
-		const keyMap = await import('native-keymap');
-		assert.ok(typeof keyMap.onDidChangeKeyboardLayout === 'function', testErrorMessage('native-keymap'));
-		assert.ok(typeof keyMap.getCurrentKeyboardLayout === 'function', testErrorMessage('native-keymap'));
+		const keyMap = await import('@vscodium/native-keymap');
+		assert.ok(typeof keyMap.onDidChangeKeyboardLayout === 'function', testErrorMessage('@vscodium/native-keymap'));
+		assert.ok(typeof keyMap.getCurrentKeyboardLayout === 'function', testErrorMessage('@vscodium/native-keymap'));
 
 		const result = keyMap.getCurrentKeyboardLayout();
-		assert.ok(result, testErrorMessage('native-keymap'));
+		assert.ok(result, testErrorMessage('@vscodium/native-keymap'));
 	});
 
 	test('@vscode/native-watchdog', async () => {
@@ -124,8 +124,8 @@ flakySuite('Native Modules (all platforms)', () => {
 		assert.ok(windowsCerts.length > 0, testErrorMessage('@vscode/proxy-agent'));
 	});
 
-	test('@vscode/os-proxy-resolver', async () => {
-		const proxyResolver = await import('@vscode/os-proxy-resolver');
+	test('@vscodium/os-proxy-resolver', async () => {
+		const proxyResolver = await import('@vscodium/os-proxy-resolver');
 		const proxies = await proxyResolver.resolveProxy('https://example.com/');
 		const config = await proxyResolver.readProxyConfig();
 		assert.deepStrictEqual({
@@ -134,7 +134,7 @@ flakySuite('Native Modules (all platforms)', () => {
 		}, {
 			resolveProxy: true,
 			readProxyConfig: true,
-		}, testErrorMessage('@vscode/os-proxy-resolver'));
+		}, testErrorMessage('@vscodium/os-proxy-resolver'));
 	});
 });
 

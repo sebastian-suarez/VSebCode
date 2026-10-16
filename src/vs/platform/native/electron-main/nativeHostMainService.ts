@@ -1147,12 +1147,12 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 	}
 
 	async resolveProxyWithPackage(_windowId: number | undefined, url: string): Promise<IOSProxy[]> {
-		const { resolveProxy } = await import('@vscode/os-proxy-resolver');
+		const { resolveProxy } = await import('@vscodium/os-proxy-resolver');
 		return resolveProxy(url);
 	}
 
 	async readProxyConfigWithPackage(_windowId: number | undefined): Promise<IOSProxyConfig> {
-		const { readProxyConfig } = await import('@vscode/os-proxy-resolver');
+		const { readProxyConfig } = await import('@vscodium/os-proxy-resolver');
 		return readProxyConfig();
 	}
 

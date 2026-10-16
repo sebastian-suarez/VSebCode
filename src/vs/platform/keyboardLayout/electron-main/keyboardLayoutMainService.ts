@@ -1,9 +1,10 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type * as nativeKeymap from 'native-keymap';
+import type * as nativeKeymap from '@vscodium/native-keymap';
 import * as platform from '../../../base/common/platform.js';
 import { Emitter } from '../../../base/common/event.js';
 import { Disposable } from '../../../base/common/lifecycle.js';
@@ -46,7 +47,7 @@ export class KeyboardLayoutMainService extends Disposable implements INativeKeyb
 	}
 
 	private async _doInitialize(): Promise<void> {
-		const nativeKeymapMod = await import('native-keymap');
+		const nativeKeymapMod = await import('@vscodium/native-keymap');
 
 		this._keyboardLayoutData = readKeyboardLayoutData(nativeKeymapMod);
 		if (!platform.isCI) {
