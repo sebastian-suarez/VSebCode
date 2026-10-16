@@ -16,6 +16,7 @@ import { getCurrentExtensionTarget, getPlatformSpecificAssetName } from './exten
 import fancyLog from 'fancy-log';
 import ansiColors from 'ansi-colors';
 import { Stream } from 'stream';
+import { rewriteTelemetryDirectory, rewriteTelemetryStream } from './telemetryHosts.ts';
 
 export interface IExtensionDefinition {
 	name: string;
@@ -99,7 +100,7 @@ function getExtensionDownloadStream(extension: IExtensionDefinition) {
 		input = ext.fromGithub(extension, { latest: isInsiders() });
 	}
 
-	return input.pipe(rename(p => p.dirname = `${extension.name}/${p.dirname}`));
+	return input.pipe(rewriteTelemetryStream()).pipe(rename(p => p.dirname = `${extension.name}/${p.dirname}`));
 }
 
 function resolvePlatformSpecificAsset(extension: IExtensionDefinition): { assetName: string; sha256: string } | undefined {
@@ -124,6 +125,7 @@ function resolvePlatformSpecificAsset(extension: IExtensionDefinition): { assetN
 export function getExtensionStream(extension: IExtensionDefinition) {
 	// if the extension exists on disk, use those files instead of downloading anew
 	if (isUpToDate(extension)) {
+		rewriteTelemetryDirectory(getExtensionPath(extension));
 		log('[extensions]', `${extension.name}@${extension.version} up to date`, ansiColors.green('✔︎'));
 		return vfs.src(['**'], { cwd: getExtensionPath(extension), dot: true })
 			.pipe(rename(p => p.dirname = `${extension.name}/${p.dirname}`));
@@ -136,6 +138,7 @@ function syncMarketplaceExtension(extension: IExtensionDefinition): Stream {
 	const galleryServiceUrl = productjson.extensionsGallery?.serviceUrl;
 	const source = ansiColors.blue(galleryServiceUrl ? '[marketplace]' : '[github]');
 	if (isUpToDate(extension)) {
+		rewriteTelemetryDirectory(getExtensionPath(extension));
 		log(source, `${extension.name}@${extension.version}`, ansiColors.green('✔︎'));
 		return es.readArray([]);
 	}
