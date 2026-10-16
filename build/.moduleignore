@@ -66,6 +66,11 @@ fsevents/test/**
 @vscodium/native-keymap/deps/**
 !@vscodium/native-keymap/build/Release/*.node
 
+@vsebcode/glass/binding.gyp
+@vsebcode/glass/build/**
+@vsebcode/glass/src/**
+!@vsebcode/glass/build/Release/*.node
+
 native-is-elevated/binding.gyp
 native-is-elevated/build/**
 native-is-elevated/src/**

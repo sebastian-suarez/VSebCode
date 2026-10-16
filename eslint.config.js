@@ -1523,6 +1523,7 @@ export default defineConfig(
 						'node:url',
 						'node:v8',
 						'@vscodium/native-keymap',
+						'@vsebcode/glass',
 						'net',
 						'node-pty',
 						'os',

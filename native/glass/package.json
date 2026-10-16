@@ -1,0 +1,15 @@
+{
+  "name": "@vsebcode/glass",
+  "version": "0.1.0",
+  "description": "Native Liquid Glass layer for VSebCode windows on macOS (NSGlassEffectView behind the web contents).",
+  "private": true,
+  "license": "MIT",
+  "main": "build/Release/vsebcode_glass.node",
+  "types": "index.d.ts",
+  "gypfile": true,
+  "files": [
+    "index.d.ts",
+    "binding.gyp",
+    "src"
+  ]
+}
