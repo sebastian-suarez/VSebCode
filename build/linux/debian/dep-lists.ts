@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -25,7 +26,7 @@ export const recommendedDeps = [
 export const referenceGeneratedDepsByArch = {
 	'amd64': [
 		'ca-certificates',
-		'libasound2 (>= 1.0.17)',
+		'libasound2t64 (>= 1.2.12) | libasound2 (>= 1.0.17) | liboss4-salsa-asound2',
 		'libatk-bridge2.0-0 (>= 2.5.3)',
 		'libatk1.0-0 (>= 2.11.90)',
 		'libatspi2.0-0 (>= 2.9.90)',
@@ -65,7 +66,7 @@ export const referenceGeneratedDepsByArch = {
 	],
 	'armhf': [
 		'ca-certificates',
-		'libasound2 (>= 1.0.17)',
+		'libasound2t64 (>= 1.2.12) | libasound2 (>= 1.0.17) | liboss4-salsa-asound2',
 		'libatk-bridge2.0-0 (>= 2.5.3)',
 		'libatk1.0-0 (>= 2.11.90)',
 		'libatspi2.0-0 (>= 2.9.90)',
@@ -108,7 +109,7 @@ export const referenceGeneratedDepsByArch = {
 	],
 	'arm64': [
 		'ca-certificates',
-		'libasound2 (>= 1.0.17)',
+		'libasound2t64 (>= 1.2.12) | libasound2 (>= 1.0.17) | liboss4-salsa-asound2',
 		'libatk-bridge2.0-0 (>= 2.5.3)',
 		'libatk1.0-0 (>= 2.11.90)',
 		'libatspi2.0-0 (>= 2.9.90)',

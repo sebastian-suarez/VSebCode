@@ -8,20 +8,16 @@ import { gulp, replace, rename } from './lib/gulp/facade.ts';
 import es from 'event-stream';
 import vfs from 'vinyl-fs';
 import { rimraf } from './lib/util.ts';
-import { getVersion } from './lib/getVersion.ts';
 import * as task from './lib/gulp/task.ts';
 import packageJson from '../package.json' with { type: 'json' };
 import product from '../product.json' with { type: 'json' };
 import { getDependencies } from './linux/dependencies-generator.ts';
 import { recommendedDeps as debianRecommendedDependencies } from './linux/debian/dep-lists.ts';
 import { recommendedDeps as rpmRecommendedDependencies } from './linux/rpm/dep-lists.ts';
-import * as path from 'path';
 import * as cp from 'child_process';
 import { promisify } from 'util';
 
 const exec = promisify(cp.exec);
-const root = path.dirname(import.meta.dirname);
-const commit = getVersion(root);
 const linuxDesktopName = product.linuxDesktopName;
 
 const linuxPackageRevision = Math.floor(new Date().getTime() / 1000);
@@ -266,7 +262,7 @@ function prepareSnapPackage(arch: string) {
 
 		const snapcraft = gulp.src('resources/linux/snap/snapcraft.yaml', { base: '.' })
 			.pipe(replace('@@NAME@@', product.applicationName))
-			.pipe(replace('@@VERSION@@', commit!.substr(0, 8)))
+			.pipe(replace('@@VERSION@@', packageJson.version))
 			// Possible run-on values https://snapcraft.io/docs/architectures
 			.pipe(replace('@@ARCHITECTURE@@', arch === 'x64' ? 'amd64' : arch))
 			.pipe(rename('snap/snapcraft.yaml'));

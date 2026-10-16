@@ -2,18 +2,20 @@
 Name=@@NAME_LONG@@
 Comment=Code editor based on Code - OSS without Microsoft services or AI features
 GenericName=Text Editor
+GenericName[ar]=محرر نصوص
 Exec=@@EXEC@@ %F
 Icon=@@ICON@@
 Type=Application
 StartupNotify=false
 StartupWMClass=@@DESKTOP_NAME@@
 Categories=TextEditor;Development;IDE;
-MimeType=application/x-@@NAME@@-workspace;
+MimeType=text/plain;inode/directory;application/x-@@NAME@@-workspace;
 Actions=new-empty-window;
 Keywords=vsebcode;vsc;
 
 [Desktop Action new-empty-window]
 Name=New Empty Window
+Name[ar]=نافذة فارغة جديدة
 Name[cs]=Nové prázdné okno
 Name[de]=Neues leeres Fenster
 Name[es]=Nueva ventana vacía

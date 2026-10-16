@@ -115,6 +115,8 @@ function calculatePackageDeps(binaryPath: string, arch: DebianArchString, chromi
 	// versions from build container for native modules.
 	const filteredDeps = depsStr.split(', ').filter(dependency => {
 		return !dependency.startsWith('libgcc-s1');
+	}).map(dependency => {
+		return dependency.startsWith('libasound2 (>= 1.0.17)') ? 'libasound2t64 (>= 1.2.12) | libasound2 (>= 1.0.17) | liboss4-salsa-asound2' : dependency;
 	}).sort();
 	const requires = new Set(filteredDeps);
 	return requires;

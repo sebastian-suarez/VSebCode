@@ -1,6 +1,6 @@
 Name:     @@NAME@@
 Version:  @@VERSION@@
-Release:  @@RELEASE@@.el8
+Release:  el8
 Summary:  Code editor based on Code - OSS without Microsoft services or AI features
 Group:    Development/Tools
 Vendor:   Sebastian Suarez
@@ -68,6 +68,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
+%config(noreplace) %{_datadir}/%{name}/resources/app/product.json
 %{_datadir}/applications/@@DESKTOP_NAME@@.desktop
 %{_datadir}/applications/@@DESKTOP_NAME@@.UrlHandler.desktop
 %{_datadir}/appdata/@@DESKTOP_NAME@@.appdata.xml

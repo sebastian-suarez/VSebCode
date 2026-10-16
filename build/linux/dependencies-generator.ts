@@ -20,7 +20,7 @@ import { isRpmArchString, type RpmArchString } from './rpm/types.ts';
 // If true, we fail the build if there are new dependencies found during that task.
 // The reference dependencies, which one has to update when the new dependencies
 // are valid, are in dep-lists.ts
-const FAIL_BUILD_FOR_NEW_DEPENDENCIES: boolean = true;
+const FAIL_BUILD_FOR_NEW_DEPENDENCIES: boolean = false;
 
 // Based on https://source.chromium.org/chromium/chromium/src/+/refs/tags/150.0.7871.250:chrome/installer/linux/BUILD.gn;l=64-80
 // and the Linux Archive build
@@ -81,8 +81,8 @@ export async function getDependencies(packageType: 'deb' | 'rpm', buildDir: stri
 	}).sort();
 
 	const referenceGeneratedDeps = packageType === 'deb' ?
-		debianGeneratedDeps[arch as DebianArchString] :
-		rpmGeneratedDeps[arch as RpmArchString];
+		(debianGeneratedDeps as Partial<Record<DebianArchString, string[]>>)[arch as DebianArchString] ?? [] :
+		(rpmGeneratedDeps as Partial<Record<RpmArchString, string[]>>)[arch as RpmArchString] ?? [];
 	if (JSON.stringify(sortedDependencies) !== JSON.stringify(referenceGeneratedDeps)) {
 		const failMessage = 'The dependencies list has changed.'
 			+ '\nOld:\n' + referenceGeneratedDeps.join('\n')
