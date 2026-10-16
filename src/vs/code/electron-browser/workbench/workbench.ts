@@ -82,10 +82,20 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 			}
 		}
 
+		// A glass window (`window.glass`) shows the desktop through its side bar: when the splash
+		// paints the parts of a theme that is not high contrast, the page background stays
+		// transparent and the splash root paints the opaque shell around the side bar. Otherwise the
+		// page stays opaque, with the main process's default colors when nothing is saved, because
+		// a transparent window has no window background to fall back to.
+		const glassSplash = configuration.glass === true && configuration.glassHidden !== true && !!data?.layoutInfo && data.baseTheme !== 'hc-black' && data.baseTheme !== 'hc-light';
+		if (configuration.glass === true && !glassSplash && !shellBackground) {
+			shellBackground = configuration.colorScheme.dark ? '#1F1F1F' : '#FFFFFF';
+		}
+
 		const style = document.createElement('style');
 		style.className = 'initialShellColors';
 		window.document.head.appendChild(style);
-		style.textContent = `body {	background-color: ${shellBackground}; color: ${shellForeground}; margin: 0; padding: 0; }`;
+		style.textContent = `body {	background-color: ${glassSplash ? 'transparent' : shellBackground}; color: ${shellForeground}; margin: 0; padding: 0; }`;
 
 		// set zoom level as soon as possible
 		if (typeof data?.zoomLevel === 'number' && typeof preloadGlobals?.webFrame?.setZoomLevel === 'function') {
@@ -102,6 +112,7 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 
 			const splash = document.createElement('div');
 			splash.id = 'monaco-parts-splash';
+			let glassSideBar: HTMLElement | undefined;
 			splash.className = baseTheme ?? 'vs-dark';
 
 			if (layoutInfo.windowBorder && colorInfo.windowBorder) {
@@ -361,6 +372,13 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				} else {
 					sideDiv.style.backgroundColor = `${colorInfo.sideBarBackground}`;
 				}
+				if (glassSplash) {
+					// the native glass layer shows through; no card paint, no border, no corners
+					sideDiv.style.backgroundColor = 'transparent';
+					sideDiv.style.border = 'none';
+					sideDiv.style.borderRadius = '0';
+					glassSideBar = sideDiv;
+				}
 				splash.appendChild(sideDiv);
 
 				if (!modernUI && colorInfo.sideBarBorder) {
@@ -475,6 +493,19 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 			}
 
 			window.document.body.appendChild(splash);
+
+			if (glassSplash) {
+				// Paint the opaque shell on the splash root with a rectangular hole where the side
+				// bar is, mirroring the workbench's own backing (see `glass.css`).
+				splash.style.position = 'absolute';
+				splash.style.inset = '0';
+				splash.style.backgroundColor = shellBackground ?? '';
+				const hole = glassSideBar?.getBoundingClientRect();
+				if (hole && hole.width > 0 && hole.height > 0) {
+					const px = (value: number) => `${Math.max(0, value)}px`;
+					splash.style.clipPath = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${px(hole.left)} ${px(hole.top)}, ${px(hole.left)} ${px(hole.bottom)}, ${px(hole.right)} ${px(hole.bottom)}, ${px(hole.right)} ${px(hole.top)}, ${px(hole.left)} ${px(hole.top)})`;
+				}
+			}
 		}
 	}
 
@@ -722,6 +753,11 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 
 				// Show our splash as early as possible
 				showSplash(windowConfig);
+
+				// A glass window stays opaque until the splash is painted (see `IGlassMainService.revealGlass`)
+				if (windowConfig.glass === true) {
+					window.requestAnimationFrame(() => window.requestAnimationFrame(() => preloadGlobals.ipcRenderer.send('vscode:revealGlass')));
+				}
 
 				// Code windows have a `vscodeWindowId` property to identify them
 				Object.defineProperty(window, 'vscodeWindowId', {
