@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -58,6 +59,28 @@ function calculatePackageDeps(binaryPath: string, arch: DebianArchString, chromi
 				`-l${chromiumSysroot}/lib/aarch64-linux-gnu`,
 				`-l${vscodeSysroot}/usr/lib/aarch64-linux-gnu`,
 				`-l${vscodeSysroot}/lib/aarch64-linux-gnu`);
+			break;
+		case 'ppc64el':
+		case 'ppc64le':
+			cmd.push(`-l${chromiumSysroot}/usr/lib/powerpc64le-linux-gnu`,
+				`-l${chromiumSysroot}/lib/powerpc64le-linux-gnu`,
+				`-l${vscodeSysroot}/usr/lib/powerpc64le-linux-gnu`,
+				`-l${vscodeSysroot}/lib/powerpc64le-linux-gnu`);
+			break;
+		case 'riscv64':
+			cmd.push(`-l${chromiumSysroot}/usr/lib/riscv64-linux-gnu`,
+				`-l${chromiumSysroot}/lib/riscv64-linux-gnu`,
+				`-l${vscodeSysroot}/usr/lib/riscv64-linux-gnu`,
+				`-l${vscodeSysroot}/lib/riscv64-linux-gnu`);
+			break;
+		case 'loong64':
+			cmd.push(`-l${chromiumSysroot}/usr/lib/loongarch64-linux-gnu`, `-l${chromiumSysroot}/lib/loongarch64-linux-gnu`, `-l${vscodeSysroot}/usr/lib/loongarch64-linux-gnu`, `-l${vscodeSysroot}/lib/loongarch64-linux-gnu`);
+			break;
+		case 's390x':
+			cmd.push(`-l${chromiumSysroot}/usr/lib/s390x-linux-gnu`,
+				`-l${chromiumSysroot}/lib/s390x-linux-gnu`,
+				`-l${vscodeSysroot}/usr/lib/s390x-linux-gnu`,
+				`-l${vscodeSysroot}/lib/s390x-linux-gnu`);
 			break;
 	}
 	cmd.push(`-l${chromiumSysroot}/usr/lib`);

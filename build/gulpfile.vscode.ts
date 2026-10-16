@@ -441,6 +441,10 @@ const BUILD_TARGETS = [
 	{ platform: 'linux', arch: 'x64' },
 	{ platform: 'linux', arch: 'armhf' },
 	{ platform: 'linux', arch: 'arm64' },
+	{ platform: 'linux', arch: 'ppc64le' },
+	{ platform: 'linux', arch: 'riscv64' },
+	{ platform: 'linux', arch: 'loong64' },
+	{ platform: 'linux', arch: 's390x' },
 ];
 BUILD_TARGETS.forEach(buildTarget => {
 	const dashed = (str: string) => (str ? `-${str}` : ``);

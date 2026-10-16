@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -29,7 +30,7 @@ export function isAlpineLinux(): boolean {
  */
 const supportedTargets = new Set([
 	'win32-x64', 'win32-arm64',
-	'linux-x64', 'linux-arm64', 'linux-armhf',
+	'linux-x64', 'linux-arm64', 'linux-armhf', 'linux-ppc64le', 'linux-riscv64', 'linux-loong64', 'linux-s390x',
 	'alpine-x64', 'alpine-arm64',
 	'darwin-x64', 'darwin-arm64',
 ]);
@@ -41,6 +42,7 @@ const supportedTargets = new Set([
 function toTargetArch(arch: string): string {
 	switch (arch) {
 		case 'arm': return 'armhf';
+		case 'ppc64': return 'ppc64le';
 		default: return arch;
 	}
 }
@@ -51,7 +53,7 @@ function toTargetArch(arch: string): string {
  * `src/vs/platform/extensions/common/extensions.ts`.
  *
  * @returns the target platform string, or `undefined` when the combination is not a supported
- * marketplace target (e.g. an unsupported OS or architecture such as `win32-ia32` or `linux-riscv64`).
+ * marketplace target (e.g. an unsupported OS or architecture such as `win32-ia32` or `linux-mips64`).
  */
 export function getExtensionTarget(platform: string, arch: string, isAlpine: () => boolean = isAlpineLinux): string | undefined {
 	const targetArch = toTargetArch(arch);

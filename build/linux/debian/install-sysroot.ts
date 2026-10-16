@@ -1,14 +1,13 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { spawnSync, execSync } from 'child_process';
+import { spawnSync, execFileSync } from 'child_process';
 import { tmpdir } from 'os';
 import fs from 'fs';
-import https from 'https';
 import path from 'path';
-import { createHash } from 'crypto';
 import { download } from '../../lib/download.ts';
 import { getElectronVersion } from '../../lib/electronVersion.ts';
 import type { DebianArchString } from './types.ts';
@@ -38,21 +37,6 @@ interface IFetchOptions {
 	dest: string;
 }
 
-function getSha(filename: fs.PathLike): string {
-	const hash = createHash('sha256');
-	// Read file 1 MB at a time
-	const fd = fs.openSync(filename, 'r');
-	const buffer = Buffer.alloc(1024 * 1024);
-	let position = 0;
-	let bytesRead = 0;
-	while ((bytesRead = fs.readSync(fd, buffer, 0, buffer.length, position)) === buffer.length) {
-		hash.update(buffer);
-		position += bytesRead;
-	}
-	hash.update(buffer.slice(0, bytesRead));
-	return hash.digest('hex');
-}
-
 function getVSCodeSysrootChecksum(expectedName: string) {
 	const checksums = fs.readFileSync(path.join(REPO_ROOT, 'build', 'checksums', 'vscode-sysroot.txt'), 'utf8');
 	for (const line of checksums.split('\n')) {
@@ -71,7 +55,9 @@ function getVSCodeSysrootChecksum(expectedName: string) {
  */
 async function fetchUrl(options: IFetchOptions): Promise<void> {
 	const version = '20260212-405735';
-	const releaseUrl = `https://api.github.com/repos/Microsoft/vscode-linux-build-agent/releases/tags/v${version}`;
+	const repository = process.env['VSCODE_SYSROOT_REPOSITORY'] ?? 'Microsoft/vscode-linux-build-agent';
+	const actualVersion = process.env['VSCODE_SYSROOT_VERSION'] ?? version;
+	const releaseUrl = `https://api.github.com/repos/${repository}/releases/tags/v${actualVersion}`;
 	const downloadOptions = {
 		attempts: 11,
 		onRetry: (error: Error) => console.log(`Fetching failed: ${error}`)
@@ -79,7 +65,7 @@ async function fetchUrl(options: IFetchOptions): Promise<void> {
 	const releaseContents = await download(releaseUrl, { ...downloadOptions, headers: ghApiHeaders });
 	const asset = JSON.parse(Buffer.from(releaseContents).toString()).assets.find((a: { name: string }) => a.name === options.assetName);
 	if (!asset) {
-		throw new Error(`Could not find asset in release of Microsoft/vscode-linux-build-agent @ ${version}`);
+		throw new Error(`Could not find asset in release of ${repository} @ ${actualVersion}`);
 	}
 
 	console.log(`Found asset ${options.assetName} @ ${asset.url}.`);
@@ -90,7 +76,7 @@ async function fetchUrl(options: IFetchOptions): Promise<void> {
 	}));
 	console.log(`Fetched response body buffer: ${assetContents.byteLength} bytes`);
 	console.log(`Verified SHA256 checksums match for ${asset.url}`);
-	execSync(`tar -xz -C ${options.dest}`, { input: assetContents });
+	execFileSync('tar', ['-xz', '-C', options.dest], { input: assetContents });
 	console.log('Fetch complete!');
 }
 
@@ -122,19 +108,44 @@ export async function getVSCodeSysroot(arch: DebianArchString, isMusl: boolean =
 			expectedName = `arm-rpi-linux-gnueabihf${prefix}.tar.gz`;
 			triple = 'arm-rpi-linux-gnueabihf';
 			break;
+		case 'ppc64le':
+		case 'ppc64el':
+			expectedName = `powerpc64le-linux-gnu${prefix}.tar.gz`;
+			triple = `powerpc64le-linux-gnu`;
+			break;
+		case 'riscv64':
+			expectedName = `riscv64-linux-gnu${prefix}.tar.gz`;
+			triple = 'riscv64-linux-gnu';
+			break;
+		case 'loong64':
+			expectedName = `loongarch64-linux-gnu${prefix}.tar.gz`;
+			triple = 'loongarch64-linux-gnu';
+			break;
+		case 's390x':
+			expectedName = `s390x-linux-gnu${prefix}.tar.gz`;
+			triple = 's390x-linux-gnu';
+			break;
 	}
 	console.log(`Fetching ${expectedName} for ${triple}`);
-	const checksumSha256 = getVSCodeSysrootChecksum(expectedName);
+	const checksumSha256 = process.env['VSCODE_SYSROOT_SHA256'] ?? getVSCodeSysrootChecksum(expectedName);
+	if (checksumSha256 && !/^[a-f0-9]{64}$/i.test(checksumSha256)) {
+		throw new Error('VSCODE_SYSROOT_SHA256 must be a SHA256 digest.');
+	}
 	if (!checksumSha256) {
 		throw new Error(`Could not find checksum for ${expectedName}`);
 	}
 	const sysroot = process.env['VSCODE_SYSROOT_DIR'] ?? path.join(tmpdir(), `vscode-${arch}-sysroot`);
 	const stamp = path.join(sysroot, '.stamp');
+	const cacheIdentity = JSON.stringify({
+		repository: process.env['VSCODE_SYSROOT_REPOSITORY'] ?? 'Microsoft/vscode-linux-build-agent',
+		version: process.env['VSCODE_SYSROOT_VERSION'] ?? '20260212-405735',
+		asset: expectedName, checksumSha256
+	});
 	let result = `${sysroot}/${triple}/${triple}/sysroot`;
 	if (isMusl) {
 		result = `${sysroot}/output/${triple}`;
 	}
-	if (fs.existsSync(stamp) && fs.readFileSync(stamp).toString() === expectedName) {
+	if (fs.existsSync(stamp) && fs.readFileSync(stamp).toString() === cacheIdentity && fs.existsSync(result)) {
 		return result;
 	}
 	console.log(`Installing ${arch} root image: ${sysroot}`);
@@ -145,24 +156,53 @@ export async function getVSCodeSysroot(arch: DebianArchString, isMusl: boolean =
 		assetName: expectedName,
 		dest: sysroot
 	});
-	fs.writeFileSync(stamp, expectedName);
+	fs.writeFileSync(stamp, cacheIdentity);
 	return result;
 }
 
-export async function getChromiumSysroot(arch: DebianArchString): Promise<string> {
-	const sysrootJSONUrl = `https://raw.githubusercontent.com/electron/electron/v${getElectronVersion().electronVersion}/script/sysroots.json`;
-	const sysrootDictLocation = `${tmpdir()}/sysroots.json`;
-	const result = spawnSync('curl', [sysrootJSONUrl, '-o', sysrootDictLocation]);
-	if (result.status !== 0) {
-		throw new Error('Cannot retrieve sysroots.json. Stderr:\n' + result.stderr);
+/** Validates custom manifest paths before any cached directory is removed or written. */
+export function getChromiumSysrootPaths(entry: unknown, cacheRoot: string): { sysroot: string; tarball: string; checksum: string } {
+	if (!entry || typeof entry !== 'object') {
+		throw new Error('Invalid Chromium sysroot manifest entry.');
 	}
-	const sysrootInfo = JSON.parse(fs.readFileSync(sysrootDictLocation, 'utf8'));
+	const value = entry as Partial<SysrootDictEntry>;
+	const safeName = /^[a-zA-Z0-9][a-zA-Z0-9._-]*$/;
+	if (typeof value.SysrootDir !== 'string' || !safeName.test(value.SysrootDir) || typeof value.Tarball !== 'string' || !safeName.test(value.Tarball) || typeof value.Sha256Sum !== 'string' || !/^[a-f0-9]{64}$/i.test(value.Sha256Sum)) {
+		throw new Error('Invalid Chromium sysroot manifest: directory and archive must be plain filenames, with a SHA256 checksum.');
+	}
+	const sysroot = path.join(cacheRoot, value.SysrootDir);
+	if ([cacheRoot, sysroot].some(directory => fs.lstatSync(directory, { throwIfNoEntry: false })?.isSymbolicLink())) {
+		throw new Error('Chromium sysroot cache directories must not be symbolic links.');
+	}
+	return { sysroot, tarball: path.join(sysroot, value.Tarball), checksum: value.Sha256Sum.toLowerCase() };
+}
+
+/** Downloads and verifies a Chromium sysroot, allowing isolated environment/cache inputs for callers. */
+export async function getChromiumSysroot(arch: DebianArchString, environment: NodeJS.ProcessEnv = process.env, temporaryDirectory: string = tmpdir()): Promise<string> {
+	const sysrootJSONUrl = environment['VSCODE_CHROMIUM_SYSROOTS_URL'] ?? `https://raw.githubusercontent.com/electron/electron/v${getElectronVersion().electronVersion}/script/sysroots.json`;
+	const manifestDirectory = fs.mkdtempSync(path.join(temporaryDirectory, 'vscode-sysroots-manifest-'));
+	const sysrootDictLocation = path.join(manifestDirectory, 'sysroots.json');
+	let sysrootInfo: Record<string, unknown>;
+	try {
+		const result = spawnSync('curl', ['--fail', '--location', '--retry', '2', sysrootJSONUrl, '-o', sysrootDictLocation]);
+		if (result.status !== 0) {
+			throw new Error('Cannot retrieve sysroots.json. Stderr:\n' + result.stderr);
+		}
+		sysrootInfo = JSON.parse(fs.readFileSync(sysrootDictLocation, 'utf8'));
+		if (!sysrootInfo || typeof sysrootInfo !== 'object' || Array.isArray(sysrootInfo)) {
+			throw new Error('Invalid Chromium sysroots manifest.');
+		}
+	} finally {
+		fs.rmSync(manifestDirectory, { recursive: true, force: true });
+	}
 	const sysrootArch = `bullseye_${arch}`;
-	const sysrootDict: SysrootDictEntry = sysrootInfo[sysrootArch];
-	const tarballFilename = sysrootDict['Tarball'];
-	const tarballSha = sysrootDict['Sha256Sum'];
-	const sysroot = path.join(tmpdir(), sysrootDict['SysrootDir']);
-	const url = [URL_PREFIX, URL_PATH, tarballSha].join('/');
+	const sysrootDict = sysrootInfo[sysrootArch];
+	if (!sysrootDict) {
+		throw new Error(`No Chromium sysroot for ${arch} at Electron ${getElectronVersion().electronVersion}. Supply a compatible sysroots manifest through VSCODE_CHROMIUM_SYSROOTS_URL.`);
+	}
+	const cacheRoot = path.join(temporaryDirectory, 'vscode-chromium-sysroots');
+	const { sysroot, tarball, checksum: tarballSha } = getChromiumSysrootPaths(sysrootDict, cacheRoot);
+	const url = [environment['VSCODE_CHROMIUM_SYSROOTS_BASE_URL'] ?? `${URL_PREFIX}/${URL_PATH}`, tarballSha].join('/');
 	const stamp = path.join(sysroot, '.stamp');
 	if (fs.existsSync(stamp) && fs.readFileSync(stamp).toString() === url) {
 		return sysroot;
@@ -170,35 +210,15 @@ export async function getChromiumSysroot(arch: DebianArchString): Promise<string
 
 	console.log(`Installing Debian ${arch} root image: ${sysroot}`);
 	fs.rmSync(sysroot, { recursive: true, force: true });
-	fs.mkdirSync(sysroot);
-	const tarball = path.join(sysroot, tarballFilename);
+	fs.mkdirSync(sysroot, { recursive: true });
 	console.log(`Downloading ${url}`);
-	let downloadSuccess = false;
-	for (let i = 0; i < 3 && !downloadSuccess; i++) {
-		fs.writeFileSync(tarball, '');
-		await new Promise<void>((c) => {
-			https.get(url, (res) => {
-				res.on('data', (chunk) => {
-					fs.appendFileSync(tarball, chunk);
-				});
-				res.on('end', () => {
-					downloadSuccess = true;
-					c();
-				});
-			}).on('error', (err) => {
-				console.error('Encountered an error during the download attempt: ' + err.message);
-				c();
-			});
-		});
-	}
-	if (!downloadSuccess) {
-		fs.rmSync(tarball);
-		throw new Error('Failed to download ' + url);
-	}
-	const sha = getSha(tarball);
-	if (sha !== tarballSha) {
-		throw new Error(`Tarball checksum is wrong. Expected ${tarballSha}, actual ${sha}`);
-	}
+	const contents = await download(url, {
+		attempts: 3,
+		timeout: 5 * 60_000,
+		checksumSha256: tarballSha,
+		onRetry: error => console.error(`Encountered an error during the download attempt: ${error.message}`)
+	});
+	fs.writeFileSync(tarball, contents);
 
 	const proc = spawnSync('tar', ['xf', tarball, '-C', sysroot]);
 	if (proc.status) {

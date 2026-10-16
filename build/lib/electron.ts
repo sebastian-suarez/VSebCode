@@ -238,9 +238,10 @@ export const config = {
 	linuxExecutableName: product.applicationName,
 	winIcon: 'resources/win32/code.ico',
 	token: process.env['GITHUB_TOKEN'],
-	repo: electronAssetResolver,
+	repo: process.env['VSCODE_ELECTRON_REPOSITORY'] || electronAssetResolver,
+	tag: process.env['VSCODE_ELECTRON_TAG'],
 	validateChecksum: true,
-	checksumFile: path.join(root, 'build', 'checksums', 'electron.txt'),
+	checksumFile: process.env['VSCODE_ELECTRON_CHECKSUM_FILE'] || path.join(root, 'build', 'checksums', 'electron.txt'),
 };
 
 function getElectron(arch: string): () => NodeJS.ReadWriteStream {

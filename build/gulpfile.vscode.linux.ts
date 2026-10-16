@@ -31,6 +31,10 @@ function getDebPackageArch(arch: string): string {
 		case 'x64': return 'amd64';
 		case 'armhf': return 'armhf';
 		case 'arm64': return 'arm64';
+		case 'ppc64le': return 'ppc64el';
+		case 'riscv64': return 'riscv64';
+		case 'loong64': return 'loong64';
+		case 's390x': return 's390x';
 		default: throw new Error(`Unknown arch: ${arch}`);
 	}
 }
@@ -137,6 +141,10 @@ function getRpmPackageArch(arch: string): string {
 		case 'x64': return 'x86_64';
 		case 'armhf': return 'armv7hl';
 		case 'arm64': return 'aarch64';
+		case 'ppc64le': return 'ppc64le';
+		case 'riscv64': return 'riscv64';
+		case 'loong64': return 'loongarch64';
+		case 's390x': return 's390x';
 		default: throw new Error(`Unknown arch: ${arch}`);
 	}
 }
@@ -281,6 +289,10 @@ const BUILD_TARGETS = [
 	{ arch: 'x64' },
 	{ arch: 'armhf' },
 	{ arch: 'arm64' },
+	{ arch: 'ppc64le' },
+	{ arch: 'riscv64' },
+	{ arch: 'loong64' },
+	{ arch: 's390x' },
 ];
 
 BUILD_TARGETS.forEach(({ arch }) => {

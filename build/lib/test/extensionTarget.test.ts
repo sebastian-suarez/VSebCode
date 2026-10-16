@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -22,7 +23,11 @@ suite('extensionTarget', () => {
 			linuxArm64: getExtensionTarget('linux', 'arm64', notAlpine),
 			linuxArmhf: getExtensionTarget('linux', 'armhf', notAlpine),
 			linuxArmProcess: getExtensionTarget('linux', 'arm', notAlpine),
-			linuxUnsupportedArch: getExtensionTarget('linux', 'riscv64', notAlpine),
+			linuxRiscv64: getExtensionTarget('linux', 'riscv64', notAlpine),
+			linuxPpc64le: getExtensionTarget('linux', 'ppc64', notAlpine),
+			linuxLoong64: getExtensionTarget('linux', 'loong64', notAlpine),
+			linuxS390x: getExtensionTarget('linux', 's390x', notAlpine),
+			linuxUnsupportedArch: getExtensionTarget('linux', 'mips64', notAlpine),
 			alpineX64: getExtensionTarget('linux', 'x64', alpine),
 			alpineArm64: getExtensionTarget('linux', 'arm64', alpine),
 			unsupported: getExtensionTarget('sunos', 'x64'),
@@ -36,6 +41,10 @@ suite('extensionTarget', () => {
 			linuxArm64: 'linux-arm64',
 			linuxArmhf: 'linux-armhf',
 			linuxArmProcess: 'linux-armhf',
+			linuxRiscv64: 'linux-riscv64',
+			linuxPpc64le: 'linux-ppc64le',
+			linuxLoong64: 'linux-loong64',
+			linuxS390x: 'linux-s390x',
 			linuxUnsupportedArch: undefined,
 			alpineX64: 'alpine-x64',
 			alpineArm64: 'alpine-arm64',

@@ -10,7 +10,7 @@
 const ripgrepUniversalPlatforms = [
 	'darwin-arm64', 'darwin-x64',
 	'linux-arm', 'linux-arm64', 'linux-ia32', 'linux-x64',
-	'linux-ppc64', 'linux-riscv64', 'linux-s390x',
+	'linux-ppc64', 'linux-riscv64', 'linux-loong64', 'linux-s390x',
 	'win32-arm64', 'win32-ia32', 'win32-x64',
 ];
 
@@ -21,6 +21,8 @@ function toNodePlatformArch(platform: string, arch: string): { nodePlatform: str
 	if (arch === 'armhf') {
 		// VS Code build uses 'armhf'; Node reports process.arch === 'arm'
 		nodeArch = 'arm';
+	} else if (arch === 'ppc64le') {
+		nodeArch = 'ppc64';
 	} else if (arch === 'alpine') {
 		// Legacy: { platform: 'linux', arch: 'alpine' } means alpine-x64
 		nodePlatform = 'linux';
