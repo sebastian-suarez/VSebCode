@@ -89,5 +89,284 @@
 				"publisherDisplayName": "Microsoft"
 			}
 		}
-	]
+	],
+	"extensionEnabledApiProposals": {
+		"mrleemurray.theme-2026": [
+			"css"
+		],
+		"ms-azuretools.vscode-containers": [
+			"authenticationChallenges"
+		],
+		"ms-vscode.vscode-selfhost-test-provider": [
+			"testObserver",
+			"testRelatedCode"
+		],
+		"ms-vscode.js-debug": [
+			"portsAttributes",
+			"findTextInFiles",
+			"workspaceTrust",
+			"tunnels",
+			"browser"
+		],
+		"ms-python.python": [
+			"contribEditorContentMenu",
+			"quickPickSortByLabel",
+			"portsAttributes",
+			"testObserver",
+			"quickPickItemTooltip",
+			"terminalDataWriteEvent",
+			"terminalExecuteCommandEvent",
+			"notebookReplDocument",
+			"notebookVariableProvider",
+			"terminalShellEnv"
+		],
+		"ms-python.vscode-python-envs": [
+			"terminalShellEnv",
+			"terminalDataWriteEvent",
+			"taskExecutionTerminal"
+		],
+		"ms-dotnettools.dotnet-interactive-vscode": [
+			"notebookMessaging"
+		],
+		"ms-vscode.js-debug-nightly": [
+			"portsAttributes",
+			"findTextInFiles",
+			"workspaceTrust",
+			"tunnels",
+			"browser"
+		],
+		"ms-vscode.lsif-browser": [
+			"documentFiltersExclusive"
+		],
+		"ms-python.vscode-pylance": [
+			"terminalShellEnv",
+			"portsAttributes"
+		],
+		"ms-python.debugpy": [
+			"contribViewsWelcome",
+			"debugVisualization",
+			"portsAttributes"
+		],
+		"ms-toolsai.jupyter-renderers": [
+			"contribNotebookStaticPreloads"
+		],
+		"ms-toolsai.jupyter": [
+			"notebookDeprecated",
+			"notebookMessaging",
+			"notebookMime",
+			"portsAttributes",
+			"quickPickSortByLabel",
+			"notebookKernelSource",
+			"interactiveWindow",
+			"notebookControllerAffinityHidden",
+			"contribNotebookStaticPreloads",
+			"quickPickItemTooltip",
+			"notebookExecution",
+			"notebookCellExecution",
+			"notebookVariableProvider",
+			"notebookReplDocument"
+		],
+		"donjayamanne.kusto": [
+			"notebookVariableProvider"
+		],
+		"ms-toolsai.tensorboard": [
+			"portsAttributes"
+		],
+		"ms-vscode.anycode": [
+			"extensionsAny"
+		],
+		"ms-vscode.cpptools": [
+			"terminalDataWriteEvent"
+		],
+		"ms-dotnettools.csdevkit": [
+			"inlineCompletionsAdditions"
+		],
+		"TypeScriptTeam.vscode-typescript": [
+			"editorHoverVerbosityLevel",
+			"multiDocumentHighlightProvider"
+		],
+		"TypeScriptTeam.native-preview": [
+			"editorHoverVerbosityLevel",
+			"multiDocumentHighlightProvider"
+		],
+		"jeanp413.open-remote-ssh": [
+			"resolvers",
+			"tunnels",
+			"terminalDataWriteEvent",
+			"contribRemoteHelp",
+			"contribViewsRemote"
+		],
+		"jeanp413.open-remote-wsl": [
+			"resolvers",
+			"contribRemoteHelp",
+			"contribViewsRemote"
+		]
+	},
+	"extensionKind": {
+		"shalldie.background": [
+			"ui"
+		],
+		"techer.open-in-browser": [
+			"ui"
+		],
+		"CoenraadS.bracket-pair-colorizer-2": [
+			"ui"
+		],
+		"CoenraadS.bracket-pair-colorizer": [
+			"ui",
+			"workspace"
+		],
+		"hiro-sun.vscode-emacs": [
+			"ui",
+			"workspace"
+		],
+		"hnw.vscode-auto-open-markdown-preview": [
+			"ui",
+			"workspace"
+		],
+		"wayou.vscode-todo-highlight": [
+			"ui",
+			"workspace"
+		],
+		"aaron-bond.better-comments": [
+			"ui",
+			"workspace"
+		],
+		"vscodevim.vim": [
+			"ui"
+		],
+		"ollyhayes.colmak-vim": [
+			"ui"
+		]
+	},
+	"extensionPointExtensionKind": {
+		"typescriptServerPlugins": [
+			"workspace"
+		]
+	},
+	"extensionVirtualWorkspacesSupport": {
+		"esbenp.prettier-vscode": {
+			"default": false
+		},
+		"msjsdiag.debugger-for-chrome": {
+			"default": false
+		},
+		"redhat.java": {
+			"default": false
+		},
+		"HookyQR.beautify": {
+			"default": false
+		},
+		"ritwickdey.LiveServer": {
+			"default": false
+		},
+		"octref.vetur": {
+			"default": false
+		},
+		"formulahendry.code-runner": {
+			"default": false
+		},
+		"xdebug.php-debug": {
+			"default": false
+		},
+		"ms-mssql.mssql": {
+			"default": false
+		},
+		"christian-kohler.path-intellisense": {
+			"default": false
+		},
+		"eg2.tslint": {
+			"default": false
+		},
+		"eg2.vscode-npm-script": {
+			"default": false
+		},
+		"donjayamanne.githistory": {
+			"default": false
+		},
+		"Zignd.html-css-class-completion": {
+			"default": false
+		},
+		"christian-kohler.npm-intellisense": {
+			"default": false
+		},
+		"EditorConfig.EditorConfig": {
+			"default": false
+		},
+		"austin.code-gnu-global": {
+			"default": false
+		},
+		"johnpapa.Angular2": {
+			"default": false
+		},
+		"ms-vscode.vscode-typescript-tslint-plugin": {
+			"default": false
+		},
+		"DotJoshJohnson.xml": {
+			"default": false
+		},
+		"techer.open-in-browser": {
+			"default": false
+		},
+		"tht13.python": {
+			"default": false
+		},
+		"bmewburn.vscode-intelephense-client": {
+			"default": false
+		},
+		"Angular.ng-template": {
+			"default": false
+		},
+		"xdebug.php-pack": {
+			"default": false
+		},
+		"dbaeumer.jshint": {
+			"default": false
+		},
+		"yzhang.markdown-all-in-one": {
+			"default": false
+		},
+		"Dart-Code.flutter": {
+			"default": false
+		},
+		"streetsidesoftware.code-spell-checker": {
+			"default": false
+		},
+		"rebornix.Ruby": {
+			"default": false
+		},
+		"ms-vscode.sublime-keybindings": {
+			"default": false
+		},
+		"mitaki28.vscode-clang": {
+			"default": false
+		},
+		"steoates.autoimport": {
+			"default": false
+		},
+		"donjayamanne.python-extension-pack": {
+			"default": false
+		},
+		"shd101wyy.markdown-preview-enhanced": {
+			"default": false
+		},
+		"mikestead.dotenv": {
+			"default": false
+		},
+		"pranaygp.vscode-css-peek": {
+			"default": false
+		},
+		"ikappas.phpcs": {
+			"default": false
+		},
+		"platformio.platformio-ide": {
+			"default": false
+		},
+		"jchannon.csharpextensions": {
+			"default": false
+		},
+		"gruntfuggly.todo-tree": {
+			"default": false
+		}
+	}
 }
