@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -8,6 +9,8 @@ import { $, append } from '../../../../../base/browser/dom.js';
 import { mainWindow } from '../../../../../base/browser/window.js';
 import { toDisposable } from '../../../../../base/common/lifecycle.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
+import { NeverShowAgainScope } from '../../../../../platform/notification/common/notification.js';
+import { IStorageService, StorageScope, StorageTarget } from '../../../../../platform/storage/common/storage.js';
 import { IBannerItem } from '../../../../services/banner/browser/bannerService.js';
 import { BannerPart } from '../../../../browser/parts/banner/bannerPart.js';
 import { workbenchInstantiationService } from '../../workbenchTestServices.js';
@@ -21,8 +24,20 @@ suite('BannerPart', () => {
 		store.add(toDisposable(() => container.remove()));
 		const banner = store.add(services.createInstance(BannerPart));
 		banner.create(container);
-		return { banner, container };
+		return { banner, container, storage: services.get(IStorageService) };
 	}
+
+	test('suppression uses the selected scope and defaults to application storage', () => {
+		for (const [scope, storageScope] of [[undefined, StorageScope.APPLICATION], [NeverShowAgainScope.APPLICATION, StorageScope.APPLICATION], [NeverShowAgainScope.PROFILE, StorageScope.PROFILE], [NeverShowAgainScope.WORKSPACE, StorageScope.WORKSPACE]] as const) {
+			const { banner, container, storage } = createBanner();
+			storage.store('dismissal', true, storageScope, StorageTarget.USER);
+			banner.show({ id: 'dismissed', icon: undefined, message: 'Hidden', neverShowAgain: { id: 'dismissal', scope } });
+			assert.strictEqual(container.childElementCount, 0);
+			storage.remove('dismissal', storageScope);
+			banner.show({ id: 'dismissed', icon: undefined, message: 'Visible', neverShowAgain: { id: 'dismissal', scope } });
+			assert.strictEqual(container.querySelector('.message-container')?.textContent, 'Visible');
+		}
+	});
 
 	test('updates same-id content and actions without accumulating old DOM or losing banner focus', () => {
 		const { banner, container } = createBanner();
