@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -46,7 +47,7 @@ suite('NumberPolicy', () => {
 		const admx = policy.renderADMX('TestKey');
 
 		assert.deepStrictEqual(admx, [
-			'<policy name="TestNumberPolicy" class="Both" displayName="$(string.TestNumberPolicy)" explainText="$(string.TestNumberPolicy_test_policy_description)" key="Software\\Policies\\Microsoft\\TestKey" presentation="$(presentation.TestNumberPolicy)">',
+			'<policy name="TestNumberPolicy" class="Both" displayName="$(string.TestNumberPolicy)" explainText="$(string.TestNumberPolicy_test_policy_description)" key="Software\\Policies\\SebastianSuarez\\TestKey" presentation="$(presentation.TestNumberPolicy)">',
 			'\t<parentCategory ref="test.category" />',
 			'\t<supportedOn ref="Supported_1_0" />',
 			'\t<elements>',

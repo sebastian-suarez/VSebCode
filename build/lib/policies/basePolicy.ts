@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -36,7 +37,7 @@ export abstract class BasePolicy implements Policy {
 
 	renderADMX(regKey: string) {
 		return [
-			`<policy name="${this.name}" class="Both" displayName="$(string.${this.name})" explainText="$(string.${this.name}_${this.description.nlsKey.replace(/\./g, '_')})" key="Software\\Policies\\Microsoft\\${regKey}" presentation="$(presentation.${this.name})">`,
+			`<policy name="${this.name}" class="Both" displayName="$(string.${this.name})" explainText="$(string.${this.name}_${this.description.nlsKey.replace(/\./g, '_')})" key="Software\\Policies\\SebastianSuarez\\${regKey}" presentation="$(presentation.${this.name})">`,
 			`	<parentCategory ref="${this.category.name.nlsKey}" />`,
 			`	<supportedOn ref="Supported_${this.minimumVersion.replace(/\./g, '_')}" />`,
 			`	<elements>`,

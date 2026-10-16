@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -45,7 +46,7 @@ suite('BooleanPolicy', () => {
 		const admx = policy.renderADMX('TestKey');
 
 		assert.deepStrictEqual(admx, [
-			'<policy name="TestBooleanPolicy" class="Both" displayName="$(string.TestBooleanPolicy)" explainText="$(string.TestBooleanPolicy_test_policy_description)" key="Software\\Policies\\Microsoft\\TestKey" presentation="$(presentation.TestBooleanPolicy)">',
+			'<policy name="TestBooleanPolicy" class="Both" displayName="$(string.TestBooleanPolicy)" explainText="$(string.TestBooleanPolicy_test_policy_description)" key="Software\\Policies\\SebastianSuarez\\TestKey" presentation="$(presentation.TestBooleanPolicy)">',
 			'\t<parentCategory ref="test.category" />',
 			'\t<supportedOn ref="Supported_1_0" />',
 			'\t<elements>',

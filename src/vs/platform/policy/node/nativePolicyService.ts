@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -33,7 +34,7 @@ export class NativePolicyService extends AbstractPolicyService implements IPolic
 				this.watcher.value = createWatcher(this.productName, policyDefinitions, update => {
 					this._onDidPolicyChange(update);
 					c();
-				});
+				}, { registryPath: `Software\\Policies\\SebastianSuarez\\${this.productName}` });
 			} catch (err) {
 				this.logService.error(`NativePolicyService#_updatePolicyDefinitions - Error creating watcher:`, err);
 				e(err);

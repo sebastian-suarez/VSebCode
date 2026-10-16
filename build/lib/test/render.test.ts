@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -188,7 +189,7 @@ suite('Render Functions', () => {
 			category: mockCategory,
 			minimumVersion: '1.85',
 			renderADMX: (regKey: string) => [
-				`<policy name="TestPolicy" class="Both" displayName="$(string.TestPolicy)" key="Software\\Policies\\Microsoft\\${regKey}">`,
+				`<policy name="TestPolicy" class="Both" displayName="$(string.TestPolicy)" key="Software\\Policies\\SebastianSuarez\\${regKey}">`,
 				`	<enabledValue><decimal value="1" /></enabledValue>`,
 				`</policy>`
 			],
@@ -210,7 +211,7 @@ suite('Render Functions', () => {
 		test('should include policy namespaces with regKey', () => {
 			const result = renderADMX('TestApp', ['1.0'], [mockCategory], [mockPolicy]);
 
-			assert.ok(result.includes('<target prefix="TestApp" namespace="Microsoft.Policies.TestApp"'));
+			assert.ok(result.includes('<target prefix="TestApp" namespace="SebastianSuarez.Policies.TestApp"'));
 		});
 
 		test('should replace dots in versions with underscores', () => {
@@ -263,7 +264,7 @@ suite('Render Functions', () => {
 				category: mockCategory,
 				minimumVersion: '1.85',
 				renderADMX: (regKey: string) => [
-					`<policy name="TestPolicy2" class="Both" displayName="$(string.TestPolicy2)" key="Software\\Policies\\Microsoft\\${regKey}">`,
+					`<policy name="TestPolicy2" class="Both" displayName="$(string.TestPolicy2)" key="Software\\Policies\\SebastianSuarez\\${regKey}">`,
 					`	<enabledValue><string /></enabledValue>`,
 					`</policy>`
 				],
@@ -446,11 +447,11 @@ suite('Render Functions', () => {
 			assert.ok(result.includes('Translated Description'));
 		});
 
-		test('should include VS Code specific URLs', () => {
+		test('should include distribution URLs', () => {
 			const result = renderProfileManifest('VS Code', 'com.microsoft.vscode', ['1.0'], [mockCategory], [mockPolicy]);
 
-			assert.ok(result.includes('https://code.visualstudio.com/'));
-			assert.ok(result.includes('https://code.visualstudio.com/docs/setup/enterprise'));
+			assert.ok(result.includes('https://github.com/sebastian-suarez/VSebCode'));
+			assert.ok(result.includes('https://github.com/sebastian-suarez/VSebCode'));
 		});
 
 		test('should include last modified date', () => {
@@ -562,13 +563,13 @@ suite('Render Functions', () => {
 			</dict>
 		</array>
 		<key>PayloadDescription</key>
-		<string>This profile manages VS Code. For more information see https://code.visualstudio.com/docs/setup/enterprise</string>
+		<string>This profile manages VS Code. For more information see https://github.com/sebastian-suarez/VSebCode</string>
 		<key>PayloadDisplayName</key>
 		<string>VS Code</string>
 		<key>PayloadIdentifier</key>
 		<string>com.microsoft.vscode</string>
 		<key>PayloadOrganization</key>
-		<string>Microsoft</string>
+		<string>Sebastian Suarez</string>
 		<key>PayloadType</key>
 		<string>Configuration</string>
 		<key>PayloadUUID</key>
@@ -669,7 +670,7 @@ suite('Render Functions', () => {
 			};
 			const result = renderMacOSPolicy(product, [mockPolicy], []);
 
-			assert.ok(result.profile.includes('https://code.visualstudio.com/docs/setup/enterprise'));
+			assert.ok(result.profile.includes('https://github.com/sebastian-suarez/VSebCode'));
 		});
 
 		test('should set TargetDeviceType to 5', () => {
@@ -700,7 +701,7 @@ suite('Render Functions', () => {
 			category: mockCategory,
 			minimumVersion: '1.85',
 			renderADMX: (regKey: string) => [
-				`<policy name="TestPolicy" class="Both" displayName="$(string.TestPolicy)" key="Software\\Policies\\Microsoft\\${regKey}">`,
+				`<policy name="TestPolicy" class="Both" displayName="$(string.TestPolicy)" key="Software\\Policies\\SebastianSuarez\\${regKey}">`,
 				`	<enabledValue><decimal value="1" /></enabledValue>`,
 				`</policy>`
 			],
@@ -739,7 +740,7 @@ suite('Render Functions', () => {
 			const result = renderGP(product, [mockPolicy], []);
 
 			assert.ok(result.admx.includes('CustomRegKey'));
-			assert.ok(result.admx.includes('Software\\Policies\\Microsoft\\CustomRegKey'));
+			assert.ok(result.admx.includes('Software\\Policies\\SebastianSuarez\\CustomRegKey'));
 		});
 
 		test('should include en-us ADML by default', () => {
@@ -838,7 +839,7 @@ suite('Render Functions', () => {
 				...mockPolicy,
 				name: 'TestPolicy2',
 				renderADMX: (regKey: string) => [
-					`<policy name="TestPolicy2" class="Both" displayName="$(string.TestPolicy2)" key="Software\\Policies\\Microsoft\\${regKey}">`,
+					`<policy name="TestPolicy2" class="Both" displayName="$(string.TestPolicy2)" key="Software\\Policies\\SebastianSuarez\\${regKey}">`,
 					`	<enabledValue><decimal value="1" /></enabledValue>`,
 					`</policy>`
 				],

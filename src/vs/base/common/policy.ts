@@ -9,7 +9,7 @@ import { localize } from '../../nls.js';
 /**
  * System-wide policy file path for Linux systems.
  */
-export const LINUX_SYSTEM_POLICY_FILE_PATH = '/etc/vscode/policy.json';
+export const LINUX_SYSTEM_POLICY_FILE_PATH = '/etc/vsc/policy.json';
 
 export type PolicyName = string;
 export type LocalizedValue = {
