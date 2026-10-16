@@ -11,6 +11,7 @@ import vfs from 'vinyl-fs';
 import { filter, jsonEditor } from './gulp/facade.ts';
 import * as util from './util.ts';
 import { getElectronVersion } from './electronVersion.ts';
+import { checkDesktopBuildPrerequisites } from './desktopBuildPrerequisites.ts';
 import { getVersion } from './getVersion.ts';
 import { downloadFeedPackage } from './azureFeed.ts';
 import electron from '@vscode/gulp-electron';
@@ -246,6 +247,7 @@ export const config = {
 
 function getElectron(arch: string): () => NodeJS.ReadWriteStream {
 	return () => {
+		checkDesktopBuildPrerequisites(process.platform, arch, root);
 		const electronOpts = {
 			...config,
 			platform: process.platform,

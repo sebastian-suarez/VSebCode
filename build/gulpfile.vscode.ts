@@ -23,6 +23,8 @@ import * as cp from 'child_process';
 import * as i18n from './lib/i18n.ts';
 import { getProductionDependencies } from './lib/dependencies.ts';
 import { config } from './lib/electron.ts';
+import { checkDesktopBuildPrerequisites } from './lib/desktopBuildPrerequisites.ts';
+import { findSignTool } from './lib/win32SignTool.ts';
 import { createAsar } from './lib/asar.ts';
 import minimist from 'minimist';
 import { compileNonNativeExtensionsBuildTask, compileNativeExtensionsBuildTask, compileAllExtensionsBuildTask, compileExtensionMediaBuildTask, cleanExtensionsBuildTask } from './gulpfile.extensions.ts';
@@ -93,7 +95,7 @@ function computeChecksum(filename: string): string {
 	return hash;
 }
 
-function packageTask(platform: string, arch: string, sourceFolderName: string, destinationFolderName: string, _opts?: { stats?: boolean }) {
+function packageTask(platform: string, arch: string, sourceFolderName: string, destinationFolderName: string) {
 	const destination = path.join(path.dirname(root), destinationFolderName);
 	platform = platform || process.platform;
 
@@ -354,7 +356,7 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
 
 function hasAuthenticodeSignature(filePath: string): Promise<boolean> {
 	return new Promise((resolve, reject) => {
-		const proc = cp.spawn('signtool.exe', ['verify', '/pa', filePath]);
+		const proc = cp.spawn(findSignTool(process.env['ProgramFiles(x86)'] ? path.join(process.env['ProgramFiles(x86)']!, 'Windows Kits', '10', 'bin') : undefined), ['verify', '/pa', filePath]);
 		proc.on('error', reject);
 		proc.on('exit', code => resolve(code === 0));
 	});
@@ -368,7 +370,7 @@ async function stripAuthenticodeSignature(filePath: string): Promise<void> {
 		return;
 	}
 	await new Promise<void>((resolve, reject) => {
-		const proc = cp.spawn('signtool.exe', ['remove', '/s', filePath]);
+		const proc = cp.spawn(findSignTool(process.env['ProgramFiles(x86)'] ? path.join(process.env['ProgramFiles(x86)']!, 'Windows Kits', '10', 'bin') : undefined), ['remove', '/s', filePath]);
 		let out = '';
 		proc.stdout?.on('data', chunk => out += chunk.toString());
 		proc.stderr?.on('data', chunk => out += chunk.toString());
@@ -436,8 +438,8 @@ const buildRoot = path.dirname(root);
 const BUILD_TARGETS = [
 	{ platform: 'win32', arch: 'x64' },
 	{ platform: 'win32', arch: 'arm64' },
-	{ platform: 'darwin', arch: 'x64', opts: { stats: true } },
-	{ platform: 'darwin', arch: 'arm64', opts: { stats: true } },
+	{ platform: 'darwin', arch: 'x64' },
+	{ platform: 'darwin', arch: 'arm64' },
 	{ platform: 'linux', arch: 'x64' },
 	{ platform: 'linux', arch: 'armhf' },
 	{ platform: 'linux', arch: 'arm64' },
@@ -446,20 +448,29 @@ const BUILD_TARGETS = [
 	{ platform: 'linux', arch: 'loong64' },
 	{ platform: 'linux', arch: 's390x' },
 ];
+const prepack = new Map<string, task.Task>();
+for (const minified of ['', 'min']) {
+	const name = `vscode${minified ? '-min' : ''}-prepack`;
+	const preparation = task.define(name, task.series(copyCodiconsTask, cleanExtensionsBuildTask, compileNonNativeExtensionsBuildTask, compileExtensionMediaBuildTask));
+	task.task(preparation);
+	prepack.set(minified, preparation);
+}
+
 BUILD_TARGETS.forEach(buildTarget => {
 	const dashed = (str: string) => (str ? `-${str}` : ``);
 	const platform = buildTarget.platform;
 	const arch = buildTarget.arch;
-	const opts = buildTarget.opts;
 
 	const [vscode, vscodeMin] = ['', 'min'].map(minified => {
 		const sourceFolderName = `out-vscode${dashed(minified)}`;
 		const destinationFolderName = `VSCode${dashed(platform)}${dashed(arch)}`;
 
+		const prerequisiteTask = task.define(`check-desktop-${platform}-${arch}${dashed(minified)}`, () => checkDesktopBuildPrerequisites(platform, arch, root));
 		const packageTasks: task.Task[] = [
+			prerequisiteTask,
 			compileNativeExtensionsBuildTask,
 			util.rimraf(path.join(buildRoot, destinationFolderName)),
-			packageTask(platform, arch, sourceFolderName, destinationFolderName, opts)
+			packageTask(platform, arch, sourceFolderName, destinationFolderName)
 		];
 
 		if (platform === 'win32') {
@@ -476,15 +487,14 @@ BUILD_TARGETS.forEach(buildTarget => {
 			`esbuild-bundle${dashed(platform)}${dashed(arch)}${dashed(minified)}`,
 			() => runEsbuildBundle(sourceFolderName, !!minified, true, 'desktop')
 		);
-		const vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(
-			copyCodiconsTask,
-			cleanExtensionsBuildTask,
-			compileNonNativeExtensionsBuildTask,
-			compileExtensionMediaBuildTask,
+		const packingTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}-packing`, task.series(
+			prerequisiteTask,
 			writeISODate('out-build'),
 			esbuildBundleTask,
 			vscodeTaskCI
 		));
+		task.task(packingTask);
+		const vscodeTask = task.define(`vscode${dashed(platform)}${dashed(arch)}${dashed(minified)}`, task.series(prerequisiteTask, prepack.get(minified)!, packingTask));
 		task.task(vscodeTask);
 
 		return vscodeTask;

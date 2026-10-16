@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -158,22 +159,11 @@ async function main(buildDir?: string, outDir?: string): Promise<void> {
 	const appRoot = path.join(buildDir, `VSCode-darwin-${arch}`);
 	const appName = product.nameLong + '.app';
 	const appPath = path.join(appRoot, appName);
-	const dmgName = `VSCode-darwin-${arch}`;
+	const dmgName = `${product.nameShort}-darwin-${arch}`;
 	const artifactPath = path.join(outDir, `${dmgName}.dmg`);
 	const backgroundPath = path.join(import.meta.dirname, `dmg-background-${quality}.tiff`);
 	const diskIconPath = path.join(root, 'resources', 'darwin', 'code.icns');
-	let title = 'Code OSS';
-	switch (quality) {
-		case 'stable':
-			title = 'VS Code';
-			break;
-		case 'insider':
-			title = 'VS Code Insiders';
-			break;
-		case 'exploration':
-			title = 'VS Code Exploration';
-			break;
-	}
+	const title = product.nameLong;
 
 	if (!fs.existsSync(appPath)) {
 		throw new Error(`App path does not exist: ${appPath}`);
@@ -202,7 +192,7 @@ async function main(buildDir?: string, outDir?: string): Promise<void> {
 	fs.writeFileSync(settingsFile, settingsContent);
 
 	try {
-		await runDmgBuild(settingsFile, dmgName, artifactPath);
+		await runDmgBuild(settingsFile, title, artifactPath);
 	} finally {
 		if (fs.existsSync(settingsFile)) {
 			fs.unlinkSync(settingsFile);
