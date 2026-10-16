@@ -4,6 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { checkExtensionInstallation, getExtensionInstallationBlockReason } from '../common/extensionInstallationPolicy.js';
 import * as fs from 'fs';
 import { Promises, Queue } from '../../../base/common/async.js';
 import { VSBuffer } from '../../../base/common/buffer.js';
@@ -151,6 +152,7 @@ export class ExtensionManagementService extends AbstractExtensionManagementServi
 		try {
 			const manifest = await getManifest(path.resolve(location.fsPath));
 			const extensionId = getGalleryExtensionId(manifest.publisher, manifest.name);
+			checkExtensionInstallation(extensionId);
 			if (manifest.engines && manifest.engines.vscode && !isEngineValid(manifest.engines.vscode, this.productService.version, this.productService.date)) {
 				throw new Error(nls.localize('incompatible', "Unable to install extension '{0}' as it is not compatible with {2} '{1}'.", extensionId, this.productService.version, this.productService.nameShort));
 			}
@@ -180,6 +182,7 @@ export class ExtensionManagementService extends AbstractExtensionManagementServi
 		if (!local || !local.manifest.name || !local.manifest.version) {
 			throw new Error(`Cannot find a valid extension from the location ${location.toString()}`);
 		}
+		checkExtensionInstallation(getGalleryExtensionId(local.manifest.publisher, local.manifest.name));
 		await this.addExtensionsToProfile([[local, { source: 'resource' }]], profileLocation);
 		this.logService.info('Successfully installed extension', local.identifier.id, profileLocation.toString());
 		return local;
@@ -187,7 +190,17 @@ export class ExtensionManagementService extends AbstractExtensionManagementServi
 
 	async installExtensionsFromProfile(extensions: IExtensionIdentifier[], fromProfileLocation: URI, toProfileLocation: URI): Promise<ILocalExtension[]> {
 		this.logService.trace('ExtensionManagementService#installExtensionsFromProfile', extensions, fromProfileLocation.toString(), toProfileLocation.toString());
-		const extensionsToInstall = (await this.getInstalled(ExtensionType.User, fromProfileLocation)).filter(e => extensions.some(id => areSameExtensions(id, e.identifier)));
+		const extensionsToInstall = (await this.getInstalled(ExtensionType.User, fromProfileLocation)).filter(extension => {
+			if (!extensions.some(id => areSameExtensions(id, extension.identifier))) {
+				return false;
+			}
+			const reason = getExtensionInstallationBlockReason(extension.identifier.id);
+			if (reason) {
+				this.logService.warn(reason);
+				return false;
+			}
+			return true;
+		});
 		if (extensionsToInstall.length) {
 			const metadata = await Promise.all(extensionsToInstall.map(e => this.extensionsScanner.scanMetadata(e, fromProfileLocation)));
 			await this.addExtensionsToProfile(extensionsToInstall.map((e, index) => [e, metadata[index]]), toProfileLocation);
@@ -754,6 +767,9 @@ export class ExtensionsScanner extends Disposable {
 	async copyExtension(extension: ILocalExtension, fromProfileLocation: URI, toProfileLocation: URI, metadata: Partial<Metadata>): Promise<ILocalExtension> {
 		const source = await this.getScannedExtension(extension, fromProfileLocation);
 		const target = await this.getScannedExtension(extension, toProfileLocation);
+		if (!target || !this.uriIdentityService.extUri.isEqual(target.location, extension.location)) {
+			checkExtensionInstallation(extension.identifier.id);
+		}
 		metadata = { ...source?.metadata, ...metadata };
 
 		if (target) {
@@ -774,6 +790,9 @@ export class ExtensionsScanner extends Disposable {
 	async moveExtension(extension: ILocalExtension, fromProfileLocation: URI, toProfileLocation: URI, metadata: Partial<Metadata>): Promise<ILocalExtension> {
 		const source = await this.getScannedExtension(extension, fromProfileLocation);
 		const target = await this.getScannedExtension(extension, toProfileLocation);
+		if (!target || !this.uriIdentityService.extUri.isEqual(target.location, extension.location)) {
+			checkExtensionInstallation(extension.identifier.id);
+		}
 		metadata = { ...source?.metadata, ...metadata };
 
 		if (target) {
@@ -801,7 +820,17 @@ export class ExtensionsScanner extends Disposable {
 	async copyExtensions(fromProfileLocation: URI, toProfileLocation: URI, productVersion: IProductVersion): Promise<void> {
 		const fromExtensions = await this.scanExtensions(ExtensionType.User, fromProfileLocation, productVersion);
 		const extensions: [ILocalExtension, Metadata | undefined][] = await Promise.all(fromExtensions
-			.filter(e => !e.isApplicationScoped) /* remove application scoped extensions */
+			.filter(extension => {
+				if (extension.isApplicationScoped) {
+					return false;
+				}
+				const reason = getExtensionInstallationBlockReason(extension.identifier.id);
+				if (reason) {
+					this.logService.warn(reason);
+					return false;
+				}
+				return true;
+			})
 			.map(async e => ([e, await this.scanMetadata(e, fromProfileLocation)])));
 		await this.extensionsProfileScannerService.addExtensionsToProfile(extensions, toProfileLocation);
 	}

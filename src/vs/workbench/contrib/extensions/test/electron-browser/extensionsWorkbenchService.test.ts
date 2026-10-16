@@ -10,7 +10,7 @@ import { DeferredPromise, timeout } from '../../../../../base/common/async.js';
 import { generateUuid } from '../../../../../base/common/uuid.js';
 import { runWithFakedTimers } from '../../../../../base/test/common/virtualScheduling/index.js';
 import { ExtensionState, AutoCheckUpdatesConfigurationKey, AutoUpdateConfigurationKey, AutoUpdateDelayConfigurationKey, ExtensionRuntimeActionType, AutoUpdateConfigurationValue, IExtensionsWorkbenchService } from '../../common/extensions.js';
-import { ExtensionsWorkbenchService } from '../../browser/extensionsWorkbenchService.js';
+import { Extension, ExtensionsWorkbenchService } from '../../browser/extensionsWorkbenchService.js';
 import '../../browser/extensions.contribution.js';
 import {
 	IExtensionManagementService, IExtensionGalleryService, ILocalExtension, IGalleryExtension,
@@ -1888,6 +1888,14 @@ suite('ExtensionsWorkbenchServiceTest', () => {
 		await workbenchService.checkForUpdates();
 		return workbenchService;
 	}
+
+	test('already installed service extensions are not offered prohibited updates', () => {
+		const publisher = 'MS-VSCODE-REMOTE';
+		const local = aLocalExtension('remote-ssh', { publisher });
+		const gallery = aGalleryExtension('remote-ssh', { publisher, version: '2.0.0' });
+		const extension = instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, local, gallery, undefined);
+		assert.deepStrictEqual([extension.state, extension.outdated], [ExtensionState.Installed, false]);
+	});
 
 	function stubConfiguration(autoUpdateValue?: any, autoCheckUpdatesValue?: any): void {
 		const values: any = {

@@ -6,6 +6,7 @@
 
 import * as nls from '../../../../nls.js';
 import * as semver from '../../../../base/common/semver/semver.js';
+import { getExtensionInstallationBlockReason } from '../../../../platform/extensionManagement/common/extensionInstallationPolicy.js';
 import { Event, Emitter } from '../../../../base/common/event.js';
 import { index } from '../../../../base/common/arrays.js';
 import { CancelablePromise, Promises, ThrottledDelayer, createCancelablePromise } from '../../../../base/common/async.js';
@@ -334,7 +335,7 @@ export class Extension implements IExtension {
 
 	get outdated(): boolean {
 		try {
-			if (!this.gallery || !this.local) {
+			if (!this.gallery || !this.local || getExtensionInstallationBlockReason(this.identifier.id)) {
 				return false;
 			}
 			// Do not allow updating system extensions in stable

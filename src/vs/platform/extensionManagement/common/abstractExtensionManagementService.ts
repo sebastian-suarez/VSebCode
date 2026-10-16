@@ -4,6 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { checkExtensionInstallation, getExtensionInstallationBlockReason } from './extensionInstallationPolicy.js';
 import { distinct, isNonEmptyArray } from '../../../base/common/arrays.js';
 import { Barrier, CancelablePromise, createCancelablePromise } from '../../../base/common/async.js';
 import { CancellationToken } from '../../../base/common/cancellation.js';
@@ -73,6 +74,10 @@ export abstract class CommontExtensionManagementService extends Disposable imple
 	}
 
 	async canInstall(extension: IGalleryExtension): Promise<true | IMarkdownString> {
+		const blocked = getExtensionInstallationBlockReason(extension.identifier.id);
+		if (blocked) {
+			return new MarkdownString().appendText(blocked);
+		}
 		const allowedToInstall = this.allowedExtensionsService.isAllowed({ id: extension.identifier.id, publisherDisplayName: extension.publisherDisplayName });
 		if (allowedToInstall !== true) {
 			return new MarkdownString(nls.localize('not allowed to install', "This extension cannot be installed because {0}", allowedToInstall.value));
@@ -290,6 +295,7 @@ export abstract class AbstractExtensionManagementService extends CommontExtensio
 
 		const getInstallExtensionTaskKey = (extension: IGalleryExtension, profileLocation: URI) => `${ExtensionKey.create(extension).toString()}-${profileLocation.toString()}`;
 		const createInstallExtensionTask = (manifest: IExtensionManifest, extension: IGalleryExtension | URI, options: InstallExtensionTaskOptions, root: IInstallExtensionTask | undefined): void => {
+			checkExtensionInstallation(getGalleryExtensionId(manifest.publisher, manifest.name));
 			let uninstallTaskToWaitFor;
 			if (!URI.isUri(extension)) {
 				if (installingExtensionsMap.has(`${extension.identifier.id.toLowerCase()}-${options.profileLocation.toString()}`)) {
@@ -703,6 +709,7 @@ export abstract class AbstractExtensionManagementService extends CommontExtensio
 	}
 
 	private async checkAndGetCompatibleVersion(extension: IGalleryExtension, sameVersion: boolean, installPreRelease: boolean, productVersion: IProductVersion): Promise<{ extension: IGalleryExtension; manifest: IExtensionManifest }> {
+		checkExtensionInstallation(extension.identifier.id);
 		let compatibleExtension: IGalleryExtension | null;
 
 		const extensionsControlManifest = await this.getExtensionsControlManifest();
@@ -712,6 +719,7 @@ export abstract class AbstractExtensionManagementService extends CommontExtensio
 
 		const deprecationInfo = extensionsControlManifest.deprecated[extension.identifier.id.toLowerCase()];
 		if (deprecationInfo?.extension?.autoMigrate) {
+			checkExtensionInstallation(deprecationInfo.extension.id);
 			this.logService.info(`The '${extension.identifier.id}' extension is deprecated, fetching the compatible '${deprecationInfo.extension.id}' extension instead.`);
 			compatibleExtension = (await this.galleryService.getExtensions([{ id: deprecationInfo.extension.id, preRelease: deprecationInfo.extension.preRelease }], { targetPlatform: await this.getTargetPlatform(), compatible: true, productVersion }, CancellationToken.None))[0];
 			if (!compatibleExtension) {
@@ -735,6 +743,7 @@ export abstract class AbstractExtensionManagementService extends CommontExtensio
 			}
 		}
 
+		checkExtensionInstallation(compatibleExtension.identifier.id);
 		this.logService.info('Getting Manifest...', compatibleExtension.identifier.id);
 		const manifest = await this.galleryService.getManifest(compatibleExtension, CancellationToken.None);
 		if (manifest === null) {
