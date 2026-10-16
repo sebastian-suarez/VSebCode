@@ -1,11 +1,17 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 .monaco-workbench.nopanel .part.panel {
 	display: none !important;
 	visibility: hidden !important;
+}
+
+.monaco-workbench .part.panel > .content {
+	font-family: var(--vscode-workbench-bottompane-font-family, inherit);
+	font-size: var(--vscode-workbench-bottompane-font-size, 13px);
 }
 
 .monaco-workbench .part.panel.bottom .composite.title {
@@ -97,4 +103,44 @@
 .monaco-workbench .part.basepanel.top .global-actions .codicon-panel-restore::before {
 	display: inline-block;
 	transform: rotate(180deg);
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench .part.panel.bottom {
+	font-size: var(--vscode-workbench-bottompane-font-size, 13px);
+}
+
+.monaco-workbench .pane-composite-part.bottom .monaco-action-bar .action-label,
+.monaco-workbench .pane-composite-part.bottom .monaco-action-bar .action-item .keybinding {
+	font-size: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 11 / 13);
+	padding: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench .pane-composite-part.bottom > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item,
+.monaco-workbench .pane-composite-part.bottom > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item {
+	padding-left: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 10 / 13);
+	padding-right: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 10 / 13);
+	font-size: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 11 / 13);
+	padding-bottom: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 2 / 13);
+	padding-top: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench .pane-composite-part.bottom > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .badge,
+.monaco-workbench .pane-composite-part.bottom > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .badge {
+	margin-left: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 2 / 13);
+	font-size: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 11 / 13);
+}
+
+.monaco-workbench .pane-composite-part.bottom .monaco-action-bar .action-item .codicon {
+	width: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 16 / 13);
+	height: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench .pane-composite-part.bottom .codicon[class*='codicon-'] {
+	font-size: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench .pane-composite-part.bottom .monaco-dropdown-with-primary > .dropdown-action-container > .monaco-dropdown > .dropdown-label .codicon[class*='codicon-'] {
+	font-size: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 12 / 13);
+	line-height: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 16 / 13);
 }

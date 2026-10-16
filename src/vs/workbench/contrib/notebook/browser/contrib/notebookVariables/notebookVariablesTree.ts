@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -8,6 +9,7 @@ import { IListVirtualDelegate } from '../../../../../../base/browser/ui/list/lis
 import { IListAccessibilityProvider } from '../../../../../../base/browser/ui/list/listWidget.js';
 import { ITreeNode, ITreeRenderer } from '../../../../../../base/browser/ui/tree/tree.js';
 import { FuzzyScore } from '../../../../../../base/common/filters.js';
+import { getElementFontMetric } from '../../../../../../base/browser/font.js';
 import { DisposableStore } from '../../../../../../base/common/lifecycle.js';
 import { observableValue } from '../../../../../../base/common/observable.js';
 import { ILocalizedString, localize, localize2 } from '../../../../../../nls.js';
@@ -26,8 +28,8 @@ export class NotebookVariablesTree extends WorkbenchObjectTree<INotebookVariable
 
 export class NotebookVariablesDelegate implements IListVirtualDelegate<INotebookVariableElement> {
 
-	getHeight(element: INotebookVariableElement): number {
-		return 22;
+	getHeight(element: INotebookVariableElement, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: INotebookVariableElement): string {

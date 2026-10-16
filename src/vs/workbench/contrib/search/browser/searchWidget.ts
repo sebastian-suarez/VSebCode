@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -45,9 +46,7 @@ import { SearchFindInput } from './searchFindInput.js';
 import { getDefaultHoverDelegate } from '../../../../base/browser/ui/hover/hoverDelegateFactory.js';
 import { IDisposable, MutableDisposable } from '../../../../base/common/lifecycle.js';
 import { NotebookFindScopeType } from '../../notebook/common/notebookCommon.js';
-
-/** Specified in searchview.css */
-const SingleLineInputHeight = 26;
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 export interface ISearchWidgetOptions {
 	value?: string;
@@ -97,7 +96,7 @@ const ctrlKeyMod = (isMacintosh ? KeyMod.WinCtrl : KeyMod.CtrlCmd);
 
 function stopPropagationForMultiLineUpwards(event: IKeyboardEvent, value: string, textarea: HTMLTextAreaElement | null) {
 	const isMultiline = !!value.match(/\n/);
-	if (textarea && (isMultiline || textarea.clientHeight > SingleLineInputHeight) && textarea.selectionStart > 0) {
+	if (textarea && (isMultiline || textarea.clientHeight > getElementFontMetric(textarea, 26)) && textarea.selectionStart > 0) {
 		event.stopPropagation();
 		return;
 	}
@@ -105,12 +104,11 @@ function stopPropagationForMultiLineUpwards(event: IKeyboardEvent, value: string
 
 function stopPropagationForMultiLineDownwards(event: IKeyboardEvent, value: string, textarea: HTMLTextAreaElement | null) {
 	const isMultiline = !!value.match(/\n/);
-	if (textarea && (isMultiline || textarea.clientHeight > SingleLineInputHeight) && textarea.selectionEnd < textarea.value.length) {
+	if (textarea && (isMultiline || textarea.clientHeight > getElementFontMetric(textarea, 26)) && textarea.selectionEnd < textarea.value.length) {
 		event.stopPropagation();
 		return;
 	}
 }
-
 
 export class SearchWidget extends Widget {
 	private static readonly INPUT_MAX_HEIGHT = 134;
@@ -314,7 +312,7 @@ export class SearchWidget extends Widget {
 	setWidth(width: number) {
 		this.searchInput?.inputBox.layout();
 		if (this.replaceInput) {
-			this.replaceInput.width = width - 28;
+			this.replaceInput.width = width - getElementFontMetric(this.replaceInput.domNode, 28);
 			this.replaceInput.inputBox.layout();
 		}
 	}

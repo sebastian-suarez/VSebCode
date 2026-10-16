@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -14,6 +15,7 @@ import { assertNever } from '../../../../base/common/assert.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { memoize } from '../../../../base/common/decorators.js';
 import { FuzzyScore, createMatches } from '../../../../base/common/filters.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 import { Iterable } from '../../../../base/common/iterator.js';
 import { Disposable, DisposableStore, MutableDisposable } from '../../../../base/common/lifecycle.js';
 import { IObservable, autorun, observableValue } from '../../../../base/common/observable.js';
@@ -437,8 +439,8 @@ class TestCoverageTree extends Disposable {
 }
 
 class TestCoverageTreeListDelegate implements IListVirtualDelegate<CoverageTreeElement> {
-	getHeight(element: CoverageTreeElement): number {
-		return 22;
+	getHeight(element: CoverageTreeElement, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: CoverageTreeElement): string {

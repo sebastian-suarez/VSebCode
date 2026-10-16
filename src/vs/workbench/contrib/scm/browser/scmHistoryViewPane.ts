@@ -74,6 +74,7 @@ import { ListViewTargetSector } from '../../../../base/browser/ui/list/listView.
 import { CancellationToken } from '../../../../base/common/cancellation.js';
 import { IMarkdownRendererService } from '../../../../platform/markdown/browser/markdownRenderer.js';
 import { MarkdownString } from '../../../../base/common/htmlContent.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 const PICK_REPOSITORY_ACTION_ID = 'workbench.scm.action.graph.pickRepository';
 const PICK_HISTORY_ITEM_REFS_ACTION_ID = 'workbench.scm.action.graph.pickHistoryItemRefs';
@@ -408,8 +409,8 @@ registerAction2(class extends Action2 {
 
 class ListDelegate implements IListVirtualDelegate<TreeElement> {
 
-	getHeight(): number {
-		return 22;
+	getHeight(_element?: TreeElement, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: TreeElement): string {

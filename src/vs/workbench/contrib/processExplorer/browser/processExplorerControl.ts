@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -33,6 +34,7 @@ import { IRemoteAgentService } from '../../../services/remote/common/remoteAgent
 import { ILabelService } from '../../../../platform/label/common/label.js';
 import { Schemas } from '../../../../base/common/network.js';
 import { isWeb } from '../../../../base/common/platform.js';
+import { FONT } from '../../../../base/common/font.js';
 
 const DEBUG_FLAGS_PATTERN = /\s--inspect(?:-brk|port)?=(?<port>\d+)?/;
 const DEBUG_PORT_PATTERN = /\s--inspect-port=(?<port>\d+)/;
@@ -73,7 +75,7 @@ function isProcessItem(item: unknown): item is ProcessItem {
 class ProcessListDelegate implements IListVirtualDelegate<IMachineProcessInformation | ProcessItem | IRemoteDiagnosticError> {
 
 	getHeight() {
-		return 22;
+		return (22 * FONT.workbenchCoefficient);
 	}
 
 	getTemplateId(element: IProcessInformation | IMachineProcessInformation | ProcessItem | IRemoteDiagnosticError) {

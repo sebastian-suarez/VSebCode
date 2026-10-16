@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -47,13 +48,14 @@ import { Codicon } from '../../../../base/common/codicons.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../../../platform/storage/common/storage.js';
 import { IActionViewItemProvider } from '../../../../base/browser/ui/actionbar/actionbar.js';
 import { fromNow } from '../../../../base/common/date.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 type TreeElement = ISCMRepository | SCMArtifactGroupTreeElement | SCMArtifactTreeElement | IResourceNode<SCMArtifactTreeElement, SCMArtifactGroupTreeElement>;
 
 class ListDelegate implements IListVirtualDelegate<ISCMRepository> {
 
-	getHeight(): number {
-		return 22;
+	getHeight(_element?: ISCMRepository, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: TreeElement): string {

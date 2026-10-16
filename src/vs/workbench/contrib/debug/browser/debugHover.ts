@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,6 +14,7 @@ import { AsyncDataTree } from '../../../../base/browser/ui/tree/asyncDataTree.js
 import { ITreeContextMenuEvent } from '../../../../base/browser/ui/tree/tree.js';
 import { coalesce } from '../../../../base/common/arrays.js';
 import { CancellationToken, CancellationTokenSource } from '../../../../base/common/cancellation.js';
+import { FONT } from '../../../../base/common/font.js';
 import { KeyCode } from '../../../../base/common/keyCodes.js';
 import * as lifecycle from '../../../../base/common/lifecycle.js';
 import { clamp } from '../../../../base/common/numbers.js';
@@ -444,7 +446,7 @@ class DebugHoverDataSource extends AbstractExpressionDataSource<IExpression, IEx
 
 class DebugHoverDelegate implements IListVirtualDelegate<IExpression> {
 	getHeight(element: IExpression): number {
-		return 18;
+		return (18 * FONT.workbenchCoefficient);
 	}
 
 	getTemplateId(element: IExpression): string {

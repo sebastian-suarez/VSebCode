@@ -1,9 +1,11 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import './media/style.css';
+import './media/fonts.css';
 import { registerThemingParticipant } from '../../platform/theme/common/themeService.js';
 import { WORKBENCH_BACKGROUND, TITLE_BAR_ACTIVE_BACKGROUND } from '../common/theme.js';
 import { isWeb, isIOS } from '../../base/common/platform.js';

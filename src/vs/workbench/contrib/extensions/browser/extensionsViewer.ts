@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -38,6 +39,7 @@ import { DelayedPagedModel, IPagedModel } from '../../../../base/common/paging.j
 import { ExtensionIconWidget } from './extensionsWidgets.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
 import { isCancellationError } from '../../../../base/common/errors.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 function getAriaLabelForExtension(extension: IExtension | null): string {
 	if (!extension) {
@@ -259,8 +261,8 @@ class AsyncDataSource implements IAsyncDataSource<IExtensionData, any> {
 
 class VirualDelegate implements IListVirtualDelegate<IExtensionData> {
 
-	public getHeight(element: IExtensionData): number {
-		return 62;
+	public getHeight(element: IExtensionData, container?: HTMLElement): number {
+		return getElementFontMetric(container, 62);
 	}
 	public getTemplateId({ extension }: IExtensionData): string {
 		return extension ? ExtensionRenderer.TEMPLATE_ID : UnknownExtensionRenderer.TEMPLATE_ID;

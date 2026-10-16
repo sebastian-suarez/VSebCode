@@ -70,6 +70,7 @@ import { StandardKeyboardEvent } from '../../../../base/browser/keyboardEvent.js
 import { KeyCode } from '../../../../base/common/keyCodes.js';
 import { IExtensionGalleryManifest, IExtensionGalleryManifestService } from '../../../../platform/extensionManagement/common/extensionGalleryManifest.js';
 import { URI } from '../../../../base/common/uri.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 export const ExtensionsSortByContext = new RawContextKey<string>('extensionsSortByValue', '');
 export const SearchMarketplaceExtensionsContext = new RawContextKey<boolean>('searchMarketplaceExtensions', false);
@@ -701,13 +702,16 @@ export class ExtensionsViewPaneContainer extends ViewPaneContainer<IExtensionsVi
 	private _dimension: Dimension | undefined;
 	override layout(dimension: Dimension): void {
 		this._dimension = dimension;
+		const metric = (size: number) => getElementFontMetric(this.root, size);
+		const separateActions = dimension.width < metric(170);
 		if (this.root) {
 			this.root.classList.toggle('narrow', dimension.width <= 250);
 			this.root.classList.toggle('mini', dimension.width <= 200);
+			this.root.classList.toggle('font-narrow', separateActions);
 		}
-		this.searchBox?.layout(new Dimension(dimension.width - 34 - /*padding*/8 - (24 * 2), 20));
-		const searchBoxHeight = 20 + 21 /*margin*/;
-		const headerHeight = this.header && !!this.notificationContainer?.childNodes.length ? this.notificationContainer.clientHeight + searchBoxHeight + 10 /*margin*/ : searchBoxHeight;
+		this.searchBox?.layout(new Dimension(Math.max(1, dimension.width - metric(42) - (separateActions ? 0 : metric(48))), metric(20)));
+		const searchBoxHeight = metric(40) + (separateActions ? metric(24) : 0) + 1 /*margin*/;
+		const headerHeight = this.header && !!this.notificationContainer?.childNodes.length ? this.notificationContainer.clientHeight + searchBoxHeight + metric(10) /*margin*/ : searchBoxHeight;
 		this.header!.style.height = `${headerHeight}px`;
 		super.layout(new Dimension(dimension.width, dimension.height - headerHeight));
 	}

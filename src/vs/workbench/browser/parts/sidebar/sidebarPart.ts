@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -36,12 +37,15 @@ import { localize2 } from '../../../../nls.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { VisibleViewContainersTracker } from '../visibleViewContainersTracker.js';
 import { Extensions } from '../../panecomposite.js';
+import { invalidateFontMetrics, updateSidebarSize } from '../../../../base/common/font.js';
+import { getFontSize } from '../../../../platform/configuration/common/fontConfiguration.js';
 
 const PRIMARY_SIDE_BAR_SASH_CLASS = 'primary-sidebar-sash';
 
 export class SidebarPart extends AbstractPaneCompositePart {
 
 	static readonly activeViewletSettingsKey = 'workbench.sidebar.activeviewletid';
+	static readonly fontSizeSettingsKey = 'workbench.sideBar.experimental.fontSize';
 
 	//#region IView
 
@@ -129,6 +133,12 @@ export class SidebarPart extends AbstractPaneCompositePart {
 			if (e.affectsConfiguration(LayoutSettings.ACTIVITY_BAR_AUTO_HIDE)) {
 				this.onDidChangeActivityBarLocation();
 			}
+			if ((e.affectsConfiguration(SidebarPart.fontSizeSettingsKey) || e.affectsConfiguration('workbench.experimental.fontSize'))) {
+				this.applySidebarFontSize();
+			}
+			if (e.affectsConfiguration('workbench.sideBar.experimental.fontFamily')) {
+				this.applySidebarFontFamily();
+			}
 		}));
 
 		this.registerActions();
@@ -181,6 +191,9 @@ export class SidebarPart extends AbstractPaneCompositePart {
 		container.style.borderLeftStyle = borderColor && !isPositionLeft ? 'solid' : '';
 		container.style.borderLeftColor = !isPositionLeft ? borderColor || '' : '';
 		container.style.outlineColor = this.getColor(SIDE_BAR_DRAG_AND_DROP_BACKGROUND) ?? '';
+
+		this.applySidebarFontSize(container);
+		this.applySidebarFontFamily(container);
 	}
 
 	override layout(width: number, height: number, top: number, left: number): void {
@@ -329,6 +342,44 @@ export class SidebarPart extends AbstractPaneCompositePart {
 
 			this.activityBarPart.show(true);
 		}
+	}
+
+	private applySidebarFontFamily(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+
+		const family = this.configurationService.getValue<string>('workbench.sideBar.experimental.fontFamily');
+
+		if (target.style.getPropertyValue('--vscode-workbench-sidebar-font-family') === (family || '')) {
+			return;
+		}
+		if (family) {
+			target.style.setProperty('--vscode-workbench-sidebar-font-family', family);
+		} else {
+			target.style.removeProperty('--vscode-workbench-sidebar-font-family');
+		}
+
+		invalidateFontMetrics();
+	}
+
+	private applySidebarFontSize(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+
+		const configuredSize = getFontSize(this.configurationService, SidebarPart.fontSizeSettingsKey, 13);
+
+		const value = `${configuredSize}px`;
+		if (target.style.getPropertyValue('--vscode-workbench-sidebar-font-size') === value) {
+			return;
+		}
+		target.style.setProperty('--vscode-workbench-sidebar-font-size', value);
+		updateSidebarSize(configuredSize);
+
+		this._onDidChange.fire(undefined); // Signal grid that size constraints changed
 	}
 
 	private registerActions(): void {

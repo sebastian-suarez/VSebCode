@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -84,4 +85,33 @@
 
 .monaco-pane-view .pane:not(.merged-header) .monaco-progress-container {
 	top: 20px;
+}
+
+
+
+.monaco-workbench .part.sidebar .monaco-pane-view .pane > .pane-header.not-collapsible .title, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane > .pane-header.not-collapsible .title {
+	margin-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 8 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane > .pane-header > .icon, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane > .pane-header > .icon {
+	width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 16 / 13);
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 16 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane.pane.horizontal:not(.expanded) > .pane-header > .icon, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane.pane.horizontal:not(.expanded) > .pane-header > .icon {
+	margin-top: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 4 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane > .pane-header h3.title, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane > .pane-header h3.title {
+	font-size: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 11 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane > .pane-header .description, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane > .pane-header .description {
+	margin-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 10 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane > .pane-header .description .codicon, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane > .pane-header .description .codicon {
+	font-size: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 9 / 13);
+	margin-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 2 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane .monaco-progress-container, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane .monaco-progress-container {
+	top: calc(var(--vscode-workbench-sidebar-font-size, 13px) * -2 / 13)
+}
+.monaco-workbench .part.sidebar .monaco-pane-view .pane:not(.merged-header) .monaco-progress-container, .monaco-workbench .part.auxiliarybar .monaco-pane-view .pane:not(.merged-header) .monaco-progress-container {
+	top: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 20 / 13)
 }

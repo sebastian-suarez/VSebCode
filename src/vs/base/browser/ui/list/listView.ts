@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -12,6 +13,7 @@ import { SmoothScrollableElement } from '../scrollbar/scrollableElement.js';
 import { distinct, equals, splice } from '../../../common/arrays.js';
 import { Delayer, disposableTimeout } from '../../../common/async.js';
 import { memoize } from '../../../common/decorators.js';
+import { onDidChangeFontMetrics } from '../../../common/font.js';
 import { Emitter, Event, IValueWithChangeEvent } from '../../../common/event.js';
 import { Disposable, DisposableStore, IDisposable, MutableDisposable, toDisposable } from '../../../common/lifecycle.js';
 import { IRange, Range } from '../../../common/range.js';
@@ -316,6 +318,8 @@ export class ListView<T> implements IListView<T> {
 	private _scrollHeight: number = 0;
 	private scrollableElementUpdateDisposable: IDisposable | null = null;
 	private scrollableElementWidthDelayer = new Delayer<void>(50);
+	private fontMeasurementsPending = false;
+	private fontMetricsPending = true;
 	private splicing = false;
 	private dragOverAnimationDisposable: IDisposable | undefined;
 	private dragOverAnimationStopDisposable: IDisposable = Disposable.None;
@@ -389,6 +393,20 @@ export class ListView<T> implements IListView<T> {
 		if (options.horizontalScrolling && options.supportDynamicHeights) {
 			throw new Error('Horizontal scrolling and dynamic heights not supported simultaneously');
 		}
+
+		let fontLayoutPending = false;
+		this.disposables.add(onDidChangeFontMetrics(() => {
+			if (fontLayoutPending) {
+				return;
+			}
+			fontLayoutPending = true;
+			queueMicrotask(() => {
+				fontLayoutPending = false;
+				if (!this.disposables.isDisposed && this.length) {
+					this.refreshFontMetrics();
+				}
+			});
+		}));
 
 		this.items = [];
 		this.itemId = 0;
@@ -504,6 +522,50 @@ export class ListView<T> implements IListView<T> {
 		if (topOffset < 0) {
 			// Scroll up
 			this.setScrollTop(this.scrollTop + topOffset);
+		}
+	}
+
+	private refreshFontMetrics(): void {
+		this.fontMetricsPending = !this.domNode.isConnected;
+		this.fontMeasurementsPending = this.horizontalScrolling || this.supportDynamicHeights;
+		if (this.length) {
+			const anchor = this.firstVisibleIndex;
+			const offset = this.scrollTop - this.elementTop(anchor);
+			const previousRange = this.getRenderRange(this.lastRenderTop, this.lastRenderHeight);
+			let changed = false;
+			for (const item of this.items) {
+				if (!item.hasDynamicHeight) {
+					const size = this.virtualDelegate.getHeight(item.element, this.domNode);
+					changed ||= size !== item.size;
+					item.size = size;
+				}
+				item.lastDynamicHeightWidth = undefined;
+			}
+			if (changed) {
+				this.rangeMap.splice(0, this.length, this.items);
+				this.render(previousRange, this.elementTop(anchor) + offset, this.lastRenderHeight, undefined, undefined, true);
+				this.eventuallyUpdateScrollDimensions();
+				this.setScrollTop(this.elementTop(anchor) + offset);
+				this._onDidChangeContentHeight.fire(this.contentHeight);
+			}
+		}
+		this.refreshFontMeasurements();
+	}
+
+	private refreshFontMeasurements(): void {
+		if (!this.fontMeasurementsPending || this.domNode.getClientRects().length === 0) {
+			return;
+		}
+		this.fontMeasurementsPending = false;
+		if (this.horizontalScrolling) {
+			for (const item of this.items) {
+				item.width = undefined;
+			}
+			this.measureItemWidths(this.items);
+			this.updateScrollWidth();
+		}
+		if (this.supportDynamicHeights) {
+			this._rerender(this.lastRenderTop, this.lastRenderHeight);
 		}
 	}
 
@@ -677,7 +739,7 @@ export class ListView<T> implements IListView<T> {
 			id: String(this.itemId++),
 			element,
 			templateId: this.virtualDelegate.getTemplateId(element),
-			size: this.virtualDelegate.getHeight(element),
+			size: this.virtualDelegate.getHeight(element, this.domNode),
 			width: undefined,
 			hasDynamicHeight: !!this.virtualDelegate.hasDynamicHeight && this.virtualDelegate.hasDynamicHeight(element),
 			lastDynamicHeightWidth: undefined,
@@ -886,6 +948,9 @@ export class ListView<T> implements IListView<T> {
 	}
 
 	layout(height?: number, width?: number): void {
+		if (this.fontMetricsPending && this.domNode.isConnected) {
+			this.refreshFontMetrics();
+		}
 		const scrollDimensions: INewScrollDimensions = {
 			height: typeof height === 'number' ? height : getContentHeight(this.domNode)
 		};
@@ -916,6 +981,7 @@ export class ListView<T> implements IListView<T> {
 			const rightOffset = Math.max(0, scrollDims.scrollWidth - scrollPos.scrollLeft - this.renderWidth);
 			this.domNode.style.setProperty('--list-scroll-right-offset', `${Math.max(rightOffset - 12, 0)}px`);
 		}
+		this.refreshFontMeasurements();
 	}
 
 	// Render
@@ -1596,6 +1662,9 @@ export class ListView<T> implements IListView<T> {
 	 * to be probed for dynamic height. Adjusts scroll height and top if necessary.
 	 */
 	protected _rerender(renderTop: number, renderHeight: number, inSmoothScrolling?: boolean): void {
+		if (this.fontMeasurementsPending && this.domNode.getClientRects().length === 0) {
+			return;
+		}
 		let previousRenderRange = this.getRenderRange(renderTop, renderHeight);
 		const retainedMeasurements = new Map<number, IDynamicHeightMeasurement<T>>();
 

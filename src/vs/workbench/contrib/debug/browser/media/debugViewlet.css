@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -389,4 +390,127 @@
 .debug-pane .pane-header .breakpoint-warning .monaco-icon-label .codicon {
 	display: flex;
 	align-items: center;
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint-folder,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .exception {
+	margin-left: 0 !important;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-action.notification:after {
+	width: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+	top: calc(var(--monaco-ui-font-size, 13px) * 10 / 13);
+	right: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) > .title > .title-actions .start-debug-action-item {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 20 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) > .title > .title-actions .start-debug-action-item .codicon-debug-start {
+	width: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+	padding-right: 1px;
+	margin-left: 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 0);
+	min-width: calc(var(--monaco-ui-font-size, 13px) * 90 / 13);
+}
+
+.monaco-workbench.safari :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .start-debug-action-item .configuration .monaco-select-box {
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 0);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .line-number {
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .call-stack-state-message {
+	margin: calc(var(--monaco-ui-font-size, 13px) * 0) calc(var(--monaco-ui-font-size, 13px) * 10 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .call-stack-state-message > .label {
+	padding: 1px calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 9 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-call-stack .thread,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-call-stack .session,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-call-stack .stack-frame {
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-call-stack .thread > .state.label,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-call-stack .session > .state.label {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 10 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .monaco-list-row .monaco-action-bar .action-label {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .session .codicon {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .scope {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 11 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .monaco-list-row .expression .value {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .monaco-inputbox > .ibwrapper {
+	height: calc(var(--monaco-ui-font-size, 13px) * 19 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .monaco-inputbox > .ibwrapper > .input {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 0);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-view-content .monaco-tl-contents .highlight {
+	outline: 1px dotted var(--vscode-list-filterMatchBorder);
+	outline-offset: calc(var(--monaco-ui-font-size, 13px) * -1 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .monaco-list-row {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * -19 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint .monaco-custom-toggle {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint .monaco-custom-toggle.monaco-checkbox {
+	width: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+	min-width: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+	max-width: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+	padding: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint .monaco-custom-toggle.monaco-checkbox::before {
+	margin: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .debug-breakpoints .breakpoint > .codicon {
+	width: calc(var(--monaco-ui-font-size, 13px) * 19 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 19 / 13);
+	min-width: calc(var(--monaco-ui-font-size, 13px) * 19 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .debug-pane .pane-header .breakpoint-warning {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
 }

@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -41,6 +42,7 @@ import { ActionViewItem } from '../../../../base/browser/ui/actionbar/actionView
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { MarshalledCommentThread, MarshalledCommentThreadInternal } from '../../../common/comments.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 export const COMMENTS_VIEW_ID = 'workbench.panel.comments';
 export const COMMENTS_VIEW_STORAGE_ID = 'Comments';
@@ -80,11 +82,11 @@ class CommentsModelVirtualDelegate implements IListVirtualDelegate<ResourceWithC
 	private static readonly COMMENT_ID = 'comment-node';
 
 
-	getHeight(element: any): number {
+	getHeight(element: any, container?: HTMLElement): number {
 		if ((element instanceof CommentNode) && element.hasReply()) {
-			return 44;
+			return getElementFontMetric(container, 44);
 		}
-		return 22;
+		return getElementFontMetric(container, 22);
 	}
 
 	public getTemplateId(element: any): string {

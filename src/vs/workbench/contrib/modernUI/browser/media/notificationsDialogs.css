@@ -16,7 +16,7 @@
  */
 
 .modern-ui-notifications-dialogs.monaco-workbench .notifications-list-container .notification-list-item {
-	padding: var(--vscode-spacing-size60) var(--vscode-spacing-size20);
+	padding: calc(var(--vscode-workbench-font-size, 13px) * 6 / 13) var(--vscode-spacing-size20);
 }
 
 .modern-ui-notifications-dialogs.monaco-workbench .notifications-list-container .notification-list-item .notification-list-item-icon {

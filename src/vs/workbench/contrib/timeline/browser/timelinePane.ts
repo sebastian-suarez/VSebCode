@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -57,8 +58,7 @@ import { AriaRole } from '../../../../base/browser/ui/aria/aria.js';
 import { ILocalizedString } from '../../../../platform/action/common/action.js';
 import { IHoverService, WorkbenchHoverDelegate } from '../../../../platform/hover/browser/hover.js';
 import { HoverPosition } from '../../../../base/browser/ui/hover/hoverWidget.js';
-
-const ItemHeight = 22;
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 type TreeElement = TimelineItem | LoadMoreCommand;
 
@@ -328,7 +328,7 @@ export class TimelinePane extends ViewPane {
 		let pageSize = this.configurationService.getValue<number | null | undefined>('timeline.pageSize');
 		if (pageSize === undefined || pageSize === null) {
 			// If we are paging when scrolling, then add an extra item to the end to make sure the "Load more" item is out of view
-			pageSize = Math.max(20, Math.floor(((this.tree?.renderHeight ?? 0) / ItemHeight) + (this.pageOnScroll ? 1 : -1)));
+			pageSize = Math.max(20, Math.floor(((this.tree?.renderHeight ?? 0) / getElementFontMetric(this.$tree, 22)) + (this.pageOnScroll ? 1 : -1)));
 		}
 		return pageSize;
 	}
@@ -1155,8 +1155,8 @@ export class TimelineKeyboardNavigationLabelProvider implements IKeyboardNavigat
 }
 
 export class TimelineListVirtualDelegate implements IListVirtualDelegate<TreeElement> {
-	getHeight(_element: TreeElement): number {
-		return ItemHeight;
+	getHeight(_element: TreeElement, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: TreeElement): string {

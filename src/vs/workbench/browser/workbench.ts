@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -7,6 +8,8 @@ import './style.js';
 import { runWhenWindowIdle } from '../../base/browser/dom.js';
 import { Event, Emitter, setGlobalLeakWarningThreshold } from '../../base/common/event.js';
 import { RunOnceScheduler, timeout } from '../../base/common/async.js';
+import { invalidateFontMetrics, updateDefaultSize } from '../../base/common/font.js';
+import { getFontSize } from '../../platform/configuration/common/fontConfiguration.js';
 import { isFirefox, isSafari, isChrome } from '../../base/browser/browser.js';
 import { mark } from '../../base/common/performance.js';
 import { onUnexpectedError, setUnexpectedErrorHandler } from '../../base/common/errors.js';
@@ -17,7 +20,7 @@ import { IEditorFactoryRegistry, EditorExtensions } from '../common/editor.js';
 import { getSingletonServiceDescriptors } from '../../platform/instantiation/common/extensions.js';
 import { Position, Parts, IWorkbenchLayoutService, positionToString } from '../services/layout/browser/layoutService.js';
 import { IStorageService, WillSaveStateReason, StorageScope, StorageTarget } from '../../platform/storage/common/storage.js';
-import { IConfigurationChangeEvent, IConfigurationService } from '../../platform/configuration/common/configuration.js';
+import { IConfigurationService } from '../../platform/configuration/common/configuration.js';
 import { IInstantiationService } from '../../platform/instantiation/common/instantiation.js';
 import { ServiceCollection } from '../../platform/instantiation/common/serviceCollection.js';
 import { LifecyclePhase, ILifecycleService, WillShutdownEvent } from '../services/lifecycle/common/lifecycle.js';
@@ -211,7 +214,17 @@ export class Workbench extends Layout {
 	private registerListeners(lifecycleService: ILifecycleService, storageService: IStorageService, configurationService: IConfigurationService, hostService: IHostService, dialogService: IDialogService): void {
 
 		// Configuration changes
-		this._register(configurationService.onDidChangeConfiguration(e => this.updateFontAliasing(e, configurationService)));
+		this._register(configurationService.onDidChangeConfiguration(e => {
+			if (e.affectsConfiguration('workbench.fontAliasing')) {
+				this.updateFontAliasing(configurationService);
+			}
+			if (e.affectsConfiguration('workbench.experimental.fontFamily')) {
+				this.updateFontFamily(configurationService);
+			}
+			if (e.affectsConfiguration('workbench.experimental.fontSize')) {
+				this.updateFontSize(configurationService);
+			}
+		}));
 
 		// Font Info
 		if (isNative) {
@@ -248,13 +261,9 @@ export class Workbench extends Layout {
 	}
 
 	private fontAliasing: 'default' | 'antialiased' | 'none' | 'auto' | undefined;
-	private updateFontAliasing(e: IConfigurationChangeEvent | undefined, configurationService: IConfigurationService) {
+	private updateFontAliasing(configurationService: IConfigurationService) {
 		if (!isMacintosh) {
 			return; // macOS only
-		}
-
-		if (e && !e.affectsConfiguration('workbench.fontAliasing')) {
-			return;
 		}
 
 		const aliasing = configurationService.getValue<'default' | 'antialiased' | 'none' | 'auto'>('workbench.fontAliasing');
@@ -272,6 +281,54 @@ export class Workbench extends Layout {
 		if (fontAliasingValues.some(option => option === aliasing)) {
 			this.mainContainer.classList.add(`monaco-font-aliasing-${aliasing}`);
 		}
+	}
+
+	private applyFontStylesToNewContainers(): void {
+		this._register(this.onDidAddContainer(({ container }) => {
+			for (const property of ['--vscode-workbench-font-family', '--vscode-workbench-font-size']) {
+				const value = this.mainContainer.style.getPropertyValue(property);
+				if (value) {
+					container.style.setProperty(property, value);
+				}
+			}
+		}));
+	}
+
+	private fontFamily: string | undefined;
+	private updateFontFamily(configurationService: IConfigurationService) {
+		const family = configurationService.getValue<string>('workbench.experimental.fontFamily');
+
+		if (this.fontFamily === family) {
+			return;
+		}
+
+		this.fontFamily = family;
+
+		if (family) {
+			for (const container of this.containers) {
+				container.style.setProperty('--vscode-workbench-font-family', family);
+			}
+		} else {
+			for (const container of this.containers) {
+				container.style.removeProperty('--vscode-workbench-font-family');
+			}
+		}
+		invalidateFontMetrics();
+	}
+
+	private fontSize: number | undefined;
+	private updateFontSize(configurationService: IConfigurationService) {
+		const configuredSize = getFontSize(configurationService, 'workbench.experimental.fontSize', 13);
+
+		if (this.fontSize === configuredSize) {
+			return;
+		}
+
+		this.fontSize = configuredSize;
+		for (const container of this.containers) {
+			container.style.setProperty('--vscode-workbench-font-size', `${configuredSize}px`);
+		}
+		updateDefaultSize(configuredSize);
 	}
 
 	private restoreFontInfo(storageService: IStorageService, configurationService: IConfigurationService): void {
@@ -299,6 +356,8 @@ export class Workbench extends Layout {
 
 	private renderWorkbench(instantiationService: IInstantiationService, notificationService: NotificationService, storageService: IStorageService, configurationService: IConfigurationService): void {
 
+		this.applyFontStylesToNewContainers();
+
 		// ARIA & Signals
 		setARIAContainer(this.mainContainer);
 		setProgressAccessibilitySignalScheduler((msDelayTime: number, msLoopTime?: number) => instantiationService.createInstance(AccessibilityProgressSignalScheduler, msDelayTime, msLoopTime));
@@ -317,7 +376,10 @@ export class Workbench extends Layout {
 		this.mainContainer.classList.add(...workbenchClasses);
 
 		// Apply font aliasing
-		this.updateFontAliasing(undefined, configurationService);
+		this.updateFontAliasing(configurationService);
+
+		this.updateFontFamily(configurationService);
+		this.updateFontSize(configurationService);
 
 		// Warm up font cache information before building up too many dom elements
 		this.restoreFontInfo(storageService, configurationService);

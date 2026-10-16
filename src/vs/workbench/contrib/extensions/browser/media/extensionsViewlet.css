@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -50,6 +51,12 @@
 	top: 0;
 	right: 0;
 	height: 100%;
+}
+
+.extensions-viewlet.font-narrow > .header > .extensions-search-container > .extensions-search-actions-container {
+	position: static;
+	justify-content: flex-end;
+	height: calc(var(--monaco-ui-font-size, 13px) * 24 / 13);
 }
 
 .extensions-viewlet > .header > .notification-container {

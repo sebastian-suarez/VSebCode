@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -38,6 +39,7 @@ import { asCssVariable } from '../../../../platform/theme/common/colorUtils.js';
 import { foreground, chartAxis, chartGuide, chartLine } from '../../../../platform/theme/common/colorRegistry.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { IMarkdownRendererService } from '../../../../platform/markdown/browser/markdownRenderer.js';
+import { FONT } from '../../../../base/common/font.js';
 
 interface IExtensionFeatureElementRenderer extends IExtensionFeatureRenderer {
 	type: 'element';
@@ -472,7 +474,7 @@ interface IExtensionFeatureItemTemplateData {
 }
 
 class ExtensionFeatureItemDelegate implements IListVirtualDelegate<IExtensionFeatureDescriptor> {
-	getHeight() { return 22; }
+	getHeight() { return (22 * FONT.workbenchCoefficient); }
 	getTemplateId() { return 'extensionFeatureDescriptor'; }
 }
 

@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -119,8 +120,8 @@
 	cursor: pointer;
 	height: var(--editor-group-tab-height);
 	box-sizing: border-box;
-	padding-left: 10px;
-	outline-offset: -2px;
+	padding-left: calc(var(--vscode-workbench-tabs-font-size, 13px) * 10 / 13);
+	outline-offset: calc(var(--vscode-workbench-tabs-font-size, 13px) * -2 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-connected-edge {
@@ -201,18 +202,18 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.has-icon.close-action-off:not(.sticky-compact),
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.has-icon.tab-actions-right,
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.has-icon.close-action-off:not(.sticky-compact) {
-	padding-left: 5px; /* reduce padding when we show icons and are in shrinking mode and tab actions is not left (unless sticky-compact) */
+	padding-left: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* reduce padding when we show icons and are in shrinking mode and tab actions is not left (unless sticky-compact) */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fit {
-	width: 120px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 120 / 13);
 	min-width: fit-content;
 	flex-shrink: 0;
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed {
-	min-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, 50px));
-	max-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-max-width, 160px));
+	min-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, calc(var(--vscode-workbench-tabs-font-size, 13px) * 50 / 13)));
+	max-width: var(--tab-sizing-current-width, var(--tab-sizing-fixed-max-width, calc(var(--vscode-workbench-tabs-font-size, 13px) * 160 / 13)));
 	flex: 1 0 0; /* all tabs are evenly sized and grow */
 }
 
@@ -220,7 +221,7 @@
 	/* prevent last tab in a row from moving to next row when tab widths are
 	 * fixed in case rounding errors make the fixed tabs grow over the size
 	 * of the tabs container */
-	min-width: calc(var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, 50px)) - 1px);
+	min-width: calc(var(--tab-sizing-current-width, var(--tab-sizing-fixed-min-width, calc(var(--vscode-workbench-tabs-font-size, 13px) * 50 / 13))) - 1px);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title > .tabs-and-actions-container.wrapping .tabs-container > .tab.sizing-fit.last-in-row:not(:last-child) {
@@ -228,7 +229,7 @@
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink {
-	min-width: 80px;
+	min-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 80 / 13);
 	flex-basis: 0; /* all tabs are even */
 	flex-grow: 1; /* all tabs grow even */
 	max-width: fit-content;
@@ -255,9 +256,9 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.sticky-compact {
 
 	/** Sticky compact tabs have a fixed width of 38px */
-	width: 38px;
-	min-width: 38px;
-	max-width: 38px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 38 / 13);
+	min-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 38 / 13);
+	max-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 38 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fit.sticky-shrink,
@@ -265,9 +266,9 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.sticky-shrink {
 
 	/** Sticky shrink tabs have a fixed width of 80px */
-	width: 80px;
-	min-width: 80px;
-	max-width: 80px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 80 / 13);
+	min-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 80 / 13);
+	max-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 80 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container.disable-sticky-tabs > .tab.sizing-fit.sticky-compact,
@@ -302,19 +303,19 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.close-action-off .tab-fade-hider {
 	display: flex;
 	flex: 0;
-	width: 5px; /* reserve space to hide tab fade when close button is left or off (fixes https://github.com/microsoft/vscode/issues/45728) */
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* reserve space to hide tab fade when close button is left or off (fixes https://github.com/microsoft/vscode/issues/45728) */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.tab-actions-left,
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.tab-actions-left {
-	min-width: 80px; /* make more room for close button when it shows to the left */
-	padding-right: 5px; /* we need less room when sizing is shrink/fixed */
+	min-width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 80 / 13); /* make more room for close button when it shows to the left */
+	padding-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* we need less room when sizing is shrink/fixed */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.tab-actions-left:not(.sticky-compact) {
 	flex-direction: row-reverse;
 	padding-left: 0;
-	padding-right: 10px;
+	padding-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 10 / 13);
 }
 
 /* Tab border top/bottom */
@@ -354,7 +355,7 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.dirty-border-top:not(:focus) > .tab-border-top-container {
 	z-index: 6;
 	top: 0;
-	height: 2px;
+	height: calc(var(--vscode-workbench-tabs-font-size, 13px) * 2 / 13);
 	background-color: var(--tab-dirty-border-top-color);
 }
 
@@ -376,13 +377,13 @@
 	content: ''; /* enables a linear gradient to overlay the end of the label when tabs overflow */
 	position: absolute;
 	right: 0;
-	width: 5px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13);
 	opacity: 1;
 	padding: 0;
 	/* the rules below ensure that the gradient does not impact top/bottom borders (https://github.com/microsoft/vscode/issues/115129) */
 	top: 1px;
 	bottom: 1px;
-	height: calc(100% - 2px);
+	height: calc(100% - calc(var(--vscode-workbench-tabs-font-size, 13px) * 2 / 13));
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink:focus > .tab-label > .monaco-icon-label-container::after,
@@ -392,11 +393,11 @@
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink > .tab-label.tab-label-has-badge::after,
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed > .tab-label.tab-label-has-badge::after {
-	margin-right: 5px; /* with tab sizing shrink/fixed and badges, we want a right-margin because the close button is hidden. Use margin instead of padding to support animating the badge (https://github.com/microsoft/vscode/issues/242661) */
+	margin-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* with tab sizing shrink/fixed and badges, we want a right-margin because the close button is hidden. Use margin instead of padding to support animating the badge (https://github.com/microsoft/vscode/issues/242661) */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink:not(.tab-actions-left):not(.close-action-off) .tab-label {
-	padding-right: 5px; /* ensure that the gradient does not show when tab actions show https://github.com/microsoft/vscode/issues/189625*/
+	padding-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* ensure that the gradient does not show when tab actions show https://github.com/microsoft/vscode/issues/189625*/
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sticky-compact:not(.has-icon) .monaco-icon-label {
@@ -444,11 +445,11 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-actions {
 	margin-top: auto;
 	margin-bottom: auto;
-	width: 28px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 28 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-actions > .monaco-action-bar {
-	width: 28px;
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 28 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.tab-actions-right.sizing-shrink > .tab-actions,
@@ -488,10 +489,10 @@
 
 .monaco-workbench .part.editor > .content .editor-group-container.active > .title .tabs-container > .tab > .tab-actions .action-label.codicon {
 	color: inherit;
-	font-size: 16px;
-	padding: 2px;
-	width: 16px;
-	height: 16px;
+	font-size: calc(var(--vscode-workbench-tabs-font-size, 13px) * 16 / 13);
+	padding: calc(var(--vscode-workbench-tabs-font-size, 13px) * 2 / 13);
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 16 / 13);
+	height: calc(var(--vscode-workbench-tabs-font-size, 13px) * 16 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container.active > .title .tabs-container > .tab.sticky.dirty > .tab-actions .action-label:not(:hover)::before,
@@ -523,12 +524,12 @@
 /* Tab Actions: Off */
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.close-action-off {
-	padding-right: 10px; /* give a little bit more room if tab actions is off */
+	padding-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 10 / 13); /* give a little bit more room if tab actions is off */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-shrink.close-action-off:not(.sticky-compact),
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.sizing-fixed.close-action-off:not(.sticky-compact) {
-	padding-right: 5px; /* we need less room when sizing is shrink/fixed (unless tab is sticky-compact) */
+	padding-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 5 / 13); /* we need less room when sizing is shrink/fixed (unless tab is sticky-compact) */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.close-action-off.dirty-border-top > .tab-actions {
@@ -548,7 +549,7 @@
 .monaco-workbench .part.editor > .content .editor-group-container > .title .editor-actions {
 	cursor: default;
 	flex: initial;
-	padding: 0 8px 0 4px;
+	padding: 0 calc(var(--vscode-workbench-tabs-font-size, 13px) * 8 / 13) 0 calc(var(--vscode-workbench-tabs-font-size, 13px) * 4 / 13);
 	height: var(--editor-group-tab-height);
 }
 
@@ -557,7 +558,7 @@
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .editor-actions .action-item {
-	margin-right: 4px;
+	margin-right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 4 / 13);
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title > .tabs-and-actions-container.wrapping .editor-actions {
@@ -590,7 +591,7 @@
 	position: absolute;
 	top: 0;
 	height: 100%;
-	width: 2px;
+	width: 1px;
 	background-color: var(--vscode-tab-dragAndDropBorder);
 	pointer-events: none;
 	z-index: 11;
@@ -601,9 +602,17 @@
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.drop-target-left::after {
-	right: -2px; /* -2 to connect with drop-target-right */
+	right: calc(var(--vscode-workbench-tabs-font-size, 13px) * -1 / 13); /* -2 to connect with drop-target-right */
 }
 
 .monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row.drop-target-left:not(:last-child)::after {
-	right: 0;
+	right: calc(var(--vscode-workbench-tabs-font-size, 13px) * 0);
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row.drop-target-left::after,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.last-in-row + .tab.drop-target-right::before,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab:last-child.drop-target-left::after,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab:first-child.drop-target-right::before {
+	width: calc(var(--vscode-workbench-tabs-font-size, 13px) * 2 / 13);
 }

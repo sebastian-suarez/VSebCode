@@ -1,10 +1,11 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'assert';
-import { DEFAULT_PANE_HEADER_SIZE, Pane, PaneView, setGlobalPaneHeaderSize } from '../../../../browser/ui/splitview/paneview.js';
+import { Pane, PaneView, setGlobalPaneHeaderSize } from '../../../../browser/ui/splitview/paneview.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../common/utils.js';
 
 class TestPane extends Pane {
@@ -28,7 +29,7 @@ suite('Paneview', () => {
 
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
 
-	teardown(() => setGlobalPaneHeaderSize(DEFAULT_PANE_HEADER_SIZE));
+	teardown(() => setGlobalPaneHeaderSize(22));
 
 	test('uses the global pane header size', () => {
 		const pane = store.add(new TestPane());
@@ -67,7 +68,7 @@ suite('Paneview', () => {
 		paneView.layout(100, 200);
 		const overrideSize = paneView.getPaneSize(pane);
 
-		setGlobalPaneHeaderSize(DEFAULT_PANE_HEADER_SIZE);
+		setGlobalPaneHeaderSize(22);
 		paneView.layout(100, 200);
 
 		assert.deepStrictEqual({ defaultSize, overrideSize, restoredSize: paneView.getPaneSize(pane) }, {
@@ -75,5 +76,20 @@ suite('Paneview', () => {
 			overrideSize: 28,
 			restoredSize: 22,
 		});
+	});
+
+	test('scales an unscaled header override once after attaching a rendered pane', () => {
+		const region = document.body.appendChild(document.createElement('div'));
+		region.style.setProperty('--monaco-ui-font-size', '26px');
+		const paneView = store.add(new PaneView(region));
+		const pane = store.add(new TestPane(false));
+		try {
+			setGlobalPaneHeaderSize(28);
+			paneView.addPane(pane, pane.minimumSize);
+			paneView.layout(100, 200);
+			assert.deepStrictEqual({ minimumSize: pane.minimumSize, height: paneView.getPaneSize(pane) }, { minimumSize: 56, height: 56 });
+		} finally {
+			region.remove();
+		}
 	});
 });

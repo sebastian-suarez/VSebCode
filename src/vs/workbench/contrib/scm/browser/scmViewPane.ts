@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -75,6 +76,7 @@ import { AccessibilityVerbositySettingId } from '../../accessibility/browser/acc
 import { IAccessibilityService } from '../../../../platform/accessibility/common/accessibility.js';
 import { AccessibilityCommandId } from '../../accessibility/common/accessibilityCommands.js';
 import { SCMInputWidget } from './scmInput.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 type TreeElement = ISCMRepository | ISCMInput | ISCMActionButton | ISCMResourceGroup | ISCMResource | IResourceNode<ISCMResource, ISCMResourceGroup>;
 
@@ -141,8 +143,6 @@ interface ActionButtonTemplate {
 }
 
 export class ActionButtonRenderer implements ICompressibleTreeRenderer<ISCMActionButton, FuzzyScore, ActionButtonTemplate> {
-	static readonly DEFAULT_HEIGHT = 28;
-
 	static readonly TEMPLATE_ID = 'actionButton';
 	get templateId(): string { return ActionButtonRenderer.TEMPLATE_ID; }
 
@@ -251,6 +251,7 @@ class SCMTreeDragAndDrop implements ITreeDragAndDrop<TreeElement> {
 }
 
 interface InputTemplate {
+	readonly container: HTMLElement;
 	readonly inputWidget: SCMInputWidget;
 	inputWidgetHeight: number;
 	readonly elementDisposables: DisposableStore;
@@ -258,8 +259,6 @@ interface InputTemplate {
 }
 
 class InputRenderer implements ICompressibleTreeRenderer<ISCMInput, FuzzyScore, InputTemplate> {
-
-	static readonly DEFAULT_HEIGHT = 26;
 
 	static readonly TEMPLATE_ID = 'input';
 	get templateId(): string { return InputRenderer.TEMPLATE_ID; }
@@ -284,7 +283,7 @@ class InputRenderer implements ICompressibleTreeRenderer<ISCMInput, FuzzyScore, 
 		const inputWidget = this.instantiationService.createInstance(SCMInputWidget, inputElement, this.overflowWidgetsDomNode);
 		templateDisposable.add(inputWidget);
 
-		return { inputWidget, inputWidgetHeight: InputRenderer.DEFAULT_HEIGHT, elementDisposables: new DisposableStore(), templateDisposable };
+		return { container, inputWidget, inputWidgetHeight: getElementFontMetric(container, 26), elementDisposables: new DisposableStore(), templateDisposable };
 	}
 
 	renderElement(node: ITreeNode<ISCMInput, FuzzyScore>, index: number, templateData: InputTemplate): void {
@@ -313,7 +312,7 @@ class InputRenderer implements ICompressibleTreeRenderer<ISCMInput, FuzzyScore, 
 		}));
 
 		// Reset widget height so it's recalculated
-		templateData.inputWidgetHeight = InputRenderer.DEFAULT_HEIGHT;
+		templateData.inputWidgetHeight = getElementFontMetric(templateData.container, 26);
 
 		// Rerender the element whenever the editor content height changes
 		const onDidChangeContentHeight = () => {
@@ -321,7 +320,7 @@ class InputRenderer implements ICompressibleTreeRenderer<ISCMInput, FuzzyScore, 
 			this.contentHeights.set(input, contentHeight);
 
 			if (templateData.inputWidgetHeight !== contentHeight) {
-				this.updateHeight(input, contentHeight + 10);
+				this.updateHeight(input, contentHeight + getElementFontMetric(templateData.container, 10));
 				templateData.inputWidgetHeight = contentHeight;
 				templateData.inputWidget.layout();
 			}
@@ -354,8 +353,8 @@ class InputRenderer implements ICompressibleTreeRenderer<ISCMInput, FuzzyScore, 
 		templateData.templateDisposable.dispose();
 	}
 
-	getHeight(input: ISCMInput): number {
-		return (this.contentHeights.get(input) ?? InputRenderer.DEFAULT_HEIGHT) + 10;
+	getHeight(input: ISCMInput, container?: HTMLElement): number {
+		return (this.contentHeights.get(input) ?? getElementFontMetric(container, 26)) + getElementFontMetric(container, 10);
 	}
 
 	getRenderedInputWidget(input: ISCMInput): SCMInputWidget | undefined {
@@ -673,13 +672,13 @@ class ListDelegate implements IListVirtualDelegate<TreeElement> {
 
 	constructor(private readonly inputRenderer: InputRenderer) { }
 
-	getHeight(element: TreeElement) {
+	getHeight(element: TreeElement, container?: HTMLElement) {
 		if (isSCMInput(element)) {
-			return this.inputRenderer.getHeight(element);
+			return this.inputRenderer.getHeight(element, container);
 		} else if (isSCMActionButton(element)) {
-			return ActionButtonRenderer.DEFAULT_HEIGHT + 8;
+			return getElementFontMetric(container, 28) + 8;
 		} else {
-			return 22;
+			return getElementFontMetric(container, 22);
 		}
 	}
 

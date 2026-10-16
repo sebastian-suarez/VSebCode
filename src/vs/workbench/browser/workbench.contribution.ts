@@ -696,6 +696,89 @@ const registry = Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Con
 				],
 				'included': isMacintosh
 			},
+			'workbench.experimental.fontFamily': {
+				type: 'string',
+				description: localize('workbench.fontFamily', "Controls the font family in the workbench."),
+				'tags': ['experimental']
+			},
+			'workbench.experimental.fontSize': {
+				type: 'number',
+				default: 13,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('workbench.fontSize', "Controls the font size in pixels for the workbench."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.activityBar.experimental.fontFamily': {
+				type: 'string',
+				default: '',
+				markdownDescription: localize('activityBarFontFamily', "Controls the font family for the activity bar."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.activityBar.experimental.fontSize': {
+				type: 'number',
+				default: 16,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('activityBarFontSize', "Controls the font size in pixels for the activity bar."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.bottomPane.experimental.fontFamily': {
+				type: 'string',
+				default: '',
+				markdownDescription: localize('bottomPaneFontFamily', "Controls the font family for the bottom panel."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.bottomPane.experimental.fontSize': {
+				type: 'number',
+				default: 13,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('bottomPaneFontSize', "Controls the font size in pixels for the bottom panel."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.sideBar.experimental.fontFamily': {
+				type: 'string',
+				default: '',
+				markdownDescription: localize('sideBarFontFamily', "Controls the font family for the side bars."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.sideBar.experimental.fontSize': {
+				type: 'number',
+				default: 13,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('sideBarFontSize', "Controls the font size in pixels for the side bars."),
+				tags: ['accessibility', 'experimental']
+			},
+			'workbench.statusBar.experimental.fontFamily': {
+				type: 'string',
+				default: '',
+				markdownDescription: localize('statusBarFontFamily', "Controls the font family for the status bar."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.statusBar.experimental.fontSize': {
+				type: 'number',
+				default: 12,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('statusBarFontSize', "Controls the font size in pixels for the status bar."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.tabs.experimental.fontFamily': {
+				type: 'string',
+				default: '',
+				markdownDescription: localize('tabsFontFamily', "Controls the font family in editor tabs."),
+				'tags': ['accessibility', 'experimental']
+			},
+			'workbench.tabs.experimental.fontSize': {
+				type: 'number',
+				default: 13,
+				minimum: 6,
+				maximum: 32,
+				markdownDescription: localize('tabsFontSize', "Controls the font size in pixels for editor tabs."),
+				'tags': ['accessibility', 'experimental']
+			},
 			'workbench.settings.editor': {
 				'type': 'string',
 				'enum': ['ui', 'json'],

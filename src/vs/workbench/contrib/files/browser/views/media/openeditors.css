@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -111,4 +112,31 @@
 .monaco-workbench.hc-light .open-editors .open-editor,
 .monaco-workbench.hc-light .open-editors .editor-group {
 	line-height: 20px;
+}
+
+
+
+.monaco-workbench .part.sidebar .pane-header .open-editors-dirty-count-container > .dirty-count.monaco-count-badge, .monaco-workbench .part.auxiliarybar .pane-header .open-editors-dirty-count-container > .dirty-count.monaco-count-badge {
+	padding: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 2 / 13) calc(var(--vscode-workbench-sidebar-font-size, 13px) * 4 / 13);
+	margin-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 6 / 13)
+}
+.monaco-workbench .part.sidebar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .action-label, .monaco-workbench .part.auxiliarybar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .action-label {
+	padding: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 2 / 13)
+}
+.monaco-workbench .part.sidebar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .action-close-all-files, .monaco-workbench .part.sidebar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .save-all, .monaco-workbench .part.auxiliarybar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .action-close-all-files, .monaco-workbench .part.auxiliarybar .open-editors .monaco-list .monaco-list-row > .monaco-action-bar .save-all {
+	width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 23 / 13);
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13)
+}
+.monaco-workbench .part.sidebar .open-editors .monaco-list .monaco-list-row, .monaco-workbench .part.auxiliarybar .open-editors .monaco-list .monaco-list-row {
+	padding-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 8 / 13)
+}
+.monaco-workbench .part.sidebar .open-editors .monaco-list .monaco-list-row .editor-group, .monaco-workbench .part.auxiliarybar .open-editors .monaco-list .monaco-list-row .editor-group {
+	font-size: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 11 / 13)
+}
+.monaco-workbench .part.sidebar .open-editors .open-editor, .monaco-workbench .part.sidebar .open-editors .editor-group, .monaco-workbench .part.auxiliarybar .open-editors .open-editor, .monaco-workbench .part.auxiliarybar .open-editors .editor-group {
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13);
+	line-height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13)
+}
+.monaco-workbench.hc-black .part.sidebar .open-editors .open-editor, .monaco-workbench.hc-black .part.sidebar .open-editors .editor-group, .monaco-workbench.hc-light .part.sidebar .open-editors .open-editor, .monaco-workbench.hc-light .part.sidebar .open-editors .editor-group, .monaco-workbench.hc-black .part.auxiliarybar .open-editors .open-editor, .monaco-workbench.hc-black .part.auxiliarybar .open-editors .editor-group, .monaco-workbench.hc-light .part.auxiliarybar .open-editors .open-editor, .monaco-workbench.hc-light .part.auxiliarybar .open-editors .editor-group {
+	line-height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 20 / 13)
 }

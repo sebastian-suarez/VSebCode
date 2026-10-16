@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -46,6 +47,9 @@ import { ServiceCollection } from '../../../../platform/instantiation/common/ser
 import { IBaseActionViewItemOptions } from '../../../../base/browser/ui/actionbar/actionViewItems.js';
 import { MarkdownString } from '../../../../base/common/htmlContent.js';
 import { IManagedHoverTooltipMarkdownString } from '../../../../base/browser/ui/hover/hover.js';
+import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
+import { FONT, updateTabsSize } from '../../../../base/common/font.js';
+import { getFontSize } from '../../../../platform/configuration/common/fontConfiguration.js';
 import { applyDragImage } from '../../../../base/browser/ui/dnd/dnd.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
@@ -103,18 +107,16 @@ export abstract class EditorTabsControl extends Themable implements IEditorTabsC
 	protected readonly groupTransfer = LocalSelectionTransfer.getInstance<DraggedEditorGroupIdentifier>();
 	protected readonly treeItemsTransfer = LocalSelectionTransfer.getInstance<DraggedTreeItemsIdentifier>();
 
-	private static readonly EDITOR_TAB_HEIGHT = {
-		normal: 35 as const,
-		compact: 22 as const,
-		// Modern UI multi-tab mode adds 4px top + 4px bottom padding to
-		// the tabs-and-actions-container (tabs.css), so the total title-bar height is the
-		// --editor-group-tab-height CSS value (24px / 20px) plus that 8px padding.
-		modernUI: 32 as const,        // 24px tab  + 4px top + 4px bottom padding
-		modernUICompact: 28 as const, // 20px tab  + 4px top + 4px bottom padding (20px = minimum to fit 16px icon + 2px padding)
-		connected: 28 as const,
-		connectedCompact: 24 as const,
-	};
-
+	private static get EDITOR_TAB_HEIGHT() {
+		return {
+			normal: FONT.tabsSize35,
+			compact: FONT.tabsSize22,
+			modernUI: FONT.tabsSize24 + 8,
+			modernUICompact: FONT.tabsSize * 20 / 13 + 8,
+			connected: FONT.tabsSize24 + 4,
+			connectedCompact: FONT.tabsSize * 20 / 13 + 4,
+		};
+	}
 	protected editorActionsToolbarContainer: HTMLElement | undefined;
 	private editorActionsToolbar: WorkbenchToolBar | undefined;
 	private readonly editorActionsToolbarDisposables = this._register(new DisposableStore());
@@ -165,12 +167,24 @@ export abstract class EditorTabsControl extends Themable implements IEditorTabsC
 		@IEditorResolverService private readonly editorResolverService: IEditorResolverService,
 		@IHostService protected readonly hostService: IHostService,
 		@IMenuService protected readonly menuService: IMenuService,
+		@IConfigurationService protected readonly configurationService: IConfigurationService,
 	) {
 		super(themeService);
 
 		this.renderDropdownAsChildElement = false;
 
 		const container = this.create(parent);
+
+		this._register(configurationService.onDidChangeConfiguration(e => {
+			if (e.affectsConfiguration('workbench.tabs.experimental.fontFamily')) {
+				this.applyTabsFontFamily();
+			}
+			if ((e.affectsConfiguration('workbench.tabs.experimental.fontSize') || e.affectsConfiguration('workbench.experimental.fontSize'))) {
+				this.applyTabsFontSize();
+				this.updateTabHeight();
+				this.groupView.relayout();
+			}
+		}));
 
 		// Context Keys
 		this.contextMenuContextKeyService = this._register(this.contextKeyService.createScoped(container));
@@ -195,9 +209,39 @@ export abstract class EditorTabsControl extends Themable implements IEditorTabsC
 	}
 
 	protected create(parent: HTMLElement): HTMLElement {
+		this.applyTabsFontSize(parent);
+		this.applyTabsFontFamily(parent);
 		this.updateTabHeight();
 		this.updateTabActionSpaceReservation();
 		return parent;
+	}
+
+	private applyTabsFontFamily(container?: HTMLElement): void {
+		const target = container ?? this.parent;
+		if (!target) {
+			return;
+		}
+
+		const family = this.configurationService.getValue<string>('workbench.tabs.experimental.fontFamily');
+
+		if (family) {
+			target.style.setProperty('--vscode-workbench-tabs-font-family', family);
+		} else {
+			target.style.removeProperty('--vscode-workbench-tabs-font-family');
+		}
+	}
+
+	private applyTabsFontSize(container?: HTMLElement): void {
+		const target = container ?? this.parent;
+		if (!target) {
+			return;
+		}
+
+		const configuredSize = getFontSize(this.configurationService, 'workbench.tabs.experimental.fontSize', 13);
+
+		updateTabsSize(configuredSize);
+
+		target.style.setProperty('--vscode-workbench-tabs-font-size', `${FONT.tabsSize}px`);
 	}
 
 	private get editorActionsEnabled(): boolean {

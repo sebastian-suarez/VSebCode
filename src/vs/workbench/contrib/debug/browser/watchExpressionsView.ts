@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -40,6 +41,7 @@ import { COPY_WATCH_EXPRESSION_COMMAND_ID, setDataBreakpointInfoResponse } from 
 import { DebugExpressionRenderer } from './debugExpressionRenderer.js';
 import { watchExpressionsAdd, watchExpressionsRemoveAll } from './debugIcons.js';
 import { VariablesRenderer, VisualizedVariableRenderer } from './variablesView.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 const MAX_VALUE_RENDER_LENGTH_IN_VIEWLET = 1024;
 let ignoreViewUpdates = false;
@@ -237,8 +239,8 @@ export class WatchExpressionsView extends ViewPane implements IDebugViewWithVari
 
 class WatchExpressionsDelegate implements IListVirtualDelegate<IExpression> {
 
-	getHeight(_element: IExpression): number {
-		return 22;
+	getHeight(_element: IExpression, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: IExpression): string {

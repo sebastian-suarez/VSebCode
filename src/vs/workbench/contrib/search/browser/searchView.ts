@@ -4,6 +4,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { getElementFontMetric } from '../../../../base/browser/font.js';
+import { onDidChangeFontMetrics } from '../../../../base/common/font.js';
 import * as dom from '../../../../base/browser/dom.js';
 import { StandardKeyboardEvent } from '../../../../base/browser/keyboardEvent.js';
 import * as aria from '../../../../base/browser/ui/aria/aria.js';
@@ -123,6 +125,7 @@ interface ISearchViewState {
 
 const SEARCH_CANCELLED_MESSAGE = nls.localize('searchCanceled', "Search was canceled before any results could be found - ");
 const DEBOUNCE_DELAY = 75;
+
 export class SearchView extends ViewPane {
 
 	private static readonly ACTIONS_RIGHT_CLASS_NAME = 'actions-right';
@@ -937,7 +940,7 @@ export class SearchView extends ViewPane {
 				multipleSelectionSupport: true,
 				selectionNavigation: true,
 				overrideStyles: this.getLocationBasedColors().listOverrideStyles,
-				paddingBottom: SearchDelegate.ITEM_HEIGHT,
+				paddingBottom: getElementFontMetric(container, 22),
 				collapseByDefault: (e: RenderableMatch) => {
 					if (isTextSearchHeading(e)) {
 						// always expand the text result
@@ -953,6 +956,7 @@ export class SearchView extends ViewPane {
 			}));
 
 		Constants.SearchContext.SearchResultListFocusedKey.bindTo(this.tree.contextKeyService);
+		this._register(onDidChangeFontMetrics(() => this.tree.updateOptions({ paddingBottom: getElementFontMetric(this.tree.getHTMLElement(), 22) })));
 
 		this.tree.setInput(this.viewModel.searchResult);
 		this._register(this.tree.onContextMenu(e => this.onContextMenu(e)));
@@ -1313,14 +1317,15 @@ export class SearchView extends ViewPane {
 		const actionsPosition = this.searchConfig.actionsPosition;
 		this.getContainer().classList.toggle(SearchView.ACTIONS_RIGHT_CLASS_NAME, actionsPosition === 'right');
 
-		this.searchWidget.setWidth(this.size.width - 28 /* container margin */);
+		this.searchWidget.setWidth(this.size.width - getElementFontMetric(this.tree.getHTMLElement(), 28));
 
-		this.inputPatternExcludes.setWidth(this.size.width - 28 /* container margin */);
-		this.inputPatternIncludes.setWidth(this.size.width - 28 /* container margin */);
+		this.inputPatternExcludes.setWidth(this.size.width - getElementFontMetric(this.tree.getHTMLElement(), 28));
+		this.inputPatternIncludes.setWidth(this.size.width - getElementFontMetric(this.tree.getHTMLElement(), 28));
 
 		const widgetHeight = dom.getTotalHeight(this.searchWidgetsContainerElement);
 		const messagesHeight = dom.getTotalHeight(this.messagesElement);
-		this.tree.layout(this.size.height - widgetHeight - messagesHeight, this.size.width - 28);
+		this.tree.updateOptions({ paddingBottom: getElementFontMetric(this.tree.getHTMLElement(), 22) });
+		this.tree.layout(this.size.height - widgetHeight - messagesHeight, this.size.width - getElementFontMetric(this.tree.getHTMLElement(), 28));
 	}
 
 	protected override layoutBody(height: number, width: number): void {

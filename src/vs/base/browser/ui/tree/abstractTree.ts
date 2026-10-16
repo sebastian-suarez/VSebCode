@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -225,8 +226,8 @@ export class ComposedTreeDelegate<T, N extends { element: T }> implements IListV
 
 	constructor(private delegate: IListVirtualDelegate<T>) { }
 
-	getHeight(element: N): number {
-		return this.delegate.getHeight(element.element);
+	getHeight(element: N, container?: HTMLElement): number {
+		return this.delegate.getHeight(element.element, container);
 	}
 
 	getTemplateId(element: N): string {
@@ -1561,7 +1562,7 @@ class StickyScrollController<T, TFilterData, TRef> extends Disposable {
 		if (index >= 0) {
 			return this.view.getElementHeight(index);
 		}
-		return this.treeDelegate.getHeight(node);
+		return this.treeDelegate.getHeight(node, this.view.getHTMLElement());
 	}
 
 	private clampNodeHeight(height: number): number {

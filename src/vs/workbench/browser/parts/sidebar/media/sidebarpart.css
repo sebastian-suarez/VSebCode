@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,15 +14,21 @@
 }
 
 .monaco-workbench .part.sidebar .title-actions .action-item {
-	margin-right: 4px;
+	margin-right: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 4 / 13);
 }
 
 .monaco-workbench .part.sidebar > .title {
 	background-color: var(--vscode-sideBarTitle-background);
 }
 
+.monaco-workbench .part.sidebar > .content {
+	font-size: var(--vscode-workbench-sidebar-font-size, 13px);
+	line-height: 1.4em;
+}
+
 .monaco-workbench .part.sidebar > .title > .title-label h2 {
 	text-transform: uppercase;
+	font-size: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 11 / 13);
 }
 
 .monaco-workbench .viewlet .collapsible.header .title {
@@ -41,12 +48,12 @@
 }
 
 .monaco-workbench .viewlet .collapsible.header .actions .action-label {
-	width: 28px;
-	background-size: 16px;
+	width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 28 / 13);
+	background-size: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 16 / 13);
 	background-position: center center;
 	background-repeat: no-repeat;
 	margin-right: 0;
-	height: 22px;
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13);
 }
 
 .monaco-workbench .viewlet .collapsible.header .actions .action-label .label {
@@ -60,8 +67,8 @@
 .monaco-workbench .viewlet .collapsible.header .action-label {
 	margin-right: 0.2em;
 	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
+	width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 16 / 13);
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 16 / 13);
 }
 
 .monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item:focus,
@@ -84,7 +91,7 @@
 .monaco-workbench .part.sidebar > .title > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label::before,
 .monaco-workbench .part.sidebar > .header-or-footer > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item .action-label::before {
 	position: absolute;
-	left: 5px; /* place icon in center */
+	left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 5 / 13); /* place icon in center */
 }
 
 .monaco-workbench .part.sidebar > .header-or-footer.header > .composite-bar-container > .composite-bar > .monaco-action-bar .action-item.checked:not(:focus) .active-item-indicator:before,
@@ -122,5 +129,9 @@
 }
 
 .monaco-workbench .sidebar.pane-composite-part > .title.has-composite-bar > .title-actions .monaco-action-bar .action-item {
-	max-width: 150px;
+	max-width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 150 / 13);
+}
+
+.monaco-workbench .part.sidebar > .content {
+	font-family: var(--vscode-workbench-sidebar-font-family, inherit);
 }

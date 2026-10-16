@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -38,6 +39,8 @@ import { ColorIdentifier, asCssVariable, asCssVariableWithDefault, inputBackgrou
 import { MenuPreventer } from '../menuPreventer.js';
 import { SelectionClipboardContributionID } from '../selectionClipboard.js';
 import { getSimpleEditorOptions, setupSimpleEditorSelectionStyling } from '../simpleEditorOptions.js';
+import { onDidChangeFontMetrics } from '../../../../../base/common/font.js';
+import { getElementFontMetric, getElementFontSize } from '../../../../../base/browser/font.js';
 
 export interface SuggestResultsProvider {
 	/**
@@ -155,7 +158,7 @@ export class SuggestEnabledInput extends Widget {
 
 		const editorOptions: IEditorConstructionOptions = mixin(
 			getSimpleEditorOptions(configurationService),
-			getSuggestEnabledInputOptions(ariaLabel));
+			getSuggestEnabledInputOptions(this.stylingContainer, ariaLabel));
 		editorOptions.overflowWidgetsDomNode = options.overflowWidgetsDomNode;
 
 		const scopedContextKeyService = this.getScopedContextKeyService(contextKeyService);
@@ -176,6 +179,20 @@ export class SuggestEnabledInput extends Widget {
 				]),
 				isSimpleWidget: true,
 			}));
+
+		let fontLayoutPending = false;
+		this._register(onDidChangeFontMetrics(() => {
+			if (fontLayoutPending) {
+				return;
+			}
+			fontLayoutPending = true;
+			queueMicrotask(() => {
+				fontLayoutPending = false;
+				if (!this._store.isDisposed) {
+					this.updateFontOptions();
+				}
+			});
+		}));
 
 		this._register(configurationService.onDidChangeConfiguration((e) => {
 			if (e.affectsConfiguration('editor.accessibilitySupport') ||
@@ -335,8 +352,18 @@ export class SuggestEnabledInput extends Widget {
 	}
 
 	public layout(dimension: Dimension): void {
+		this.updateFontOptions();
 		this.inputWidget.layout(dimension);
 		this.placeholderText.style.width = `${dimension.width - 2}px`;
+	}
+
+	private updateFontOptions(): void {
+		const fontSize = getElementFontSize(this.stylingContainer);
+		const lineHeight = getElementFontMetric(this.stylingContainer, 20);
+		const options = this.inputWidget.getRawOptions();
+		if (options.fontSize !== fontSize || options.lineHeight !== lineHeight) {
+			this.inputWidget.updateOptions({ fontSize, lineHeight });
+		}
 	}
 
 	private selectAll(): void {
@@ -477,10 +504,10 @@ export class ContextScopedSuggestEnabledInputWithHistory extends SuggestEnabledI
 
 setupSimpleEditorSelectionStyling('.suggest-input-container');
 
-function getSuggestEnabledInputOptions(ariaLabel?: string): IEditorOptions {
+function getSuggestEnabledInputOptions(container: HTMLElement, ariaLabel?: string): IEditorOptions {
 	return {
-		fontSize: 13,
-		lineHeight: 20,
+		fontSize: getElementFontSize(container),
+		lineHeight: getElementFontMetric(container, 20),
 		wordWrap: 'off',
 		scrollbar: { vertical: 'hidden', },
 		roundedSelection: false,

@@ -1,17 +1,148 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'assert';
 import { CachedListVirtualDelegate, IListRenderer, IListVirtualDelegate } from '../../../../browser/ui/list/list.js';
 import { ListView } from '../../../../browser/ui/list/listView.js';
+import { getElementFontMetric } from '../../../../browser/font.js';
+import { FONT, invalidateFontMetrics, updateSidebarSize } from '../../../../common/font.js';
+import { timeout } from '../../../../common/async.js';
 import { range } from '../../../../common/arrays.js';
 import { IRange } from '../../../../common/range.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../common/utils.js';
 
 suite('ListView', function () {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
+
+	test('remeasures existing rows after font changes, preserving the visible anchor', async () => {
+		const element = document.createElement('div');
+		const list = store.add(new ListView<number>(element, { getHeight: () => FONT.sidebarSize22, getTemplateId: () => 'font' }, [{ templateId: 'font', renderTemplate() { }, renderElement() { }, disposeTemplate() { } }]));
+		list.layout(220);
+		list.splice(0, 0, range(100));
+		list.setScrollTop(220);
+		try {
+			updateSidebarSize(26);
+			await Promise.resolve();
+			assert.deepStrictEqual([list.elementTop(10), list.scrollTop, list.contentHeight], [440, 440, 4400]);
+		} finally {
+			updateSidebarSize(13);
+			await Promise.resolve();
+		}
+	});
+
+	test('font remeasurement preserves live input state in retained rows', async () => {
+		const element = document.createElement('div');
+		let renders = 0;
+		const list = store.add(new ListView<number>(element, { getHeight: () => FONT.sidebarSize22, getTemplateId: () => 'input' }, [{
+			templateId: 'input',
+			renderTemplate(container) { return container.appendChild(document.createElement('input')); },
+			renderElement(_element, _index, input) { renders++; input.value = 'initial'; },
+			disposeTemplate() { }
+		}]));
+		list.layout(220);
+		list.splice(0, 0, [0]);
+		const input = element.querySelector('input')!;
+		input.value = 'unfinished rename';
+		try {
+			updateSidebarSize(26);
+			await Promise.resolve();
+			assert.deepStrictEqual([element.querySelector('input') === input, input.value, renders, list.contentHeight], [true, 'unfinished rename', 1, 44]);
+		} finally {
+			updateSidebarSize(13);
+			await Promise.resolve();
+		}
+	});
+
+	test('font changes refresh horizontal bounds without replacing retained rows', async () => {
+		const element = document.body.appendChild(document.createElement('div'));
+		element.style.width = '100px';
+		element.style.height = '100px';
+		const list = new ListView<number>(element, { getHeight: () => 22, getTemplateId: () => 'text' }, [{
+			templateId: 'text',
+			renderTemplate(container) {
+				const text = container.appendChild(document.createElement('span'));
+				text.style.cssText = 'white-space: nowrap; font: 10px monospace';
+				text.textContent = 'An unbroken long filename';
+				return text;
+			},
+			renderElement() { },
+			disposeTemplate() { }
+		}], { horizontalScrolling: true });
+		try {
+			list.layout(100, 100);
+			list.splice(0, 0, [0]);
+			await timeout(75);
+			const previousWidth = list.contentWidth;
+			const text = element.querySelector('span')!;
+			text.style.fontSize = '24px';
+			invalidateFontMetrics();
+			await timeout(75);
+			assert.ok(list.contentWidth > previousWidth * 2);
+			assert.strictEqual(element.querySelector('span'), text);
+		} finally {
+			list.dispose();
+			element.remove();
+		}
+	});
+
+	test('hidden dynamic rows keep their heights until they can be measured on reveal', async () => {
+		const element = document.body.appendChild(document.createElement('div'));
+		element.style.width = '200px';
+		element.style.height = '100px';
+		const list = new ListView<number>(element, { getHeight: () => 20, getTemplateId: () => 'dynamic', hasDynamicHeight: () => true }, [{
+			templateId: 'dynamic',
+			renderTemplate(container) {
+				const content = container.appendChild(document.createElement('div'));
+				content.className = 'font-test-content';
+				content.style.height = '20px';
+			},
+			renderElement() { },
+			disposeTemplate() { }
+		}], { supportDynamicHeights: true });
+		try {
+			list.layout(100, 200);
+			list.splice(0, 0, [0]);
+			assert.strictEqual(list.contentHeight, 20);
+			element.style.display = 'none';
+			element.querySelector<HTMLElement>('.font-test-content')!.style.height = '40px';
+			invalidateFontMetrics();
+			await Promise.resolve();
+			list.layout(100, 200);
+			assert.strictEqual(list.contentHeight, 20);
+			element.style.display = '';
+			list.layout(100, 200);
+			assert.strictEqual(list.contentHeight, 40);
+		} finally {
+			list.dispose();
+			element.remove();
+		}
+	});
+
+	test('detached rows adopt their current region metrics when attached', async () => {
+		const region = document.body.appendChild(document.createElement('div'));
+		region.style.setProperty('--monaco-ui-font-size', '26px');
+		const element = document.createElement('div');
+		const list = new ListView<number>(element, { getHeight: (_element, container) => getElementFontMetric(container, 22), getTemplateId: () => 'region' }, [{ templateId: 'region', renderTemplate() { }, renderElement() { }, disposeTemplate() { } }]);
+		try {
+			list.splice(0, 0, [0, 1]);
+			region.appendChild(element);
+			list.layout(100, 200);
+			assert.strictEqual(list.contentHeight, 88);
+			element.remove();
+			region.style.setProperty('--monaco-ui-font-size', '39px');
+			invalidateFontMetrics();
+			await Promise.resolve();
+			region.appendChild(element);
+			list.layout(100, 200);
+			assert.strictEqual(list.contentHeight, 132);
+		} finally {
+			list.dispose();
+			region.remove();
+		}
+	});
 
 	test('all rows get disposed', function () {
 		const element = document.createElement('div');

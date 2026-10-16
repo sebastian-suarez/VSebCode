@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -20,6 +21,7 @@ import { RunOnceScheduler } from '../../../../base/common/async.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { Event } from '../../../../base/common/event.js';
 import { createMatches, FuzzyScore, IMatch } from '../../../../base/common/filters.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 import { DisposableStore, dispose, IDisposable } from '../../../../base/common/lifecycle.js';
 import { posix } from '../../../../base/common/path.js';
 import { commonSuffixLength } from '../../../../base/common/strings.js';
@@ -898,15 +900,15 @@ class ShowMoreRenderer implements ICompressibleTreeRenderer<IStackFrame[], Fuzzy
 
 class CallStackDelegate implements IListVirtualDelegate<CallStackItem> {
 
-	getHeight(element: CallStackItem): number {
+	getHeight(element: CallStackItem, container?: HTMLElement): number {
 		if (element instanceof StackFrame && element.presentationHint === 'label') {
-			return 16;
+			return getElementFontMetric(container, 16);
 		}
 		if (element instanceof ThreadAndSessionIds || element instanceof Array) {
-			return 16;
+			return getElementFontMetric(container, 16);
 		}
 
-		return 22;
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: CallStackItem): string {

@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -9,6 +10,7 @@ import { IListVirtualDelegate } from '../../../../base/browser/ui/list/list.js';
 import { DefaultStyleController, IListAccessibilityProvider } from '../../../../base/browser/ui/list/listWidget.js';
 import { RenderIndentGuides } from '../../../../base/browser/ui/tree/abstractTree.js';
 import { ITreeElement, ITreeNode, ITreeRenderer } from '../../../../base/browser/ui/tree/tree.js';
+import { FONT } from '../../../../base/common/font.js';
 import { Iterable } from '../../../../base/common/iterator.js';
 import { DisposableStore } from '../../../../base/common/lifecycle.js';
 import { localize } from '../../../../nls.js';
@@ -151,7 +153,7 @@ class TOCTreeDelegate implements IListVirtualDelegate<SettingsTreeElement> {
 	}
 
 	getHeight(element: SettingsTreeElement): number {
-		return 22;
+		return (22 * FONT.workbenchCoefficient);
 	}
 }
 

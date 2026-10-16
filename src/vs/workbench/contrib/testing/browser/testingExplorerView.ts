@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -83,6 +84,7 @@ import * as icons from './icons.js';
 import './media/testing.css';
 import { DebugLastRun, ReRunLastRun } from './testExplorerActions.js';
 import { TestingExplorerFilter } from './testingExplorerFilter.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 const enum LastFocusState {
 	Input,
@@ -1428,8 +1430,8 @@ class TreeKeyboardNavigationLabelProvider implements IKeyboardNavigationLabelPro
 }
 
 class ListDelegate implements IListVirtualDelegate<TestExplorerTreeElement> {
-	getHeight(element: TestExplorerTreeElement) {
-		return element instanceof TestTreeErrorMessage ? 17 + 10 : 22;
+	getHeight(element: TestExplorerTreeElement, container?: HTMLElement) {
+		return element instanceof TestTreeErrorMessage ? getElementFontMetric(container, 17) + 10 : getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: TestExplorerTreeElement) {

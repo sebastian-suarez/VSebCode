@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -61,6 +62,7 @@ import * as icons from './debugIcons.js';
 import { DisassemblyView } from './disassemblyView.js';
 import { equals } from '../../../../base/common/arrays.js';
 import { hasKey } from '../../../../base/common/types.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 const $ = dom.$;
 
@@ -590,8 +592,8 @@ class BreakpointsDelegate implements IListVirtualDelegate<BreakpointTreeElement>
 		// noop
 	}
 
-	getHeight(_element: BreakpointTreeElement): number {
-		return 22;
+	getHeight(_element: BreakpointTreeElement, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: BreakpointTreeElement): string {

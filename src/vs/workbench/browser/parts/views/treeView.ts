@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -77,6 +78,7 @@ import { Button } from '../../../../base/browser/ui/button/button.js';
 import { defaultButtonStyles } from '../../../../platform/theme/browser/defaultStyles.js';
 import { IAccessibleViewInformationService } from '../../../services/accessibility/common/accessibleViewInformationService.js';
 import { Command } from '../../../../editor/common/languages.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 export class TreeViewPane extends ViewPane {
 
@@ -1166,8 +1168,8 @@ class TreeViewIdentityProvider implements IIdentityProvider<ITreeItem> {
 
 class TreeViewDelegate implements IListVirtualDelegate<ITreeItem> {
 
-	getHeight(element: ITreeItem): number {
-		return TreeRenderer.ITEM_HEIGHT;
+	getHeight(element: ITreeItem, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: ITreeItem): string {
@@ -1243,7 +1245,6 @@ interface ITreeExplorerTemplateData {
 }
 
 class TreeRenderer extends Disposable implements ITreeRenderer<ITreeItem, FuzzyScore, ITreeExplorerTemplateData> {
-	static readonly ITEM_HEIGHT = 22;
 	static readonly TREE_TEMPLATE_ID = 'treeExplorer';
 
 	private readonly _onDidChangeCheckboxState: Emitter<readonly ITreeItem[]> = this._register(new Emitter<readonly ITreeItem[]>());

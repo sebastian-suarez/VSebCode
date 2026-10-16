@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -11,7 +12,8 @@ import { ListViewTargetSector } from './listView.js';
 import { IDisposable } from '../../../common/lifecycle.js';
 
 export interface IListVirtualDelegate<T> {
-	getHeight(element: T): number;
+	/** The container supplies inherited UI metrics when the delegate uses scaled dimensions. */
+	getHeight(element: T, container?: HTMLElement): number;
 	getTemplateId(element: T): string;
 	hasDynamicHeight?(element: T): boolean;
 	getDynamicHeight?(element: T): number | null;

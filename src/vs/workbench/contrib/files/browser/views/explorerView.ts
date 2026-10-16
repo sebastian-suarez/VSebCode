@@ -1,8 +1,11 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { getElementFontMetric } from '../../../../../base/browser/font.js';
+import { onDidChangeFontMetrics } from '../../../../../base/common/font.js';
 import * as nls from '../../../../../nls.js';
 import { URI } from '../../../../../base/common/uri.js';
 import { Sequencer } from '../../../../../base/common/async.js';
@@ -360,6 +363,7 @@ export class ExplorerView extends ViewPane implements IExplorerView {
 
 	protected override layoutBody(height: number, width: number): void {
 		super.layoutBody(height, width);
+		this.tree.updateOptions({ paddingBottom: getElementFontMetric(this.tree.getHTMLElement(), 22) });
 		this.tree.layout(height, width);
 	}
 
@@ -573,11 +577,12 @@ export class ExplorerView extends ViewPane implements IExplorerView {
 				}
 				return false;
 			},
-			paddingBottom: ExplorerDelegate.ITEM_HEIGHT,
+			paddingBottom: getElementFontMetric(container, 22),
 			overrideStyles: this.getLocationBasedColors().listOverrideStyles,
 			findProvider: this.findProvider,
 		});
 		this._register(this.tree);
+		this._register(onDidChangeFontMetrics(() => this.tree.updateOptions({ paddingBottom: getElementFontMetric(this.tree.getHTMLElement(), 22) })));
 		this._register(this.themeService.onDidColorThemeChange(() => this.tree.rerender()));
 
 		// Bind configuration

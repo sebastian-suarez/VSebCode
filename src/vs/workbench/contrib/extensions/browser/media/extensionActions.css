@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -163,4 +164,37 @@
 .monaco-action-bar .action-item.disabled .action-label.extension-action.text {
 	opacity: 0.9;
 	font-style: italic;
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item > .action-label.extension-action.label,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-dropdown-item > .action-label.extension-action.label {
+	padding: 0 calc(var(--monaco-ui-font-size, 13px) * 5 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-dropdown-item > .monaco-dropdown .action-label {
+	padding: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item .action-label.extension-action.label {
+	outline-offset: 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item .action-label.extension-action.text,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item .action-label.extension-action.label,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-dropdown-item .action-label.extension-action.label {
+	width: auto;
+	height: auto;
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 14 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item:not(.disabled) .action-label.extension-action.text,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item:not(.disabled) .action-label.extension-action.label,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item .action-label.extension-action.icon,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-dropdown-item .action-label.extension-action.label {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-action-bar .action-item.disabled .action-label.extension-status-label:before {
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
 }

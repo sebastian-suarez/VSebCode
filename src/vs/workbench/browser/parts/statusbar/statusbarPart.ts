@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -39,6 +40,8 @@ import { IView } from '../../../../base/browser/ui/grid/grid.js';
 import { isManagedHoverTooltipHTMLElement, isManagedHoverTooltipMarkdownString } from '../../../../base/browser/ui/hover/hover.js';
 import { IHostService } from '../../../services/host/browser/host.js';
 import { CodeWindow, mainWindow } from '../../../../base/browser/window.js';
+import { FONT, updateStatusBarSize } from '../../../../base/common/font.js';
+import { getFontSize } from '../../../../platform/configuration/common/fontConfiguration.js';
 
 export interface IStatusbarEntryContainer extends IDisposable {
 
@@ -121,7 +124,7 @@ interface IPendingStatusbarEntry {
 
 class StatusbarPart extends Part implements IStatusbarEntryContainer {
 
-	static readonly HEIGHT = 22;
+	static get HEIGHT() { return FONT.statusBarSize22; }
 
 	/**
 	 * Vertical padding reserved around the main status bar under the floating panels
@@ -184,6 +187,15 @@ class StatusbarPart extends Part implements IStatusbarEntryContainer {
 		@IHostService private readonly hostService: IHostService,
 	) {
 		super(id, { hasTitle: false }, themeService, storageService, layoutService);
+
+		this._register(configurationService.onDidChangeConfiguration(e => {
+			if (e.affectsConfiguration('workbench.statusBar.experimental.fontFamily')) {
+				this.applyStatusBarFontFamily();
+			}
+			if ((e.affectsConfiguration('workbench.statusBar.experimental.fontSize') || e.affectsConfiguration('workbench.experimental.fontSize'))) {
+				this.applyStatusBarFontSize();
+			}
+		}));
 
 		this.viewModel = this._register(new StatusbarViewModel(storageService));
 		this.onDidChangeEntryVisibility = this.viewModel.onDidChangeEntryVisibility;
@@ -479,7 +491,40 @@ class StatusbarPart extends Part implements IStatusbarEntryContainer {
 		// Initial status bar entries
 		this.createInitialStatusbarEntries();
 
+		this.applyStatusBarFontFamily(this.element);
+		this.applyStatusBarFontSize(this.element);
+
 		return this.element;
+	}
+
+	private applyStatusBarFontFamily(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+		const family = this.configurationService.getValue<string>('workbench.statusBar.experimental.fontFamily');
+		if (family) {
+			target.style.setProperty('--vscode-workbench-statusbar-font-family', family);
+		} else {
+			target.style.removeProperty('--vscode-workbench-statusbar-font-family');
+		}
+
+		this._onDidChange.fire(undefined); // Signal grid that size constraints changed
+	}
+
+	private applyStatusBarFontSize(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+
+		const configuredSize = getFontSize(this.configurationService, 'workbench.statusBar.experimental.fontSize', 12);
+
+		updateStatusBarSize(configuredSize);
+
+		target.style.setProperty('--vscode-workbench-statusbar-font-size', `${FONT.statusBarSize}px`);
+
+		this._onDidChange.fire(undefined); // Signal grid that size constraints changed
 	}
 
 	private createInitialStatusbarEntries(): void {
@@ -835,7 +880,7 @@ export class AuxiliaryStatusbarPart extends StatusbarPart implements IAuxiliaryS
 
 	private static COUNTER = 1;
 
-	readonly height = StatusbarPart.HEIGHT;
+	get height() { return StatusbarPart.HEIGHT; }
 
 	constructor(
 		readonly container: HTMLElement,

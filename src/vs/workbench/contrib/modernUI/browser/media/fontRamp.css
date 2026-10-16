@@ -28,6 +28,74 @@
  * that class these rules never apply.
  */
 
+/* Keep the existing ramp at default sizes; scale each region from its configured font. */
+.modern-ui.monaco-workbench {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-font-size, 13px) * 26 / 13);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-font-size, 13px) * 18 / 13);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-font-size, 13px) * 12 / 13);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-font-size, 13px) * 10 / 13);
+}
+
+.modern-ui.monaco-workbench .part.sidebar,
+.modern-ui.monaco-workbench .part.auxiliarybar {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 26 / 13);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 18 / 13);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 12 / 13);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 10 / 13);
+}
+
+.modern-ui.monaco-workbench .part.panel {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 26 / 13);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 18 / 13);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 12 / 13);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-bottompane-font-size, 13px) * 10 / 13);
+}
+
+.modern-ui.monaco-workbench .part.editor > .content .editor-group-container > .title {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-tabs-font-size, 13px) * 26 / 13);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-tabs-font-size, 13px) * 18 / 13);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-tabs-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-tabs-font-size, 13px) * 13 / 13);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-tabs-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-tabs-font-size, 13px) * 12 / 13);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-tabs-font-size, 13px) * 11 / 13);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-tabs-font-size, 13px) * 10 / 13);
+}
+
+.modern-ui.monaco-workbench .part.activitybar {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 26 / 16);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 18 / 16);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 13 / 16);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 13 / 16);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 11 / 16);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 12 / 16);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 11 / 16);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-activitybar-font-size, 16px) * 10 / 16);
+}
+
+.modern-ui.monaco-workbench .part.statusbar {
+	--vscode-fontSize-heading1: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 26 / 12);
+	--vscode-fontSize-heading2: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 18 / 12);
+	--vscode-fontSize-heading3: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 13 / 12);
+	--vscode-fontSize-body1: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 13 / 12);
+	--vscode-fontSize-body2: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 11 / 12);
+	--vscode-fontSize-label1: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 12 / 12);
+	--vscode-fontSize-label2: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 11 / 12);
+	--vscode-fontSize-label3: calc(var(--vscode-workbench-statusbar-font-size, 12px) * 10 / 12);
+}
+
 /* Anchor the workbench base font on Body 1 so inheriting surfaces follow the ramp. */
 .modern-ui.monaco-workbench {
 	font-size: var(--vscode-fontSize-body1);

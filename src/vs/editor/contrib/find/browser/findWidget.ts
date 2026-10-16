@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -45,6 +46,7 @@ import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { IHistory } from '../../../../base/common/history.js';
 import { HoverStyle, type IHoverLifecycleOptions } from '../../../../base/browser/ui/hover/hover.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
+import { FONT, onDidChangeFontMetrics } from '../../../../base/common/font.js';
 
 const findCollapsedIcon = registerIcon('find-collapsed', Codicon.chevronRight, nls.localize('findCollapsedIcon', 'Icon to indicate that the editor find widget is collapsed.'));
 const findExpandedIcon = registerIcon('find-expanded', Codicon.chevronDown, nls.localize('findExpandedIcon', 'Icon to indicate that the editor find widget is expanded.'));
@@ -80,6 +82,7 @@ export const NLS_NO_RESULTS = nls.localize('label.noResults', "No results");
 const FIND_WIDGET_INITIAL_WIDTH = 419;
 const PART_WIDTH = 275;
 const FIND_INPUT_AREA_WIDTH = PART_WIDTH - 54;
+const FLEXIBLE_MAX_HEIGHT = 118;
 
 let MAX_MATCHES_COUNT_WIDTH = 69;
 // let FIND_ALL_CONTROLS_WIDTH = 17/** Find Input margin-left */ + (MAX_MATCHES_COUNT_WIDTH + 3 + 1) /** Match Results */ + 23 /** Button */ * 4 + 2/** sash */;
@@ -96,7 +99,7 @@ export class FindWidgetViewZone implements IViewZone {
 	constructor(afterLineNumber: number) {
 		this.afterLineNumber = afterLineNumber;
 
-		this.heightInPx = FIND_INPUT_AREA_HEIGHT;
+		this.heightInPx = FIND_INPUT_AREA_HEIGHT * FONT.workbenchCoefficient;
 		this.suppressMouseDown = false;
 		this.domNode = document.createElement('div');
 		this.domNode.className = 'dock-find-viewzone';
@@ -196,6 +199,13 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 		this._updateButtons();
 		this._tryUpdateWidgetWidth();
 		this._findInput.inputBox.layout();
+
+		this._register(onDidChangeFontMetrics(() => {
+			this._tryUpdateWidgetWidth();
+			this._findInput.inputBox.layout();
+			this._replaceInput.inputBox.layout();
+			this._layoutViewZone();
+		}));
 
 		this._register(this._codeEditor.onDidChangeConfiguration((e: ConfigurationChangedEvent) => {
 			if (e.hasChanged(EditorOption.readOnly)) {
@@ -744,6 +754,10 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 			// the widget is not in the DOM
 			return;
 		}
+		const minimumWidth = Math.round(FIND_WIDGET_INITIAL_WIDTH * FONT.workbenchCoefficient);
+		if (!this._resized || parseFloat(this._domNode.style.width) < minimumWidth) {
+			this._domNode.style.width = `${minimumWidth}px`;
+		}
 
 		const layoutInfo = this._codeEditor.getLayoutInfo();
 		const editorContentWidth = layoutInfo.contentWidth;
@@ -765,7 +779,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 		if (this._resized) {
 			const widgetWidth = dom.getTotalWidth(this._domNode);
 
-			if (widgetWidth > FIND_WIDGET_INITIAL_WIDTH) {
+			if (widgetWidth > (Math.round(FIND_WIDGET_INITIAL_WIDTH * FONT.workbenchCoefficient))) {
 				// as the widget is resized by users, we may need to change the max width of the widget as the editor width changes.
 				this._domNode.style.maxWidth = `${editorWidth - 28 - minimapWidth - 15}px`;
 				this._replaceInput.width = dom.getTotalWidth(this._findInput.domNode);
@@ -773,13 +787,16 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 			}
 		}
 
-		if (FIND_WIDGET_INITIAL_WIDTH + 28 + minimapWidth >= editorWidth) {
+		const initialWidth = (FIND_WIDGET_INITIAL_WIDTH + 28) * FONT.workbenchCoefficient;
+		const maxMatchesWidth = MAX_MATCHES_COUNT_WIDTH * FONT.workbenchCoefficient;
+
+		if (initialWidth + minimapWidth >= editorWidth) {
 			reducedFindWidget = true;
 		}
-		if (FIND_WIDGET_INITIAL_WIDTH + 28 + minimapWidth - MAX_MATCHES_COUNT_WIDTH >= editorWidth) {
+		if (initialWidth + minimapWidth - maxMatchesWidth >= editorWidth) {
 			narrowFindWidget = true;
 		}
-		if (FIND_WIDGET_INITIAL_WIDTH + 28 + minimapWidth - MAX_MATCHES_COUNT_WIDTH >= editorWidth + 50) {
+		if (initialWidth + minimapWidth - maxMatchesWidth >= editorWidth + 50) {
 			collapsedFindWidget = true;
 		}
 		this._domNode.classList.toggle('collapsed-find-widget', collapsedFindWidget);
@@ -803,23 +820,26 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 	}
 
 	private _getHeight(): number {
+		const size2 = 2 * FONT.workbenchCoefficient;
+		const size4 = 4 * FONT.workbenchCoefficient;
+
 		let totalheight = 0;
 
 		// find input margin top
-		totalheight += 4;
+		totalheight += size4;
 
 		// find input height
-		totalheight += this._findInput.inputBox.height + 2 /** input box border */;
+		totalheight += this._findInput.inputBox.height + size2 /** input box border */;
 
 		if (this._isReplaceVisible) {
 			// replace input margin
-			totalheight += 4;
+			totalheight += size4;
 
-			totalheight += this._replaceInput.inputBox.height + 2 /** input box border */;
+			totalheight += this._replaceInput.inputBox.height + size2 /** input box border */;
 		}
 
 		// margin bottom
-		totalheight += 4;
+		totalheight += size4;
 		return totalheight;
 	}
 
@@ -988,7 +1008,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 		const findSearchHistoryConfig = this._codeEditor.getOption(EditorOption.find).history;
 		const replaceHistoryConfig = this._codeEditor.getOption(EditorOption.find).replaceHistory;
 		this._findInput = this._register(new ContextScopedFindInput(null, this._contextViewProvider, {
-			width: FIND_INPUT_AREA_WIDTH,
+			width: FIND_INPUT_AREA_WIDTH * FONT.workbenchCoefficient,
 			label: NLS_FIND_INPUT_LABEL,
 			placeholder: NLS_FIND_INPUT_PLACEHOLDER,
 			appendCaseSensitiveLabel: this._keybindingLabelFor(FIND_IDS.ToggleCaseSensitiveCommand),
@@ -1008,7 +1028,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 			},
 			flexibleHeight,
 			flexibleWidth,
-			flexibleMaxHeight: 118,
+			flexibleMaxHeight: FLEXIBLE_MAX_HEIGHT * FONT.workbenchCoefficient,
 			showCommonFindToggles: true,
 			showHistoryHint: () => showHistoryKeybindingHint(this._keybindingService),
 			inputBoxStyles: defaultInputBoxStyles,
@@ -1164,7 +1184,7 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 			history: replaceHistoryConfig === 'workspace' ? this._replaceWidgetHistory : new Set([]),
 			flexibleHeight,
 			flexibleWidth,
-			flexibleMaxHeight: 118,
+			flexibleMaxHeight: FLEXIBLE_MAX_HEIGHT * FONT.workbenchCoefficient,
 			showHistoryHint: () => showHistoryKeybindingHint(this._keybindingService),
 			inputBoxStyles: defaultInputBoxStyles,
 			toggleStyles: defaultToggleStyles,
@@ -1260,8 +1280,10 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 		this._domNode.ariaLabel = NLS_FIND_DIALOG_LABEL;
 		this._domNode.role = 'dialog';
 
+		const initialWidth = Math.round(FIND_WIDGET_INITIAL_WIDTH * FONT.workbenchCoefficient);
+
 		// We need to set this explicitly, otherwise on IE11, the width inheritence of flex doesn't work.
-		this._domNode.style.width = `${FIND_WIDGET_INITIAL_WIDTH}px`;
+		this._domNode.style.width = `${initialWidth}px`;
 
 		this._domNode.appendChild(this._toggleReplaceBtn.domNode);
 		this._domNode.appendChild(findPart);
@@ -1270,17 +1292,19 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 
 		this._resizeSash = this._register(new Sash(this._domNode, this, { orientation: Orientation.VERTICAL, size: 2 }));
 		this._resized = false;
-		let originalWidth = FIND_WIDGET_INITIAL_WIDTH;
+
+		let originalWidth = initialWidth;
 
 		this._register(this._resizeSash.onDidStart(() => {
 			originalWidth = dom.getTotalWidth(this._domNode);
 		}));
 
 		this._register(this._resizeSash.onDidChange((evt: ISashEvent) => {
+			const initialWidth = Math.round(FIND_WIDGET_INITIAL_WIDTH * FONT.workbenchCoefficient);
 			this._resized = true;
 			const width = originalWidth + evt.startX - evt.currentX;
 
-			if (width < FIND_WIDGET_INITIAL_WIDTH) {
+			if (width < initialWidth) {
 				// narrow down the find widget should be handled by CSS.
 				return;
 			}
@@ -1299,17 +1323,18 @@ export class FindWidget extends Widget implements IOverlayWidget, IVerticalSashL
 		}));
 
 		this._register(this._resizeSash.onDidReset(() => {
+			const initialWidth = Math.round(FIND_WIDGET_INITIAL_WIDTH * FONT.workbenchCoefficient);
 			// users double click on the sash
 			const currentWidth = dom.getTotalWidth(this._domNode);
 
-			if (currentWidth < FIND_WIDGET_INITIAL_WIDTH) {
+			if (currentWidth < initialWidth) {
 				// The editor is narrow and the width of the find widget is controlled fully by CSS.
 				return;
 			}
 
-			let width = FIND_WIDGET_INITIAL_WIDTH;
+			let width = initialWidth;
 
-			if (!this._resized || currentWidth === FIND_WIDGET_INITIAL_WIDTH) {
+			if (!this._resized || currentWidth === initialWidth) {
 				// 1. never resized before, double click should maximizes it
 				// 2. users resized it already but its width is the same as default
 				const layoutInfo = this._codeEditor.getLayoutInfo();

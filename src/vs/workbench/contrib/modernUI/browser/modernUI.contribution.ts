@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -14,12 +15,15 @@ import { IWorkbenchLayoutService, LayoutSettings, ModernUIDensity, ModernUIEdito
 import { IWorkbenchContribution, registerWorkbenchContribution2, WorkbenchPhase } from '../../../common/contributions.js';
 import { DEFAULT_SCROLLBAR_SIZE, setGlobalDefaultScrollbarSize } from '../../../../base/browser/ui/scrollbar/scrollableElement.js';
 import { COMPACT_NOTIFICATION_ROW_HEIGHT, DEFAULT_NOTIFICATION_ROW_HEIGHT, setNotificationRowHeight } from '../../../browser/parts/notifications/notificationsViewer.js';
-import { DEFAULT_PANE_HEADER_SIZE, setGlobalPaneHeaderSize } from '../../../../base/browser/ui/splitview/paneview.js';
+import { setGlobalPaneHeaderSize } from '../../../../base/browser/ui/splitview/paneview.js';
 import { CONNECTED_EDITOR_TABS_CLASS } from '../../../browser/parts/editor/editor.js';
 import { LayoutDensityMenu } from '../../../browser/actions/layoutDensityActions.js';
 
 /** Reduced scrollbar size (px) applied when Modern UI is on. */
 const MODERN_UI_SCROLLBAR_SIZE = 8;
+
+/** Default pane header size (px) at the 13px base font; the pane view scales it with the inherited font metrics. */
+const DEFAULT_PANE_HEADER_SIZE = 22;
 
 /** Increased pane header size (px) applied when Modern UI is on. */
 const MODERN_UI_PANE_HEADER_SIZE = 28;

@@ -1,8 +1,10 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { FONT } from '../../../../base/common/font.js';
 import { IListVirtualDelegate, IListRenderer } from '../../../../base/browser/ui/list/list.js';
 import { clearNode, addDisposableListener, EventType, EventHelper, $, isEventLike } from '../../../../base/browser/dom.js';
 import { IOpenerService } from '../../../../platform/opener/common/opener.js';
@@ -45,7 +47,7 @@ export const DEFAULT_NOTIFICATION_ROW_HEIGHT = 42;
 export const COMPACT_NOTIFICATION_ROW_HEIGHT = 34;
 
 /** Current height (px) of a single notification row; overridable via {@link setNotificationRowHeight}. */
-let notificationRowHeight = DEFAULT_NOTIFICATION_ROW_HEIGHT;
+let notificationRowHeight: number | undefined;
 const onDidChangeNotificationRowHeightEmitter = new Emitter<number>();
 export const onDidChangeNotificationRowHeight = onDidChangeNotificationRowHeightEmitter.event;
 
@@ -61,8 +63,7 @@ export function setNotificationRowHeight(height: number): void {
 
 export class NotificationsListDelegate implements IListVirtualDelegate<INotificationViewItem> {
 
-	private static get ROW_HEIGHT(): number { return notificationRowHeight; }
-	private static readonly LINE_HEIGHT = 22;
+	private static get ROW_HEIGHT(): number { return (notificationRowHeight ?? DEFAULT_NOTIFICATION_ROW_HEIGHT) * FONT.workbenchCoefficient; }
 
 	private offsetHelper: HTMLElement;
 
@@ -84,9 +85,9 @@ export class NotificationsListDelegate implements IListVirtualDelegate<INotifica
 
 		// Dynamic height: if message overflows
 		const preferredMessageHeight = this.computePreferredHeight(notification);
-		const messageOverflows = NotificationsListDelegate.LINE_HEIGHT < preferredMessageHeight;
+		const messageOverflows = (22 * FONT.workbenchCoefficient) < preferredMessageHeight;
 		if (messageOverflows) {
-			const overflow = preferredMessageHeight - NotificationsListDelegate.LINE_HEIGHT;
+			const overflow = preferredMessageHeight - (22 * FONT.workbenchCoefficient);
 			expandedHeight += overflow;
 		}
 

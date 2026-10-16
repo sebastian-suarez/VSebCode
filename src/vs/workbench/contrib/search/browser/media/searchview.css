@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -440,4 +441,163 @@
 	box-sizing: border-box;
 	user-select: none;
 	-webkit-user-select: none;
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widgets-container {
+	margin: calc(var(--monaco-ui-font-size, 13px) * 0) calc(var(--monaco-ui-font-size, 13px) * 12 / 13) 0 calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+	padding-top: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+	padding-bottom: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .toggle-replace-button {
+	width: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .search-container,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .replace-container {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .monaco-inputbox > .ibwrapper > .mirror,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .monaco-inputbox > .ibwrapper > textarea.input {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 3 / 13) calc(var(--monaco-ui-font-size, 13px) * 0) calc(var(--monaco-ui-font-size, 13px) * 3 / 13) calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .monaco-inputbox > .ibwrapper > textarea.input {
+	height: calc(var(--monaco-ui-font-size, 13px) * 2);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .replace-container {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .replace-input {
+	width: auto;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .replace-input > .controls {
+	top: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+	right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .search-widget .replace-container .monaco-action-bar {
+	height: calc(var(--monaco-ui-font-size, 13px) * 25 / 13);
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .query-details {
+	margin: 0 0 0 calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .query-details .more {
+	right: calc(var(--monaco-ui-font-size, 13px) * -2 / 13);
+	width: calc(var(--monaco-ui-font-size, 13px) * 25 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .query-details .file-types > .monaco-inputbox {
+	height: calc(var(--monaco-ui-font-size, 13px) * 25 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .query-details.more .file-types:last-child {
+	padding-bottom: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .query-details.more h4 {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 4 / 13) 0 0;
+	margin: 0;
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 11 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .messages {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * -5 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .message {
+	padding: 0 calc(var(--monaco-ui-font-size, 13px) * 22 / 13) calc(var(--monaco-ui-font-size, 13px) * 8 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .message.ai-keywords {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 22 / 13) calc(var(--monaco-ui-font-size, 13px) * 8 / 13);
+	padding: calc(var(--monaco-ui-font-size, 13px) * 0);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .message p:first-child {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 0);
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 0);
+	padding-bottom: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .message .keyword-refresh {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .foldermatch,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .filematch {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+	padding: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .textsearchresult {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+	padding: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .textsearchresult .monaco-icon-label .codicon {
+	top: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .pane-body.wide .search-view .foldermatch .badge,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .pane-body.wide .search-view .filematch .badge {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 10 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .linematch {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .linematch .matchLineNum {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 7 / 13);
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-item {
+	margin: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench.hc-black :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label,
+.monaco-workbench.hc-light :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .monaco-list .monaco-list-row .monaco-action-bar .action-label {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .monaco-count-badge {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+}
+
+.monaco-workbench.hc-black :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .foldermatch,
+.monaco-workbench.hc-black :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .filematch,
+.monaco-workbench.hc-black :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .linematch,
+.monaco-workbench.hc-light :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .foldermatch,
+.monaco-workbench.hc-light :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .filematch,
+.monaco-workbench.hc-light :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-view .linematch {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 20 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .text-search-provider-messages .providerMessage {
+	padding-top: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .text-search-provider-messages .providerMessage .codicon {
+	top: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .search-container .find-filter-button {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
 }

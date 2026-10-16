@@ -4,6 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 import * as DOM from '../../../../base/browser/dom.js';
 import { CountBadge } from '../../../../base/browser/ui/countBadge/countBadge.js';
 import { IListVirtualDelegate } from '../../../../base/browser/ui/list/list.js';
@@ -77,10 +78,8 @@ interface IMatchTemplate {
 
 export class SearchDelegate implements IListVirtualDelegate<RenderableMatch> {
 
-	public static ITEM_HEIGHT = 22;
-
-	getHeight(element: RenderableMatch): number {
-		return SearchDelegate.ITEM_HEIGHT;
+	getHeight(element: RenderableMatch, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: RenderableMatch): string {

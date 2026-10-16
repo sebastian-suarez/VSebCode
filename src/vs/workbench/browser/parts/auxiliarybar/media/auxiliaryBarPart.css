@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -24,6 +25,12 @@
 
 .monaco-workbench .part.auxiliarybar > .title {
 	background-color: var(--vscode-sideBarTitle-background);
+}
+
+.monaco-workbench .part.auxiliarybar > .content {
+	font-size: var(--vscode-workbench-sidebar-font-size, 13px);
+	font-family: var(--vscode-workbench-sidebar-font-family, inherit);
+	line-height: 1.4em;
 }
 
 .monaco-workbench .part.auxiliarybar > .title > .title-label {

@@ -1,14 +1,15 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 .monaco-workbench .debug-toolbar {
 	position: absolute;
 	z-index: 2520; /* Below quick input at 2550, above custom titlebar toolbar at 2500 */
-	height: 28px;
+	height: calc(var(--monaco-ui-font-size, 13px) * 28 / 13);
 	display: flex;
-	padding-left: 2px;
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
 	border-radius: var(--vscode-cornerRadius-large);
 	left: 0;
 	top: 0;
@@ -17,11 +18,11 @@
 }
 
 .monaco-workbench .debug-toolbar .monaco-action-bar .action-item {
-	margin-right: 4px;
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
 }
 
 .monaco-workbench .debug-toolbar .monaco-action-bar .action-item.select-container {
-	margin-right: 2px;
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
 }
 
 .monaco-workbench .debug-toolbar .monaco-action-bar .action-item.select-container .monaco-select-box,
@@ -33,7 +34,7 @@
 
 .monaco-workbench .debug-toolbar .drag-area {
 	cursor: grab;
-	width: 20px;
+	width: calc(var(--monaco-ui-font-size, 13px) * 20 / 13);
 	opacity: 0.5;
 	display: flex;
 	align-items: center;
@@ -46,10 +47,16 @@
 
 .monaco-workbench  .debug-toolbar .monaco-action-bar .action-item .action-label {
 	margin-right: 0;
-	background-size: 16px;
+	background-size: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
 	background-position: center center;
 	background-repeat: no-repeat;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench .debug-toolbar .monaco-action-bar .action-item.select-container .monaco-select-box,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .start-debug-action-item .select-container .monaco-select-box {
+	padding: 0 calc(var(--monaco-ui-font-size, 13px) * 24 / 13) 0 calc(var(--monaco-ui-font-size, 13px) * 8 / 13);
 }

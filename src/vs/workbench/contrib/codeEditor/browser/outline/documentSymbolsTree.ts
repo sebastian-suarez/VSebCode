@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -13,6 +14,7 @@ import { IListAccessibilityProvider } from '../../../../../base/browser/ui/list/
 import { ITreeDragAndDrop, ITreeDragOverReaction, ITreeFilter, ITreeNode, ITreeRenderer } from '../../../../../base/browser/ui/tree/tree.js';
 import { safeIntl } from '../../../../../base/common/date.js';
 import { createMatches, FuzzyScore } from '../../../../../base/common/filters.js';
+import { getElementFontMetric } from '../../../../../base/browser/font.js';
 import { ThemeIcon } from '../../../../../base/common/themables.js';
 import { URI } from '../../../../../base/common/uri.js';
 import { Range } from '../../../../../editor/common/core/range.js';
@@ -157,8 +159,8 @@ class DocumentSymbolTemplate {
 
 export class DocumentSymbolVirtualDelegate implements IListVirtualDelegate<DocumentSymbolItem> {
 
-	getHeight(_element: DocumentSymbolItem): number {
-		return 22;
+	getHeight(_element: DocumentSymbolItem, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: DocumentSymbolItem): string {

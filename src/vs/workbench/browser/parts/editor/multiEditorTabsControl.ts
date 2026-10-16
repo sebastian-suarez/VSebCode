@@ -1,9 +1,12 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import './media/multieditortabscontrol.css';
+import { FONT } from '../../../../base/common/font.js';
 import { isLinux, isMacintosh, isWindows } from '../../../../base/common/platform.js';
 import { shorten } from '../../../../base/common/labels.js';
 import { EditorResourceAccessor, Verbosity, IEditorPartOptions, SideBySideEditor, DEFAULT_EDITOR_ASSOCIATION, EditorInputCapabilities, IUntypedEditorInput, preventEditorClose, EditorCloseMethod, EditorsOrder, IToolbarActions } from '../../../common/editor.js';
@@ -95,12 +98,16 @@ export class MultiEditorTabsControl extends EditorTabsControl {
 		large: 10 as const
 	};
 
-	private static readonly TAB_WIDTH = {
-		compact: 38 as const,
-		shrink: 80 as const,
-		fit: 120 as const
-	};
-	private static readonly MODERN_UI_COMPACT_PINNED_TAB_WIDTH = 28 as const;
+	private static get TAB_WIDTH() {
+		return {
+			compact: FONT.tabsSize38,
+			shrink: FONT.tabsSize80,
+			fit: FONT.tabsSize120
+		};
+	}
+	private static get MODERN_UI_COMPACT_PINNED_TAB_WIDTH() {
+		return FONT.tabsSize28;
+	}
 
 	private static readonly DRAG_OVER_OPEN_TAB_THRESHOLD = 1500;
 
@@ -169,8 +176,9 @@ export class MultiEditorTabsControl extends EditorTabsControl {
 		@IEditorResolverService editorResolverService: IEditorResolverService,
 		@IHostService hostService: IHostService,
 		@IMenuService menuService: IMenuService,
+		@IConfigurationService configurationService: IConfigurationService,
 	) {
-		super(parent, editorPartsView, groupsView, groupView, tabsModel, menuIds, breadcrumbsInHeader, useModernUITabs, contextMenuService, instantiationService, contextKeyService, keybindingService, notificationService, quickInputService, themeService, editorResolverService, hostService, menuService);
+		super(parent, editorPartsView, groupsView, groupView, tabsModel, menuIds, breadcrumbsInHeader, useModernUITabs, contextMenuService, instantiationService, contextKeyService, keybindingService, notificationService, quickInputService, themeService, editorResolverService, hostService, menuService, configurationService);
 
 		// Resolve the correct path library for the OS we are on
 		// If we are connected to remote, this accounts for the

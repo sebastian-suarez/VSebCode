@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -117,4 +118,27 @@
 
 .monaco-workbench.context-menu-visible .explorer-folders-view.highlight .monaco-list-row {
 	outline: none !important;
+}
+
+
+
+.monaco-workbench .part.sidebar .explorer-folders-view .explorer-item, .monaco-workbench .part.sidebar .explorer-folders-view .editor-group, .monaco-workbench .part.auxiliarybar .explorer-folders-view .explorer-item, .monaco-workbench .part.auxiliarybar .explorer-folders-view .editor-group {
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13);
+	line-height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13)
+}
+.monaco-workbench .part.sidebar .explorer-folders-view .monaco-list-row .explorer-item .monaco-count-badge, .monaco-workbench .part.auxiliarybar .explorer-folders-view .monaco-list-row .explorer-item .monaco-count-badge {
+	margin-left: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 5 / 13)
+}
+.monaco-workbench.linux .part.sidebar .explorer-folders-view .explorer-item .monaco-inputbox, .monaco-workbench.mac .part.sidebar .explorer-folders-view .explorer-item .monaco-inputbox, .monaco-workbench.linux .part.auxiliarybar .explorer-folders-view .explorer-item .monaco-inputbox, .monaco-workbench.mac .part.auxiliarybar .explorer-folders-view .explorer-item .monaco-inputbox {
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 22 / 13)
+}
+.monaco-workbench .part.sidebar .explorer-folders-view .explorer-item .monaco-inputbox > .ibwrapper > .input, .monaco-workbench .part.auxiliarybar .explorer-folders-view .explorer-item .monaco-inputbox > .ibwrapper > .input {
+	height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 20 / 13)
+}
+.monaco-workbench.hc-black .part.sidebar .explorer-folders-view .explorer-item, .monaco-workbench.hc-light .part.sidebar .explorer-folders-view .explorer-item, .monaco-workbench.hc-black .part.auxiliarybar .explorer-folders-view .explorer-item, .monaco-workbench.hc-light .part.auxiliarybar .explorer-folders-view .explorer-item {
+	line-height: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 20 / 13)
+}
+.monaco-workbench .part.sidebar .explorer-folders-view .explorer-item .monaco-inputbox input[type="text"], .monaco-workbench .part.auxiliarybar .explorer-folders-view .explorer-item .monaco-inputbox input[type="text"] {
+	outline-width: calc(var(--vscode-workbench-sidebar-font-size, 13px) * 1 / 13);
+	outline-offset: calc(var(--vscode-workbench-sidebar-font-size, 13px) * -1 / 13)
 }

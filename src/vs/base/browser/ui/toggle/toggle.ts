@@ -1,8 +1,10 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { getElementFontMetric } from '../../font.js';
 import { IAction } from '../../../common/actions.js';
 import { Codicon } from '../../../common/codicons.js';
 import { Emitter, Event } from '../../../common/event.js';
@@ -228,7 +230,7 @@ export class Toggle extends Widget {
 	}
 
 	width(): number {
-		return 2 /*margin left*/ + 2 /*border*/ + 2 /*padding*/ + 16 /* icon width */;
+		return 2 + getElementFontMetric(this.domNode, 20);
 	}
 
 	protected applyStyles(): void {

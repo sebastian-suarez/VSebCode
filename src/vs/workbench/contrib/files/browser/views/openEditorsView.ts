@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -59,6 +60,7 @@ import { getDefaultHoverDelegate } from '../../../../../base/browser/ui/hover/ho
 import { StandardKeyboardEvent } from '../../../../../base/browser/keyboardEvent.js';
 import { EventType as TouchEventType, Gesture } from '../../../../../base/browser/touch.js';
 import { IFileService } from '../../../../../platform/files/common/files.js';
+import { getElementFontMetric } from '../../../../../base/browser/font.js';
 
 const $ = dom.$;
 
@@ -405,6 +407,7 @@ export class OpenEditorsView extends ViewPane {
 
 	protected override layoutBody(height: number, width: number): void {
 		super.layoutBody(height, width);
+		this.updateSize();
 		this.list?.layout(height, width);
 	}
 
@@ -568,8 +571,14 @@ export class OpenEditorsView extends ViewPane {
 
 	private updateSize(): void {
 		// Adjust expanded body size
-		this.minimumBodySize = this.orientation === Orientation.VERTICAL ? this.getMinExpandedBodySize() : 170;
-		this.maximumBodySize = this.orientation === Orientation.VERTICAL ? this.getMaxExpandedBodySize() : Number.POSITIVE_INFINITY;
+		const minimumSize = this.orientation === Orientation.VERTICAL ? this.getMinExpandedBodySize() : 170;
+		const maximumSize = this.orientation === Orientation.VERTICAL ? this.getMaxExpandedBodySize() : Number.POSITIVE_INFINITY;
+		if (this.minimumBodySize !== minimumSize) {
+			this.minimumBodySize = minimumSize;
+		}
+		if (this.maximumBodySize !== maximumSize) {
+			this.maximumBodySize = maximumSize;
+		}
 	}
 
 	private updateDirtyIndicator(workingCopy?: IWorkingCopy): void {
@@ -606,7 +615,7 @@ export class OpenEditorsView extends ViewPane {
 			return Number.POSITIVE_INFINITY;
 		}
 
-		return (Math.max(this.elementCount, minVisibleOpenEditors)) * OpenEditorsDelegate.ITEM_HEIGHT;
+		return (Math.max(this.elementCount, minVisibleOpenEditors)) * getElementFontMetric(this.element, 22);
 	}
 
 	private getMinExpandedBodySize(): number {
@@ -620,7 +629,7 @@ export class OpenEditorsView extends ViewPane {
 
 	private computeMinExpandedBodySize(visibleOpenEditors = OpenEditorsView.DEFAULT_VISIBLE_OPEN_EDITORS): number {
 		const itemsToShow = Math.min(Math.max(visibleOpenEditors, 1), this.elementCount);
-		return itemsToShow * OpenEditorsDelegate.ITEM_HEIGHT;
+		return itemsToShow * getElementFontMetric(this.element, 22);
 	}
 
 	setStructuralRefreshDelay(delay: number): void {
@@ -668,10 +677,8 @@ class OpenEditorActionRunner extends ActionRunner {
 
 class OpenEditorsDelegate implements IListVirtualDelegate<OpenEditor | IEditorGroup> {
 
-	public static readonly ITEM_HEIGHT = 22;
-
-	getHeight(_element: OpenEditor | IEditorGroup): number {
-		return OpenEditorsDelegate.ITEM_HEIGHT;
+	getHeight(_element: OpenEditor | IEditorGroup, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: OpenEditor | IEditorGroup): string {

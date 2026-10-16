@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -32,6 +33,8 @@ import { IPaneCompositeBarOptions } from '../paneCompositeBar.js';
 import { IHoverService } from '../../../../platform/hover/browser/hover.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
 import { Extensions } from '../../panecomposite.js';
+import { invalidateFontMetrics, updatePanelSize as updateBottomPaneSize } from '../../../../base/common/font.js';
+import { getFontSize } from '../../../../platform/configuration/common/fontConfiguration.js';
 
 export class PanelPart extends AbstractPaneCompositePart {
 
@@ -115,6 +118,12 @@ export class PanelPart extends AbstractPaneCompositePart {
 			if (e.affectsConfiguration('workbench.panel.showLabels')) {
 				this.updateCompositeBar(true);
 			}
+			if (e.affectsConfiguration('workbench.bottomPane.experimental.fontFamily')) {
+				this.applyPanelFontFamily();
+			}
+			if ((e.affectsConfiguration('workbench.bottomPane.experimental.fontSize') || e.affectsConfiguration('workbench.experimental.fontSize'))) {
+				this.applyPanelFontSize();
+			}
 		}));
 	}
 
@@ -131,6 +140,47 @@ export class PanelPart extends AbstractPaneCompositePart {
 		if (this.titleArea) {
 			this.titleArea.style.borderTopColor = this.getColor(PANEL_BORDER) || this.getColor(contrastBorder) || '';
 		}
+
+		this.applyPanelFontFamily(container);
+		this.applyPanelFontSize(container);
+	}
+
+	private applyPanelFontFamily(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+
+		const family = this.configurationService.getValue<string>('workbench.bottomPane.experimental.fontFamily');
+
+		if (target.style.getPropertyValue('--vscode-workbench-bottompane-font-family') === (family || '')) {
+			return;
+		}
+		if (family) {
+			target.style.setProperty('--vscode-workbench-bottompane-font-family', family);
+		} else {
+			target.style.removeProperty('--vscode-workbench-bottompane-font-family');
+		}
+
+		invalidateFontMetrics();
+	}
+
+	private applyPanelFontSize(container?: HTMLElement): void {
+		const target = container ?? this.getContainer();
+		if (!target) {
+			return;
+		}
+
+		const configuredSize = getFontSize(this.configurationService, 'workbench.bottomPane.experimental.fontSize', 13);
+
+		const value = `${configuredSize}px`;
+		if (target.style.getPropertyValue('--vscode-workbench-bottompane-font-size') === value) {
+			return;
+		}
+		target.style.setProperty('--vscode-workbench-bottompane-font-size', value);
+		updateBottomPaneSize(configuredSize);
+
+		this._onDidChange.fire(undefined); // Signal grid that size constraints changed
 	}
 
 	protected getCompositeBarOptions(): IPaneCompositeBarOptions {

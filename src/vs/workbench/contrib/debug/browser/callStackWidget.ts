@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -11,6 +12,8 @@ import { assertNever } from '../../../../base/common/assert.js';
 import { CancellationToken, CancellationTokenSource } from '../../../../base/common/cancellation.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { Emitter, Event } from '../../../../base/common/event.js';
+import { onDidChangeFontMetrics } from '../../../../base/common/font.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 import { Disposable, DisposableStore, IDisposable, toDisposable } from '../../../../base/common/lifecycle.js';
 import { autorun, autorunWithStore, derived, IObservable, ISettableObservable, observableValue, transaction } from '../../../../base/common/observable.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
@@ -82,10 +85,10 @@ class WrappedCallStackFrame extends CallStackFrame implements IFrameLikeItem {
 	public readonly collapsed = observableValue('WrappedCallStackFrame.collapsed', false);
 
 	public readonly height = derived(reader => {
-		return this.collapsed.read(reader) ? CALL_STACK_WIDGET_HEADER_HEIGHT : CALL_STACK_WIDGET_HEADER_HEIGHT + this.editorHeight.read(reader);
+		return this.collapsed.read(reader) ? this.stackHeaderHeight.read(reader) : this.stackHeaderHeight.read(reader) + this.editorHeight.read(reader);
 	});
 
-	constructor(original: CallStackFrame) {
+	constructor(original: CallStackFrame, private readonly stackHeaderHeight: IObservable<number>) {
 		super(original.name, original.source, original.line, original.column);
 	}
 }
@@ -94,11 +97,11 @@ class WrappedCustomStackFrame implements IFrameLikeItem {
 	public readonly collapsed = observableValue('WrappedCallStackFrame.collapsed', false);
 
 	public readonly height = derived(reader => {
-		const headerHeight = this.original.showHeader.read(reader) ? CALL_STACK_WIDGET_HEADER_HEIGHT : 0;
+		const headerHeight = this.original.showHeader.read(reader) ? this.stackHeaderHeight.read(reader) : 0;
 		return this.collapsed.read(reader) ? headerHeight : headerHeight + this.original.height.read(reader);
 	});
 
-	constructor(public readonly original: CustomStackFrame) { }
+	constructor(public readonly original: CustomStackFrame, private readonly stackHeaderHeight: IObservable<number>) { }
 }
 
 const isFrameLike = (item: unknown): item is IFrameLikeItem =>
@@ -115,6 +118,7 @@ const WIDGET_CLASS_NAME = 'multiCallStackWidget';
  */
 export class CallStackWidget extends Disposable {
 	private readonly list: WorkbenchList<ListItem>;
+	private readonly stackHeaderHeight = observableValue('CallStackWidget.headerHeight', 24);
 	private readonly layoutEmitter = this._register(new Emitter<void>());
 	private readonly currentFramesDs = this._register(new DisposableStore());
 	private cts?: CancellationTokenSource;
@@ -132,12 +136,14 @@ export class CallStackWidget extends Disposable {
 	}
 
 	constructor(
-		container: HTMLElement,
+		private readonly container: HTMLElement,
 		containingEditor: ICodeEditor | undefined,
 		@IInstantiationService instantiationService: IInstantiationService,
 	) {
 		super();
 
+		this.updateHeaderHeight();
+		this._register(onDidChangeFontMetrics(() => this.updateHeaderHeight()));
 		container.classList.add(WIDGET_CLASS_NAME);
 		this._register(toDisposable(() => container.classList.remove(WIDGET_CLASS_NAME)));
 
@@ -145,7 +151,7 @@ export class CallStackWidget extends Disposable {
 			WorkbenchList,
 			'TestResultStackWidget',
 			container,
-			new StackDelegate(),
+			new StackDelegate(this.stackHeaderHeight),
 			[
 				instantiationService.createInstance(FrameCodeRenderer, containingEditor, this.layoutEmitter.event),
 				instantiationService.createInstance(MissingCodeRenderer),
@@ -175,8 +181,13 @@ export class CallStackWidget extends Disposable {
 	}
 
 	public layout(height?: number, width?: number): void {
+		this.updateHeaderHeight();
 		this.list.layout(height, width);
 		this.layoutEmitter.fire();
+	}
+
+	private updateHeaderHeight(): void {
+		this.stackHeaderHeight.set(getElementFontMetric(this.container, 24), undefined);
 	}
 
 	public collapseAll() {
@@ -213,7 +224,7 @@ export class CallStackWidget extends Disposable {
 			}
 
 			const wrapped = frame instanceof CustomStackFrame
-				? new WrappedCustomStackFrame(frame) : new WrappedCallStackFrame(frame);
+				? new WrappedCustomStackFrame(frame, this.stackHeaderHeight) : new WrappedCallStackFrame(frame, this.stackHeaderHeight);
 			result.push(wrapped);
 
 			this.currentFramesDs.add(autorun(reader => {
@@ -260,12 +271,14 @@ class StackAccessibilityProvider implements IListAccessibilityProvider<ListItem>
 }
 
 class StackDelegate implements IListVirtualDelegate<ListItem> {
+	constructor(private readonly stackHeaderHeight: IObservable<number>) { }
+
 	getHeight(element: ListItem): number {
 		if (element instanceof CallStackFrame || element instanceof WrappedCustomStackFrame) {
 			return element.height.get();
 		}
 		if (element instanceof SkippedCallFrames) {
-			return CALL_STACK_WIDGET_HEADER_HEIGHT;
+			return this.stackHeaderHeight.get();
 		}
 
 		assertNever(element);
@@ -319,8 +332,6 @@ const makeFrameElements = () => dom.h('div.multiCallStackFrame', [
 		dom.h('div.editorContainer@editor'),
 	])
 ]);
-
-export const CALL_STACK_WIDGET_HEADER_HEIGHT = 24;
 
 interface IAbstractFrameRendererTemplateData {
 	container: HTMLElement;

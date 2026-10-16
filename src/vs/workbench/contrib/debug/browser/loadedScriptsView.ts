@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -12,6 +13,7 @@ import { ITreeElement, ITreeFilter, ITreeNode, TreeFilterResult, TreeVisibility 
 import { RunOnceScheduler } from '../../../../base/common/async.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { createMatches, FuzzyScore } from '../../../../base/common/filters.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 import { normalizeDriveLetter, tildify } from '../../../../base/common/labels.js';
 import { dispose, DisposableMap, DisposableStore } from '../../../../base/common/lifecycle.js';
 import { isAbsolute, normalize, posix } from '../../../../base/common/path.js';
@@ -649,8 +651,8 @@ export class LoadedScriptsView extends ViewPane {
 
 class LoadedScriptsDelegate implements IListVirtualDelegate<LoadedScriptsItem> {
 
-	getHeight(element: LoadedScriptsItem): number {
-		return 22;
+	getHeight(element: LoadedScriptsItem, container?: HTMLElement): number {
+		return getElementFontMetric(container, 22);
 	}
 
 	getTemplateId(element: LoadedScriptsItem): string {

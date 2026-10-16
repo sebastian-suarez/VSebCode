@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -56,11 +57,12 @@ import { ICommandService } from '../../../../platform/commands/common/commands.j
 import { IStorageService, StorageScope } from '../../../../platform/storage/common/storage.js';
 import { TerminalStorageKeys } from '../common/terminalStorageKeys.js';
 import { isObject } from '../../../../base/common/types.js';
+import { onDidChangeFontMetrics } from '../../../../base/common/font.js';
+import { getElementFontMetric } from '../../../../base/browser/font.js';
 
 const $ = DOM.$;
 
 export const enum TerminalTabsListSizes {
-	TabHeight = 22,
 	NarrowViewWidth = 46,
 	WideViewMinimumWidth = 80,
 	DefaultWidth = 120,
@@ -97,7 +99,7 @@ export class TerminalTabList extends WorkbenchList<ITerminalInstance> {
 	) {
 		super('TerminalTabsList', container,
 			{
-				getHeight: () => TerminalTabsListSizes.TabHeight,
+				getHeight: (_element, currentContainer) => getElementFontMetric(currentContainer, 22),
 				getTemplateId: () => 'terminal.tabs'
 			},
 			[instantiationService.createInstance(TerminalTabsRenderer, container, instantiationService.createInstance(ResourceLabels, DEFAULT_LABELS_CONTAINER), () => this.getSelectedElements(), {
@@ -114,7 +116,7 @@ export class TerminalTabList extends WorkbenchList<ITerminalInstance> {
 				accessibilityProvider: instantiationService.createInstance(TerminalTabsAccessibilityProvider),
 				smoothScrolling: _configurationService.getValue<boolean>('workbench.list.smoothScrolling'),
 				multipleSelectionSupport: true,
-				paddingBottom: TerminalTabsListSizes.TabHeight,
+				paddingBottom: getElementFontMetric(container, 22),
 				dnd: instantiationService.createInstance(TerminalTabsDragAndDrop),
 				openOnSingleClick: true
 			},
@@ -123,6 +125,8 @@ export class TerminalTabList extends WorkbenchList<ITerminalInstance> {
 			_configurationService,
 			instantiationService,
 		);
+
+		this.disposables.add(onDidChangeFontMetrics(() => this.updateOptions({ paddingBottom: getElementFontMetric(container, 22) })));
 
 		const instanceDisposables: IDisposable[] = [
 			this._terminalGroupService.onDidChangeInstances(() => this.refresh()),
@@ -259,6 +263,7 @@ export class TerminalTabList extends WorkbenchList<ITerminalInstance> {
 	}
 
 	override layout(height?: number, width?: number): void {
+		this.updateOptions({ paddingBottom: getElementFontMetric(this.getHTMLElement(), 22) });
 		super.layout(height, width);
 		const actualWidth = width ?? this.getHTMLElement().clientWidth;
 		const newHasText = actualWidth >= TerminalTabsListSizes.MidpointViewWidth;
@@ -458,7 +463,7 @@ class TerminalTabsRenderer implements IListRenderer<ITerminalInstance, ITerminal
 			ariaLabel: localize('terminalInputAriaLabel', "Type terminal name. Press Enter to confirm or Escape to cancel."),
 			inputBoxStyles: defaultInputBoxStyles
 		});
-		inputBox.element.style.height = '22px';
+		inputBox.element.style.height = 'calc(var(--monaco-ui-font-size, 13px) * 22 / 13)';
 		inputBox.value = value;
 		inputBox.focus();
 		inputBox.select({ start: 0, end: value.length });

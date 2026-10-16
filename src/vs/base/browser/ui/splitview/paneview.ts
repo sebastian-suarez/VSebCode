@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -19,6 +20,8 @@ import './paneview.css';
 import { localize } from '../../../../nls.js';
 import { IView, Sizing, SplitView } from './splitview.js';
 import { applyDragImage } from '../dnd/dnd.js';
+import { invalidateFontMetrics, onDidChangeFontMetrics } from '../../../common/font.js';
+import { getElementFontMetric } from '../../font.js';
 
 export interface IPaneOptions {
 	minimumBodySize?: number;
@@ -37,14 +40,16 @@ export interface IPaneStyles {
 	readonly leftBorder: string | undefined;
 }
 
-export const DEFAULT_PANE_HEADER_SIZE = 22;
-let globalPaneHeaderSize = DEFAULT_PANE_HEADER_SIZE;
+let globalPaneHeaderSize: number | undefined;
 
 /**
- * Updates the header size used by all panes.
+ * Updates the base header size at a 13px UI font. Each pane scales it to its container's font size.
  */
-export function setGlobalPaneHeaderSize(size: number): void {
-	globalPaneHeaderSize = size;
+export function setGlobalPaneHeaderSize(baseSize: number): void {
+	if (globalPaneHeaderSize !== baseSize) {
+		globalPaneHeaderSize = baseSize;
+		invalidateFontMetrics();
+	}
 }
 
 /**
@@ -127,7 +132,7 @@ export abstract class Pane extends Disposable implements IView {
 	}
 
 	private get headerSize(): number {
-		return this.headerVisible ? globalPaneHeaderSize : 0;
+		return this.headerVisible ? getElementFontMetric(this.element, globalPaneHeaderSize ?? 22) : 0;
 	}
 
 	get minimumSize(): number {
@@ -254,6 +259,21 @@ export abstract class Pane extends Disposable implements IView {
 		this.element.classList.toggle('expanded', this.isExpanded());
 		this.element.classList.toggle('horizontal', this.orientation === Orientation.HORIZONTAL);
 		this.element.classList.toggle('vertical', this.orientation === Orientation.VERTICAL);
+
+		let fontLayoutPending = false;
+		this._register(onDidChangeFontMetrics(() => {
+			if (fontLayoutPending) {
+				return;
+			}
+			fontLayoutPending = true;
+			queueMicrotask(() => {
+				fontLayoutPending = false;
+				if (!this._store.isDisposed) {
+					this.updateHeader();
+					this._onDidChange.fire(undefined);
+				}
+			});
+		}));
 
 		this.header = $('.pane-header');
 		append(this.element, this.header);

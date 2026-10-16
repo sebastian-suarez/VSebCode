@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -695,10 +696,8 @@
 	padding: 2px 4px;
 }
 
-.monaco-workbench .part.sidebar > .title > .title-actions .action-label.scm-graph-repository-picker,
-.monaco-workbench .part.sidebar > .title > .title-actions .action-label.scm-graph-history-item-picker,
-.monaco-workbench .part.auxiliarybar > .title > .title-actions .action-label.scm-graph-repository-picker,
-.monaco-workbench .part.auxiliarybar > .title > .title-actions .action-label.scm-graph-history-item-picker,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) > .title > .title-actions .action-label.scm-graph-repository-picker,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) > .title > .title-actions .action-label.scm-graph-history-item-picker,
 .monaco-workbench .part.panel > .title > .title-actions .action-label.scm-graph-repository-picker,
 .monaco-workbench .part.panel > .title > .title-actions .action-label.scm-graph-history-item-picker {
 	display: flex;
@@ -810,4 +809,282 @@
 	background: var(--vscode-scmGraph-historyItemHoverDefaultLabelBackground);
 	border-radius: 2px;
 	opacity: 0.5;
+}
+
+/* Custom font size: rules without an upstream counterpart. */
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-tl-contents > div {
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .count {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .codicon {
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .actions {
+	min-width: calc(var(--monaco-ui-font-size, 13px) * 24 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .actions > .monaco-toolbar > .monaco-action-bar > .actions-container > .action-item {
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .actions > .monaco-toolbar > .monaco-action-bar > .actions-container > .action-item.scm-status-bar-action {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-status-bar-action .action-label > span:not(.codicon) {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .actions > .monaco-toolbar > .monaco-action-bar > .actions-container > .action-item > .action-label,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-provider > .actions > .monaco-toolbar > .monaco-action-bar > .actions-container > .action-item > .monaco-dropdown > .dropdown-label > .action-label {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .monaco-icon-label-container {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .monaco-tl-twistie:not(.collapsed) + .monaco-tl-contents > .history-item > .graph-container > svg > path:last-of-type {
+	stroke-width: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .graph-container {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+	gap: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container > .label {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container > .label > .count {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container > .label > .codicon {
+	padding: 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container > .label > .codicon.codicon-git-branch {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+	padding: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .label-container > .label > .description {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+	max-width: calc(var(--monaco-ui-font-size, 13px) * 100 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item .monaco-icon-label .icon-container {
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item .monaco-icon-label .avatar {
+	width: calc(var(--monaco-ui-font-size, 13px) * 14 / 13);
+	height: calc(var(--monaco-ui-font-size, 13px) * 14 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item > .actions {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .resource > .name > .monaco-icon-label::after,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item-change > .label-container > .monaco-icon-label::after {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .resource > .decoration-icon {
+	width: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 5 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .resource > .decoration-icon.codicon {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .actions .action-label {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-input {
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 11 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-input .scm-editor .scm-editor-toolbar {
+	padding: 1px calc(var(--monaco-ui-font-size, 13px) * 3 / 13) 1px 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-input .scm-editor .scm-editor-toolbar.scroll-decoration {
+	box-shadow: var(--vscode-scrollbar-shadow) 0 calc(var(--monaco-ui-font-size, 13px) * 6 / 13) calc(var(--monaco-ui-font-size, 13px) * 6 / 13) calc(var(--monaco-ui-font-size, 13px) * -6 / 13) inset;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container {
+	padding-left: calc(var(--monaco-ui-font-size, 13px) * 11 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container .codicon.codicon-cloud-upload,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container .codicon.codicon-sync {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 4 / 13) 0 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container .codicon.codicon-arrow-up,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container .codicon.codicon-arrow-down {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 4 / 13) 0 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .button-container > .monaco-button-dropdown > .monaco-dropdown-button {
+	padding: 0 calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-editor.synthetic-focus,
+.monaco-workbench .part.panel .scm-view .scm-editor.synthetic-focus {
+	outline: 1px solid var(--vscode-focusBorder);
+	outline-offset: calc(var(--monaco-ui-font-size, 13px) * -1 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-editor.validation-info {
+	outline: 1px solid var(--vscode-inputValidation-infoBorder);
+	outline-offset: calc(var(--monaco-ui-font-size, 13px) * -1 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-editor.validation-warning {
+	outline: 1px solid var(--vscode-inputValidation-warningBorder);
+	outline-offset: calc(var(--monaco-ui-font-size, 13px) * -1 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .scm-editor.validation-error {
+	outline: 1px solid var(--vscode-inputValidation-errorBorder);
+	outline-offset: calc(var(--monaco-ui-font-size, 13px) * -1 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-editor-validation-container {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-editor-validation {
+	padding: 1px calc(var(--monaco-ui-font-size, 13px) * 3 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-editor-validation p {
+	margin: 0;
+	padding: 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-editor-validation-actions {
+	margin-top: 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-repositories-view .scm-artifact-group,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-repositories-view .scm-artifact {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-repositories-view .scm-artifact .icon {
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-repositories-view .scm-artifact .timestamp-container {
+	margin-left: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+	margin-right: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-repositories-view .scm-artifact .timestamp-container.duplicate {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+	min-width: calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container > .rendered-markdown:first-child > p {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container > .rendered-markdown:last-child p {
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container > .rendered-markdown:last-child p span:not(.codicon) {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13) 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container > .rendered-markdown hr {
+	margin-top: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container > .rendered-markdown > p {
+	margin: calc(var(--monaco-ui-font-size, 13px) * 4 / 13) 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container div:nth-of-type(3):nth-last-of-type(2) > p {
+	gap: calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container p > span > span.codicon.codicon-git-branch {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container p > span > span.codicon.codicon-tag,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container p > span > span.codicon.codicon-target {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 14 / 13);
+	margin-bottom: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-hover.history-item-hover .history-item-hover-container p > span > span.codicon.codicon-cloud {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 14 / 13);
+	margin-bottom: 1px;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .pane-header .scm-graph-view-badge-container > .scm-graph-view-badge.monaco-count-badge.long {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 6 / 13);
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13) calc(var(--monaco-ui-font-size, 13px) * 4 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-toolbar .action-item > .action-label.scm-graph-repository-picker,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-toolbar .action-item > .action-label.scm-graph-history-item-picker {
+	line-height: calc(var(--monaco-ui-font-size, 13px) * 16 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-toolbar .action-label.scm-graph-repository-picker > .name,
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .monaco-toolbar .action-label.scm-graph-history-item-picker > .name {
+	max-width: calc(var(--monaco-ui-font-size, 13px) * 100 / 13);
+	padding-right: calc(var(--monaco-ui-font-size, 13px) * 2 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-history-view .scm-provider .state-label.monaco-count-badge.long {
+	margin: 0 calc(var(--monaco-ui-font-size, 13px) * 10 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-view .monaco-list-row .history-item-change > .graph-placeholder {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-history-view .history-item-load-more {
+	height: calc(var(--monaco-ui-font-size, 13px) * 22 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-history-view .history-item-load-more .history-item-placeholder .monaco-highlighted-label .codicon {
+	font-size: calc(var(--monaco-ui-font-size, 13px) * 12 / 13);
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-history-view .history-item-load-more .history-item-placeholder.shimmer {
+	padding: calc(var(--monaco-ui-font-size, 13px) * 2 / 13) 0;
+}
+
+.monaco-workbench :is(.part.sidebar, .part.auxiliarybar, .part.panel) .scm-history-view .history-item-load-more .history-item-placeholder.shimmer .monaco-icon-label-container {
+	height: calc(var(--monaco-ui-font-size, 13px) * 18 / 13);
 }

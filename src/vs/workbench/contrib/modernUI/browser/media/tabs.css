@@ -58,13 +58,13 @@
 .modern-ui-tabs.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs {
 	background-color: transparent !important;
 	cursor: default;
-	--editor-group-tab-height: 24px !important;
+	--editor-group-tab-height: calc(var(--vscode-workbench-tabs-font-size, 13px) * 24 / 13) !important;
 }
 
 /* Compact tab height: 20px tab + 4px top + 4px bottom padding = 28px total.
  * 20px is the minimum to fit the tab action icons (16px codicon + 2px padding on each side). */
 .modern-ui-tabs.monaco-workbench .part.editor > .content .editor-group-container > .title.tabs.compact-height {
-	--editor-group-tab-height: 20px !important;
+	--editor-group-tab-height: calc(var(--vscode-workbench-tabs-font-size, 13px) * 20 / 13) !important;
 }
 
 .modern-ui-tabs .part.editor .tabs-container > .tab,
