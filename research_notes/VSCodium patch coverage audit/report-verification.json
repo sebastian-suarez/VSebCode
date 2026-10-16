@@ -1,0 +1,15 @@
+{
+	"matrixRows": 76,
+	"classificationCounts": {
+		"Intentional": 20,
+		"Inapplicable": 9,
+		"Unresolved": 1,
+		"Covered": 14,
+		"Missing": 21,
+		"Partial": 11
+	},
+	"reportSha256AtReview": "25122163b2352ef3ae1cb51e859824529b82faf6a1fb7b0027bef790cc380c56",
+	"jsonParsing": "passed",
+	"exactMatrixCoverageAndClassifications": "passed",
+	"lineEndings": "LF with trailing newline"
+}

@@ -24,6 +24,16 @@ VSebCode is a fork of Code - OSS, the open-source repository (`microsoft/vscode`
 
 Help links in the user interface still open the upstream documentation, which describes the features VSebCode keeps.
 
+## Distribution settings
+
+VSebCode includes compatible VSCodium conveniences: command allow/deny/confirm rules (`commands.filters`), optional extension-control feeds (`extensions.excludeUnsafes`), a 48-hour extension update age (`extensions.minReleaseAge`), Welcome announcements and experimental workbench/region font settings. The default typography and Microsoft Marketplace remain available.
+
+The update age uses the publication time of the version being offered, so a newer prerelease does not restart the wait for an older stable update. Set `extensions.minReleaseAge` to `0` to show updates immediately.
+
+A `product.json` in the selected user-data directory can override product values. Objects merge recursively; arrays and scalar values replace existing values. The six `VSCODE_GALLERY_*` environment variables take precedence for gallery endpoints. These are advanced distribution settings and do not move the selected user-data directory.
+
+Installations, updates and reinstalls of the Microsoft cloud/remote service extensions listed in [the installation policy](docs/plans/vscodium-blocked-extensions.json) are blocked. Existing copies keep running. Generic development extensions and open remote clients remain available. See [VSCodium parity status](docs/plans/vscodium-parity-status.md) for the implemented effects and platform prerequisites.
+
 ## Build from source
 
 You need Git, Node.js with the major version given in `.nvmrc`, Python, and a C/C++ compiler toolchain for the native modules. Then run:
@@ -64,6 +74,8 @@ VSebCode keeps its user data (settings, keybindings, snippets, profiles and stat
 | Extensions | `~/.vsebcode/extensions` | `~/.vscode-oss/extensions` |
 
 On Linux, `$XDG_CONFIG_HOME` replaces `~/.config` when it is set. On Windows, `~` is your user profile folder (`%USERPROFILE%`).
+
+Linux logs use `~/.local/state/VSebCode/logs`, or `$XDG_STATE_HOME/VSebCode/logs`. An explicit `--user-data-dir` or `VSCODE_APPDATA` selection keeps logs inside that data directory unless `VSCODE_APPSTATE` overrides their location. Isolated profiles receive separate subdirectories under that override. Portable installations use their own `user-state` directory.
 
 Nothing migrates the Code - OSS folders. To keep your setup, quit both editors and copy each Code - OSS folder to the matching VSebCode path. If VSebCode has already created its folders, copy the contents of the old folders into them. Sign-ins that extensions kept in the system keychain may not carry over, so sign in again where an extension asks.
 

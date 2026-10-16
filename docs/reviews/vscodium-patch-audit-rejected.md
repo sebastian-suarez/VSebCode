@@ -1,0 +1,13 @@
+# VSCodium patch audit review record
+
+The audited product baseline is `95800bc5a6f6a286eb32d099bb772e5870cd4763`, compared with VSCodium `be70704abf84fc6c7721f94478dfcccd2dc6163e`. The reviewed artifact is [the complete report](../../reports/VSCodium%20patch%20coverage%20audit.md), SHA-256 `25122163b2352ef3ae1cb51e859824529b82faf6a1fb7b0027bef790cc380c56`. Subsequent workspace commits during the audit contain documentation only; product-source comparison remains against the stated baseline.
+
+Verification preceded review: all 76 matrix paths and classifications reconciled with the manifest, 121 pinned source files were independently re-fetched with matching hashes, 21 existing policy tests passed, and five direct policy-renderer assertions reproduced the stated branding behavior. Local and pinned-source citation bounds were checked. The repository hygiene command matched no eligible documentation files; it was not counted as a passing check. The [verification record](../../research_notes/VSCodium%20patch%20coverage%20audit/verification.md) states the exact limits.
+
+The requested independent vendor review failed before inference with HTTP 429, `model_requires_usage_credits`. This is an unavailable review, not approval. The configured fallback supplied a fresh artifact-only review and reported no material findings; it checked the report's internal counts, classifications and qualifications without inspecting its linked evidence or the original task.
+
+The required task-aware review command completed successfully in a separate temporary repository with a fresh session. Its lossless snapshot contained the complete report, the original request and constraints, the 76-path inventory, the verification record, and 26 numbered evidence excerpts concerning the main findings. It returned approval with no findings, explicitly limited to that supplied audit snapshot. It did not independently inspect every underlying source file or execute the application.
+
+There were no final-review findings to accept or reject, so no product or report corrections resulted from these reviews. The missing independent vendor review remains disclosed. One final review round completed using the fallback; no second fix round was needed.
+
+The earlier plan review also required a fallback after a session-limit failure. Its three method refinements were incorporated before research: trace the final effect after ordered transformations, classify constituent effects within mixed patches, and reconcile every matrix row against a machine-readable manifest. Those were planning refinements, not rejected implementation findings.

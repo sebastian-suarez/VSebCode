@@ -1,0 +1,13 @@
+[mcp_servers.component-explorer]
+command = "npm"
+args = [
+    "exec",
+    "--no",
+    "--",
+    "component-explorer",
+    "mcp",
+    "-p",
+    "./test/componentFixtures/component-explorer.json",
+    "--use-daemon",
+    "-vv",
+]
