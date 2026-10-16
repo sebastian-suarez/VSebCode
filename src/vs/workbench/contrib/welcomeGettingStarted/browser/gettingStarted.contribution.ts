@@ -297,6 +297,13 @@ configurationRegistry.registerConfiguration({
 			default: true,
 			description: localize('workbench.welcomePage.walkthroughs.openOnInstall', "When enabled, an extension's walkthrough will open upon install of the extension.")
 		},
+		'workbench.welcomePage.extraAnnouncements': {
+			scope: ConfigurationScope.MACHINE,
+			type: 'boolean',
+			default: true,
+			description: localize('workbench.welcomePage.extraAnnouncements', "Load additional announcements from the {0} repository on the Welcome page.", product.nameShort),
+			tags: ['usesOnlineServices']
+		},
 		'workbench.startupEditor': {
 			'scope': ConfigurationScope.RESOURCE,
 			'type': 'string',

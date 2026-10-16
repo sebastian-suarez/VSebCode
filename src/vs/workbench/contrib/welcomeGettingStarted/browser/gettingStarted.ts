@@ -4,6 +4,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { IRequestService } from '../../../../platform/request/common/request.js';
+import { IWelcomeAnnouncement, WelcomeAnnouncements } from '../common/announcements.js';
 import { $, Dimension, addDisposableListener, append, clearNode, reset } from '../../../../base/browser/dom.js';
 import { renderFormattedText } from '../../../../base/browser/formattedTextRenderer.js';
 import { status } from '../../../../base/browser/ui/aria/aria.js';
@@ -150,6 +152,9 @@ export class GettingStartedPage extends EditorPane {
 	private readonly startList = this._register(new MutableDisposable<GettingStartedIndexList<IWelcomePageStartEntry>>());
 	private readonly gettingStartedList = this._register(new MutableDisposable<GettingStartedIndexList<IResolvedWalkthrough>>());
 
+	private readonly announcementList = this._register(new MutableDisposable<GettingStartedIndexList<IWelcomeAnnouncement>>());
+	private readonly announcements: WelcomeAnnouncements;
+
 	private stepsSlide!: HTMLElement;
 	private categoriesSlide!: HTMLElement;
 	private stepsContent!: HTMLElement;
@@ -192,9 +197,11 @@ export class GettingStartedPage extends EditorPane {
 		@IWebviewService private readonly webviewService: IWebviewService,
 		@IWorkspaceContextService private readonly workspaceContextService: IWorkspaceContextService,
 		@IAccessibilityService private readonly accessibilityService: IAccessibilityService,
+		@IRequestService requestService: IRequestService,
 	) {
 
 		super(GettingStartedPage.ID, group, telemetryService, themeService, storageService);
+		this.announcements = this._register(new WelcomeAnnouncements(requestService));
 
 		this.container = $('.gettingStartedContainer',
 			{
@@ -255,6 +262,9 @@ export class GettingStartedPage extends EditorPane {
 		}));
 
 		this._register(this.configurationService.onDidChangeConfiguration(e => {
+			if (e.affectsConfiguration('workbench.welcomePage.extraAnnouncements') && this.categoriesSlide) {
+				void this.buildCategoriesSlide(true);
+			}
 			if (e.affectsConfiguration(REDUCED_MOTION_KEY)) {
 				this.container.classList.toggle('animatable', this.shouldAnimate());
 			}
@@ -928,6 +938,7 @@ export class GettingStartedPage extends EditorPane {
 		const startList = this.buildStartList();
 		const recentList = this.buildRecentlyOpenedList();
 		const gettingStartedList = this.buildGettingStartedWalkthroughsList();
+		const announcementList = this.buildAnnouncementList();
 
 		const footerChildren: HTMLElement[] = [];
 		footerChildren.push($('p.showOnStartup', {},
@@ -940,7 +951,7 @@ export class GettingStartedPage extends EditorPane {
 		const layoutLists = () => {
 			if (gettingStartedList.itemCount) {
 				this.container.classList.remove('noWalkthroughs');
-				reset(rightColumn, gettingStartedList.getDomElement());
+				reset(rightColumn, gettingStartedList.getDomElement(), announcementList.getDomElement());
 			}
 			else {
 				this.container.classList.add('noWalkthroughs');
@@ -954,7 +965,7 @@ export class GettingStartedPage extends EditorPane {
 			if (this.container.classList.contains('noWalkthroughs')) {
 				recentList.setLimit(10);
 				reset(leftColumn, startList.getDomElement());
-				reset(rightColumn, recentList.getDomElement());
+				reset(rightColumn, recentList.getDomElement(), announcementList.getDomElement());
 			} else {
 				recentList.setLimit(5);
 				reset(leftColumn, startList.getDomElement(), recentList.getDomElement());
@@ -1125,6 +1136,33 @@ export class GettingStartedPage extends EditorPane {
 			const workspacesWithID = this.filterRecentlyOpened(workspaces);
 			this.recentlyOpenedList.value?.setEntries(workspacesWithID);
 		}).catch(onUnexpectedError);
+	}
+
+	private buildAnnouncementList(): GettingStartedIndexList<IWelcomeAnnouncement> {
+		const list = new GettingStartedIndexList<IWelcomeAnnouncement>({
+			title: localize('announcements', "{0} Announcements", this.productService.nameShort),
+			klass: 'announcements',
+			limit: 5,
+			empty: $('.empty-recent', {}, localize('noAnnouncements', "There are no current announcements.")),
+			renderElement: announcement => {
+				const anchor = $('a', { href: announcement.url }, announcement.title);
+				this.categoriesSlideDisposables.add(addDisposableListener(anchor, 'click', event => {
+					event.preventDefault();
+					void this.openerService.open(URI.parse(announcement.url), { allowCommands: false });
+				}));
+				return $('li', {}, anchor);
+			},
+			contextService: this.contextService
+		});
+		this.announcementList.value = list;
+		list.setEntries([]);
+		void this.announcements.get(this.configurationService.getValue<boolean>('workbench.welcomePage.extraAnnouncements') !== false).then(entries => {
+			if (this.announcementList.value === list) {
+				list.setEntries(entries);
+				this.categoriesPageScrollbar?.scanDomNode();
+			}
+		});
+		return list;
 	}
 
 	private buildStartList(): GettingStartedIndexList<IWelcomePageStartEntry> {
