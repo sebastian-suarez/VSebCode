@@ -1,0 +1,60 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/*
+ * Glass side bar (`window.glass`): the window is transparent and a native glass layer sits
+ * behind the web contents. The workbench root and the Modern UI grid give up their own shell
+ * background; an opaque backing element paints it instead, with a rectangular hole where
+ * the primary side bar is (an inline clip path the layout service writes from the bounds the
+ * side bar part reports on every layout), so the gutters between the cards, panels
+ * spanning the side bar column and hidden parts stay opaque and only the side bar shows the
+ * desktop. All rules are gated behind the `glass` class the layout service toggles on the main
+ * container.
+ */
+
+.monaco-workbench.glass,
+.monaco-workbench.glass.floating-panels,
+.monaco-workbench.glass.floating-panels > .monaco-grid-view {
+	background-color: transparent;
+}
+
+.monaco-workbench > .glass-backing {
+	display: none;
+}
+
+.monaco-workbench.glass > .glass-backing {
+	display: block;
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-color: var(--modern-ui-shell-background, var(--vscode-modernUI-shellBackground, var(--vscode-titleBar-activeBackground, var(--vscode-editor-background))));
+	/* the clip path with the side bar hole is written inline by the layout service */
+}
+
+/*
+ * The side bar paints nothing of its own: the tint belongs to the native layer. Its views,
+ * lists, trees, titles and section headers read the side bar colors through these variables,
+ * so redefining them for the subtree keeps every descendant transparent; sticky scroll headers
+ * keep the tint as a translucent backing so they stay readable over scrolled rows. The second
+ * selector outranks the floating-panels card rules of the same strength instead of relying on
+ * stylesheet order; the compact density paints its card strokes as background gradients.
+ */
+.monaco-workbench.glass .part.sidebar,
+.monaco-workbench.glass.floating-panels .part.sidebar {
+	--vscode-sideBar-background: transparent;
+	--vscode-sideBarTitle-background: transparent;
+	--vscode-sideBarSectionHeader-background: transparent;
+	--vscode-sideBarStickyScroll-background: var(--glass-sidebar-tint, transparent);
+	background-color: transparent !important;
+	background-image: none !important;
+}
+
+/* Flush with the window edge and its neighbours, square on every corner (the mockup's column). */
+.monaco-workbench.glass.floating-panels .part.sidebar {
+	margin: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+}

@@ -158,6 +158,7 @@ import './contrib/encryption/electron-browser/encryption.contribution.js';
 
 // Modern UI
 import './contrib/modernUI/electron-browser/frostedGlass.contribution.js';
+import './contrib/glass/electron-browser/glass.contribution.js';
 
 // Policy Export
 import './contrib/policyExport/electron-browser/policyExport.contribution.js';

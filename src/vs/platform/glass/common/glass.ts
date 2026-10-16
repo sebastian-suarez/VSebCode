@@ -51,11 +51,12 @@ export function glassAppearanceOfBaseTheme(baseTheme: string | undefined): Glass
 }
 
 /**
- * Returns the tint the glass layer gets for a side bar color, as `#RRGGBBAA`, or `undefined`
- * when the color cannot be parsed.
+ * Returns the tint the glass layer gets for a side bar color (a `Color` or a CSS color string
+ * such as `#RRGGBB` or `rgba(...)`), as `#RRGGBBAA`, or `undefined` when the color cannot be
+ * parsed.
  */
-export function glassTintColor(sideBarBackground: string): string | undefined {
-	const color = Color.Format.CSS.parseHex(sideBarBackground);
+export function glassTintColor(sideBarBackground: string | Color): string | undefined {
+	const color = typeof sideBarBackground === 'string' ? Color.Format.CSS.parse(sideBarBackground) : sideBarBackground;
 	if (!color) {
 		return undefined;
 	}

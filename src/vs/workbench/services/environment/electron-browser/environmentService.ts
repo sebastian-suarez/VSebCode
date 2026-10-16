@@ -35,6 +35,8 @@ export interface INativeWorkbenchEnvironmentService extends IBrowserWorkbenchEnv
 		isInitialStartup?: boolean;
 		isCodeCaching?: boolean;
 		perfMarks: PerformanceMark[];
+		/** Whether the window has a native glass layer behind its web contents (`window.glass`). */
+		glass?: boolean;
 	};
 
 	// --- Main
@@ -88,7 +90,8 @@ export class NativeWorkbenchEnvironmentService extends AbstractNativeEnvironment
 			accessibilitySupport: this.configuration.accessibilitySupport,
 			perfMarks: this.configuration.perfMarks,
 			isInitialStartup: this.configuration.isInitialStartup,
-			isCodeCaching: typeof this.configuration.codeCachePath === 'string'
+			isCodeCaching: typeof this.configuration.codeCachePath === 'string',
+			glass: this.configuration.glass
 		};
 	}
 

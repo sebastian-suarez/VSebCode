@@ -6,7 +6,7 @@
 import assert from 'assert';
 import { mainWindow } from '../../../../../base/browser/window.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
-import { COMPACT_FLOATING_PANEL_MARGIN, COMPACT_FLOATING_PANEL_OUTER_MARGIN, FLOATING_PANEL_INNER_MARGIN, FLOATING_PANEL_MARGIN, getFloatingEditorVerticalMargins, getFloatingOuterEdgeOwners, getFloatingPaneCompositeHorizontalMargins, getFloatingPaneCompositeVerticalMargins, getFloatingPanelMargin, getFloatingPanelOuterMargin, getFloatingSidebarSiblingToEditorStatus, isFloatingTopEdgeExposed, type PanelAlignment, Parts, Position } from '../../browser/layoutService.js';
+import { applyGlassSideBarHole, clearGlassSideBarHole, COMPACT_FLOATING_PANEL_MARGIN, COMPACT_FLOATING_PANEL_OUTER_MARGIN, FLOATING_PANEL_INNER_MARGIN, FLOATING_PANEL_MARGIN, getFloatingEditorVerticalMargins, getFloatingOuterEdgeOwners, getFloatingPaneCompositeHorizontalMargins, getFloatingPaneCompositeVerticalMargins, getFloatingPanelMargin, getFloatingPanelOuterMargin, getFloatingSidebarSiblingToEditorStatus, isFloatingTopEdgeExposed, type PanelAlignment, Parts, Position } from '../../browser/layoutService.js';
 import { TestLayoutService } from '../../../../test/browser/workbenchTestServices.js';
 
 suite('LayoutService - isFloatingTopEdgeExposed', () => {
@@ -457,6 +457,45 @@ suite('LayoutService - getFloatingEditorVerticalMargins', () => {
 		}, {
 			betweenTitleAndStatusBars: { top: 0, bottom: 0 },
 			atWindowEdges: { top: 0, bottom: 0 },
+		});
+	});
+});
+
+suite('LayoutService - glass side bar', () => {
+
+	ensureNoDisposablesAreLeakedInTestSuite();
+
+	class GlassLayoutService extends TestLayoutService {
+		// No activity bar: the opaque side bar then keeps the window-edge perimeter on its left.
+		readonly visibleParts = new Set([Parts.TITLEBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART, Parts.STATUSBAR_PART]);
+		override isFloatingPanelsEnabled(): boolean { return true; }
+		override isVisible(part: Parts): boolean { return this.visibleParts.has(part); }
+	}
+
+	test('the glass side bar reserves no floating insets while the opaque one keeps them', () => {
+		const service = new GlassLayoutService();
+		const insets = () => ({ horizontal: getFloatingPaneCompositeHorizontalMargins(service, Parts.SIDEBAR_PART), vertical: getFloatingPaneCompositeVerticalMargins(service, Parts.SIDEBAR_PART, mainWindow) });
+		const opaque = insets();
+		service.setGlassSideBar(true);
+		const glass = insets();
+		assert.deepStrictEqual({ opaqueHorizontal: opaque.horizontal, glass, secondarySideBar: getFloatingPaneCompositeHorizontalMargins(service, Parts.AUXILIARYBAR_PART) }, {
+			opaqueHorizontal: { left: 4, right: FLOATING_PANEL_INNER_MARGIN },
+			glass: { horizontal: { left: 0, right: 0 }, vertical: { top: 0, bottom: 0 } },
+			secondarySideBar: { left: 4, right: 4 }
+		});
+	});
+
+	test('the backing hole follows the reported bounds, collapses without them and can be cleared', () => {
+		const backing = mainWindow.document.createElement('div');
+		applyGlassSideBarHole(backing, { left: 48, top: 35, width: 170, height: 859 });
+		const reported = backing.style.clipPath;
+		applyGlassSideBarHole(backing, undefined);
+		const collapsed = backing.style.clipPath;
+		clearGlassSideBarHole(backing);
+		assert.deepStrictEqual({ reported, collapsed, cleared: backing.style.clipPath }, {
+			reported: 'polygon(evenodd, 0px 0px, 100% 0px, 100% 100%, 0px 100%, 0px 0px, 48px 35px, 48px 894px, 218px 894px, 218px 35px, 48px 35px)',
+			collapsed: 'polygon(evenodd, 0px 0px, 100% 0px, 100% 100%, 0px 100%, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px)',
+			cleared: ''
 		});
 	});
 });

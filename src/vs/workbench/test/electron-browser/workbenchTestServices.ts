@@ -70,6 +70,7 @@ export class TestNativeHostService implements INativeHostService {
 
 	readonly onDidOpenMainWindow: Event<number> = Event.None;
 	readonly onDidMaximizeWindow: Event<number> = Event.None;
+	readonly onDidDetachGlass: Event<number> = Event.None;
 	readonly onDidUnmaximizeWindow: Event<number> = Event.None;
 	readonly onDidFocusMainWindow: Event<number> = Event.None;
 	readonly onDidBlurMainWindow: Event<number> = Event.None;

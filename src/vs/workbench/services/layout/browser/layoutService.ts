@@ -279,8 +279,8 @@ export function getFloatingOuterGutterEdges(layoutService: IWorkbenchLayoutServi
  * margins in `floatingPanels.css`.
  */
 export function getFloatingPaneCompositeHorizontalMargins(layoutService: IWorkbenchLayoutService, partId: Parts): { left: number; right: number } {
-	if (!layoutService.isFloatingPanelsEnabled()) {
-		return { left: 0, right: 0 };
+	if (!layoutService.isFloatingPanelsEnabled() || (partId === Parts.SIDEBAR_PART && layoutService.isGlassSideBar())) {
+		return { left: 0, right: 0 }; // a glass side bar is flush with the window and its neighbours
 	}
 
 	const outerGutter = getFloatingOuterGutterEdges(layoutService, partId);
@@ -337,8 +337,8 @@ export function getFloatingPaneCompositeVerticalMargins(
 	partId: Parts,
 	targetWindow: Window
 ): { top: number; bottom: number } {
-	if (!layoutService.isFloatingPanelsEnabled()) {
-		return { top: 0, bottom: 0 };
+	if (!layoutService.isFloatingPanelsEnabled() || (partId === Parts.SIDEBAR_PART && layoutService.isGlassSideBar())) {
+		return { top: 0, bottom: 0 }; // a glass side bar is flush with the window and its neighbours
 	}
 
 	const outerEdges = getFloatingPaneCompositeVerticalOuterEdges(layoutService, partId, targetWindow);
@@ -572,6 +572,26 @@ export interface IWorkbenchLayoutService extends ILayoutService {
 	 * Returns whether Modern UI uses its compact density.
 	 */
 	isModernUICompact(): boolean;
+
+	/**
+	 * Whether the primary side bar is rendered as glass over the desktop: it sits flush with
+	 * the window edge without the floating-card gutter, border and corners, and the main
+	 * container carries the `glass` class. Toggled by the glass contribution of desktop windows
+	 * that were created with a native glass layer (`window.glass`).
+	 */
+	isGlassSideBar(): boolean;
+
+	/**
+	 * Turns the glass side bar on or off and relayouts the main container when it changes.
+	 */
+	setGlassSideBar(glass: boolean): void;
+
+	/**
+	 * Reports the primary side bar's rectangle within the main container (the side bar part
+	 * calls it from its layout), or `undefined` while the side bar is hidden; the glass backing
+	 * cuts its hole there.
+	 */
+	setGlassSideBarBounds(bounds: IGlassSideBarBounds | undefined): void;
 
 	/**
 	 * Focuses the part in the target window. If the part is not visible this is a noop.
@@ -815,4 +835,28 @@ function isTitleBarEmpty(configurationService: IConfigurationService): boolean {
 	}
 
 	return true;
+}
+
+/** The primary side bar's rectangle within the main container, as the grid lays the part out. */
+export interface IGlassSideBarBounds {
+	readonly left: number;
+	readonly top: number;
+	readonly width: number;
+	readonly height: number;
+}
+
+/**
+ * Cuts the hole of the glass backing (the element the layout service keeps below the parts of
+ * a glass window): the side bar's rectangle, or a collapsed hole when the side bar is hidden.
+ * The clip path is written inline on that element, so a sash drag never invalidates the style
+ * of the workbench subtree.
+ */
+export function applyGlassSideBarHole(backing: HTMLElement, bounds: IGlassSideBarBounds | undefined): void {
+	const [left, top, right, bottom] = (bounds ? [bounds.left, bounds.top, bounds.left + bounds.width, bounds.top + bounds.height] : [0, 0, 0, 0]).map(value => `${Math.max(0, value)}px`);
+	backing.style.clipPath = `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${left} ${top}, ${left} ${bottom}, ${right} ${bottom}, ${right} ${top}, ${left} ${top})`;
+}
+
+/** Removes the hole `applyGlassSideBarHole` cut. */
+export function clearGlassSideBarHole(backing: HTMLElement): void {
+	backing.style.removeProperty('clip-path');
 }

@@ -196,12 +196,25 @@ export class SidebarPart extends AbstractPaneCompositePart {
 		this.applySidebarFontFamily(container);
 	}
 
+	protected override getFloatingBorderWidth(): number {
+		return this.layoutService.isGlassSideBar() ? 0 : super.getFloatingBorderWidth(); // the glass side bar draws no card border
+	}
+
 	override layout(width: number, height: number, top: number, left: number): void {
-		if (!this.layoutService.isVisible(Parts.SIDEBAR_PART)) {
+		const visible = this.layoutService.isVisible(Parts.SIDEBAR_PART);
+		this.layoutService.setGlassSideBarBounds(visible ? { left, top, width, height } : undefined); // the glass backing cuts its hole here
+		if (!visible) {
 			return;
 		}
 
 		super.layout(width, height, top, left);
+	}
+
+	override setVisible(visible: boolean): void {
+		super.setVisible(visible);
+		if (!visible) {
+			this.layoutService.setGlassSideBarBounds(undefined);
+		}
 	}
 
 	override setBoundarySashes(sashes: IBoundarySashes): void {

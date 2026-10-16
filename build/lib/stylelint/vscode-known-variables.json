@@ -906,6 +906,7 @@
 		"--vscode-gitDecoration-modifiedResourceForeground"
 	],
 	"others": [
+		"--glass-sidebar-tint",
 		"--monaco-ui-font-size",
 		"--monaco-font",
 		"--vscode-workbench-activitybar-font-family",

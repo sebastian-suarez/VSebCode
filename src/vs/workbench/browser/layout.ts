@@ -13,7 +13,7 @@ import { isWindows, isLinux, isMacintosh, isWeb, isIOS } from '../../base/common
 import { EditorInputCapabilities, isResourceEditorInput, IUntypedEditorInput, pathsToEditors } from '../common/editor.js';
 import { SidebarPart } from './parts/sidebar/sidebarPart.js';
 import { PanelPart } from './parts/panel/panelPart.js';
-import { Position, Parts, PartOpensMaximizedOptions, IWorkbenchLayoutService, positionFromString, positionToString, partOpensMaximizedFromString, PanelAlignment, ActivityBarPosition, LayoutSettings, MULTI_WINDOW_PARTS, SINGLE_WINDOW_PARTS, ZenModeSettings, EditorTabsMode, EditorActionsLocation, shouldShowCustomTitleBar, isHorizontal, isMultiWindowPart, IPartVisibilityChangeEvent, isFloatingTopEdgeExposed, ModernUIDensity } from '../services/layout/browser/layoutService.js';
+import { applyGlassSideBarHole, clearGlassSideBarHole, IGlassSideBarBounds, Position, Parts, PartOpensMaximizedOptions, IWorkbenchLayoutService, positionFromString, positionToString, partOpensMaximizedFromString, PanelAlignment, ActivityBarPosition, LayoutSettings, MULTI_WINDOW_PARTS, SINGLE_WINDOW_PARTS, ZenModeSettings, EditorTabsMode, EditorActionsLocation, shouldShowCustomTitleBar, isHorizontal, isMultiWindowPart, IPartVisibilityChangeEvent, isFloatingTopEdgeExposed, ModernUIDensity } from '../services/layout/browser/layoutService.js';
 import { isTemporaryWorkspace, IWorkspaceContextService, WorkbenchState } from '../../platform/workspace/common/workspace.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../platform/storage/common/storage.js';
 import { IConfigurationChangeEvent, IConfigurationService, isConfigured } from '../../platform/configuration/common/configuration.js';
@@ -100,6 +100,8 @@ enum LayoutClasses {
 	WINDOW_BORDER = 'border',
 	NO_SHADOWS = 'no-shadows',
 	FLOATING_PANELS = 'floating-panels',
+	// The primary side bar is glass over the desktop (see `setGlassSideBar`).
+	GLASS = 'glass',
 	// Presentation class for the Modern UI Update experiment, owned/toggled at
 	// runtime by `ModernUIContribution`. It is *also* applied here at render
 	// time (see `getLayoutClasses`) to avoid a flash of unstyled workbench chrome.
@@ -616,6 +618,52 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 
 	isModernUICompact(): boolean {
 		return this.isFloatingPanelsEnabled() && this.configurationService.getValue<ModernUIDensity>(LayoutSettings.MODERN_UI_DENSITY) === ModernUIDensity.Compact;
+	}
+
+	private glassSideBar = false;
+	private glassSideBarBounds: IGlassSideBarBounds | undefined;
+	private glassBacking: HTMLElement | undefined;
+
+	isGlassSideBar(): boolean {
+		return this.glassSideBar;
+	}
+
+	setGlassSideBar(glass: boolean): void {
+		if (this.glassSideBar === glass) {
+			return;
+		}
+
+		this.glassSideBar = glass;
+		this.mainContainer.classList.toggle(LayoutClasses.GLASS, glass);
+		if (glass) {
+			if (!this.glassBacking) {
+				// The opaque backing below the parts (see `glass.css`); its hole follows the side bar
+				this.glassBacking = this.mainContainer.ownerDocument.createElement('div');
+				this.glassBacking.className = 'glass-backing';
+				this.mainContainer.prepend(this.glassBacking);
+			}
+			applyGlassSideBarHole(this.glassBacking, this.glassSideBarBounds);
+		} else if (this.glassBacking) {
+			clearGlassSideBarHole(this.glassBacking);
+		}
+
+		// The side bar's floating insets depend on the state (the first layout reads it itself).
+		// Its grid bounds do not change with it and the grid skips a leaf whose bounds are
+		// unchanged, so the part is laid out again explicitly with its current bounds.
+		if (this.initialized) {
+			const sideBar = this.getPart(Parts.SIDEBAR_PART);
+			const size = this.workbenchGrid.getViewSize(this.sideBarPartView); // the grid's size, not the part's inset content size
+			if (sideBar.contentPosition) {
+				sideBar.layout(size.width, size.height, sideBar.contentPosition.top, sideBar.contentPosition.left);
+			}
+		}
+	}
+
+	setGlassSideBarBounds(bounds: IGlassSideBarBounds | undefined): void {
+		this.glassSideBarBounds = bounds;
+		if (this.glassSideBar && this.glassBacking) {
+			applyGlassSideBarHole(this.glassBacking, bounds);
+		}
 	}
 
 	private updateFloatingPanels(): void {
