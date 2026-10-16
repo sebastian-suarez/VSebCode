@@ -33,6 +33,8 @@ import { IStorageMainService } from '../../storage/electron-main/storageMainServ
 import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { ThemeIcon } from '../../../base/common/themables.js';
 import { IThemeMainService } from '../../theme/electron-main/themeMainService.js';
+import { IGlassMainService } from '../../glass/electron-main/glassMainService.js';
+import { glassAppearanceOfBaseTheme, glassTintColor } from '../../glass/common/glass.js';
 import { getMenuBarVisibility, IFolderToOpen, INativeWindowConfiguration, IWindowSettings, IWorkspaceToOpen, MenuBarVisibility, hasNativeTitlebar, useNativeFullScreen, DEFAULT_CUSTOM_TITLEBAR_HEIGHT, TitlebarStyle, MenuSettings, getMacOSWindowControlsPosition } from '../../window/common/window.js';
 import { defaultBrowserWindowOptions, getAllWindowsExcludingOffscreen, IWindowsMainService, OpenContext, WindowStateValidator } from './windows.js';
 import { ISingleFolderWorkspaceIdentifier, IWorkspaceIdentifier, isSingleFolderWorkspaceIdentifier, isWorkspaceIdentifier, toWorkspaceIdentifier } from '../../workspace/common/workspace.js';
@@ -717,6 +719,9 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 
 	get isExtensionDevelopmentTestFromCli(): boolean { return this.isExtensionDevelopmentHost && this.isExtensionTestHost && !this._config?.debugId; }
 
+	get glass(): boolean { return this.glassMainService.isGlassWindow(this._win); }
+	get glassHidden(): boolean { return this.glassMainService.isGlassHidden(this._win); }
+
 	//#endregion
 
 	private readonly windowState: IWindowState;
@@ -760,7 +765,8 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 		@IProtocolMainService protocolMainService: IProtocolMainService,
 		@IWindowsMainService private readonly windowsMainService: IWindowsMainService,
 		@IStateService stateService: IStateService,
-		@IInstantiationService instantiationService: IInstantiationService
+		@IInstantiationService instantiationService: IInstantiationService,
+		@IGlassMainService private readonly glassMainService: IGlassMainService
 	) {
 		super(configurationService, stateService, environmentMainService, logService);
 
@@ -782,10 +788,24 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 			const options = instantiationService.invokeFunction(defaultBrowserWindowOptions, this.windowState, undefined, webPreferences);
 			this._iconPath = undefined;
 
+			// Glass: the window is created transparent so the native layer attached below
+			// shows through the side bar (see `IGlassMainService`)
+			const useGlass = this.glassMainService.shouldUseGlass(this.configurationService.getValue<IWindowSettings | undefined>('window'), hasNativeTitlebar(this.configurationService), this.configurationService.getValue<string | undefined>('workbench.reduceTransparency'));
+			if (useGlass) {
+				options.transparent = true; // the background color stays: the window is opaque until its first document loaded (`showGlass`)
+			}
+
 			// Create the browser window
 			mark('code/willCreateCodeBrowserWindow');
 			this._win = new electron.BrowserWindow(options);
 			mark('code/didCreateCodeBrowserWindow');
+
+			if (useGlass) {
+				const splash = this.themeMainService.getWindowSplash(undefined);
+				const sideBarBackground = splash?.colorInfo.sideBarBackground;
+				const tintColor = sideBarBackground ? glassTintColor(sideBarBackground) : undefined;
+				this.glassMainService.attach(this._win, { style: 'regular', tintColor, appearance: glassAppearanceOfBaseTheme(splash?.baseTheme) }, this.themeMainService.getBackgroundColor()); // a failed attach leaves the opaque window as it is
+			}
 
 			this._id = this._win.id;
 			this.setWin(this._win, options);
@@ -895,6 +915,13 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 				this._config = this.pendingLoadConfig;
 
 				this.pendingLoadConfig = undefined;
+			}
+		}));
+
+		// A glass window paints its content opaque until the renderer has painted its splash
+		this._register(Event.fromNodeEventEmitter<electron.IpcMainEvent>(this._win.webContents.ipc, 'vscode:revealGlass')(event => {
+			if (event.senderFrame === this._win.webContents.mainFrame) {
+				this.glassMainService.revealGlass(this._win);
 			}
 		}));
 
@@ -1274,6 +1301,7 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 		} else {
 			windowUrl = FileAccess.asBrowserUri(`vs/code/electron-browser/workbench/workbench${this.environmentMainService.isBuilt ? '' : '-dev'}.html`).toString(true);
 		}
+		this.glassMainService.coverGlass(this._win); // opaque again until the new document's splash is painted
 		this._win.loadURL(windowUrl);
 
 		// Remember that we did load
@@ -1357,6 +1385,8 @@ export class CodeWindow extends BaseWindow implements ICodeWindow {
 
 		// Copy our current config for reuse
 		const configuration = Object.assign({}, this._config);
+		configuration.glass = this.glass; // the layer may have gone away or been hidden since the window was created
+		configuration.glassHidden = this.glassHidden;
 
 		// Validate workspace
 		configuration.workspace = await this.validateWorkspaceBeforeReload(configuration);

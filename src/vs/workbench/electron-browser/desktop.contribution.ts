@@ -247,6 +247,13 @@ import product from '../../platform/product/common/product.js';
 				'scope': ConfigurationScope.APPLICATION,
 				'description': localize('titleBarStyle', "Adjust the appearance of the window title bar to be native by the OS or custom. Changes require a full restart to apply."),
 			},
+			'window.glass': {
+				'type': 'boolean',
+				'default': true,
+				'included': isMacintosh,
+				'scope': ConfigurationScope.APPLICATION,
+				'markdownDescription': localize('window.glass', "Renders the primary side bar as translucent glass over the desktop on macOS 26 and newer. Needs the custom title bar and no native tabs, yields to the operating system's reduced transparency setting and to {0}, and requires a full restart to apply.", '`#workbench.reduceTransparency#`'),
+			},
 			'window.controlsStyle': {
 				'type': 'string',
 				'enum': ['native', 'custom', 'hidden'],

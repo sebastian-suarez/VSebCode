@@ -7,6 +7,7 @@
 import { VSBuffer } from '../../../base/common/buffer.js';
 import { Event } from '../../../base/common/event.js';
 import { URI } from '../../../base/common/uri.js';
+import { IGlassOptions } from '../../glass/common/glass.js';
 import { MessageBoxOptions, MessageBoxReturnValue, OpenDevToolsOptions, OpenDialogOptions, OpenDialogReturnValue, SaveDialogOptions, SaveDialogReturnValue } from '../../../base/parts/sandbox/common/electronTypes.js';
 import { ISerializableCommandAction } from '../../action/common/action.js';
 import { INativeOpenDialogOptions } from '../../dialogs/common/dialogs.js';
@@ -235,6 +236,9 @@ export interface ICommonNativeHostService {
 	readonly onDidOpenMainWindow: Event<number>;
 
 	readonly onDidMaximizeWindow: Event<number>;
+
+	/** Fires with the window id when a window's native glass layer went away (see `window.glass`). */
+	readonly onDidDetachGlass: Event<number>;
 	readonly onDidUnmaximizeWindow: Event<number>;
 
 	readonly onDidFocusMainWindow: Event<number>;
@@ -302,6 +306,12 @@ export interface ICommonNativeHostService {
 	updateWindowControls(options: INativeHostOptions & { height?: number; horizontalInset?: number; backgroundColor?: string; foregroundColor?: string; dimmed?: boolean }): Promise<void>;
 
 	updateWindowAccentColor(color: 'default' | 'off' | string, inactiveColor: string | undefined): Promise<void>;
+
+	/**
+	 * Changes the native glass layer of the window (macOS, see `window.glass`). Resolves to
+	 * `false` when the window has no glass layer.
+	 */
+	updateGlass(options: INativeHostOptions & IGlassOptions): Promise<boolean>;
 
 	setMinimumSize(width: number | undefined, height: number | undefined): Promise<void>;
 

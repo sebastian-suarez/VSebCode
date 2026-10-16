@@ -212,6 +212,7 @@ export interface IWindowSettings {
 	readonly clickThroughInactive: boolean;
 	readonly newWindowProfile: string;
 	readonly density: IDensitySettings;
+	readonly glass: boolean;
 	readonly border: 'off' | 'default' | 'system' | string /* color in RGB or other formats */;
 }
 
@@ -451,6 +452,18 @@ export interface INativeWindowConfiguration extends IWindowConfiguration, Native
 	tmpDir: string;
 	userDataDir: string;
 	userStateDir: string;
+
+	/**
+	 * Whether the window was created transparent with a native glass layer behind its web
+	 * contents (macOS only). Set by the main process after a successful attach.
+	 */
+	glass?: boolean;
+
+	/**
+	 * Whether that layer is hidden because the renderer paints the side bar opaque (a high
+	 * contrast theme or reduced transparency); the splash paints opaque then.
+	 */
+	glassHidden?: boolean;
 
 	partsSplash?: IPartsSplash;
 

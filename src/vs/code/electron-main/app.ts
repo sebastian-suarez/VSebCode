@@ -84,6 +84,7 @@ import { IWebviewManagerService } from '../../platform/webview/common/webviewMan
 import { WebviewMainService } from '../../platform/webview/electron-main/webviewMainService.js';
 import { isFolderToOpen, isWorkspaceToOpen, IWindowOpenable } from '../../platform/window/common/window.js';
 import { getAllWindowsExcludingOffscreen, IWindowsMainService, OpenContext } from '../../platform/windows/electron-main/windows.js';
+import { IGlassMainService } from '../../platform/glass/electron-main/glassMainService.js';
 import { ICodeWindow } from '../../platform/window/electron-main/window.js';
 import { WindowsMainService } from '../../platform/windows/electron-main/windowsMainService.js';
 import { ActiveWindowManager } from '../../platform/windows/node/windowTracker.js';
@@ -723,6 +724,9 @@ export class CodeApplication extends Disposable {
 
 		// Open Windows
 		mark('code/willOpenFirstWindow');
+		// Load the native glass layer before any window is created (its windows are created transparent)
+		await appInstantiationService.invokeFunction(accessor => accessor.get(IGlassMainService).initialize());
+
 		const windows = await appInstantiationService.invokeFunction(accessor => this.openFirstWindow(accessor, initialProtocolUrls));
 		mark('code/didOpenFirstWindow');
 

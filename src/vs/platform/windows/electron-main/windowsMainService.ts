@@ -1593,6 +1593,8 @@ export class WindowsMainService extends Disposable implements IWindowsMainServic
 		// Update window identifier and session now
 		// that we have the window object in hand.
 		configuration.windowId = window.id;
+		configuration.glass = window.glass;
+		configuration.glassHidden = window.glassHidden;
 
 		// If the window was already loaded, make sure to unload it
 		// first and only load the new configuration if that was

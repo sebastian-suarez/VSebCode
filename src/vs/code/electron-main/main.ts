@@ -74,6 +74,7 @@ import { SaveStrategy, StateService } from '../../platform/state/node/stateServi
 import { FileUserDataProvider } from '../../platform/userData/common/fileUserDataProvider.js';
 import { addUNCHostToAllowlist, getUNCHost } from '../../base/node/unc.js';
 import { ThemeMainService } from '../../platform/theme/electron-main/themeMainServiceImpl.js';
+import { GlassMainService, IGlassMainService } from '../../platform/glass/electron-main/glassMainService.js';
 import { LINUX_SYSTEM_POLICY_FILE_PATH } from '../../base/common/policy.js';
 
 /**
@@ -247,6 +248,9 @@ class CodeMain {
 
 		// Themes
 		services.set(IThemeMainService, new SyncDescriptor(ThemeMainService));
+
+		// Glass
+		services.set(IGlassMainService, new SyncDescriptor(GlassMainService));
 
 		// Signing
 		services.set(ISignService, new SyncDescriptor(SignService, undefined, false /* proxied to other processes */));

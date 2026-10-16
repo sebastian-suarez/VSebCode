@@ -34,6 +34,8 @@ import { IGPUProcessMainService } from '../../gpu/electron-main/gpuProcessMainSe
 import { IProductService } from '../../product/common/productService.js';
 import { IPartsSplash } from '../../theme/common/themeService.js';
 import { IThemeMainService } from '../../theme/electron-main/themeMainService.js';
+import { IGlassOptions } from '../../glass/common/glass.js';
+import { IGlassMainService } from '../../glass/electron-main/glassMainService.js';
 import { defaultWindowState, ICodeWindow } from '../../window/electron-main/window.js';
 import { IColorScheme, IOpenedAuxiliaryWindow, IOpenedMainWindow, IOpenEmptyWindowOptions, IOpenWindowOptions, IPoint, IRectangle, IWindowOpenable } from '../../window/common/window.js';
 import { defaultBrowserWindowOptions, IWindowsMainService, OpenContext } from '../../windows/electron-main/windows.js';
@@ -72,6 +74,7 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 		@ILogService private readonly logService: ILogService,
 		@IProductService private readonly productService: IProductService,
 		@IThemeMainService private readonly themeMainService: IThemeMainService,
+		@IGlassMainService private readonly glassMainService: IGlassMainService,
 		@IWorkspacesManagementMainService private readonly workspacesManagementMainService: IWorkspacesManagementMainService,
 		@IConfigurationService private readonly configurationService: IConfigurationService,
 		@IRequestService private readonly requestService: IRequestService,
@@ -81,6 +84,8 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 		@IGPUProcessMainService gpuProcessMainService: IGPUProcessMainService,
 	) {
 		super();
+
+		this.onDidDetachGlass = this.glassMainService.onDidDetach;
 
 		this.gpuCompositingState = this._register(new GPUCompositingState(gpuProcessMainService));
 
@@ -213,6 +218,8 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 
 	private readonly _onDidChangePassword = this._register(new Emitter<{ account: string; service: string }>());
 	readonly onDidChangePassword = this._onDidChangePassword.event;
+
+	readonly onDidDetachGlass: Event<number>;
 
 	readonly onDidChangeDisplay: Event<void>;
 	readonly onDidChangeGPUCompositing: Event<boolean>;
@@ -397,6 +404,23 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 	async updateWindowControls(windowId: number | undefined, options: INativeHostOptions & { height?: number; horizontalInset?: number; backgroundColor?: string; foregroundColor?: string; dimmed?: boolean }): Promise<void> {
 		const window = this.windowById(options?.targetWindowId, windowId);
 		window?.updateWindowControls(options);
+	}
+
+	async updateGlass(windowId: number | undefined, options: INativeHostOptions & IGlassOptions): Promise<boolean> {
+		const window = this.windowById(options?.targetWindowId, windowId);
+		if (!window?.win) {
+			return false;
+		}
+
+		// Only the fields the caller set reach the layer: a present but undefined field would count as a change
+		const glassOptions: Record<string, unknown> = {};
+		for (const key of ['style', 'tintColor', 'cornerRadius', 'hidden', 'appearance'] as const) {
+			if (options[key] !== undefined) {
+				glassOptions[key] = options[key];
+			}
+		}
+
+		return this.glassMainService.update(window.win, glassOptions as IGlassOptions);
 	}
 
 	async updateWindowAccentColor(windowId: number | undefined, color: 'default' | 'off' | string, inactiveColor: string | undefined): Promise<void> {

@@ -69,6 +69,12 @@ export interface ICodeWindow extends IBaseWindow {
 	readonly isExtensionDevelopmentHost: boolean;
 	readonly isExtensionTestHost: boolean;
 
+	/** Whether the window has a native glass layer behind its web contents. */
+	readonly glass: boolean;
+
+	/** Whether that layer is hidden because the renderer paints its side bar opaque. */
+	readonly glassHidden: boolean;
+
 	readonly isReady: boolean;
 	ready(): Promise<ICodeWindow>;
 	setReady(): void;

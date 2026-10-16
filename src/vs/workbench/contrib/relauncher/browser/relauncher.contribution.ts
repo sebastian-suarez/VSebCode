@@ -39,6 +39,7 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 		MenuSettings.MenuStyle,
 		'window.nativeTabs',
 		'window.nativeFullScreen',
+		'window.glass',
 		'window.clickThroughInactive',
 		'window.controlsStyle',
 		'editor.accessibilitySupport',
@@ -53,6 +54,7 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 	private readonly menuStyle = new ChangeObserver<MenuStyleConfiguration>('string');
 	private readonly nativeTabs = new ChangeObserver('boolean');
 	private readonly nativeFullScreen = new ChangeObserver('boolean');
+	private readonly glass = new ChangeObserver('boolean');
 	private readonly clickThroughInactive = new ChangeObserver('boolean');
 	private readonly controlsStyle = new ChangeObserver('string');
 	private accessibilitySupport: 'on' | 'off' | 'auto' | undefined;
@@ -103,6 +105,9 @@ export class SettingsChangeRelauncher extends Disposable implements IWorkbenchCo
 
 			// macOS: Native fullscreen
 			processChanged(isMacintosh && this.nativeFullScreen.handleChange(config.window?.nativeFullScreen));
+
+			// Glass
+			processChanged(isMacintosh && this.glass.handleChange(config.window?.glass));
 
 			// macOS: Click through (accept first mouse)
 			processChanged(isMacintosh && this.clickThroughInactive.handleChange(config.window?.clickThroughInactive));

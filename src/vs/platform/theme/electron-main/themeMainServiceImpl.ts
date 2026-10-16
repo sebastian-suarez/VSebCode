@@ -18,6 +18,7 @@ import { coalesce } from '../../../base/common/arrays.js';
 import { getAllWindowsExcludingOffscreen } from '../../windows/electron-main/windows.js';
 import { ILogService, LogLevel } from '../../log/common/log.js';
 import { IThemeMainService } from './themeMainService.js';
+import { IGlassMainService } from '../../glass/electron-main/glassMainService.js';
 
 // These default colors match our default themes
 // editor background color ("Dark Modern", etc...)
@@ -78,7 +79,8 @@ export class ThemeMainService extends Disposable implements IThemeMainService {
 	constructor(
 		@IStateService private stateService: IStateService,
 		@IConfigurationService private configurationService: IConfigurationService,
-		@ILogService private logService: ILogService
+		@ILogService private logService: ILogService,
+		@IGlassMainService private readonly glassMainService: IGlassMainService
 	) {
 		super();
 
@@ -329,7 +331,14 @@ export class ThemeMainService extends Disposable implements IThemeMainService {
 	private updateBackgroundColor(windowId: number, splash: IPartsSplash): void {
 		for (const window of getAllWindowsExcludingOffscreen()) {
 			if (window.id === windowId) {
-				window.setBackgroundColor(splash.colorInfo.background);
+				// A glass window keeps its clear background: the renderer paints every opaque
+				// surface itself and the native layer shows through the side bar. The color
+				// becomes the fallback the window paints while it loads or once the layer is gone.
+				if (this.glassMainService.isGlassWindow(window)) {
+					this.glassMainService.setFallbackBackgroundColor(window, splash.colorInfo.background);
+				} else {
+					window.setBackgroundColor(splash.colorInfo.background);
+				}
 				break;
 			}
 		}
