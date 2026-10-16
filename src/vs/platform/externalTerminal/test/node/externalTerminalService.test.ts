@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -212,9 +213,12 @@ suite('ExternalTerminalService', () => {
 		const testCwd = 'path/to/workspace';
 		const mockSpawner: any = {
 			spawn: (command: any, args: any, opts: any) => {
-				strictEqual(command, 'ghostty');
-				deepStrictEqual(args, [`--working-directory=${testCwd}`]);
+				// Linux terminals run through a shell: the configured executable is shell syntax
+				// and the generated arguments are quoted into the command line.
+				strictEqual(command, `ghostty '--working-directory=${testCwd}'`);
+				deepStrictEqual(args, []);
 				strictEqual(opts.cwd, testCwd);
+				strictEqual(opts.shell, true);
 				done();
 				return {
 					on: (evt: any) => evt

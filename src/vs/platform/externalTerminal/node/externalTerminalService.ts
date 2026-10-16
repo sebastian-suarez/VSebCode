@@ -242,8 +242,7 @@ export class LinuxExternalTerminalService extends ExternalTerminalService implem
 
 		return new Promise<number | undefined>((resolve, reject) => {
 			execPromise.then(exec => {
-				const basename = path.basename(exec).toLowerCase();
-				if (basename === 'ghostty') {
+				if (/(?:^|[\/\s'"])ghostty(?:['"\s]|$)/i.test(exec)) {
 					const ghosttyArgs: string[] = [];
 					if (dir) {
 						ghosttyArgs.push(`--working-directory=${dir}`);
@@ -267,8 +266,8 @@ export class LinuxExternalTerminalService extends ExternalTerminalService implem
 				termArgs.push('bash');
 				termArgs.push('-c');
 
-				const bashCommand = `${quote(args)}; echo; read -p "${LinuxExternalTerminalService.WAIT_MESSAGE}" -n1;`;
-				termArgs.push(`''${bashCommand}''`);	// wrapping argument in two sets of ' because node is so "friendly" that it removes one set...
+				const bashCommand = `${args.map(quotePosixArgument).join(' ')}; echo; read -p ${quotePosixArgument(LinuxExternalTerminalService.WAIT_MESSAGE)} -n1;`;
+				termArgs.push(bashCommand);
 
 
 				LinuxExternalTerminalService.spawnTerminalWithEnv(exec, termArgs, dir, envVars, resolve, reject);
@@ -289,7 +288,7 @@ export class LinuxExternalTerminalService extends ExternalTerminalService implem
 		// delete environment variables that have a null value
 		Object.keys(env).filter(v => env[v] === null).forEach(key => delete env[key]);
 
-		const cmd = cp.spawn(exec, args, { cwd: dir, env });
+		const cmd = cp.spawn([exec, ...args.map(quotePosixArgument)].join(' '), [], { cwd: dir, env, shell: true });
 		setupSpawnErrorHandling(cmd, resolve, reject, exec);
 	}
 
@@ -327,14 +326,17 @@ export class LinuxExternalTerminalService extends ExternalTerminalService implem
 		return new Promise<void>((c, e) => {
 			execPromise.then(exec => {
 				const env = getSanitizedEnvironment(process);
-				const basename = path.basename(exec).toLowerCase();
-				const args = basename === 'ghostty' && cwd ? [`--working-directory=${cwd}`] : [];
-				const child = spawner.spawn(exec, args, { cwd, env });
-				child.on('error', e);
-				child.on('exit', () => c());
-			});
+				const args = /(?:^|[\/\s'"])ghostty(?:['"\s]|$)/i.test(exec) && cwd ? [`--working-directory=${cwd}`] : [];
+				const child = spawner.spawn([exec, ...args.map(quotePosixArgument)].join(' '), [], { cwd, env, shell: true });
+				setupSpawnErrorHandling(child, () => c(), e, exec);
+			}, e);
 		});
 	}
+}
+
+// The configured executable is shell syntax; generated arguments are always literal values.
+function quotePosixArgument(value: string): string {
+	return `'${value.replace(/'/g, `'\\''`)}'`;
 }
 
 function getSanitizedEnvironment(process: NodeJS.Process) {
@@ -382,20 +384,4 @@ function setupSpawnErrorHandling(
 			}
 		}
 	});
-}
-
-/**
- * Quote args if necessary and combine into a space separated string.
- */
-function quote(args: string[]): string {
-	let r = '';
-	for (const a of args) {
-		if (a.indexOf(' ') >= 0) {
-			r += '"' + a + '"';
-		} else {
-			r += a;
-		}
-		r += ' ';
-	}
-	return r;
 }
