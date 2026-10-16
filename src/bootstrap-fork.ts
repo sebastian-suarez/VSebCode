@@ -4,6 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+import { loadUserProduct } from './bootstrap-meta.js';
 import * as performance from './vs/base/common/performance.js';
 import { removeGlobalNodeJsModuleLookupPaths } from './bootstrap-node.js';
 import { bootstrapESM } from './bootstrap-esm.js';
@@ -227,6 +228,9 @@ if (process.env['VSCODE_PARENT_PID']) {
 }
 
 // Bootstrap ESM
+if (process.env['VSCODE_USER_DATA_DIR']) {
+	loadUserProduct(process.env['VSCODE_USER_DATA_DIR']);
+}
 await bootstrapESM();
 
 // Load ESM entry point

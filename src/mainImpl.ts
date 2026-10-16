@@ -12,7 +12,7 @@ import { configurePortable } from './bootstrap-node.js';
 import { bootstrapESM } from './bootstrap-esm.js';
 import { app, protocol, crashReporter, Menu, contentTracing } from 'electron';
 import minimist from 'minimist';
-import { product } from './bootstrap-meta.js';
+import { product, loadUserProduct } from './bootstrap-meta.js';
 import { parse } from './vs/base/common/jsonc.js';
 import { getUserDataPath } from './vs/platform/environment/node/userDataPath.js';
 import * as perf from './vs/base/common/performance.js';
@@ -65,6 +65,7 @@ if (process.platform === 'win32') {
 		addUNCHostToAllowlist(userDataUNCHost); // enables to use UNC paths in userDataPath
 	}
 }
+loadUserProduct(userDataPath);
 app.setPath('userData', userDataPath);
 perf.mark('code/didGetUserDataPath');
 

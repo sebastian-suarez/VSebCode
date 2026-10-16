@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { env } from '../../../base/common/process.js';
+import { applyGalleryOverrides } from '../../../base/common/productOverrides.js';
 import { IProductConfiguration } from '../../../base/common/product.js';
 import { ISandboxConfiguration } from '../../../base/parts/sandbox/common/sandboxTypes.js';
 
@@ -74,5 +75,7 @@ else {
 		});
 	}
 }
+
+applyGalleryOverrides(product, env);
 
 export default product;

@@ -229,7 +229,8 @@ export class NativeLocalProcessExtensionHost extends Disposable implements IExte
 
 		const env = objects.mixin(processEnv, {
 			VSCODE_ESM_ENTRYPOINT: 'vs/workbench/api/node/extensionHostProcess',
-			VSCODE_HANDLES_UNCAUGHT_ERRORS: true
+			VSCODE_HANDLES_UNCAUGHT_ERRORS: true,
+			VSCODE_USER_DATA_DIR: this._environmentService.userDataPath
 		});
 
 		if (this._environmentService.debugExtensionHost.env) {

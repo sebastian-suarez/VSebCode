@@ -18,6 +18,14 @@ import { NativeParsedArgs } from '../common/argv.js';
 import { resolve, isAbsolute, join } from 'path';
 
 const cwd = process.env['VSCODE_CWD'] || process.cwd();
+// Bootstrap and utility entry points can contain separate bundles of this module.
+const userDataPathKey = Symbol.for('vsebcode.userDataPath');
+const processState = globalThis as typeof globalThis & { [userDataPathKey]?: string };
+
+/** Keeps the selected directory stable after loading its product overrides. */
+export function setUserDataPath(path: string): void {
+	processState[userDataPathKey] = path;
+}
 
 /**
  * Returns the user data path to use with some rules:
@@ -43,6 +51,9 @@ export function getUserDataPath(cliArgs: NativeParsedArgs, productName: string):
 }
 
 function doGetUserDataPath(cliArgs: NativeParsedArgs, productName: string): string {
+	if (processState[userDataPathKey]) {
+		return processState[userDataPathKey];
+	}
 
 	// 0. Running out of sources has a fixed productName
 	if (process.env['VSCODE_DEV']) {

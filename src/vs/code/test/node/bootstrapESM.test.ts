@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -79,11 +80,15 @@ const { createPackage, uncache } = nodeRequire('asar') as {
 		const packagedAppRoot = join(fixtureDirectory, 'resources', 'app');
 		const packagedOutRoot = join(packagedAppRoot, 'out');
 		await mkdir(join(packagedOutRoot, 'vs', 'base', 'common'), { recursive: true });
+		await mkdir(join(packagedOutRoot, 'vs', 'platform', 'environment', 'node'), { recursive: true });
 		await Promise.all([
 			copyFile(join(outRoot, 'bootstrap-esm.js'), join(packagedOutRoot, 'bootstrap-esm.js')),
 			copyFile(join(outRoot, 'bootstrap-meta.js'), join(packagedOutRoot, 'bootstrap-meta.js')),
 			copyFile(join(outRoot, 'bootstrap-node.js'), join(packagedOutRoot, 'bootstrap-node.js')),
 			copyFile(join(outRoot, 'vs', 'base', 'common', 'performance.js'), join(packagedOutRoot, 'vs', 'base', 'common', 'performance.js')),
+			// `bootstrap-meta.js` loads the user product overrides before the services start.
+			copyFile(join(outRoot, 'vs', 'base', 'common', 'productOverrides.js'), join(packagedOutRoot, 'vs', 'base', 'common', 'productOverrides.js')),
+			copyFile(join(outRoot, 'vs', 'platform', 'environment', 'node', 'userDataPath.js'), join(packagedOutRoot, 'vs', 'platform', 'environment', 'node', 'userDataPath.js')),
 			writeFile(join(packagedAppRoot, 'product.json'), '{}'),
 			writeFile(join(packagedAppRoot, 'package.json'), '{"type":"module"}'),
 		]);
