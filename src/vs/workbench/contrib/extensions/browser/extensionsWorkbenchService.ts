@@ -110,7 +110,8 @@ export class Extension implements IExtension {
 		@ITelemetryService private readonly telemetryService: ITelemetryService,
 		@ILogService private readonly logService: ILogService,
 		@IFileService private readonly fileService: IFileService,
-		@IProductService private readonly productService: IProductService
+		@IProductService private readonly productService: IProductService,
+		@IConfigurationService protected configurationService: IConfigurationService
 	) {
 	}
 
@@ -338,15 +339,23 @@ export class Extension implements IExtension {
 			if (!this.gallery || !this.local || getExtensionInstallationBlockReason(this.identifier.id)) {
 				return false;
 			}
-			// Do not allow updating system extensions in stable
-			if (this.type === ExtensionType.System && this.productService.quality === 'stable') {
+			// System extensions update only when explicitly allowed by the product.
+			if (this.type === ExtensionType.System && !this.productService.builtInExtensionsEnabledWithAutoUpdates?.some(id => id.toLowerCase() === this.identifier.id.toLowerCase())) {
 				return false;
 			}
 			if (!this.local.preRelease && this.gallery.properties.isPreReleaseVersion) {
 				return false;
 			}
 			if (semver.gt(this.latestVersion, this.version)) {
-				return true;
+				const minReleaseAge = this.configurationService.getValue<number>('extensions.minReleaseAge') ?? 48;
+
+				if (minReleaseAge === 0) {
+					return true;
+				}
+
+				const age = Math.round(Math.abs(Date.now() - (this.gallery.versionLastUpdated ?? this.gallery.lastUpdated)) / (1000 * 60 * 60));
+
+				return age >= minReleaseAge;
 			}
 			if (this.outdatedTargetPlatform) {
 				return true;

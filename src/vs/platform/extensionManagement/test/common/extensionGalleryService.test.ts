@@ -7,10 +7,10 @@
 import assert from 'assert';
 import { VSBuffer, bufferToStream } from '../../../../base/common/buffer.js';
 import { CancellationToken } from '../../../../base/common/cancellation.js';
+import { isWeb } from '../../../../base/common/platform.js';
 import { Event } from '../../../../base/common/event.js';
 import { IRequestContext, IRequestOptions } from '../../../../base/parts/request/common/request.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../base/test/common/utils.js';
-import { IConfigurationService } from '../../../configuration/common/configuration.js';
 import { TestConfigurationService } from '../../../configuration/test/common/testConfigurationService.js';
 import { TargetPlatform } from '../../../extensions/common/extensions.js';
 import { resolveMarketplaceHeaders } from '../../../externalServices/common/marketplace.js';
@@ -124,13 +124,14 @@ function createExtensionGalleryManifestService(): IExtensionGalleryManifestServi
 
 suite('Extension Gallery Service', () => {
 	const disposables = ensureNoDisposablesAreLeakedInTestSuite();
-	let fileService: IFileService, productService: IProductService, configurationService: IConfigurationService;
+	let fileService: IFileService, productService: IProductService, configurationService: TestConfigurationService;
 
 	setup(() => {
 		fileService = disposables.add(new FileService(new NullLogService()));
 		const fileSystemProvider = disposables.add(new InMemoryFileSystemProvider());
 		disposables.add(fileService.registerProvider('vscode-tests', fileSystemProvider));
 		configurationService = new TestConfigurationService();
+		disposables.add(configurationService.onDidChangeConfigurationEmitter);
 		productService = { _serviceBrand: undefined, ...product };
 	});
 
@@ -138,6 +139,24 @@ suite('Extension Gallery Service', () => {
 		const allowedExtensionsService = disposables.add(new AllowedExtensionsService(productService, configurationService));
 		return new ExtensionGalleryServiceWithNoStorageService(requestService, logService, NullTelemetryService, fileService, productService, configurationService, allowedExtensionsService, createExtensionGalleryManifestService());
 	}
+
+	test('control opt-out performs no request and returns all empty sections', async () => {
+		await configurationService.setUserConfiguration('extensions.excludeUnsafes', false);
+		const requests = new RecordingRequestService(() => { throw new Error('No request expected'); });
+		const result = await createExtensionGalleryService(requests).getExtensionsControlManifest();
+		assert.deepStrictEqual([result, requests.requests], [{ malicious: [], deprecated: {}, search: [], autoUpdate: {} }, []]);
+	});
+
+	test('control request retains newer auto-update data and closes desktop connections', async () => {
+		productService = { ...productService, extensionsGallery: { serviceUrl: 'https://gallery.test', controlUrl: 'https://control.test', extensionUrlTemplate: '', resourceUrlTemplate: '', nlsBaseUrl: '' } };
+		let headers: IRequestOptions['headers'];
+		const requests = new RecordingRequestService(options => {
+			headers = options.headers;
+			return requestContext(200, { malicious: [], deprecated: {}, search: [], autoUpdate: { 'publisher.extension': '2.0.0' } });
+		});
+		const result = await createExtensionGalleryService(requests).getExtensionsControlManifest();
+		assert.deepStrictEqual([result.autoUpdate, headers], [{ 'publisher.extension': '2.0.0' }, isWeb ? undefined : { Connection: 'close' }]);
+	});
 
 	test('marketplace headers carry no machine id', async () => {
 		const headers = await resolveMarketplaceHeaders(product.version, productService);
@@ -172,6 +191,15 @@ suite('Extension Gallery Service', () => {
 			requests: [{ type: 'GET', url: 'https://marketplace.test/_apis/public/gallery/publishers/publisher/extensions/extension/latest' }],
 			extensions: [{ id: 'publisher.extension', uuid: 'extension-uuid', version: '1.0.0' }]
 		});
+	});
+
+	test('gallery results retain the selected version publication time independently of newer releases', async () => {
+		const rawExtension = rawLatestExtension();
+		rawExtension.lastUpdated = '2026-01-15T00:00:00Z';
+		const requestService = new RecordingRequestService(options => options.type === 'GET' ? requestContext(200, rawExtension) : requestContext(200, galleryQueryResponse([])));
+		const galleryService = createExtensionGalleryService(requestService);
+		const [extension] = await galleryService.getExtensions([{ id: 'publisher.extension', uuid: 'extension-uuid' }], CancellationToken.None);
+		assert.deepStrictEqual([extension.version, extension.lastUpdated, extension.versionLastUpdated], ['1.0.0', Date.parse(rawExtension.lastUpdated), Date.parse(rawExtension.versions[0].lastUpdated)]);
 	});
 
 	test('getExtensions falls back to query API when latest resource response omits files', async () => {

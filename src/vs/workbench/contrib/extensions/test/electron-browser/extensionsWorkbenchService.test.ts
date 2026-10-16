@@ -1889,6 +1889,41 @@ suite('ExtensionsWorkbenchServiceTest', () => {
 		return workbenchService;
 	}
 
+	test('release age boundaries, missing dates, future dates and zero bypass', async () => {
+		const now = Date.now();
+		const local = aLocalExtension('age');
+		const makeExtension = (lastUpdated: number | undefined) => instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, local, aGalleryExtension('age', { version: '2.0.0', lastUpdated }), undefined);
+		await instantiationService.get(IConfigurationService).updateValue('extensions.minReleaseAge', 48);
+		const hour = 3_600_000;
+		assert.deepStrictEqual([now - 47.4 * hour, now - 47.6 * hour, now - 48 * hour, now + 49 * hour, undefined, NaN].map(date => makeExtension(date).outdated), [false, true, true, true, false, false]);
+		await instantiationService.get(IConfigurationService).updateValue('extensions.minReleaseAge', 0);
+		assert.strictEqual(makeExtension(undefined).outdated, true);
+	});
+
+	test('system-extension update guard applies on all channels and honors the explicit allowlist', () => {
+		for (const quality of ['stable', 'insider', undefined]) {
+			const local = aLocalExtension('channel', {}, { type: ExtensionType.System });
+			const gallery = aGalleryExtension('channel', { version: '2.0.0' });
+			instantiationService.stub(IProductService, { ...TestProductService, quality });
+			const blocked = instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, local, gallery, undefined);
+			instantiationService.stub(IProductService, { ...TestProductService, quality, builtInExtensionsEnabledWithAutoUpdates: [local.identifier.id.toUpperCase()] });
+			const allowed = instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, local, gallery, undefined);
+			assert.deepStrictEqual([blocked.outdated, allowed.outdated], [false, true]);
+		}
+	});
+
+	test('release cooldown uses the offered version even when another channel was published recently', async () => {
+		await instantiationService.get(IConfigurationService).updateValue('extensions.minReleaseAge', 48);
+		const now = Date.now();
+		const local = aLocalExtension('age');
+		const gallery = aGalleryExtension('age', { version: '2.0.0', lastUpdated: now, versionLastUpdated: now - 72 * 3_600_000 });
+		const extension = instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, local, gallery, undefined);
+		assert.strictEqual(extension.outdated, true);
+		gallery.lastUpdated = now - 72 * 3_600_000;
+		gallery.versionLastUpdated = now;
+		assert.strictEqual(extension.outdated, false);
+	});
+
 	test('already installed service extensions are not offered prohibited updates', () => {
 		const publisher = 'MS-VSCODE-REMOTE';
 		const local = aLocalExtension('remote-ssh', { publisher });
@@ -1901,6 +1936,7 @@ suite('ExtensionsWorkbenchServiceTest', () => {
 		const values: any = {
 			[AutoUpdateConfigurationKey]: autoUpdateValue ?? true,
 			[AutoUpdateDelayConfigurationKey]: 2,
+			'extensions.minReleaseAge': 0,
 			[AutoCheckUpdatesConfigurationKey]: autoCheckUpdatesValue ?? true
 		};
 		const emitter = disposableStore.add(new Emitter<IConfigurationChangeEvent>());

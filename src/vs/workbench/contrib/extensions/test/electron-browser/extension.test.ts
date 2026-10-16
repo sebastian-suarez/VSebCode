@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -14,6 +15,8 @@ import { generateUuid } from '../../../../../base/common/uuid.js';
 import { TestInstantiationService } from '../../../../../platform/instantiation/test/common/instantiationServiceMock.js';
 import { IProductService } from '../../../../../platform/product/common/productService.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../../../base/test/common/utils.js';
+import { IConfigurationService } from '../../../../../platform/configuration/common/configuration.js';
+import { TestConfigurationService } from '../../../../../platform/configuration/test/common/testConfigurationService.js';
 
 suite('Extension Test', () => {
 
@@ -24,6 +27,8 @@ suite('Extension Test', () => {
 	setup(() => {
 		instantiationService = disposables.add(new TestInstantiationService());
 		instantiationService.stub(IProductService, { quality: 'insiders' });
+		// The release-age gate is covered by the service tests; these tests check the version comparison alone.
+		instantiationService.stub(IConfigurationService, new TestConfigurationService({ extensions: { minReleaseAge: 0 } }));
 	});
 
 	test('extension is not outdated when there is no local and gallery', () => {
@@ -51,7 +56,8 @@ suite('Extension Test', () => {
 		assert.strictEqual(extension.outdated, true);
 	});
 
-	test('extension is outdated when local is built in and older than gallery', () => {
+	test('extension is outdated when local is built in, older than gallery and allowed to update by the product', () => {
+		instantiationService.stub(IProductService, { quality: 'insiders', builtInExtensionsEnabledWithAutoUpdates: ['pub.somext'] });
 		const extension = instantiationService.createInstance(Extension, () => ExtensionState.Installed, () => undefined, undefined, aLocalExtension('somext', { version: '1.0.0' }, { type: ExtensionType.System }), aGalleryExtension('somext', { version: '1.0.1' }), undefined);
 		assert.strictEqual(extension.outdated, true);
 	});

@@ -86,7 +86,7 @@ function setupTest(disposables: Pick<DisposableStore, 'add'>) {
 
 	instantiationService.stub(IWorkspaceContextService, new TestContextService());
 	instantiationService.stub(IFileService, disposables.add(new FileService(new NullLogService())));
-	instantiationService.stub(IConfigurationService, new TestConfigurationService());
+	instantiationService.stub(IConfigurationService, new TestConfigurationService({ extensions: { minReleaseAge: 0 } }));
 	instantiationService.stub(IProgressService, ProgressService);
 	instantiationService.stub(IProductService, {});
 	instantiationService.stub(IContextKeyService, new MockContextKeyService());

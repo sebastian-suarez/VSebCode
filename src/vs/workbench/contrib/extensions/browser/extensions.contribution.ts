@@ -194,6 +194,14 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration)
 				description: localize('extensionsIgnoreRecommendations', "When enabled, the notifications for extension recommendations will not be shown."),
 				default: false,
 			},
+			'extensions.minReleaseAge': {
+				type: 'integer',
+				minimum: 0,
+				default: 48,
+				scope: ConfigurationScope.APPLICATION,
+				description: localize('extensions.minReleaseAge', "Minimum age, in hours, before a newer extension version is shown as an update. Set to 0 to allow updates immediately."),
+				tags: ['usesOnlineServices']
+			},
 			'extensions.showRecommendationsOnlyOnDemand': {
 				type: 'boolean',
 				deprecationMessage: localize('extensionsShowRecommendationsOnlyOnDemand_Deprecated', "This setting is deprecated. Use extensions.ignoreRecommendations setting to control recommendation notifications. Use Extensions view's visibility actions to hide Recommended view by default."),
@@ -377,6 +385,13 @@ Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration)
 				default: 60_000,
 				scope: ConfigurationScope.APPLICATION,
 				tags: ['advanced', 'usesOnlineServices']
+			},
+			'extensions.excludeUnsafes': {
+				scope: ConfigurationScope.MACHINE,
+				type: 'boolean',
+				default: true,
+				description: localize('extensionsExcludeUnsafes', "When enabled, it will download and cache the list of malicious and deprecated extensions. It's recommended to leave it enabled."),
+				tags: ['usesOnlineServices']
 			},
 		}
 	});

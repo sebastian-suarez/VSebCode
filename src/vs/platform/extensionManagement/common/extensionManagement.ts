@@ -257,6 +257,8 @@ export interface IGalleryExtension {
 	tags: readonly string[];
 	releaseDate: number;
 	lastUpdated: number;
+	/** Publication time of the selected version, which can differ from the extension's latest release. */
+	versionLastUpdated?: number;
 	preview: boolean;
 	private: boolean;
 	hasPreReleaseVersion: boolean;

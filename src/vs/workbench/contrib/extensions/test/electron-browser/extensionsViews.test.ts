@@ -91,7 +91,7 @@ suite('ExtensionsViews Tests', () => {
 		instantiationService.stub(IProductService, {});
 
 		instantiationService.stub(IWorkspaceContextService, new TestContextService());
-		instantiationService.stub(IConfigurationService, new TestConfigurationService());
+		instantiationService.stub(IConfigurationService, new TestConfigurationService({ extensions: { minReleaseAge: 0 } }));
 
 		instantiationService.stub(IExtensionGalleryService, ExtensionGalleryService);
 		instantiationService.stub(IExtensionGalleryManifestService, {

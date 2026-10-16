@@ -554,6 +554,7 @@ function toExtension(galleryExtension: IRawGalleryExtension, version: IRawGaller
 		tags: galleryExtension.tags || [],
 		releaseDate: Date.parse(galleryExtension.releaseDate),
 		lastUpdated: Date.parse(galleryExtension.lastUpdated),
+		versionLastUpdated: Date.parse(version.lastUpdated),
 		allTargetPlatforms,
 		assets,
 		properties: {
@@ -1895,6 +1896,12 @@ export abstract class AbstractExtensionGalleryService implements IExtensionGalle
 	}
 
 	async getExtensionsControlManifest(): Promise<IExtensionsControlManifest> {
+		const excludeUnsafes = this.configurationService.getValue('extensions.excludeUnsafes') ?? true;
+
+		if (!excludeUnsafes) {
+			return { malicious: [], deprecated: {}, search: [], autoUpdate: {} };
+		}
+
 		const manifest = await this.extensionGalleryManifestService.getExtensionGalleryManifest();
 		if (!manifest) {
 			throw new Error('No extension gallery service configured.');
@@ -1905,12 +1912,18 @@ export abstract class AbstractExtensionGalleryService implements IExtensionGalle
 			return { malicious: [], deprecated: {}, search: [], autoUpdate: {} };
 		}
 
-		const context = await this.requestService.request({
+		const requestOptions: IRequestOptions = {
 			type: 'GET',
 			url: this.extensionsControlUrl,
 			timeout: this.getRequestTimeout(),
 			callSite: 'extensionGalleryService.getExtensionsControlManifest'
-		}, CancellationToken.None);
+		};
+
+		if (!isWeb) {
+			requestOptions.headers = { Connection: 'close' };
+		}
+
+		const context = await this.requestService.request(requestOptions, CancellationToken.None);
 
 		if (context.res.statusCode !== 200) {
 			throw new Error('Could not get extensions report.');
