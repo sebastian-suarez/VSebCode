@@ -9,6 +9,7 @@ import { memoize } from '../../../base/common/decorators.js';
 import { FileAccess, Schemas } from '../../../base/common/network.js';
 import { dirname, join, normalize, resolve } from '../../../base/common/path.js';
 import { env } from '../../../base/common/process.js';
+import { isLinux } from '../../../base/common/platform.js';
 import { joinPath } from '../../../base/common/resources.js';
 import { URI } from '../../../base/common/uri.js';
 import { NativeParsedArgs } from './argv.js';
@@ -26,6 +27,8 @@ export interface INativeEnvironmentPaths {
 	 * Only one instance of VSCode can use the same `userDataDir`.
 	 */
 	userDataDir: string;
+
+	userStateDir: string;
 
 	/**
 	 * The user home directory mainly used for persisting extensions
@@ -54,6 +57,9 @@ export abstract class AbstractNativeEnvironmentService implements INativeEnviron
 	get userDataPath(): string { return this.paths.userDataDir; }
 
 	@memoize
+	get userStatePath(): string { return this.paths.userStateDir; }
+
+	@memoize
 	get appSettingsHome(): URI { return URI.file(join(this.userDataPath, 'User')); }
 
 	@memoize
@@ -71,7 +77,7 @@ export abstract class AbstractNativeEnvironmentService implements INativeEnviron
 	get logsHome(): URI {
 		if (!this.args.logsPath) {
 			const key = toLocalISOString(new Date()).replace(/-|:|\.\d+Z$/g, '');
-			this.args.logsPath = join(this.userDataPath, 'logs', key);
+			this.args.logsPath = join(this.userStatePath, ...(isLinux ? [] : ['logs']), key);
 		}
 
 		return URI.file(this.args.logsPath);

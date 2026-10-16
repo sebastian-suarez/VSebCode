@@ -10,6 +10,7 @@ import { IDebugParams } from '../common/environment.js';
 import { AbstractNativeEnvironmentService, parseDebugParams } from '../common/environmentService.js';
 import { getUserDataPath } from './userDataPath.js';
 import { IProductService } from '../../product/common/productService.js';
+import { getUserStatePath } from './userStatePath.js';
 
 export class NativeEnvironmentService extends AbstractNativeEnvironmentService {
 
@@ -19,6 +20,7 @@ export class NativeEnvironmentService extends AbstractNativeEnvironmentService {
 			homeDir,
 			tmpDir: tmpdir(),
 			userDataDir: getUserDataPath(args, productService.nameShort),
+			userStateDir: getUserStatePath(args, productService.nameShort),
 		}, productService);
 	}
 }

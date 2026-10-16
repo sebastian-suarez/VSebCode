@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -9,8 +10,17 @@ import { parseExtensionHostDebugPort } from '../../common/environmentService.js'
 import { OPTIONS, parseArgs } from '../../node/argv.js';
 import { NativeEnvironmentService } from '../../node/environmentService.js';
 import product from '../../../product/common/product.js';
+import { dirname, join } from '../../../../base/common/path.js';
+import { isLinux } from '../../../../base/common/platform.js';
 
 suite('EnvironmentService', () => {
+
+	test('default logs preserve platform layout and explicit paths take precedence', () => {
+		const service = new NativeEnvironmentService({ _: [] }, { _serviceBrand: undefined, ...product });
+		assert.strictEqual(dirname(service.logsHome.fsPath), isLinux ? service.userStatePath : join(service.userDataPath, 'logs'));
+		const explicit = new NativeEnvironmentService({ _: [], logsPath: join(service.userDataPath, 'explicit-logs') }, { _serviceBrand: undefined, ...product });
+		assert.strictEqual(explicit.logsHome.fsPath, join(service.userDataPath, 'explicit-logs'));
+	});
 
 	test('parseExtensionHostPort when built', () => {
 		const parse = (a: string[]) => parseExtensionHostDebugPort(parseArgs(a, OPTIONS), true);

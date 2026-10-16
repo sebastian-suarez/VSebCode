@@ -23,8 +23,10 @@ const ROOT = URI.file('tests').with({ scheme: 'vscode-tests' });
 class TestEnvironmentService extends AbstractNativeEnvironmentService {
 	constructor(private readonly _appSettingsHome: URI) {
 		const userDataDir = _appSettingsHome.fsPath.replace(/\/User$/, '');
+		const userStateDir = _appSettingsHome.fsPath.replace(/\/State/, '');
 		const paths: INativeEnvironmentPaths = {
 			userDataDir,
+			userStateDir,
 			homeDir: userDataDir,
 			tmpDir: userDataDir,
 		};

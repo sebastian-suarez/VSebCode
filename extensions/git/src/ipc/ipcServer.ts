@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -18,7 +19,11 @@ function getIPCHandlePath(id: string): string {
 	}
 
 	if (process.platform !== 'darwin' && process.env['XDG_RUNTIME_DIR']) {
-		return path.join(process.env['XDG_RUNTIME_DIR'] as string, `vscode-git-${id}.sock`);
+		if (process.env.FLATPAK_ID && /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$/.test(process.env.FLATPAK_ID)) {
+			return path.join(process.env['XDG_RUNTIME_DIR'] as string, 'app', process.env.FLATPAK_ID, `vscode-git-${id}.sock`);
+		} else {
+			return path.join(process.env['XDG_RUNTIME_DIR'] as string, `vscode-git-${id}.sock`);
+		}
 	}
 
 	return path.join(os.tmpdir(), `vscode-git-${id}.sock`);

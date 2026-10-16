@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -734,7 +735,14 @@ class ZlibDeflateStream extends Disposable {
 
 // Read this before there's any chance it is overwritten
 // Related to https://github.com/microsoft/vscode/issues/30624
-export const XDG_RUNTIME_DIR = process.env['XDG_RUNTIME_DIR'];
+/** Resolves Flatpak's application runtime directory without accepting path components in its ID. */
+export function getRuntimeDirectory(environment: NodeJS.ProcessEnv): string | undefined {
+	const directory = environment['XDG_RUNTIME_DIR'];
+	const flatpakId = environment['FLATPAK_ID'];
+	return directory && flatpakId && /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$/.test(flatpakId) ? join(directory, 'app', flatpakId) : directory;
+}
+
+export const XDG_RUNTIME_DIR = getRuntimeDirectory(process.env);
 
 const safeIpcPathLengths: { [platform: number]: number } = {
 	[Platform.Linux]: 107,
