@@ -1,12 +1,16 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { CancelablePromise, notCancellablePromise, raceCancellablePromises, timeout } from '../../../../base/common/async.js';
 import { Emitter, Event } from '../../../../base/common/event.js';
 import { Disposable } from '../../../../base/common/lifecycle.js';
+import { localize } from '../../../../nls.js';
 import { CommandsRegistry, ICommandEvent, ICommandService } from '../../../../platform/commands/common/commands.js';
+import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
+import { IDialogService } from '../../../../platform/dialogs/common/dialogs.js';
 import { InstantiationType, registerSingleton } from '../../../../platform/instantiation/common/extensions.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { ILogService } from '../../../../platform/log/common/log.js';
@@ -28,7 +32,9 @@ export class CommandService extends Disposable implements ICommandService {
 	constructor(
 		@IInstantiationService private readonly _instantiationService: IInstantiationService,
 		@IExtensionService private readonly _extensionService: IExtensionService,
-		@ILogService private readonly _logService: ILogService
+		@ILogService private readonly _logService: ILogService,
+		@IConfigurationService private readonly _configurationService: IConfigurationService,
+		@IDialogService private readonly _dialogService: IDialogService
 	) {
 		super();
 		this._extensionService.whenInstalledExtensionsRegistered().then(value => this._extensionHostIsReady = value);
@@ -53,26 +59,31 @@ export class CommandService extends Disposable implements ICommandService {
 		this._logService.trace('CommandService#executeCommand', id);
 
 		const activationEvent = `onCommand:${id}`;
-		const commandIsRegistered = !!CommandsRegistry.getCommand(id);
 
-		if (commandIsRegistered) {
+		let confirmed = false;
+		if (this._getCommandFilter(id) === 'ask') {
+			await this._confirmCommand(id);
+			confirmed = true;
+		}
+
+		if (CommandsRegistry.getCommand(id)) {
 
 			// if the activation event has already resolved (i.e. subsequent call),
 			// we will execute the registered command immediately
 			if (this._extensionService.activationEventIsDone(activationEvent)) {
-				return this._tryExecuteCommand(id, args);
+				return this._tryExecuteCommand(id, args, confirmed);
 			}
 
 			// if the extension host didn't start yet, we will execute the registered
 			// command immediately and send an activation event, but not wait for it
 			if (!this._extensionHostIsReady) {
 				this._extensionService.activateByEvent(activationEvent); // intentionally not awaited
-				return this._tryExecuteCommand(id, args);
+				return this._tryExecuteCommand(id, args, confirmed);
 			}
 
 			// we will wait for a simple activation event (e.g. in case an extension wants to overwrite it)
 			await this._extensionService.activateByEvent(activationEvent);
-			return this._tryExecuteCommand(id, args);
+			return this._tryExecuteCommand(id, args, confirmed);
 		}
 
 		// finally, if the command is not registered we will send a simple activation event
@@ -86,10 +97,33 @@ export class CommandService extends Disposable implements ICommandService {
 			]),
 		]);
 
-		return this._tryExecuteCommand(id, args);
+		return this._tryExecuteCommand(id, args, confirmed);
 	}
 
-	private _tryExecuteCommand(id: string, args: unknown[]): Promise<any> {
+	private _getCommandFilter(id: string): 'ask' | 'on' | undefined {
+		const filters = this._configurationService.getValue<Record<string, 'ask' | 'off' | 'on'>>('commands.filters') ?? { 'workbench.action.terminal.newLocal': 'off' };
+		const filter = Object.hasOwn(filters, id) ? filters[id] : undefined;
+		if (this._store.isDisposed || filter === 'off') {
+			throw new Error(localize('commandNotAuthorized', "Command '{0}' is not authorized.", id));
+		}
+		return filter;
+	}
+
+	private async _confirmCommand(id: string): Promise<void> {
+		const { confirmed } = await this._dialogService.confirm({
+			message: localize('confirmCommand', "Allow command '{0}' to run?", id),
+			primaryButton: localize('runCommand', "&&Run Command"),
+		});
+		if (!confirmed) {
+			throw new Error(localize('commandNotAuthorized', "Command '{0}' is not authorized.", id));
+		}
+		this._getCommandFilter(id);
+	}
+
+	private _tryExecuteCommand(id: string, args: unknown[], confirmed: boolean): Promise<any> {
+		if (this._getCommandFilter(id) === 'ask' && !confirmed) {
+			return this._confirmCommand(id).then(() => this._tryExecuteCommand(id, args, true));
+		}
 		const command = CommandsRegistry.getCommand(id);
 		if (!command) {
 			return Promise.reject(new Error(`command '${id}' not found`));
