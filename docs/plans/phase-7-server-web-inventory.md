@@ -21,7 +21,7 @@ Web workbench:
 
 Web-only modules: the 115 first-order modules of section 3 (a1), the 2 second-order ones (a2), the functionally web-only ones of (a3), the 44 keyboard layout files that only the web keyboard layout service loads (`services/keybinding/browser/keyboardLayouts/` keeps `en.{win,darwin,linux}.ts` and `_.contribution.ts`), and the orphan `keyboardLayouts/sv.darwin.ts`.
 
-Tests that cover only web or server code: `platform/files/test/browser/indexedDBFileService.integrationTest.ts`, `platform/workspaces/test/common/workspaceIdentifier.test.ts`, `services/keybinding/test/browser/browserKeyboardMapper.test.ts`, `services/storage/test/browser/storageService.test.ts`, `services/workingCopy/test/browser/workingCopyBackupTracker.test.ts`, and `src/vs/server/test/node/*`.
+Tests that cover only web or server code: `platform/files/test/browser/indexedDBFileService.integrationTest.ts`, `platform/workspaces/test/common/workspaceIdentifier.test.ts`, `services/keybinding/test/browser/browserKeyboardMapper.test.ts`, `services/storage/test/browser/storageService.test.ts`, `services/workingCopy/test/browser/workingCopyBackupTracker.test.ts` (restored on 2026-10-20: its restoration cases are the only tests of the backup tracker code the desktop shares; see `docs/reviews/phase-7-open-decisions-rejected.md`), and `src/vs/server/test/node/*`.
 
 ## 2. References outside the deleted paths
 
