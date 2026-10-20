@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -529,10 +530,13 @@ export class EditorGroupView extends Themable implements IEditorGroupView {
 
 	private updateContainer(): void {
 
-		// Empty Container: add some empty container attributes
+		// Empty Container: add some empty container attributes. The focusable
+		// container needs a role for its label to be valid, like the focusable
+		// welcome content of an empty view.
 		if (this.isEmpty) {
 			this.element.classList.add('empty');
 			this.element.tabIndex = 0;
+			this.element.setAttribute('role', 'region');
 			this.element.setAttribute('aria-label', localize('emptyEditorGroup', "{0} (empty)", this.ariaLabel));
 		}
 
@@ -540,6 +544,7 @@ export class EditorGroupView extends Themable implements IEditorGroupView {
 		else {
 			this.element.classList.remove('empty');
 			this.element.removeAttribute('tabIndex');
+			this.element.removeAttribute('role');
 			this.element.removeAttribute('aria-label');
 		}
 

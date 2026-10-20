@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -383,6 +384,28 @@ suite('EditorGroupsService', () => {
 		rootGroupLabelChangeListener.dispose();
 		rightGroupLabelChangeListener.dispose();
 		groupIndexChangedListener.dispose();
+	});
+
+	test('empty group container is a labelled region only while empty', async () => {
+		const [part] = await createPart();
+		const group = part.groups[0];
+		const attributes = () => ({
+			role: group.element.getAttribute('role'),
+			label: group.element.getAttribute('aria-label'),
+			tabIndex: group.element.getAttribute('tabIndex')
+		});
+
+		const empty = attributes();
+		const input = createTestFileEditorInput(URI.file('foo/bar'), TEST_EDITOR_INPUT_ID);
+		await group.openEditor(input, { pinned: true });
+		const filled = attributes();
+		await group.closeEditor(input);
+
+		assert.deepStrictEqual({ empty, filled, emptyAgain: attributes() }, {
+			empty: { role: 'region', label: 'Editor Group 1 (empty)', tabIndex: '0' },
+			filled: { role: null, label: null, tabIndex: null },
+			emptyAgain: { role: 'region', label: 'Editor Group 1 (empty)', tabIndex: '0' }
+		});
 	});
 
 	test('copy/merge groups', async () => {
