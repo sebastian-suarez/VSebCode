@@ -160,6 +160,9 @@ import './contrib/encryption/electron-browser/encryption.contribution.js';
 import './contrib/modernUI/electron-browser/frostedGlass.contribution.js';
 import './contrib/glass/electron-browser/glass.contribution.js';
 
+// Product defaults
+import './contrib/productDefaults/common/productDefaults.contribution.js';
+
 // Policy Export
 import './contrib/policyExport/electron-browser/policyExport.contribution.js';
 
