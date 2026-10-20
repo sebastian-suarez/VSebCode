@@ -35,18 +35,102 @@ export const SEED_USER_SETTINGS: ReadonlyArray<readonly [key: string, value: str
 function seedUserSettings(userDataDir: string): void {
 	const userDir = join(userDataDir, 'User');
 	const settingsPath = join(userDir, 'settings.json');
-	const entry = ([key, value]: readonly [string, string]) => `\t"${key}": ${value}`;
 	const text = fs.existsSync(settingsPath) ? fs.readFileSync(settingsPath, 'utf8') : '';
-	if (!text.trim()) {
+	const seeded = seedSettingsText(text);
+	if (seeded !== undefined) {
 		fs.mkdirSync(userDir, { recursive: true });
-		fs.writeFileSync(settingsPath, `{\n${SEED_USER_SETTINGS.map(entry).join(',\n')}\n}`);
-		return;
+		fs.writeFileSync(settingsPath, seeded);
 	}
-	const missing = SEED_USER_SETTINGS.filter(([key]) => !new RegExp(`"${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s*:`).test(text));
-	const brace = text.indexOf('{');
-	if (missing.length && brace !== -1) {
-		fs.writeFileSync(settingsPath, `${text.slice(0, brace + 1)}\n${missing.map(entry).join(',\n')},${text.slice(brace + 1)}`);
+}
+
+/**
+ * Returns the settings text with the missing seed entries inserted after the `{` of its top-level
+ * object, or `undefined` when nothing has to change or the text does not hold an object. Comments and
+ * strings are skipped, so a commented-out key does not count as present and a `{` inside a comment is
+ * not taken for the object's.
+ */
+export function seedSettingsText(text: string): string | undefined {
+	const entry = ([key, value]: readonly [string, string]) => `\t"${key}": ${value}`;
+	if (!text.trim()) {
+		return `{\n${SEED_USER_SETTINGS.map(entry).join(',\n')}\n}`;
 	}
+	const object = readTopLevelObject(text);
+	if (!object) {
+		return undefined;
+	}
+	const missing = SEED_USER_SETTINGS.filter(([key]) => !object.keys.has(key));
+	if (!missing.length) {
+		return undefined;
+	}
+	return `${text.slice(0, object.afterBrace)}\n${missing.map(entry).join(',\n')},${text.slice(object.afterBrace)}`;
+}
+
+/**
+ * Reads the top-level object of a JSONC text: the offset just after its `{` and the names of its own
+ * properties, ignoring comments, strings and nested values. `undefined` when the text does not start
+ * with an object.
+ */
+function readTopLevelObject(text: string): { afterBrace: number; keys: Set<string> } | undefined {
+	let offset = skipTrivia(text, 0);
+	if (text[offset] !== '{') {
+		return undefined;
+	}
+	const afterBrace = offset + 1;
+	const keys = new Set<string>();
+	let depth = 0;
+	while (offset < text.length) {
+		offset = skipTrivia(text, offset);
+		const char = text[offset];
+		if (char === '"') {
+			const end = skipString(text, offset);
+			if (depth === 1 && text[skipTrivia(text, end)] === ':') {
+				try {
+					keys.add(JSON.parse(text.slice(offset, end)));
+				} catch {
+					// a malformed key cannot be a seed key
+				}
+			}
+			offset = end;
+			continue;
+		}
+		if (char === '{' || char === '[') {
+			depth++;
+		} else if (char === '}' || char === ']') {
+			depth--;
+			if (depth === 0) {
+				break;
+			}
+		}
+		offset++;
+	}
+	return { afterBrace, keys };
+}
+
+/** Skips whitespace and JSONC comments from `offset` and returns the next significant offset. */
+function skipTrivia(text: string, offset: number): number {
+	while (offset < text.length) {
+		if (/\s/.test(text[offset])) {
+			offset++;
+		} else if (text.startsWith('//', offset)) {
+			const end = text.indexOf('\n', offset);
+			offset = end === -1 ? text.length : end + 1;
+		} else if (text.startsWith('/*', offset)) {
+			const end = text.indexOf('*/', offset + 2);
+			offset = end === -1 ? text.length : end + 2;
+		} else {
+			break;
+		}
+	}
+	return offset;
+}
+
+/** Returns the offset just after the JSON string whose opening quote is at `offset`. */
+function skipString(text: string, offset: number): number {
+	let end = offset + 1;
+	while (end < text.length && text[end] !== '"') {
+		end += text[end] === '\\' ? 2 : 1;
+	}
+	return end + 1;
 }
 
 export interface IElectronConfiguration {
