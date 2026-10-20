@@ -40,6 +40,15 @@
 		"resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
 		"nlsBaseUrl": "https://www.vscode-unpkg.net/_lp/"
 	},
+	"extensionRecommendations": {
+		"usernamehw.errorlens": {
+			"onFileOpen": [
+				{
+					"pathGlob": "**/*"
+				}
+			]
+		}
+	},
 	"builtInExtensions": [
 		{
 			"name": "ms-vscode.js-debug-companion",
