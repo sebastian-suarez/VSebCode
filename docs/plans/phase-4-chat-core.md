@@ -1,6 +1,6 @@
 # Phase 4: Chat core, agents window, agent host and the chat extension API
 
-Executable plan for the fourth removal phase of the VSebCode fork. It is written for a fresh Claude Code session: read `CLAUDE.md` first, then this file, then work top to bottom. Every path was taken from the removal map of `CLAUDE.md` and from the leftovers phase 3 recorded in its Status section at the end of phase 3 (2026-10-14); re-check with `git ls-files <path>` or `git grep` before acting, because upstream merges move things. Counts are non-test `.ts` files unless stated otherwise and date from the removal map.
+Executable plan for the fourth removal phase of the VSebCode fork. It is written for a fresh session: read `CLAUDE.md` first, then this file, then work top to bottom. Every path was taken from the removal map of `CLAUDE.md` and from the leftovers phase 3 recorded in its Status section at the end of phase 3 (2026-10-14); re-check with `git ls-files <path>` or `git grep` before acting, because upstream merges move things. Counts are non-test `.ts` files unless stated otherwise and date from the removal map.
 
 ## Confirm first (ask)
 

@@ -1,6 +1,6 @@
 # Phase 2: self-contained AI packages
 
-Executable plan for the second removal phase of the VSebCode fork. It is written for a fresh Claude Code session: read `CLAUDE.md` first, then this file, then work top to bottom. Every path and count was verified against the tree at the end of phase 1 (2026-10-14); re-check with `git ls-files <path>` or `git grep` before acting, because upstream merges move things.
+Executable plan for the second removal phase of the VSebCode fork. It is written for a fresh session: read `CLAUDE.md` first, then this file, then work top to bottom. Every path and count was verified against the tree at the end of phase 1 (2026-10-14); re-check with `git ls-files <path>` or `git grep` before acting, because upstream merges move things.
 
 ## Scope correction (ask first)
 

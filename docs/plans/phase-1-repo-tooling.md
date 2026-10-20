@@ -1,6 +1,6 @@
 # Phase 1: repo tooling and product.json endpoints
 
-Executable plan for the first removal phase of the VSebCode fork. It is written for a fresh Claude Code session: read `CLAUDE.md` first, then this file, then work top to bottom. Every item was verified against the tree on 2026-10-14 (commit `373d0d95edf` and its parent); re-check a path with `git ls-files <path>` or `grep` before acting on it, because upstream merges move things.
+Executable plan for the first removal phase of the VSebCode fork. It is written for a fresh session: read `CLAUDE.md` first, then this file, then work top to bottom. Every item was verified against the tree on 2026-10-14 (commit `373d0d95edf` and its parent); re-check a path with `git ls-files <path>` or `grep` before acting on it, because upstream merges move things.
 
 ## Ground rules
 
