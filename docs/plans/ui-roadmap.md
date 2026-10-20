@@ -133,7 +133,7 @@ Answered by the maintainer on 2026-10-20: every recommendation was taken except 
 
 ## Status
 
-Order decided on 2026-10-16; every open decision answered by the maintainer on 2026-10-20 (see "Decisions, by step"). Step 2 not started. The maintainer's recommended settings (row 2 of the decisions) are still to be supplied; they feed step 2's defaults or step 14's engine defaults, depending on what they cover.
+Order decided on 2026-10-16; every open decision answered by the maintainer on 2026-10-20 (see "Decisions, by step"). Step 2 done on 2026-10-20 (`docs/plans/ui-step-2-look-defaults.md`): the maintainer's recommended settings fed its defaults, the engine-coupled ones (relative line numbers, lightbulb off) are recorded there for step 14, and the TODO highlights moved to step 6 because Todo Tree cannot find the ripgrep the fork ships. Step 3 is next.
 
 ## Review
 

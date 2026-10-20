@@ -1,0 +1,8 @@
+# UI step 2, look and editing defaults: review findings not acted on
+
+The implementation of UI step 2 (`docs/plans/ui-step-2-look-defaults.md`, uncommitted on 2026-10-20) had two fresh-context reviews in each of its two rounds: a Codex adversarial review (`.build/ui-step-2/reviews/codex-implementation-round-{1,2}.txt`) and a fresh-context review that ran on Codex (GPT-6 Astra) as the fallback reviewer (`.build/ui-step-2/reviews/astra-fresh-review-round-{1,2}.txt`). Every other finding was acted on; the plan's Review section says how.
+
+| Finding | Source | Decision and evidence |
+|---|---|---|
+| The plan names Codex and includes its name in the review-output references, which the documentation attribution rule would forbid. | Fresh-context review, round 1, low | Rejected. Naming the review tool in a review record is the repository's established practice: the project knowledge base and seven earlier plan and review documents do it (`docs/plans/{phase-6-upstream-merge,phase-7-open-decisions,ui-roadmap,ui-step-1-glass-sidebar}.md`, `docs/reviews/{phase-7-open-decisions-rejected,phase-7-packaged-validation,ui-step-1-glass-sidebar-rejected}.md`). The maintainer's attribution rule forbids crediting the coding assistant in the work, not naming the tool that reviewed it. |
+| The rejection above contradicts the documentation rule; the plan's Review section and this record should stop naming Codex. | Fresh-context review, round 2, low | Rejected again, for the same reason. The maintainer's attribution rule forbids crediting or mentioning the coding assistant, not naming the tool that reviewed the work, and the project knowledge base and the seven earlier documents listed above name it. |
