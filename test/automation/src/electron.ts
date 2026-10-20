@@ -10,6 +10,45 @@ import type { LaunchOptions } from './code';
 
 const root = join(__dirname, '..', '..', '..');
 
+/**
+ * VSebCode changes defaults these smoke tests depend on (docs/plans/ui-step-2-look-defaults.md),
+ * so every new profile starts from the upstream values a failing test proved it needs, as
+ * `"key": value` pairs; `SettingsEditor.clearUserSettings` restores them, and the settings helpers
+ * refuse a seeded key because the seed would silently override the test's own value. No smoke test
+ * sets these keys itself. Each entry names the test that needed it.
+ */
+export const SEED_USER_SETTINGS: ReadonlyArray<readonly [key: string, value: string]> = [
+	// "Preferences" > "turns off editor line numbers and verifies the live change": selectTab clicks
+	// the settings.json tab.
+	['workbench.editor.showTabs', '"multiple"'],
+	// "Data Loss" > "verifies opened editors are restored": "View: Keep Editor" only exists while
+	// preview editors are enabled.
+	['workbench.editor.enablePreview', 'true'],
+];
+
+/**
+ * Writes the seed one entry per line below a lone `{`, so the first line, where the settings helpers
+ * type, stays as short as in an empty settings file. An existing file keeps its text, comments and
+ * trailing commas included: a test may write its own settings before the launch, and a relaunch finds
+ * the JSONC the tests typed, so only the seed entries whose key is missing are inserted after its `{`.
+ */
+function seedUserSettings(userDataDir: string): void {
+	const userDir = join(userDataDir, 'User');
+	const settingsPath = join(userDir, 'settings.json');
+	const entry = ([key, value]: readonly [string, string]) => `\t"${key}": ${value}`;
+	const text = fs.existsSync(settingsPath) ? fs.readFileSync(settingsPath, 'utf8') : '';
+	if (!text.trim()) {
+		fs.mkdirSync(userDir, { recursive: true });
+		fs.writeFileSync(settingsPath, `{\n${SEED_USER_SETTINGS.map(entry).join(',\n')}\n}`);
+		return;
+	}
+	const missing = SEED_USER_SETTINGS.filter(([key]) => !new RegExp(`"${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"\\s*:`).test(text));
+	const brace = text.indexOf('{');
+	if (missing.length && brace !== -1) {
+		fs.writeFileSync(settingsPath, `${text.slice(0, brace + 1)}\n${missing.map(entry).join(',\n')},${text.slice(brace + 1)}`);
+	}
+}
+
 export interface IElectronConfiguration {
 	readonly electronPath: string;
 	readonly args: string[];
@@ -41,6 +80,7 @@ export async function resolveElectronConfiguration(options: LaunchOptions): Prom
 	}
 	if (userDataDir) {
 		args.push(`--user-data-dir=${userDataDir}`);
+		seedUserSettings(userDataDir);
 	}
 	if (extensionsPath) {
 		args.push(`--extensions-dir=${extensionsPath}`);

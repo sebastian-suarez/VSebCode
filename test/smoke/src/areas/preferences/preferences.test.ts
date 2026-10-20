@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -20,6 +21,17 @@ export function setup(logger: Logger) {
 
 			await app.workbench.settingsEditor.addUserSetting('editor.lineNumbers', '"off"');
 			await app.code.waitForElements('.line-numbers', false, elements => !elements || elements.length === 0);
+		});
+
+		it('types settings entries longer than the wrap column above the seeded settings', async function () {
+			// VSebCode wraps lines at 120 columns by default and the launcher seeds settings below the line
+			// the helpers type on, so each helper must still read a wrapped entry back whole.
+			const app = this.app as Application;
+			const long = `"${'x'.repeat(130)}"`;
+
+			await app.workbench.settingsEditor.addUserSetting('smoke.longEntry', long);
+			await app.workbench.settingsEditor.addUserSettings([['smoke.longEntryA', long], ['smoke.longEntryB', long]]);
+			await app.workbench.settingsEditor.clearUserSettings();
 		});
 
 		it.skip('changes "workbench.action.toggleSidebarPosition" command key binding and verifies it', async function () {

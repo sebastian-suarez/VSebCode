@@ -1,11 +1,13 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
 import { References } from './peek';
 import { Commands } from './workbench';
 import { Code } from './code';
+import { IElement } from './driver';
 
 const RENAME_BOX = '.monaco-editor .monaco-editor.rename-box';
 const RENAME_INPUT = `${RENAME_BOX} .rename-input`;
@@ -112,8 +114,11 @@ export class Editor {
 	}
 
 	async waitForEditorContents(filename: string, accept: (contents: string) => boolean, selectorPrefix = ''): Promise<any> {
-		const selector = [selectorPrefix || '', `${EDITOR(filename)} .view-lines`].join(' ');
-		return this.code.waitForTextContent(selector, undefined, c => accept(c.replace(/\u00a0/g, ' ')));
+		// The editor positions its rendered lines absolutely and can keep the rest of a wrapped line after
+		// the lines below it in the DOM, so read the lines in their visual order.
+		const selector = [selectorPrefix || '', `${EDITOR(filename)} .view-lines > .view-line`].join(' ');
+		const contents = (lines: IElement[]) => [...lines].sort((a, b) => a.top - b.top).map(line => line.textContent).join('').replace(/\u00a0/g, ' ');
+		return contents(await this.code.waitForElements(selector, false, lines => accept(contents(lines))));
 	}
 
 	private async getClassSelectors(filename: string, term: string, viewline: number): Promise<string[]> {

@@ -124,6 +124,28 @@ should_run_suite() {
 }
 
 VSCODEUSERDATADIR=`mktemp -d 2>/dev/null`
+
+# VSebCode changes defaults these suites assume (docs/plans/ui-step-2-look-defaults.md), so
+# their profile starts from the upstream values the runs proved they need:
+# - editor.tabSize: "vscode API - editors" > "issue #16573" expects a tab size of 4.
+# - emmet.triggerExpansionOnTab: seventeen "Tests for Expand Abbreviations" cases (HTML, CSS, SCSS)
+#   fail when Tab expands abbreviations.
+# - emmet.includeLanguages: the two "No expanding text ... inside script tag with javascript type"
+#   cases expect JavaScript not to be mapped; a user value merges into the default object, so the
+#   seed maps it to null, which Emmet ignores.
+# - editor.formatOnSave: the API folder suite saves the tracked
+#   extensions/vscode-api-tests/testWorkspace/.vscode/settings.json, and format on save strips its
+#   final newline, leaving the tree dirty.
+mkdir -p "$VSCODEUSERDATADIR/User"
+cat > "$VSCODEUSERDATADIR/User/settings.json" <<'EOF'
+{
+	"editor.tabSize": 4,
+	"editor.formatOnSave": false,
+	"emmet.triggerExpansionOnTab": false,
+	"emmet.includeLanguages": { "javascript": null }
+}
+EOF
+
 VSCODECRASHDIR=$ROOT/.build/crashes
 VSCODELOGSDIR=$ROOT/.build/logs/integration-tests
 
