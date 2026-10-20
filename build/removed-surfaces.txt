@@ -531,7 +531,6 @@ src/vs/workbench/services/userDataProfile/browser/mcpProfileResource.ts
 src/vs/workbench/services/userDataProfile/browser/userDataProfileInit.ts
 src/vs/workbench/services/userDataProfile/browser/userDataProfileStorageService.ts
 src/vs/workbench/services/workingCopy/browser/workingCopyHistoryService.ts
-src/vs/workbench/services/workingCopy/test/browser/workingCopyBackupTracker.test.ts
 src/vs/workbench/services/workspaces/browser/workspaceEditingService.ts
 src/vs/workbench/services/workspaces/browser/workspacesService.ts
 src/vs/workbench/services/workspaces/common/editSessionIdentityService.ts
