@@ -129,9 +129,10 @@ class StatusbarPart extends Part implements IStatusbarEntryContainer {
 	/**
 	 * Vertical padding reserved around the main status bar under the floating panels
 	 * experiment so its items remain centered. The part grows by this amount and
-	 * the matching padding is applied in `floatingPanels.css`.
+	 * the matching padding is applied in `layoutColumn.css`: 6px above and below the
+	 * items, the v10 status line of 34px at the default density.
 	 */
-	static readonly FLOATING_BOTTOM_PADDING = 6;
+	static readonly FLOATING_BOTTOM_PADDING = 12;
 	static readonly COMPACT_DENSITY_FLOATING_BOTTOM_PADDING = 4;
 
 	//#region IView

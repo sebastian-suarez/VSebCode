@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -151,7 +152,7 @@ export class DebugToolBar extends Themable implements IWorkbenchContribution {
 			if (e.affectsConfiguration('debug.toolBarLocation')) {
 				this.updateScheduler.schedule();
 			}
-			if (e.affectsConfiguration(LayoutSettings.EDITOR_TABS_MODE) || e.affectsConfiguration(LayoutSettings.COMMAND_CENTER)) {
+			if (e.affectsConfiguration(LayoutSettings.EDITOR_TABS_MODE) || e.affectsConfiguration(LayoutSettings.COMMAND_CENTER) || e.affectsConfiguration(LayoutSettings.MODERN_UI) || e.affectsConfiguration(LayoutSettings.MODERN_UI_DENSITY)) {
 				this._yRange = undefined;
 				this.setCoordinates();
 			}
@@ -203,7 +204,17 @@ export class DebugToolBar extends Themable implements IWorkbenchContribution {
 			});
 		}));
 
-		this._register(this.layoutService.onDidChangePartVisibility(() => this.setCoordinates()));
+		this._register(this.layoutService.onDidChangePartVisibility(() => {
+			this._yRange = undefined; // the title row comes and goes with full screen
+			this.setCoordinates();
+		}));
+
+		// An auxiliary window shows and hides its own title row with its full screen state, which
+		// lays its container out again without changing any part's visibility
+		this._register(this.layoutService.onDidLayoutContainer(() => {
+			this._yRange = undefined;
+			this.setCoordinates();
+		}));
 
 		this._register(this.layoutService.onDidChangeActiveContainer(async () => {
 			this._yRange = undefined;
@@ -305,7 +316,7 @@ export class DebugToolBar extends Themable implements IWorkbenchContribution {
 	}
 
 	private get yDefault() {
-		return this.layoutService.mainContainerOffset.top;
+		return this.layoutService.activeContainerOffset.top; // below the active window's title row, whose height differs between windows
 	}
 
 	private _yRange: [number, number] | undefined;
@@ -313,15 +324,8 @@ export class DebugToolBar extends Themable implements IWorkbenchContribution {
 		if (!this._yRange) {
 			const isTitleBarVisible = this.layoutService.isVisible(Parts.TITLEBAR_PART, dom.getWindow(this.layoutService.activeContainer));
 			const yMin = isTitleBarVisible ? 0 : this.layoutService.mainContainerOffset.top;
-			let yMax = 0;
-
-			if (isTitleBarVisible) {
-				if (this.configurationService.getValue(LayoutSettings.COMMAND_CENTER) === true) {
-					yMax += 35;
-				} else {
-					yMax += 28;
-				}
-			}
+			// The active window's title row, whatever its height (none while hidden), and the main window's banner
+			let yMax = this.layoutService.activeContainerOffset.top;
 
 			if (this.configurationService.getValue(LayoutSettings.EDITOR_TABS_MODE) !== EditorTabsMode.NONE) {
 				yMax += 35;
@@ -348,9 +352,10 @@ export class DebugToolBar extends Themable implements IWorkbenchContribution {
 
 	private doShowInActiveContainer(): void {
 		this.layoutService.activeContainer.appendChild(this.$el);
-		this.trackPixelRatioListener.value = PixelRatio.getInstance(dom.getWindow(this.$el)).onDidChange(
-			() => this.setCoordinates()
-		);
+		this.trackPixelRatioListener.value = PixelRatio.getInstance(dom.getWindow(this.$el)).onDidChange(() => {
+			this._yRange = undefined; // the title row's height in CSS pixels follows the zoom
+			this.setCoordinates();
+		});
 	}
 
 	private hide(): void {

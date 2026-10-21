@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -12,7 +13,7 @@ import { TestStorageService } from '../../../common/workbenchTestServices.js';
 import { TestHostService, TestLayoutService } from '../../workbenchTestServices.js';
 import { ActivitybarPart, ActivityBarCompositeBar } from '../../../../browser/parts/activitybar/activitybarPart.js';
 import { IViewSize } from '../../../../../base/browser/ui/grid/grid.js';
-import { COMPACT_FLOATING_PANEL_OUTER_MARGIN, LayoutSettings, ModernUIDensity, Parts, Position } from '../../../../services/layout/browser/layoutService.js';
+import { LayoutSettings, ModernUIDensity, Parts, Position } from '../../../../services/layout/browser/layoutService.js';
 import { mainWindow } from '../../../../../base/browser/window.js';
 import { IConfigurationChangeEvent } from '../../../../../platform/configuration/common/configuration.js';
 import { IPaneCompositePart } from '../../../../browser/parts/paneCompositePart.js';
@@ -73,9 +74,11 @@ class TestFloatingPanelsLayoutService extends TestLayoutService {
 	floatingPanelsEnabled = false;
 	modernUICompact = false;
 	sideBarPosition = Position.LEFT;
+	columnBandHeight = 0;
 	override isFloatingPanelsEnabled(): boolean { return this.floatingPanelsEnabled; }
 	override isModernUICompact(): boolean { return this.modernUICompact; }
 	override getSideBarPosition(): Position { return this.sideBarPosition; }
+	override getColumnBandHeight(): number { return this.columnBandHeight; }
 }
 
 suite('ActivitybarPart', () => {
@@ -209,9 +212,8 @@ suite('ActivitybarPart', () => {
 		assert.strictEqual(part.maximumHeight, Number.POSITIVE_INFINITY);
 	});
 
-	test('floating panels reserves the cluster perimeter, plus a leading gap only for a standalone right-hand rail', () => {
-		const base = ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_MARGIN + ActivitybarPart.FLOATING_LANE;
-		const withLeadingGap = base + ActivitybarPart.FLOATING_MARGIN;
+	test('the flush rail of the side bar column reserves only its lane, wherever the side bar is', () => {
+		const base = ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_LANE;
 
 		const widthOf = (sideBarPosition: Position, sideBarVisible: boolean, modernUICompact = false) => {
 			const { part, layoutService } = createActivitybarPart(false, true, sideBarPosition, {}, modernUICompact);
@@ -229,10 +231,8 @@ suite('ActivitybarPart', () => {
 			left: base,
 			leftCollapsed: base,
 			right: base,
-			// Only here does the rail follow another card and have to supply the gap itself.
-			rightCollapsed: withLeadingGap,
-			// Compact keeps its cards joined edge to edge, so no gap is ever needed.
-			compactRightCollapsed: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + COMPACT_FLOATING_PANEL_OUTER_MARGIN + ActivitybarPart.FLOATING_COMPACT_LANE,
+			rightCollapsed: base,
+			compactRightCollapsed: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_COMPACT_LANE,
 		});
 	});
 
@@ -242,8 +242,8 @@ suite('ActivitybarPart', () => {
 		assert.deepStrictEqual(
 			{ min: part.minimumWidth, max: part.maximumWidth },
 			{
-				min: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + COMPACT_FLOATING_PANEL_OUTER_MARGIN + ActivitybarPart.FLOATING_COMPACT_LANE,
-				max: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + COMPACT_FLOATING_PANEL_OUTER_MARGIN + ActivitybarPart.FLOATING_COMPACT_LANE,
+				min: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_COMPACT_LANE,
+				max: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_COMPACT_LANE,
 			}
 		);
 	});
@@ -320,7 +320,7 @@ suite('ActivitybarPart', () => {
 		fireConfigChange(configService, LayoutSettings.MODERN_UI);
 
 		assert.deepStrictEqual(events, [undefined]);
-		assert.strictEqual(part.minimumWidth, ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_MARGIN + ActivitybarPart.FLOATING_LANE);
+		assert.strictEqual(part.minimumWidth, ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_LANE);
 	});
 
 	test('fires onDidChange(undefined) when Modern UI density changes', () => {
@@ -337,7 +337,7 @@ suite('ActivitybarPart', () => {
 			minimumWidth: part.minimumWidth,
 		}, {
 			events: [undefined],
-			minimumWidth: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + COMPACT_FLOATING_PANEL_OUTER_MARGIN + ActivitybarPart.FLOATING_COMPACT_LANE,
+			minimumWidth: ActivitybarPart.FLOATING_ACTIVITYBAR_WIDTH + ActivitybarPart.FLOATING_COMPACT_LANE,
 		});
 	});
 
@@ -432,7 +432,7 @@ suite('ActivitybarPart', () => {
 		assert.strictEqual(el.classList.contains('compact'), false);
 	});
 
-	test('leaves the card border to the stylesheet in Modern UI, keeping the legacy inline border otherwise', () => {
+	test('keeps the inline inner edge of the flush rail in both modes', () => {
 		const render = (floatingPanelsEnabled: boolean) => {
 			const { part } = createActivitybarPart(false, floatingPanelsEnabled, Position.LEFT, { [ACTIVITY_BAR_BORDER]: '#123456' });
 			const el = document.createElement('div');
@@ -445,9 +445,9 @@ suite('ActivitybarPart', () => {
 			modern: render(true),
 			classic: render(false),
 		}, {
-			// The rail is a floating card, so `modernActivityBar.border` drives it from CSS and
-			// no inline colour is written — which is what lets the seam be styled per edge.
-			modern: { inlineBorderColor: '', bordered: false },
+			// The rail is a flush surface of the side bar column, not a card: the `bordered`
+			// stroke draws its inner edge in the activity bar border color either way.
+			modern: { inlineBorderColor: 'rgb(18, 52, 86)', bordered: true },
 			classic: { inlineBorderColor: 'rgb(18, 52, 86)', bordered: true },
 		});
 	});
@@ -497,71 +497,40 @@ suite('ActivitybarPart', () => {
 		assert.deepStrictEqual(part.toJSON(), { type: Parts.ACTIVITYBAR_PART });
 	});
 
-	// --- layout: floating panels gutter reservation -------------------------
+	// --- layout: the column band ---------------------------------------------
 
 	// The part has no title, header or footer, so the content area ends up exactly the height `layout()` reserved.
-	function layoutContentHeight(visibleParts: Parts[], floatingPanelsEnabled = true, modernUICompact = false): number {
+	function layoutBand(columnBandHeight: number, floatingPanelsEnabled = true, modernUICompact = false): { contentHeight: number; paddingTop: string; band: string | undefined } {
 		const { part, layoutService } = createActivitybarPart(false, floatingPanelsEnabled, Position.LEFT, {}, modernUICompact);
 		const el = document.createElement('div');
 		fixture.appendChild(el);
 		part.create(el);
 
-		const visible = new Set(visibleParts);
-		layoutService.isVisible = (partId: Parts) => visible.has(partId);
+		layoutService.columnBandHeight = columnBandHeight;
 		part.layout(100, 300);
 
 		const content = el.querySelector<HTMLElement>('.content');
-		return parseInt(content!.style.height, 10);
+		const band = el.querySelector<HTMLElement>(':scope > .column-band');
+		return {
+			contentHeight: parseInt(content!.style.height, 10),
+			paddingTop: el.style.paddingTop,
+			band: band && band.style.display !== 'none' ? band.style.height : undefined
+		};
 	}
 
-	test('reserves the perimeter gutter on each window edge the activity bar faces', () => {
-		const margin = ActivitybarPart.FLOATING_MARGIN;
-		// At the default density the window-edge perimeter matches the inter-card gap.
-		const outerMargin = ActivitybarPart.FLOATING_MARGIN;
-		const borders = ActivitybarPart.FLOATING_BORDER * 2;
-		const actual = {
-			// Windowed default: a title bar above and a status bar below, so neither is a window edge.
-			titleAndStatusBarVisible: layoutContentHeight([Parts.TITLEBAR_PART, Parts.STATUSBAR_PART]),
-
-			// Native fullscreen: nothing above the middle section, so the top is a window edge.
-			titleBarHidden: layoutContentHeight([Parts.STATUSBAR_PART]),
-
-			// A visible banner still occupies the row above, so the top is not a window edge.
-			bannerInsteadOfTitleBar: layoutContentHeight([Parts.BANNER_PART, Parts.STATUSBAR_PART]),
-
-			// Hidden status bar: the activity bar now reaches the window bottom edge.
-			statusBarHidden: layoutContentHeight([Parts.TITLEBAR_PART]),
-
-			// Both edges at once.
-			bothEdgesExposed: layoutContentHeight([]),
-
-			// Experiment disabled: the activity bar is not a floating card, so no gutters at all.
-			floatingPanelsDisabled: layoutContentHeight([], false),
-		};
-
-		assert.deepStrictEqual(actual, {
-			titleAndStatusBarVisible: 300 - margin - borders,
-			titleBarHidden: 300 - outerMargin - margin - borders,
-			bannerInsteadOfTitleBar: 300 - margin - borders,
-			statusBarHidden: 300 - outerMargin - borders,
-			bothEdgesExposed: 300 - outerMargin * 2 - borders,
-			floatingPanelsDisabled: 300,
-		});
-	});
-
-	test('compact density keeps the activity bar flush with window chrome', () => {
-		const outerMargin = COMPACT_FLOATING_PANEL_OUTER_MARGIN;
-		const borders = ActivitybarPart.FLOATING_BORDER * 2;
+	test('reserves the column band at its top and no card gutters', () => {
 		assert.deepStrictEqual({
-			titleAndStatusBarVisible: layoutContentHeight([Parts.TITLEBAR_PART, Parts.STATUSBAR_PART], true, true),
-			titleBarHidden: layoutContentHeight([Parts.STATUSBAR_PART], true, true),
-			statusBarHidden: layoutContentHeight([Parts.TITLEBAR_PART], true, true),
-			bothEdgesExposed: layoutContentHeight([], true, true),
+			// The band beside a 44px title row (the column-with-band shape)
+			band: layoutBand(44),
+			compactBand: layoutBand(32, true, true),
+			// Full screen or a title bar above the column: no band, the rail spans its whole height
+			noBand: layoutBand(0),
+			classicBand: layoutBand(44, false),
 		}, {
-			titleAndStatusBarVisible: 300 - outerMargin - borders,
-			titleBarHidden: 300 - outerMargin * 2 - borders,
-			statusBarHidden: 300 - outerMargin - borders,
-			bothEdgesExposed: 300 - outerMargin * 2 - borders,
+			band: { contentHeight: 300 - 44, paddingTop: '44px', band: '44px' },
+			compactBand: { contentHeight: 300 - 32, paddingTop: '32px', band: '32px' },
+			noBand: { contentHeight: 300, paddingTop: '', band: undefined },
+			classicBand: { contentHeight: 300 - 44, paddingTop: '44px', band: '44px' },
 		});
 	});
 
@@ -647,8 +616,6 @@ suite('ActivitybarPart', () => {
 	}
 
 	test('composite bar is given back the leading item gap it does not render', () => {
-		const margin = ActivitybarPart.FLOATING_MARGIN;
-		const borders = ActivitybarPart.FLOATING_BORDER * 2;
 
 		assert.deepStrictEqual(
 			{
@@ -661,9 +628,9 @@ suite('ActivitybarPart', () => {
 				// No floating gutters and no gap between items.
 				classicDefault: 300,
 				classicCompact: 300,
-				// Floating reserves a bottom gutter and the card border; the 8px gap is then handed back.
-				modernDefault: 300 - margin - borders + ActivitybarPart.FLOATING_ACTION_GAP,
-				modernCompact: 300 - margin - borders,
+				// The flush rail reserves no vertical gutter; the 8px gap is handed back.
+				modernDefault: 300 + ActivitybarPart.FLOATING_ACTION_GAP,
+				modernCompact: 300,
 			}
 		);
 	});

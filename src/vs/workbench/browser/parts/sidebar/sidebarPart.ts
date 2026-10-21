@@ -39,6 +39,8 @@ import { VisibleViewContainersTracker } from '../visibleViewContainersTracker.js
 import { Extensions } from '../../panecomposite.js';
 import { invalidateFontMetrics, updateSidebarSize } from '../../../../base/common/font.js';
 import { getFontSize } from '../../../../platform/configuration/common/fontConfiguration.js';
+import { Dimension } from '../../../../base/browser/dom.js';
+import { ColumnBand } from '../../layoutColumn.js';
 
 const PRIMARY_SIDE_BAR_SASH_CLASS = 'primary-sidebar-sash';
 
@@ -75,6 +77,9 @@ export class SidebarPart extends AbstractPaneCompositePart {
 	private readonly activityBarPart = this._register(this.instantiationService.createInstance(ActivitybarPart, this.location, this));
 	private readonly visibleViewContainersTracker: VisibleViewContainersTracker;
 	private readonly primarySideBarSashClassDisposable = this._register(new MutableDisposable());
+
+	private columnBand: ColumnBand | undefined;
+	private columnLayoutDimension: Dimension | undefined;
 
 	//#endregion
 
@@ -190,6 +195,7 @@ export class SidebarPart extends AbstractPaneCompositePart {
 		container.style.borderLeftWidth = borderColor && !isPositionLeft ? '1px' : '';
 		container.style.borderLeftStyle = borderColor && !isPositionLeft ? 'solid' : '';
 		container.style.borderLeftColor = !isPositionLeft ? borderColor || '' : '';
+		container.classList.toggle('column-inner-edge', !!borderColor); // the opaque column's inner edge (`layoutColumn.css`)
 		container.style.outlineColor = this.getColor(SIDE_BAR_DRAG_AND_DROP_BACKGROUND) ?? '';
 
 		this.applySidebarFontSize(container);
@@ -197,17 +203,27 @@ export class SidebarPart extends AbstractPaneCompositePart {
 	}
 
 	protected override getFloatingBorderWidth(): number {
-		return this.layoutService.isGlassSideBar() ? 0 : super.getFloatingBorderWidth(); // the glass side bar draws no card border
+		return 0; // a flush surface of the side bar column draws no card border; the part layout reserves its inner edge
 	}
 
 	override layout(width: number, height: number, top: number, left: number): void {
 		const visible = this.layoutService.isVisible(Parts.SIDEBAR_PART);
-		this.layoutService.setGlassSideBarBounds(visible ? { left, top, width, height } : undefined); // the glass backing cuts its hole here
+		this.layoutService.setGlassSideBarBounds(visible ? { left, top, width, height } : undefined); // the glass backing cuts its hole here, band included
 		if (!visible) {
 			return;
 		}
 
-		super.layout(width, height, top, left);
+		// The column band: the content starts below the title row's height (`layoutColumn.ts`)
+		this.columnLayoutDimension = new Dimension(width, height);
+		const columnBandHeight = this.layoutService.getColumnBandHeight();
+		this.columnBand ??= new ColumnBand(this.element);
+		this.columnBand.layout(columnBandHeight);
+
+		super.layout(width, Math.max(0, height - columnBandHeight), top, left);
+	}
+
+	protected override getRelayoutDimension(): Dimension | undefined {
+		return this.columnLayoutDimension ?? super.getRelayoutDimension(); // the grid's size: the band is taken from it on every layout
 	}
 
 	override setVisible(visible: boolean): void {

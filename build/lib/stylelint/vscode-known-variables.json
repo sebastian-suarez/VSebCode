@@ -1024,6 +1024,7 @@
 		"--testMessageDecorationFontFamily",
 		"--testMessageDecorationFontSize",
 		"--title-border-bottom-color",
+		"--title-row-leading-inset",
 		"--title-wco-width",
 		"--update-progress",
 		"--reveal-button-size",

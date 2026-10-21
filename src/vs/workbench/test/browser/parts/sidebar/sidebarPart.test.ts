@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -15,9 +16,14 @@ import { TestLayoutService, workbenchInstantiationService } from '../../workbenc
 
 class TestSidebarLayoutService extends TestLayoutService {
 	sideBarPosition = Position.LEFT;
+	columnBandHeight = 0;
 
 	override getSideBarPosition(): Position {
 		return this.sideBarPosition;
+	}
+
+	override getColumnBandHeight(): number {
+		return this.columnBandHeight;
 	}
 }
 
@@ -31,6 +37,10 @@ class TestViewDescriptorService extends mock<IViewDescriptorService>() {
 
 	override getViewContainersByLocation(_location: ViewContainerLocation) {
 		return [];
+	}
+
+	override canMoveViews() {
+		return false;
 	}
 }
 
@@ -71,5 +81,42 @@ suite('SidebarPart', () => {
 			[true, false],
 			[false, false],
 		]);
+	});
+
+	test('reserves the column band at its top and lays out again from the grid size', () => {
+		const instantiationService = workbenchInstantiationService(undefined, store);
+		const layoutService = new TestSidebarLayoutService();
+		instantiationService.stub(IWorkbenchLayoutService, layoutService);
+		instantiationService.stub(IViewDescriptorService, new TestViewDescriptorService());
+
+		const part = store.add(instantiationService.createInstance(SidebarPart));
+		const container = document.createElement('div');
+		part.create(container);
+		const content = part.element.querySelector<HTMLElement>(':scope > .content');
+		const read = () => {
+			const band = part.element.querySelector<HTMLElement>(':scope > .column-band');
+			return {
+				paddingTop: part.element.style.paddingTop,
+				band: band && band.style.display !== 'none' ? band.style.height : undefined,
+				contentHeight: content?.style.height,
+			};
+		};
+		const relayout = Reflect.get(part, 'relayout') as () => void;
+
+		layoutService.columnBandHeight = 44;
+		part.layout(300, 600, 0, 0);
+		const withBand = read();
+		relayout.call(part); // what a title, header or footer change does: the band must not be taken twice
+		const afterRelayout = read();
+		layoutService.columnBandHeight = 0;
+		part.layout(300, 600, 0, 0);
+		const withoutBand = read();
+
+		// The part has a 35px title above its content
+		assert.deepStrictEqual({ withBand, afterRelayout, withoutBand }, {
+			withBand: { paddingTop: '44px', band: '44px', contentHeight: `${600 - 44 - 35}px` },
+			afterRelayout: { paddingTop: '44px', band: '44px', contentHeight: `${600 - 44 - 35}px` },
+			withoutBand: { paddingTop: '', band: undefined, contentHeight: `${600 - 35}px` },
+		});
 	});
 });

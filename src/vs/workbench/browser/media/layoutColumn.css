@@ -1,0 +1,89 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/*
+ * The side bar column (`layoutColumn.ts`): the activity bar and the primary side bar form the
+ * outer column of the workbench grid, beside the main area that holds the title row, the editor,
+ * the panel, the secondary side bar and the status line. The column is flush with the window
+ * edges and with the main area in every state, as the v10 mockup draws it: no card gutter,
+ * border or corner radius, the opaque side bar color with a 1px inner edge (the glass side bar,
+ * `glass.css`, shows the desktop instead and no edge). Modern UI's floating cards live in the
+ * main area only. The layout service sets `side-bar-column` on the main container, and
+ * `column-with-band` when the column spans the window height and reserves the title band.
+ */
+
+/* The band a column part reserves at its top (`ColumnBand`): a window drag region. */
+.monaco-workbench .part > .column-band {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	-webkit-app-region: drag;
+}
+
+/* The primary side bar */
+.monaco-workbench.side-bar-column.floating-panels .part.sidebar {
+	margin: 0 !important;
+	border: 0 none !important;
+	border-radius: 0 !important;
+	background-image: none !important;
+}
+
+.monaco-workbench.side-bar-column.floating-panels:not(.glass) .part.sidebar {
+	background-color: var(--vscode-sideBar-background) !important;
+}
+
+/* The inner edge in `sideBar.border` (or the contrast border), which the part layout reserves
+ * whenever one of those colors is set (`column-inner-edge`). */
+.monaco-workbench.side-bar-column.floating-panels:not(.glass) .part.sidebar.left.column-inner-edge {
+	border-right: 1px solid var(--vscode-sideBar-border, var(--vscode-contrastBorder)) !important;
+}
+
+.monaco-workbench.side-bar-column.floating-panels:not(.glass) .part.sidebar.right.column-inner-edge {
+	border-left: 1px solid var(--vscode-sideBar-border, var(--vscode-contrastBorder)) !important;
+}
+
+/*
+ * The activity bar: a flush rail with Modern UI's lane beside the icon column but no card
+ * margin, border or corners (`ActivitybarPart` reserves the lane only). Its inner edge is the
+ * `bordered` stroke; without the card's 1px borders the icons sit at half the lane.
+ */
+.monaco-workbench.side-bar-column.floating-panels .part.activitybar {
+	margin: 0 !important;
+	height: 100% !important;
+	border: 0 none !important;
+	border-radius: 0 !important;
+	background-image: none !important;
+}
+
+.monaco-workbench.side-bar-column.floating-panels .part.activitybar > .content {
+	left: calc(var(--modern-ui-activitybar-lane) / 2);
+}
+
+.monaco-workbench.side-bar-column.floating-panels .part.activitybar:not(.top):not(.bottom) > .content > .composite-bar {
+	margin-top: calc(var(--modern-ui-activitybar-lane) / 2);
+}
+
+.monaco-workbench.side-bar-column.floating-panels .part.activitybar:not(.top):not(.bottom) > .content > .menubar.compact {
+	height: calc(var(--activity-bar-action-height, 36px) + var(--modern-ui-activitybar-lane) / 2);
+	padding-top: calc(var(--modern-ui-activitybar-lane) / 2);
+}
+
+.monaco-workbench.side-bar-column.floating-panels .part.activitybar:not(.top):not(.bottom) > .content > :not(.composite-bar):last-child {
+	margin-bottom: calc(var(--modern-ui-activitybar-lane) / 2);
+}
+
+/* The title row: its content clears the window buttons when they sit over it (set by the title
+ * bar), which full screen hides. */
+.monaco-workbench.column-with-band:not(.fullscreen) .part.titlebar > .titlebar-container {
+	padding-left: var(--title-row-leading-inset, 0px);
+}
+
+/* The status line at the default density: its items centered in 34px (`StatusbarPart`). The
+ * notifications anchor against the bands as laid out (`getNotificationsBandInsets`). */
+.modern-ui.monaco-workbench.side-bar-column.floating-panels:not(.modern-ui-compact) .part.statusbar {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}

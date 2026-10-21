@@ -98,8 +98,8 @@ suite('LayoutService - getFloatingOuterEdgeOwners', () => {
 			// Experiment disabled: no owners regardless of layout.
 			disabled: owners(s => { s.floatingPanelsEnabled = false; s.visibleParts = new Set([Parts.AUXILIARYBAR_PART]); }),
 
-			// Default full layout (side bar left): the activity bar is the outermost card of the
-			// side bar cluster and owns the left edge, the secondary side bar owns the right edge.
+			// Default full layout (side bar left): the column (activity bar and side bar) is outside
+			// the card cluster, so the editor owns the left edge and the secondary side bar the right.
 			defaultFull: owners(s => { s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART]); }),
 			defaultFullSideBarRight: owners(s => { s.sideBarPosition = Position.RIGHT; s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART]); }),
 
@@ -107,8 +107,8 @@ suite('LayoutService - getFloatingOuterEdgeOwners', () => {
 			compactFull: owners(s => { s.modernUICompact = true; s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART]); }),
 			compactFullSideBarRight: owners(s => { s.modernUICompact = true; s.sideBarPosition = Position.RIGHT; s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART]); }),
 
-			// Maximized aux bar with the activity bar in its default (visible) position: the
-			// activity bar owns the left edge, the aux bar owns the right edge.
+			// Maximized aux bar with the activity bar visible: the rail is in the column, so the aux
+			// bar spans the whole main area and owns both edges.
 			maximizedAuxWithActivityBar: owners(s => { s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.AUXILIARYBAR_PART]); }),
 
 			// Maximized aux bar with the activity bar not in its default position (hidden from
@@ -122,8 +122,8 @@ suite('LayoutService - getFloatingOuterEdgeOwners', () => {
 			// and owns both edges.
 			editorOnly: owners(s => { s.visibleParts = new Set([Parts.EDITOR_PART]); }),
 
-			// Full layout with a visible left vertical panel: the panel sits between the editor
-			// and the side bar, so it never reaches an edge.
+			// Full layout with a visible left vertical panel: the panel sits between the column and
+			// the editor, so it owns the main area's left edge.
 			verticalPanelFull: owners(s => { s.panelPosition = Position.LEFT; s.visibleParts = new Set([Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.PANEL_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART]); }),
 
 			// Maximized left vertical panel with the activity bar hidden: the panel spans the
@@ -131,23 +131,23 @@ suite('LayoutService - getFloatingOuterEdgeOwners', () => {
 			maximizedVerticalPanel: owners(s => { s.panelPosition = Position.LEFT; s.visibleParts = new Set([Parts.PANEL_PART]); }),
 
 			// Visible horizontal (bottom) panel: not part of the vertical order, so it owns no
-			// edge; the secondary side bar still owns the right edge.
+			// edge; the editor and the secondary side bar own theirs.
 			horizontalPanelVisible: owners(s => { s.panelPosition = Position.BOTTOM; s.visibleParts = new Set([Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.PANEL_PART, Parts.AUXILIARYBAR_PART]); }),
 		};
 
 		assert.deepStrictEqual(actual, {
 			disabled: { left: undefined, right: undefined },
-			defaultFull: { left: Parts.ACTIVITYBAR_PART, right: Parts.AUXILIARYBAR_PART },
-			defaultFullSideBarRight: { left: Parts.AUXILIARYBAR_PART, right: Parts.ACTIVITYBAR_PART },
-			compactFull: { left: Parts.ACTIVITYBAR_PART, right: Parts.AUXILIARYBAR_PART },
-			compactFullSideBarRight: { left: Parts.AUXILIARYBAR_PART, right: Parts.ACTIVITYBAR_PART },
-			maximizedAuxWithActivityBar: { left: Parts.ACTIVITYBAR_PART, right: Parts.AUXILIARYBAR_PART },
+			defaultFull: { left: Parts.EDITOR_PART, right: Parts.AUXILIARYBAR_PART },
+			defaultFullSideBarRight: { left: Parts.AUXILIARYBAR_PART, right: Parts.EDITOR_PART },
+			compactFull: { left: Parts.EDITOR_PART, right: Parts.AUXILIARYBAR_PART },
+			compactFullSideBarRight: { left: Parts.AUXILIARYBAR_PART, right: Parts.EDITOR_PART },
+			maximizedAuxWithActivityBar: { left: Parts.AUXILIARYBAR_PART, right: Parts.AUXILIARYBAR_PART },
 			maximizedAuxNoActivityBar: { left: Parts.AUXILIARYBAR_PART, right: Parts.AUXILIARYBAR_PART },
 			maximizedAuxNoActivityBarSideBarRight: { left: Parts.AUXILIARYBAR_PART, right: Parts.AUXILIARYBAR_PART },
 			editorOnly: { left: Parts.EDITOR_PART, right: Parts.EDITOR_PART },
-			verticalPanelFull: { left: Parts.ACTIVITYBAR_PART, right: Parts.AUXILIARYBAR_PART },
+			verticalPanelFull: { left: Parts.PANEL_PART, right: Parts.AUXILIARYBAR_PART },
 			maximizedVerticalPanel: { left: Parts.PANEL_PART, right: Parts.PANEL_PART },
-			horizontalPanelVisible: { left: Parts.SIDEBAR_PART, right: Parts.AUXILIARYBAR_PART },
+			horizontalPanelVisible: { left: Parts.EDITOR_PART, right: Parts.AUXILIARYBAR_PART },
 		});
 	});
 });
@@ -187,8 +187,7 @@ suite('LayoutService - getFloatingPaneCompositeHorizontalMargins', () => {
 			activityBarRight: margins(Parts.AUXILIARYBAR_PART, [Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART], Position.RIGHT),
 			secondarySideBarOnly: margins(Parts.AUXILIARYBAR_PART, [Parts.AUXILIARYBAR_PART]),
 
-			// Default density: the primary side bar meets the activity bar rail flush on the
-			// facing edge, and falls back to the outer gutter when the rail is hidden.
+			// The primary side bar is a flush surface of the column in every state.
 			primarySideBarLeft: margins(Parts.SIDEBAR_PART, [Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART], Position.LEFT),
 			primarySideBarRight: margins(Parts.SIDEBAR_PART, [Parts.ACTIVITYBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART], Position.RIGHT),
 			primarySideBarLeftNoActivityBar: margins(Parts.SIDEBAR_PART, [Parts.SIDEBAR_PART, Parts.EDITOR_PART], Position.LEFT),
@@ -207,16 +206,18 @@ suite('LayoutService - getFloatingPaneCompositeHorizontalMargins', () => {
 			activityBarLeft: { left: 4, right: 4 },
 			activityBarRight: { left: 4, right: 0 },
 			secondarySideBarOnly: { left: 4, right: 4 },
-			primarySideBarLeft: { left: FLOATING_PANEL_INNER_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
-			primarySideBarRight: { left: 4, right: FLOATING_PANEL_INNER_MARGIN },
-			primarySideBarLeftNoActivityBar: { left: 4, right: FLOATING_PANEL_INNER_MARGIN },
+			primarySideBarLeft: { left: 0, right: 0 },
+			primarySideBarRight: { left: 0, right: 0 },
+			primarySideBarLeftNoActivityBar: { left: 0, right: 0 },
 			compactSecondarySideBarOnly: { left: COMPACT_FLOATING_PANEL_OUTER_MARGIN, right: COMPACT_FLOATING_PANEL_OUTER_MARGIN },
-			compactPrimarySideBarLeft: { left: COMPACT_FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
-			compactPrimarySideBarRight: { left: COMPACT_FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
+			compactPrimarySideBarLeft: { left: 0, right: 0 },
+			compactPrimarySideBarRight: { left: 0, right: 0 },
+			// A horizontal panel always reaches the main area's edge on the column's side, and the
+			// other edge whenever it reaches under the secondary side bar.
 			justifiedPanelSideBarRight: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_MARGIN },
 			rightAlignedPanelSideBarRight: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_MARGIN },
-			leftAlignedPanelSideBarRight: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
-			justifiedPanelSideBarHidden: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
+			leftAlignedPanelSideBarRight: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_MARGIN },
+			justifiedPanelSideBarHidden: { left: FLOATING_PANEL_MARGIN, right: FLOATING_PANEL_MARGIN },
 			compactJustifiedPanel: { left: COMPACT_FLOATING_PANEL_MARGIN, right: COMPACT_FLOATING_PANEL_OUTER_MARGIN },
 			compactJustifiedPanelSideBarRight: { left: COMPACT_FLOATING_PANEL_OUTER_MARGIN, right: FLOATING_PANEL_INNER_MARGIN },
 		});
@@ -246,7 +247,9 @@ suite('LayoutService - getFloatingSidebarSiblingToEditorStatus', () => {
 			// center: neither bar is a sibling (both span full height)
 			centerLeft: siblingStatus(s => { s.sideBarPosition = Position.LEFT; s.panelAlignment = 'center'; }),
 			centerRight: siblingStatus(s => { s.sideBarPosition = Position.RIGHT; s.panelAlignment = 'center'; }),
-			// justify: both bars are siblings (panel spans the full width)
+			// The primary side bar is the outer column and never a sibling; the secondary side bar is
+			// one when the panel reaches under it.
+			// justify: the panel spans the main area
 			justifyLeft: siblingStatus(s => { s.sideBarPosition = Position.LEFT; s.panelAlignment = 'justify'; }),
 			justifyRight: siblingStatus(s => { s.sideBarPosition = Position.RIGHT; s.panelAlignment = 'justify'; }),
 			// left alignment, sidebar on LEFT: sidebar IS sibling, aux bar is NOT
@@ -262,12 +265,12 @@ suite('LayoutService - getFloatingSidebarSiblingToEditorStatus', () => {
 		assert.deepStrictEqual(actual, {
 			centerLeft: { sideBar: false, auxBar: false },
 			centerRight: { sideBar: false, auxBar: false },
-			justifyLeft: { sideBar: true, auxBar: true },
-			justifyRight: { sideBar: true, auxBar: true },
-			leftAlignSidebarLeft: { sideBar: true, auxBar: false },
+			justifyLeft: { sideBar: false, auxBar: true },
+			justifyRight: { sideBar: false, auxBar: true },
+			leftAlignSidebarLeft: { sideBar: false, auxBar: false },
 			leftAlignSidebarRight: { sideBar: false, auxBar: true },
 			rightAlignSidebarLeft: { sideBar: false, auxBar: true },
-			rightAlignSidebarRight: { sideBar: true, auxBar: false },
+			rightAlignSidebarRight: { sideBar: false, auxBar: false },
 		});
 	});
 });
@@ -337,17 +340,20 @@ suite('LayoutService - getFloatingPaneCompositeVerticalMargins', () => {
 			// Vertical panel: full height, so both edges are window edges.
 			leftPanelAtBothEdges: margins(Parts.PANEL_PART, s => { s.panelPosition = Position.LEFT; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); s.visibleParts.delete(Parts.STATUSBAR_PART); }),
 
-			// Side bar beside a top panel, center alignment: full height, so it starts at the top edge.
-			sideBarTopPanelCentered: margins(Parts.SIDEBAR_PART, s => { s.panelPosition = Position.TOP; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); }),
+			// Secondary side bar beside a top panel, center alignment: full height, so it starts at the top edge.
+			auxBarTopPanelCentered: margins(Parts.AUXILIARYBAR_PART, s => { s.panelPosition = Position.TOP; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); }),
 
 			// Same but justified: the bar is a sibling, so its top faces the panel card.
-			sideBarTopPanelJustified: margins(Parts.SIDEBAR_PART, s => { s.panelPosition = Position.TOP; s.panelAlignment = 'justify'; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); }),
+			auxBarTopPanelJustified: margins(Parts.AUXILIARYBAR_PART, s => { s.panelPosition = Position.TOP; s.panelAlignment = 'justify'; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); }),
 
 			// Sibling bar above a bottom panel: its bottom faces the panel, not the window.
-			sideBarBottomPanelJustified: margins(Parts.SIDEBAR_PART, s => { s.panelAlignment = 'justify'; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.STATUSBAR_PART); }),
+			auxBarBottomPanelJustified: margins(Parts.AUXILIARYBAR_PART, s => { s.panelAlignment = 'justify'; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.STATUSBAR_PART); }),
 
 			// Full-height bar with the status bar hidden: it does reach the window bottom.
-			sideBarBottomPanelCentered: margins(Parts.SIDEBAR_PART, s => { s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.STATUSBAR_PART); }),
+			auxBarBottomPanelCentered: margins(Parts.AUXILIARYBAR_PART, s => { s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.STATUSBAR_PART); }),
+
+			// The primary side bar is a flush surface of the column whatever the panel does.
+			sideBarTopPanelJustified: margins(Parts.SIDEBAR_PART, s => { s.panelPosition = Position.TOP; s.panelAlignment = 'justify'; s.visibleParts.add(Parts.PANEL_PART); s.visibleParts.delete(Parts.TITLEBAR_PART); }),
 
 			// Maximized top panel: the editor it normally faces is hidden, so the panel now owns
 			// the cluster's bottom edge and takes the perimeter gutter there.
@@ -361,10 +367,11 @@ suite('LayoutService - getFloatingPaneCompositeVerticalMargins', () => {
 			topPanelStatusBarHidden: { top: inner, bottom: inner },
 			topPanelMaximized: { top: inner, bottom: outer },
 			leftPanelAtBothEdges: { top: outer, bottom: outer },
-			sideBarTopPanelCentered: { top: outer, bottom: margin },
-			sideBarTopPanelJustified: { top: margin, bottom: margin },
-			sideBarBottomPanelJustified: { top: inner, bottom: inner },
-			sideBarBottomPanelCentered: { top: inner, bottom: outer },
+			auxBarTopPanelCentered: { top: outer, bottom: margin },
+			auxBarTopPanelJustified: { top: margin, bottom: margin },
+			auxBarBottomPanelJustified: { top: inner, bottom: inner },
+			auxBarBottomPanelCentered: { top: inner, bottom: outer },
+			sideBarTopPanelJustified: { top: 0, bottom: 0 },
 			disabled: { top: 0, bottom: 0 },
 		});
 	});
@@ -467,20 +474,20 @@ suite('LayoutService - glass side bar', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
 
 	class GlassLayoutService extends TestLayoutService {
-		// No activity bar: the opaque side bar then keeps the window-edge perimeter on its left.
+		// No activity bar, so nothing but the column's own state could give the side bar a gutter.
 		readonly visibleParts = new Set([Parts.TITLEBAR_PART, Parts.SIDEBAR_PART, Parts.EDITOR_PART, Parts.AUXILIARYBAR_PART, Parts.STATUSBAR_PART]);
 		override isFloatingPanelsEnabled(): boolean { return true; }
 		override isVisible(part: Parts): boolean { return this.visibleParts.has(part); }
 	}
 
-	test('the glass side bar reserves no floating insets while the opaque one keeps them', () => {
+	test('the side bar column reserves no floating insets, glass or opaque', () => {
 		const service = new GlassLayoutService();
 		const insets = () => ({ horizontal: getFloatingPaneCompositeHorizontalMargins(service, Parts.SIDEBAR_PART), vertical: getFloatingPaneCompositeVerticalMargins(service, Parts.SIDEBAR_PART, mainWindow) });
 		const opaque = insets();
 		service.setGlassSideBar(true);
 		const glass = insets();
-		assert.deepStrictEqual({ opaqueHorizontal: opaque.horizontal, glass, secondarySideBar: getFloatingPaneCompositeHorizontalMargins(service, Parts.AUXILIARYBAR_PART) }, {
-			opaqueHorizontal: { left: 4, right: FLOATING_PANEL_INNER_MARGIN },
+		assert.deepStrictEqual({ opaque, glass, secondarySideBar: getFloatingPaneCompositeHorizontalMargins(service, Parts.AUXILIARYBAR_PART) }, {
+			opaque: { horizontal: { left: 0, right: 0 }, vertical: { top: 0, bottom: 0 } },
 			glass: { horizontal: { left: 0, right: 0 }, vertical: { top: 0, bottom: 0 } },
 			secondarySideBar: { left: 4, right: 4 }
 		});

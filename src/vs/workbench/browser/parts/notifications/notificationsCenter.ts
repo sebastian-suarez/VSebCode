@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -9,6 +10,7 @@ import { NOTIFICATIONS_CENTER_HEADER_FOREGROUND, NOTIFICATIONS_CENTER_HEADER_BAC
 import { IThemeService, Themable } from '../../../../platform/theme/common/themeService.js';
 import { INotificationsModel, INotificationChangeEvent, NotificationChangeType, NotificationViewItemContentChangeKind, NotificationsSettings, NotificationsPosition, getNotificationsPosition } from '../../../common/notifications.js';
 import { IWorkbenchLayoutService, Parts } from '../../../services/layout/browser/layoutService.js';
+import { getNotificationsBandInsets } from '../../layoutColumn.js';
 import { Emitter } from '../../../../base/common/event.js';
 import { IContextKeyService } from '../../../../platform/contextkey/common/contextkey.js';
 import { INotificationsCenterController, NotificationActionRunner } from './notificationsCommands.js';
@@ -128,6 +130,19 @@ export class NotificationsCenter extends Themable implements INotificationsCente
 		} else {
 			this.notificationsCenterContainer.style.top = '';
 		}
+
+		// Modern UI anchors the center against the bands its height budget reserves
+		const bands = this.getBandHeights();
+		const insets = getNotificationsBandInsets(bands.titleRow, bands.statusLine);
+		this.notificationsCenterContainer.style.setProperty('--modern-ui-notifications-block-start-inset', `${insets.blockStart}px`);
+		this.notificationsCenterContainer.style.setProperty('--modern-ui-notifications-block-end-inset', `${insets.blockEnd}px`);
+	}
+
+	private getBandHeights(): { readonly titleRow: number; readonly statusLine: number } {
+		return {
+			titleRow: this.layoutService.isVisible(Parts.TITLEBAR_PART, mainWindow) ? this.layoutService.getSize(Parts.TITLEBAR_PART).height : 0,
+			statusLine: this.layoutService.isVisible(Parts.STATUSBAR_PART, mainWindow) ? this.layoutService.getSize(Parts.STATUSBAR_PART).height : 0
+		};
 	}
 
 	private onDidChangeFilter(): void {
@@ -432,14 +447,8 @@ export class NotificationsCenter extends Themable implements INotificationsCente
 
 				// Make sure notifications are not exceeding available height
 				availableHeight = this.workbenchDimensions.height - 35 /* header */;
-				if (this.layoutService.isVisible(Parts.STATUSBAR_PART, mainWindow)) {
-					availableHeight -= 22; // adjust for status bar
-				}
-
-				if (this.layoutService.isVisible(Parts.TITLEBAR_PART, mainWindow)) {
-					availableHeight -= 22; // adjust for title bar
-				}
-
+				const bands = this.getBandHeights();
+				availableHeight -= bands.statusLine + bands.titleRow; // adjust for the status bar and the title bar
 				availableHeight -= (2 * 12); // adjust for paddings top and bottom
 			}
 

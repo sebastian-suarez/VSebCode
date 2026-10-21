@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -17,9 +18,9 @@ import { IActionViewItemService } from '../../../../platform/actions/browser/act
 import { BrowserTitlebarPart, BrowserTitleService, IAuxiliaryTitlebarPart } from '../../../browser/parts/titlebar/titlebarPart.js';
 import { IContextMenuService } from '../../../../platform/contextview/browser/contextView.js';
 import { IThemeService } from '../../../../platform/theme/common/themeService.js';
-import { IWorkbenchLayoutService, Parts } from '../../../services/layout/browser/layoutService.js';
+import { IWorkbenchLayoutService, LayoutSettings, Parts, WorkbenchGridShape } from '../../../services/layout/browser/layoutService.js';
 import { INativeHostService } from '../../../../platform/native/common/native.js';
-import { hasNativeTitlebar, useWindowControlsOverlay, DEFAULT_CUSTOM_TITLEBAR_HEIGHT, hasNativeMenu } from '../../../../platform/window/common/window.js';
+import { hasNativeTitlebar, useWindowControlsOverlay, DEFAULT_CUSTOM_TITLEBAR_HEIGHT, hasNativeMenu, getMacOSWindowControlsPosition } from '../../../../platform/window/common/window.js';
 import { IInstantiationService } from '../../../../platform/instantiation/common/instantiation.js';
 import { Codicon } from '../../../../base/common/codicons.js';
 import { ThemeIcon } from '../../../../base/common/themables.js';
@@ -29,6 +30,7 @@ import { IEditorService } from '../../../services/editor/common/editorService.js
 import { IKeybindingService } from '../../../../platform/keybinding/common/keybinding.js';
 import { CodeWindow, mainWindow } from '../../../../base/browser/window.js';
 import { IsWindowAlwaysOnTopContext } from '../../../common/contextkeys.js';
+import { getTitleBandHeight, getTitleRowLeadingInset } from '../../../browser/layoutColumn.js';
 
 export class NativeTitlebarPart extends BrowserTitlebarPart {
 
@@ -39,7 +41,14 @@ export class NativeTitlebarPart extends BrowserTitlebarPart {
 			return super.minimumHeight;
 		}
 
-		return (this.isCommandCenterVisible ? DEFAULT_CUSTOM_TITLEBAR_HEIGHT : this.macTitlebarSize) / (this.preventZoom ? getZoomFactor(getWindow(this.element)) : 1);
+		return (this.bandHeight ?? (this.isCommandCenterVisible ? DEFAULT_CUSTOM_TITLEBAR_HEIGHT : this.macTitlebarSize)) / (this.preventZoom ? getZoomFactor(getWindow(this.element)) : 1);
+	}
+
+	/**
+	 * The title row's height when the window's title band sets it (`MainNativeTitlebarPart`).
+	 */
+	protected get bandHeight(): number | undefined {
+		return undefined;
 	}
 	override get maximumHeight(): number { return this.minimumHeight; }
 
@@ -306,6 +315,55 @@ export class MainNativeTitlebarPart extends NativeTitlebarPart {
 		@IActionViewItemService actionViewItemService: IActionViewItemService
 	) {
 		super(Parts.TITLEBAR_PART, mainWindow, editorGroupService.mainPart, contextMenuService, configurationService, environmentService, instantiationService, themeService, storageService, layoutService, contextKeyService, hostService, nativeHostService, editorGroupService, editorService, menuService, keybindingService, actionViewItemService);
+
+		this.osRelease = environmentService.os.release;
+	}
+
+	private readonly osRelease: string;
+
+	/**
+	 * The v10 title band (`layoutColumn.ts`): 44px in the column-with-band shape at the default
+	 * Modern UI density; the compact density and Modern UI off keep upstream's heights.
+	 */
+	protected override get bandHeight(): number | undefined {
+		return getTitleBandHeight(this.layoutService.getWorkbenchGridShape(), this.layoutService.isFloatingPanelsEnabled(), this.layoutService.isModernUICompact());
+	}
+
+	protected override onConfigurationChanged(event: IConfigurationChangeEvent): void {
+		super.onConfigurationChanged(event);
+
+		if (event.affectsConfiguration(LayoutSettings.MODERN_UI) || event.affectsConfiguration(LayoutSettings.MODERN_UI_DENSITY)) {
+			this._onDidChange.fire(undefined); // the band's height follows the density
+		}
+	}
+
+	private lastLeftOffset = 0;
+
+	override layout(width: number, height: number, top?: number, left?: number): void {
+
+		// The title row starts beside a column on its left, so its left offset is that column's
+		// width; a relayout from inside the part passes no position and keeps the last one
+		this.lastLeftOffset = left ?? this.lastLeftOffset;
+		this.element.style.setProperty('--title-row-leading-inset', `${this.getLeadingInset(height, this.lastLeftOffset)}px`);
+
+		super.layout(width, height);
+	}
+
+	/**
+	 * Where the title row's content may start so it clears the window buttons while they sit
+	 * over the title row: not over a column on the left and not on the right (right-to-left
+	 * locales keep upstream's controls container there). Full screen hides the buttons, and the
+	 * stylesheet drops the inset then (`layoutColumn.css`), because a transition need not lay the
+	 * title row out again.
+	 */
+	private getLeadingInset(height: number, leftColumnWidth: number): number {
+		if (this.layoutService.getWorkbenchGridShape() !== WorkbenchGridShape.ColumnWithBand || this.windowControlsContainer) {
+			return getTitleRowLeadingInset(undefined, 0);
+		}
+
+		const zoomFactor = getZoomFactor(mainWindow);
+		const windowControls = getMacOSWindowControlsPosition(Math.round(height * zoomFactor), this.osRelease);
+		return getTitleRowLeadingInset((windowControls?.x ?? 0) / zoomFactor, leftColumnWidth);
 	}
 }
 

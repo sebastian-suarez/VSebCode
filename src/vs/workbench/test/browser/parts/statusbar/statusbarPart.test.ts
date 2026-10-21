@@ -195,7 +195,7 @@ suite('StatusbarPart', () => {
 		});
 	});
 
-	test('modern UI reserves compact vertical status bar padding', () => {
+	test('modern UI reserves the status line padding: 34px at the default density, upstream\'s when compact', () => {
 		const configurationService = new TestConfigurationService();
 		const instantiationService = store.add(new TestInstantiationService());
 		instantiationService.stub(IConfigurationService, configurationService);
@@ -222,7 +222,7 @@ suite('StatusbarPart', () => {
 
 		assert.deepStrictEqual({ defaultConstraints, modernUIConstraints, compactModernUIConstraints }, {
 			defaultConstraints: { minimumHeight: 22, maximumHeight: 22 },
-			modernUIConstraints: { minimumHeight: 28, maximumHeight: 28 },
+			modernUIConstraints: { minimumHeight: 34, maximumHeight: 34 },
 			compactModernUIConstraints: { minimumHeight: 26, maximumHeight: 26 },
 		});
 	});
