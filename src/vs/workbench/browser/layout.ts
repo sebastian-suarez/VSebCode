@@ -14,7 +14,7 @@ import { EditorInputCapabilities, isResourceEditorInput, IUntypedEditorInput, pa
 import { SidebarPart } from './parts/sidebar/sidebarPart.js';
 import { PanelPart } from './parts/panel/panelPart.js';
 import { applyGlassSideBarHole, clearGlassSideBarHole, IGlassSideBarBounds, Position, Parts, PartOpensMaximizedOptions, IWorkbenchLayoutService, positionFromString, positionToString, partOpensMaximizedFromString, PanelAlignment, ActivityBarPosition, LayoutSettings, MULTI_WINDOW_PARTS, SINGLE_WINDOW_PARTS, ZenModeSettings, EditorTabsMode, EditorActionsLocation, shouldShowCustomTitleBar, isHorizontal, isMultiWindowPart, IPartVisibilityChangeEvent, isFloatingTopEdgeExposed, ModernUIDensity, WorkbenchGridShape } from '../services/layout/browser/layoutService.js';
-import { arrangeWorkbenchGridParts, createWorkbenchGridDescriptor, getAuxiliaryWindowBarHeight, getColumnBandHeight, getContainerOffset, getWorkbenchGridShape } from './layoutColumn.js';
+import { arrangeWorkbenchGridParts, createWorkbenchGridDescriptor, getAuxiliaryWindowBarHeight, getColumnBandHeight, getContainerOffset, getWorkbenchGridShape, isPanelMaximizable } from './layoutColumn.js';
 import { isTemporaryWorkspace, IWorkspaceContextService, WorkbenchState } from '../../platform/workspace/common/workspace.js';
 import { IStorageService, StorageScope, StorageTarget } from '../../platform/storage/common/storage.js';
 import { IConfigurationChangeEvent, IConfigurationService, isConfigured } from '../../platform/configuration/common/configuration.js';
@@ -2183,6 +2183,10 @@ export abstract class Layout extends Disposable implements IWorkbenchLayoutServi
 		const size = this.workbenchGrid.getViewSize(this.panelPartView);
 		const panelPosition = this.getPanelPosition();
 		const maximize = !this.isPanelMaximized();
+		if (maximize && !isPanelMaximizable(panelPosition, this.getPanelAlignment())) {
+			return; // a horizontal panel maximizes only when centered (see `isPanelMaximizable`)
+		}
+
 		if (maximize) {
 			if (this.isVisible(Parts.PANEL_PART)) {
 				if (isHorizontal(panelPosition)) {
@@ -2860,6 +2864,16 @@ class LayoutStateModel extends Disposable {
 			this.getRuntimeValue(LayoutStateKeys.PANEL_HIDDEN) &&
 			this.getRuntimeValue(LayoutStateKeys.EDITOR_HIDDEN) &&
 			!this.getRuntimeValue(LayoutStateKeys.AUXILIARYBAR_WAS_LAST_MAXIMIZED)
+		) {
+			this.setRuntimeValue(LayoutStateKeys.EDITOR_HIDDEN, false);
+		}
+
+		// Nor may the editor stay hidden beside a panel that cannot be maximized, which a layout
+		// saved before `isPanelMaximizable` guarded the maximize toggle may hold
+		if (
+			this.getRuntimeValue(LayoutStateKeys.EDITOR_HIDDEN) &&
+			!this.getRuntimeValue(LayoutStateKeys.AUXILIARYBAR_WAS_LAST_MAXIMIZED) &&
+			!isPanelMaximizable(this.getRuntimeValue(LayoutStateKeys.PANEL_POSITION), this.getRuntimeValue(LayoutStateKeys.PANEL_ALIGNMENT))
 		) {
 			this.setRuntimeValue(LayoutStateKeys.EDITOR_HIDDEN, false);
 		}
