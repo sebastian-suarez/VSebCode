@@ -6,7 +6,7 @@
 
 /* eslint-disable no-restricted-globals */
 
-import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash.js';
+import { getPartsSplashColors, getPartsSplashColumnGeometry, getPartsSplashLayoutMetrics, normalizePartsSplashWidths } from './partsSplash.js';
 
 (async function () {
 
@@ -159,26 +159,14 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				element.style.height = `${bounds.height}px`;
 			};
 
-			const fallbackActivityBarBounds: IPartsSplashPartBounds | undefined = layoutInfo.modernUICompact === true && layoutInfo.activityBarWidth > 0 ? {
-				top: contentTop + (contentTop === 0 ? floatingOuterMargin : 0),
-				left: layoutInfo.sideBarSide === 'left' ? floatingOuterMargin : window.innerWidth - layoutInfo.activityBarWidth,
-				width: Math.max(0, layoutInfo.activityBarWidth - floatingOuterMargin),
-				height: window.innerHeight - contentTop - contentBottom - floatingOuterMargin - (contentTop === 0 ? floatingOuterMargin : 0),
-			} : undefined;
+			// The card cluster is the main area beside the side bar column, whose parts are flush
+			// surfaces rather than cards (`layoutColumn.ts`)
 			const compactPartBounds = layoutInfo.modernUICompact === true ? [
-				layoutInfo.partBounds?.activityBar,
-				layoutInfo.partBounds?.sideBar,
 				layoutInfo.partBounds?.auxiliaryBar,
 				layoutInfo.partBounds?.editor,
 				layoutInfo.partBounds?.panel,
 			].filter((bounds): bounds is IPartsSplashPartBounds => !!bounds) : [];
-			const compactHorizontalBounds = layoutInfo.modernUICompact === true ? [
-				layoutInfo.partBounds?.activityBar ?? fallbackActivityBarBounds,
-				layoutInfo.partBounds?.sideBar,
-				layoutInfo.partBounds?.auxiliaryBar,
-				layoutInfo.partBounds?.editor,
-				layoutInfo.partBounds?.panel,
-			].filter((bounds): bounds is IPartsSplashPartBounds => !!bounds) : [];
+			const compactHorizontalBounds = compactPartBounds;
 			const compactClusterEdges = compactPartBounds.length > 0 && compactHorizontalBounds.length > 0 ? {
 				left: Math.min(...compactHorizontalBounds.map(bounds => bounds.left)),
 				right: Math.max(...compactHorizontalBounds.map(bounds => bounds.left + bounds.width)),
@@ -190,27 +178,23 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 			// from the ones stored for the workspace) the cluster edges cannot be measured, so
 			// derive ownership from the fallback order instead: the outermost visible card on each
 			// side owns that edge, and every card spans the content region vertically.
-			const fallbackClusterOrder: readonly ('activityBar' | 'sideBar' | 'editor' | 'auxiliaryBar')[] = layoutInfo.sideBarSide === 'left'
-				? ['activityBar', 'sideBar', 'editor', 'auxiliaryBar']
-				: ['auxiliaryBar', 'editor', 'sideBar', 'activityBar'];
+			const fallbackClusterOrder: readonly ('editor' | 'auxiliaryBar')[] = layoutInfo.sideBarSide === 'left'
+				? ['editor', 'auxiliaryBar']
+				: ['auxiliaryBar', 'editor'];
 			const fallbackClusterVisible = {
-				activityBar: layoutInfo.activityBarWidth > 0,
-				sideBar: layoutInfo.sideBarWidth > 0,
 				editor: true,
 				auxiliaryBar: layoutInfo.auxiliaryBarWidth > 0,
 			};
 			const fallbackLeftOwner = fallbackClusterOrder.find(part => fallbackClusterVisible[part]);
 			const fallbackRightOwner = [...fallbackClusterOrder].reverse().find(part => fallbackClusterVisible[part]);
-			const fallbackOuterEdgesFor = (part: 'activityBar' | 'sideBar' | 'editor' | 'auxiliaryBar') => ({
+			const fallbackOuterEdgesFor = (part: 'editor' | 'auxiliaryBar') => ({
 				left: fallbackLeftOwner === part,
 				right: fallbackRightOwner === part,
 				top: true,
 				bottom: true,
 			});
-			const fallbackInsetFor = (part: 'activityBar' | 'sideBar' | 'editor' | 'auxiliaryBar', edge: 'left' | 'right' | 'top' | 'bottom') =>
+			const fallbackInsetFor = (part: 'editor' | 'auxiliaryBar', edge: 'left' | 'right' | 'top' | 'bottom') =>
 				modernUI ? fallbackOuterEdgesFor(part)[edge] ? floatingOuterMargin : floatingMargin : 0;
-
-			const railBorderColor = colorInfo.modernActivityBarBorder ?? colorInfo.surfaceBorder ?? colorInfo.editorGroupBorder ?? 'transparent';
 
 			const applyFloatingCardStyles = (
 				element: HTMLElement,
@@ -244,30 +228,26 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				element.style.overflow = 'hidden';
 			};
 
-			const contentHeight = `calc(100% - ${contentTop + contentBottom}px)`;
-			const activityHeight = modernUI ? `calc(100% - ${contentTop + contentBottom + floatingMargin}px)` : contentHeight;
 			const modernActivityBarBackground = (window.document.hasFocus()
 				? colorInfo.modernActivityBarBackground
 				: colorInfo.modernActivityBarInactiveBackground ?? colorInfo.modernActivityBarBackground)
 				?? colorInfo.activityBarBackground;
 
-			if (layoutInfo.auxiliaryBarWidth === Number.MAX_SAFE_INTEGER) {
-				// if auxiliary bar is maximized, it goes as wide as the
-				// window width but leaving room for activity bar
-				layoutInfo.auxiliaryBarWidth = window.innerWidth - layoutInfo.activityBarWidth;
-			} else {
-				// otherwise adjust for other parts sizes if not maximized
-				layoutInfo.auxiliaryBarWidth = Math.min(layoutInfo.auxiliaryBarWidth, window.innerWidth - (layoutInfo.activityBarWidth + layoutInfo.editorPartMinWidth + layoutInfo.sideBarWidth));
-			}
-			layoutInfo.sideBarWidth = Math.min(layoutInfo.sideBarWidth, window.innerWidth - (layoutInfo.activityBarWidth + layoutInfo.editorPartMinWidth + layoutInfo.auxiliaryBarWidth));
+			// The bar widths fitted into this window (a maximized secondary side bar takes it but the activity bar)
+			const widths = normalizePartsSplashWidths(layoutInfo, window.innerWidth);
+			layoutInfo.auxiliaryBarWidth = widths.auxiliaryBarWidth;
+			layoutInfo.sideBarWidth = widths.sideBarWidth;
 
-			// part: title
+			// The side bar column and the bands beside it (`layoutColumn.ts`)
+			const column = getPartsSplashColumnGeometry(layoutInfo, window.innerWidth, window.innerHeight);
+
+			// part: title, over the main area when the column reserves the title band
 			if (layoutInfo.titleBarHeight > 0) {
 				const titleDiv = document.createElement('div');
 				titleDiv.style.position = 'absolute';
-				titleDiv.style.width = '100%';
+				titleDiv.style.width = `${column.titleBar.width}px`;
 				titleDiv.style.height = `${layoutInfo.titleBarHeight}px`;
-				titleDiv.style.left = '0';
+				titleDiv.style.left = `${column.titleBar.left}px`;
 				titleDiv.style.top = '0';
 				titleDiv.style.backgroundColor = splashColors?.titleBarBackground ?? '';
 				(titleDiv.style as CSSStyleDeclaration & { '-webkit-app-region': string })['-webkit-app-region'] = 'drag';
@@ -285,117 +265,40 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				}
 			}
 
-			// part: activity bar
+			// part: activity bar, a flush rail of the side bar column with its inner edge
 			if (layoutInfo.activityBarWidth > 0) {
 				const activityDiv = document.createElement('div');
-				const activityBarBounds = layoutInfo.partBounds?.activityBar;
-				if (modernUI && activityBarBounds) {
+				const activityBarBounds = (modernUI ? layoutInfo.partBounds?.activityBar : undefined) ?? column.activityBar;
+				if (activityBarBounds) {
 					setPartBounds(activityDiv, activityBarBounds);
-				} else if (layoutInfo.modernUICompact === true) {
-					setBounds(activityDiv, {
-						top: contentTop + (contentTop === 0 ? floatingOuterMargin : 0),
-						bottom: contentBottom + floatingOuterMargin,
-						...(layoutInfo.sideBarSide === 'left' ? { left: floatingOuterMargin } : { right: floatingOuterMargin }),
-						width: Math.max(0, layoutInfo.activityBarWidth - floatingOuterMargin),
-					});
-				} else {
-					activityDiv.style.position = 'absolute';
-					activityDiv.style.width = `${layoutInfo.activityBarWidth}px`;
-					activityDiv.style.height = activityHeight;
-					activityDiv.style.top = `${contentTop}px`;
-					if (layoutInfo.sideBarSide === 'left') {
-						activityDiv.style.left = '0';
-					} else {
-						activityDiv.style.right = '0';
-					}
 				}
-				if (layoutInfo.modernUICompact === true) {
-					applyFloatingCardStyles(activityDiv, modernActivityBarBackground, activityBarBounds, fallbackOuterEdgesFor('activityBar'), railBorderColor);
-				} else if (modernUI) {
-					// The rail is a card here too: rounded on the window side, and square where it
-					// meets the primary side bar so the two read as one connected surface.
-					const radius = `${floatingBorderRadius}px`;
-					activityDiv.style.boxSizing = 'border-box';
-					activityDiv.style.backgroundColor = modernActivityBarBackground ?? 'transparent';
-					activityDiv.style.border = `${floatingBorderWidth}px solid ${railBorderColor}`;
-					activityDiv.style.borderRadius = layoutInfo.sideBarWidth === 0 ? radius
-						: layoutInfo.sideBarSide === 'left' ? `${radius} 0 0 ${radius}` : `0 ${radius} ${radius} 0`;
-					activityDiv.style.overflow = 'hidden';
-				} else {
-					activityDiv.style.backgroundColor = `${colorInfo.activityBarBackground}`;
+				activityDiv.style.boxSizing = 'border-box';
+				activityDiv.style.backgroundColor = (modernUI ? modernActivityBarBackground : colorInfo.activityBarBackground) ?? '';
+				if (colorInfo.activityBarBorder) {
+					activityDiv.style[layoutInfo.sideBarSide === 'left' ? 'borderRight' : 'borderLeft'] = `1px solid ${colorInfo.activityBarBorder}`;
 				}
 				splash.appendChild(activityDiv);
-
-				if (!modernUI && colorInfo.activityBarBorder) {
-					const activityBorderDiv = document.createElement('div');
-					activityBorderDiv.style.position = 'absolute';
-					activityBorderDiv.style.width = '1px';
-					activityBorderDiv.style.height = '100%';
-					activityBorderDiv.style.top = '0';
-					if (layoutInfo.sideBarSide === 'left') {
-						activityBorderDiv.style.right = '0';
-						activityBorderDiv.style.borderRight = `1px solid ${colorInfo.activityBarBorder}`;
-					} else {
-						activityBorderDiv.style.left = '0';
-						activityBorderDiv.style.borderLeft = `1px solid ${colorInfo.activityBarBorder}`;
-					}
-					activityDiv.appendChild(activityBorderDiv);
-				}
 			}
 
-			// part: side bar
+			// part: side bar, the flush surface of the side bar column with its inner edge
 			if (layoutInfo.sideBarWidth > 0) {
-				// The side bar meets the activity bar rail flush; with no rail it is the outermost
-				// card on that edge and takes the cluster's outer gutter instead.
-				const sideBarFallbackOuterEdges = fallbackOuterEdgesFor('sideBar');
-				const sideBarClusterInset = modernUI && sideBarFallbackOuterEdges[layoutInfo.sideBarSide === 'left' ? 'left' : 'right'] ? floatingOuterMargin : 0;
 				const sideDiv = document.createElement('div');
-				if (modernUI && layoutInfo.partBounds?.sideBar) {
-					setPartBounds(sideDiv, layoutInfo.partBounds.sideBar);
-				} else if (layoutInfo.sideBarSide === 'left') {
-					setBounds(sideDiv, {
-						top: contentTop + (contentTop === 0 ? fallbackInsetFor('sideBar', 'top') : 0),
-						bottom: contentBottom + fallbackInsetFor('sideBar', 'bottom'),
-						left: layoutInfo.activityBarWidth + sideBarClusterInset,
-						width: modernUI ? Math.max(0, layoutInfo.sideBarWidth - sideBarClusterInset - floatingBorderWidth * 2) : layoutInfo.sideBarWidth
-					});
-				} else {
-					setBounds(sideDiv, {
-						top: contentTop + (contentTop === 0 ? fallbackInsetFor('sideBar', 'top') : 0),
-						bottom: contentBottom + fallbackInsetFor('sideBar', 'bottom'),
-						right: layoutInfo.activityBarWidth + sideBarClusterInset,
-						width: modernUI ? Math.max(0, layoutInfo.sideBarWidth - sideBarClusterInset - floatingBorderWidth * 2) : layoutInfo.sideBarWidth
-					});
+				const sideBarBounds = (modernUI ? layoutInfo.partBounds?.sideBar : undefined) ?? column.sideBar;
+				if (sideBarBounds) {
+					setPartBounds(sideDiv, sideBarBounds);
 				}
-				if (modernUI) {
-					applyFloatingCardStyles(sideDiv, colorInfo.surfaceBackground ?? colorInfo.sideBarBackground, layoutInfo.partBounds?.sideBar, sideBarFallbackOuterEdges);
-				} else {
-					sideDiv.style.backgroundColor = `${colorInfo.sideBarBackground}`;
+				sideDiv.style.boxSizing = 'border-box';
+				sideDiv.style.backgroundColor = colorInfo.sideBarBackground ?? '';
+				if (colorInfo.sideBarBorder) {
+					sideDiv.style[layoutInfo.sideBarSide === 'left' ? 'borderRight' : 'borderLeft'] = `1px solid ${colorInfo.sideBarBorder}`;
 				}
 				if (glassSplash) {
-					// the native glass layer shows through; no card paint, no border, no corners
+					// the native glass layer shows through; no paint and no edge
 					sideDiv.style.backgroundColor = 'transparent';
 					sideDiv.style.border = 'none';
-					sideDiv.style.borderRadius = '0';
 					glassSideBar = sideDiv;
 				}
 				splash.appendChild(sideDiv);
-
-				if (!modernUI && colorInfo.sideBarBorder) {
-					const sideBorderDiv = document.createElement('div');
-					sideBorderDiv.style.position = 'absolute';
-					sideBorderDiv.style.width = '1px';
-					sideBorderDiv.style.height = '100%';
-					sideBorderDiv.style.top = '0';
-					sideBorderDiv.style.right = '0';
-					if (layoutInfo.sideBarSide === 'left') {
-						sideBorderDiv.style.borderRight = `1px solid ${colorInfo.sideBarBorder}`;
-					} else {
-						sideBorderDiv.style.left = '0';
-						sideBorderDiv.style.borderLeft = `1px solid ${colorInfo.sideBarBorder}`;
-					}
-					sideDiv.appendChild(sideBorderDiv);
-				}
 			}
 
 			// part: auxiliary sidebar
@@ -470,14 +373,14 @@ import { getPartsSplashColors, getPartsSplashLayoutMetrics } from './partsSplash
 				splash.appendChild(panelDiv);
 			}
 
-			// part: statusbar
+			// part: statusbar, under the main area beside the side bar column
 			if (layoutInfo.statusBarHeight > 0) {
 				const statusDiv = document.createElement('div');
 				statusDiv.style.position = 'absolute';
-				statusDiv.style.width = '100%';
+				statusDiv.style.width = `${column.statusBar.width}px`;
 				statusDiv.style.height = `${layoutInfo.statusBarHeight}px`;
 				statusDiv.style.bottom = '0';
-				statusDiv.style.left = '0';
+				statusDiv.style.left = `${column.statusBar.left}px`;
 				statusDiv.style.backgroundColor = splashColors?.statusBarBackground ?? '';
 				splash.appendChild(statusDiv);
 

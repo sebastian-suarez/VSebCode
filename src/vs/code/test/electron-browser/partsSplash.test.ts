@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -8,7 +9,7 @@ import { mock } from '../../../base/test/common/mock.js';
 import { ensureNoDisposablesAreLeakedInTestSuite } from '../../../base/test/common/utils.js';
 import { IPartsSplash } from '../../../platform/theme/common/themeService.js';
 import { ThemeTypeSelector } from '../../../platform/theme/common/theme.js';
-import { getPartsSplashColors, getPartsSplashLayoutMetrics } from '../../electron-browser/workbench/partsSplash.js';
+import { getPartsSplashColors, getPartsSplashColumnGeometry, getPartsSplashLayoutMetrics, normalizePartsSplashWidths } from '../../electron-browser/workbench/partsSplash.js';
 
 suite('Parts splash layout', () => {
 	ensureNoDisposablesAreLeakedInTestSuite();
@@ -140,6 +141,109 @@ suite('Parts splash colors', () => {
 			background: '#606060',
 			titleBarBackground: '#404040',
 			statusBarBackground: '#00000000',
+		});
+	});
+});
+
+suite('Parts splash column', () => {
+	ensureNoDisposablesAreLeakedInTestSuite();
+
+	function geometry(overrides: Partial<NonNullable<IPartsSplash['layoutInfo']>>) {
+		return getPartsSplashColumnGeometry({
+			sideBarSide: 'left',
+			editorPartMinWidth: 220,
+			titleBarHeight: 44,
+			activityBarWidth: 0,
+			sideBarWidth: 256,
+			auxiliaryBarWidth: 0,
+			statusBarHeight: 34,
+			windowBorder: false,
+			windowBorderRadius: undefined,
+			modernUI: true,
+			modernUICompact: false,
+			columnWithBand: true,
+			partBounds: undefined,
+			...overrides
+		}, 1200, 800);
+	}
+
+	test('paints the column flush at its height and the bands beside it', () => {
+		const belowTitle = {
+			titleBar: { left: 0, width: 1200 },
+			statusBar: { left: 256, width: 944 },
+			activityBar: undefined,
+			sideBar: { top: 44, left: 0, width: 256, height: 756 },
+		};
+
+		assert.deepStrictEqual({
+			band: geometry({}),
+			bandOnTheRight: geometry({ sideBarSide: 'right', activityBarWidth: 48 }),
+			belowTitle: geometry({ columnWithBand: false }),
+			// Saved before the column existed: painted below a full-width title bar until the next save
+			olderData: geometry({ columnWithBand: undefined }),
+			hiddenColumn: geometry({ sideBarWidth: 0 }),
+		}, {
+			band: {
+				titleBar: { left: 256, width: 944 },
+				statusBar: { left: 256, width: 944 },
+				activityBar: undefined,
+				sideBar: { top: 0, left: 0, width: 256, height: 800 },
+			},
+			bandOnTheRight: {
+				titleBar: { left: 0, width: 896 },
+				statusBar: { left: 0, width: 896 },
+				activityBar: { top: 0, left: 1152, width: 48, height: 800 },
+				sideBar: { top: 0, left: 896, width: 256, height: 800 },
+			},
+			belowTitle,
+			olderData: belowTitle,
+			hiddenColumn: {
+				titleBar: { left: 0, width: 1200 },
+				statusBar: { left: 0, width: 1200 },
+				activityBar: undefined,
+				sideBar: undefined,
+			},
+		});
+	});
+
+	test('fits the saved widths into the window, none below zero', () => {
+		const layout = (overrides: Partial<NonNullable<IPartsSplash['layoutInfo']>>) => ({
+			sideBarSide: 'left', editorPartMinWidth: 220, titleBarHeight: 44, activityBarWidth: 0, sideBarWidth: 300, auxiliaryBarWidth: 300,
+			statusBarHeight: 34, windowBorder: false, windowBorderRadius: undefined, modernUI: true, modernUICompact: false, columnWithBand: true, partBounds: undefined,
+			...overrides
+		} satisfies NonNullable<IPartsSplash['layoutInfo']>);
+		// A window narrower than the saved layout: the secondary side bar gets nothing, and the
+		// side bar what the editor's minimum width leaves, not the saved 600px
+		const narrow = layout({ activityBarWidth: 44, sideBarWidth: 600, auxiliaryBarWidth: 0 });
+
+		assert.deepStrictEqual({
+			fits: normalizePartsSplashWidths(layout({}), 1440),
+			narrow: normalizePartsSplashWidths(narrow, 500),
+			narrowBands: getPartsSplashColumnGeometry({ ...narrow, ...normalizePartsSplashWidths(narrow, 500) }, 500, 800),
+			maximizedSecondarySideBar: normalizePartsSplashWidths(layout({ activityBarWidth: 44, auxiliaryBarWidth: Number.MAX_SAFE_INTEGER }), 1200),
+			tooNarrowForAnything: normalizePartsSplashWidths(layout({ activityBarWidth: 44 }), 200),
+		}, {
+			fits: { auxiliaryBarWidth: 300, sideBarWidth: 300 },
+			narrow: { auxiliaryBarWidth: 0, sideBarWidth: 236 },
+			narrowBands: {
+				titleBar: { left: 280, width: 220 },
+				statusBar: { left: 280, width: 220 },
+				activityBar: { top: 0, left: 0, width: 44, height: 800 },
+				sideBar: { top: 0, left: 44, width: 236, height: 800 },
+			},
+			maximizedSecondarySideBar: { auxiliaryBarWidth: 1156, sideBarWidth: 0 },
+			tooNarrowForAnything: { auxiliaryBarWidth: 0, sideBarWidth: 0 },
+		});
+	});
+
+	test('a maximized secondary side bar leaves the bands beside the rail', () => {
+		// The window's width goes to the maximized bar but the rail, and the normalization in
+		// `workbench.ts` left the side bar the room that remains: less than nothing
+		assert.deepStrictEqual(geometry({ activityBarWidth: 44, auxiliaryBarWidth: 1200 - 44, sideBarWidth: -220 }), {
+			titleBar: { left: 44, width: 1156 },
+			statusBar: { left: 44, width: 1156 },
+			activityBar: { top: 0, left: 0, width: 44, height: 800 },
+			sideBar: undefined,
 		});
 	});
 });

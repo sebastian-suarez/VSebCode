@@ -13,7 +13,7 @@ import { editorBackground, foreground } from '../../../../platform/theme/common/
 import { getThemeTypeSelector, IPartsSplashPartBounds } from '../../../../platform/theme/common/themeService.js';
 import { DEFAULT_EDITOR_MIN_DIMENSIONS } from '../../../browser/parts/editor/editor.js';
 import * as themes from '../../../common/theme.js';
-import { IWorkbenchLayoutService, Parts, Position } from '../../../services/layout/browser/layoutService.js';
+import { IWorkbenchLayoutService, Parts, Position, WorkbenchGridShape } from '../../../services/layout/browser/layoutService.js';
 import { IWorkbenchEnvironmentService } from '../../../services/environment/common/environmentService.js';
 import { IEditorGroupsService } from '../../../services/editor/common/editorGroupsService.js';
 import { IConfigurationService } from '../../../../platform/configuration/common/configuration.js';
@@ -118,6 +118,7 @@ export class PartsSplash {
 				windowBorderRadius: this._layoutService.getMainWindowBorderRadius(),
 				modernUI: this._layoutService.isFloatingPanelsEnabled(),
 				modernUICompact: this._layoutService.isModernUICompact(),
+				columnWithBand: this._layoutService.getWorkbenchGridShape() === WorkbenchGridShape.ColumnWithBand,
 				partBounds: this._layoutService.isFloatingPanelsEnabled() ? {
 					activityBar: this._getPartBounds(Parts.ACTIVITYBAR_PART),
 					sideBar: this._getPartBounds(Parts.SIDEBAR_PART),

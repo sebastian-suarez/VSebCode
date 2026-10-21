@@ -262,6 +262,12 @@ export interface IPartsSplash {
 		windowBorderRadius: string | undefined;
 		modernUI: boolean;
 		modernUICompact: boolean;
+		/**
+		 * Whether the side bar column spans the window height and reserves the title band (the
+		 * column-with-band grid shape of `layoutColumn.ts`); otherwise the title bar spans the
+		 * window above the column. The status line spans the main area beside the column either way.
+		 */
+		columnWithBand?: boolean;
 		partBounds: {
 			activityBar?: IPartsSplashPartBounds;
 			sideBar: IPartsSplashPartBounds | undefined;
