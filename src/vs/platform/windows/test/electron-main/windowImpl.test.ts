@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -29,32 +30,40 @@ class TestWindow extends BaseWindow {
 	}
 }
 
+/** A window of the auxiliary kind: it caches its title row height under its own key, as `AuxiliaryWindow` does. */
+class TestAuxiliaryKindWindow extends TestWindow {
+	protected override get windowControlHeightStateStorageKey(): string {
+		return 'auxiliaryWindowControlHeight';
+	}
+}
+
 suite('BaseWindow - window controls overlay', () => {
 	const store = ensureNoDisposablesAreLeakedInTestSuite();
 
 	teardown(() => sinon.restore());
 
-	function createWindow() {
+	function createWindow(stateService = new InMemoryTestStateMainService(), kind: typeof TestWindow = TestWindow) {
 		const configurationService = new TestConfigurationService({ window: { titleBarStyle: 'custom' } });
 		store.add(configurationService.onDidChangeConfigurationEmitter);
-		const window = store.add(new TestWindow(
+		const window = store.add(new kind(
 			configurationService,
-			new InMemoryTestStateMainService(),
+			stateService,
 			upcastPartial<IEnvironmentMainService>({ args: { _: [] } }),
 			store.add(new NullLogService())
 		));
 		const setTitleBarOverlay = sinon.stub();
 		const setWindowButtonPosition = sinon.stub();
+		const setSheetOffset = sinon.stub();
 		const on = sinon.stub();
 		const removeListener = sinon.stub();
 		const nativeWindow = upcastPartial<BrowserWindow>({
 			on,
 			removeListener,
-			setSheetOffset: sinon.stub(),
+			setSheetOffset,
 			setWindowButtonPosition,
 			setTitleBarOverlay,
 		});
-		return { window, nativeWindow, configurationService, setTitleBarOverlay, setWindowButtonPosition };
+		return { window, nativeWindow, configurationService, setTitleBarOverlay, setWindowButtonPosition, setSheetOffset };
 	}
 
 	const windowsWithoutOverlay: { name: string; options?: BrowserWindowConstructorOptions }[] = [
@@ -96,6 +105,33 @@ suite('BaseWindow - window controls overlay', () => {
 			assert.deepStrictEqual(setTitleBarOverlay.args, enabled ? [[{ color: '#ffffff', symbolColor: '#000000', height: 39 }]] : []);
 		});
 	}
+
+	(isMacintosh ? test : test.skip)('main and auxiliary windows start their controls from their own kind\'s last title row', () => {
+		const stateService = new InMemoryTestStateMainService();
+		const open = (kind: typeof TestWindow) => {
+			const created = createWindow(stateService, kind);
+			const updateWindowControls = sinon.spy(created.window, 'updateWindowControls');
+			created.window.setWin(created.nativeWindow, { titleBarStyle: 'hidden', titleBarOverlay: true });
+			return { ...created, initialHeight: updateWindowControls.firstCall.args[0].height };
+		};
+
+		const firstMain = open(TestWindow);
+		firstMain.setSheetOffset.resetHistory();
+		firstMain.window.updateWindowControls({ height: 44 }); // the renderer reports the 44px title band
+		const auxiliary = open(TestAuxiliaryKindWindow);
+		auxiliary.window.updateWindowControls({ height: 32 }); // auxiliary title rows keep upstream's height
+		const nextMain = open(TestWindow);
+
+		assert.deepStrictEqual({
+			initialHeights: [firstMain.initialHeight, auxiliary.initialHeight, nextMain.initialHeight],
+			sheetOffsetAfterReport: firstMain.setSheetOffset.args,
+			nextMainButtons: nextMain.setWindowButtonPosition.lastCall.args,
+		}, {
+			initialHeights: [DEFAULT_CUSTOM_TITLEBAR_HEIGHT, DEFAULT_CUSTOM_TITLEBAR_HEIGHT, 44],
+			sheetOffsetAfterReport: [[44]],
+			nextMainButtons: [getMacOSWindowControlsPosition(44, release())],
+		});
+	});
 
 	(isMacintosh ? test : test.skip)('honors a fixed horizontal inset when the title-bar height changes', () => {
 		const { window, nativeWindow, setWindowButtonPosition } = createWindow();

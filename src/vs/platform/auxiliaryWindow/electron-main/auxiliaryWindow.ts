@@ -1,5 +1,6 @@
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Copyright (c) Sebastian Suarez. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
@@ -33,6 +34,10 @@ export class AuxiliaryWindow extends BaseWindow implements IAuxiliaryWindow {
 	}
 
 	private stateApplied = false;
+
+	protected override get windowControlHeightStateStorageKey(): string {
+		return 'auxiliaryWindowControlHeight'; // auxiliary title rows keep upstream's height
+	}
 
 	constructor(
 		private readonly webContents: WebContents,

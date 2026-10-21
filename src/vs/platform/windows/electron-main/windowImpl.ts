@@ -231,7 +231,7 @@ export abstract class BaseWindow extends Disposable implements IBaseWindow {
 
 		// Update the window controls immediately based on cached or default values
 		if (this.hasWindowControlOverlay) {
-			const cachedWindowControlHeight = this.stateService.getItem<number>((BaseWindow.windowControlHeightStateStorageKey));
+			const cachedWindowControlHeight = this.stateService.getItem<number>(this.windowControlHeightStateStorageKey);
 			if (cachedWindowControlHeight) {
 				this.updateWindowControls({ height: cachedWindowControlHeight });
 			} else {
@@ -483,7 +483,13 @@ export abstract class BaseWindow extends Disposable implements IBaseWindow {
 
 	//#region Window Control Overlays
 
-	private static readonly windowControlHeightStateStorageKey = 'windowControlHeight';
+	/**
+	 * Where the title row height a window last reported is cached for the next window of the same
+	 * kind: main windows and auxiliary windows have title rows of different heights (UI step 3).
+	 */
+	protected get windowControlHeightStateStorageKey(): string {
+		return 'windowControlHeight';
+	}
 
 	private windowControlsDimmed = false;
 	private lastWindowControlColors: { backgroundColor?: string; foregroundColor?: string } | undefined;
@@ -496,7 +502,7 @@ export abstract class BaseWindow extends Disposable implements IBaseWindow {
 
 		// Cache the height for speeds lookups on startup
 		if (options.height) {
-			this.stateService.setItem((CodeWindow.windowControlHeightStateStorageKey), options.height);
+			this.stateService.setItem(this.windowControlHeightStateStorageKey, options.height);
 		}
 
 		// Windows/Linux: update window controls via setTitleBarOverlay()
@@ -527,6 +533,7 @@ export abstract class BaseWindow extends Disposable implements IBaseWindow {
 		// macOS: update window controls via setWindowButtonPosition()
 		else if (isMacintosh && options.height !== undefined) {
 			win.setWindowButtonPosition(getMacOSWindowControlsPosition(options.height, release(), options.horizontalInset));
+			win.setSheetOffset(options.height); // native dialogs drop from below the title row
 		}
 	}
 
