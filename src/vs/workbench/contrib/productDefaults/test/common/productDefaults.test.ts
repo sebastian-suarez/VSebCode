@@ -23,7 +23,6 @@ suite('Product defaults', () => {
 			'window.commandCenter': false,
 			'workbench.layoutControl.enabled': false,
 			'workbench.editor.enablePreview': false,
-			'accessibility.dimUnfocused.enabled': true,
 			'window.title': '${rootName}${separator}${activeEditorMedium}${dirty}',
 			'workbench.editor.revealIfOpen': true,
 			'workbench.editor.useModal': 'off',

@@ -33,7 +33,6 @@ Layout and workbench:
 | `window.commandCenter` | `false` | D, M | `true` |
 | `workbench.layoutControl.enabled` | `false` | D | `true` |
 | `workbench.editor.enablePreview` | `false` | D, M | `true` |
-| `accessibility.dimUnfocused.enabled` | `true` (opacity stays `0.75`) | D, P | `false` |
 | `window.title` | `"${rootName}${separator}${activeEditorMedium}${dirty}"` | M | `"${activeEditorShort}${separator}${rootName}${separator}${profileName}"` |
 | `workbench.editor.revealIfOpen` | `true` | M | `false` |
 | `workbench.editor.useModal` | `"off"` | M | `"some"` |
@@ -186,6 +185,8 @@ The smoke and integration suites start from a fresh profile, so they now run wit
 ## Status
 
 Implemented on main on 2026-10-20 in five commits (`e21e491c4c8` adds the fork header line the glass step left out of three files, `fe97e0c8694` the accessibility fix, `1a3abaadf0d` the harness seeds, `abefb400ac2` the defaults, `f4f89cafa2c` the Error Lens recommendation): `contrib/productDefaults` (`productDefaults.ts` with the table and `registerProductDefaults`, `productDefaults.contribution.ts`, the unit tests), the import in `workbench.desktop.main.ts`, `product.json` `extensionRecommendations` for Error Lens only, the accessibility fix of the empty editor group (`editorGroupView.ts` with a test in `editorGroupsService.test.ts`), the integration seed in `scripts/test-integration.sh` and the smoke seed and settings helpers in `test/automation/src/{electron,settings}.ts`.
+
+Changed on 2026-10-21, at the maintainer's request: `accessibility.dimUnfocused.enabled` (`true`, from the design and the mockup panel) left the table, so the upstream default `false` applies again. Upstream's setting dims every editor and terminal without keyboard focus to 75% opacity, and keyboard focus counts only while the window is active, so it also dimmed the focused editor whenever another app was active: on screen, the brightest pixel of the code fell from 212 to 163. The design's own fading of inactive splits (the mockup's `workbench.dimInactiveWindows`, described in step 6 of `docs/plans/ui-roadmap.md`) moved to that step.
 
 Deviation from the validation list: the maintainer's `npm run watch` was running, so `npm run compile-client` was not run (it would race with the watch); instead every changed file was checked to have a compiled copy in `out/` newer than its source, and the Electron run lists the new tests.
 
