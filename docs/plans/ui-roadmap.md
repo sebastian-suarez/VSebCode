@@ -92,7 +92,7 @@ Every surface of the v10 mockup (its template, its `EXTRA` picker sources and it
 |---|---|
 | Glass column, its tint and fallbacks | 1 (done) |
 | Activity bar, command center, layout control, minimap, tab row, preview editors; sticky scroll, inlay hints, git gutter, blame, dimmed splits | 2 |
-| Column geometry, traffic-light band, the 76px title padding when the column is hidden, the status line height | 3 |
+| Column geometry, traffic-light band, the 76px title padding when the column is hidden, the status line height | 3 (done) |
 | Jump pill, title spans, "Paused at line", picker group, Debug and Stop, debug pills | 4 |
 | Status line items and order (mode and recording slots) | 5 (content: 14) |
 | Window letters and picker, winbar, modified dot, line indicator, fold ellipsis, hunk zone, peek zone, diagnostic text after the line, TODO highlights | 6 |
@@ -133,7 +133,7 @@ Answered by the maintainer on 2026-10-20: every recommendation was taken except 
 
 ## Status
 
-Order decided on 2026-10-16; every open decision answered by the maintainer on 2026-10-20 (see "Decisions, by step"). Step 2 done on 2026-10-20 (`docs/plans/ui-step-2-look-defaults.md`): the maintainer's recommended settings fed its defaults, the engine-coupled ones (relative line numbers, lightbulb off) are recorded there for step 14, and the TODO highlights moved to step 6 because Todo Tree cannot find the ripgrep the fork ships. Step 3 is next.
+Order decided on 2026-10-16; every open decision answered by the maintainer on 2026-10-20 (see "Decisions, by step"). Step 2 done on 2026-10-20 (`docs/plans/ui-step-2-look-defaults.md`): the maintainer's recommended settings fed its defaults, the engine-coupled ones (relative line numbers, lightbulb off) are recorded there for step 14, and the TODO highlights moved to step 6 because Todo Tree cannot find the ripgrep the fork ships. Step 3 done on 2026-10-20 (`docs/plans/ui-step-3-column-and-bands.md`): the column spans the window height on macOS with the custom title bar, beside a 44px title row and a 34px status line at the default density; the title row's content starts 68px right of the window controls' left edge while they sit over it, which is the mockup's 86px for controls at 18px and 84px for the real ones at 16px; the opaque column is flush with a 1px inner edge and the activity bar a flush rail, as decided; and a horizontal panel now maximizes only when centered, everywhere. Step 4 is next.
 
 ## Review
 
