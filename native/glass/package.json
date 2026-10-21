@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "build/Release/vsebcode_glass.node",
   "types": "index.d.ts",
-  "gypfile": true,
+  "gypfile": false,
   "files": [
     "index.d.ts",
     "binding.gyp",

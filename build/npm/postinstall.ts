@@ -11,6 +11,7 @@ import * as child_process from 'child_process';
 import { dirs } from './dirs.ts';
 import { root, stateFile, stateContentsFile, computeState, computeContents, isUpToDate } from './installStateHash.ts';
 import { ensureElectronTypes } from './electronTypes.ts';
+import { buildGlass } from './glass.ts';
 import { rewriteInstalledTelemetry } from './telemetry.ts';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -179,6 +180,7 @@ async function main() {
 
 	if (!process.env['VSCODE_FORCE_INSTALL'] && isUpToDate()) {
 		rewriteInstalledTelemetry(root);
+		buildGlass({ log: message => log('native/glass', message) }); // npm does not build it, and its sources may have changed
 		log('.', 'All dependencies up to date, skipping postinstall.');
 		child_process.execSync('git config pull.rebase merges');
 		child_process.execSync('git config blame.ignoreRevsFile .git-blame-ignore-revs');
@@ -226,6 +228,9 @@ async function main() {
 	const concurrency = Math.min(os.cpus().length, 8);
 	log('.', `Running ${parallelTasks.length} npm installs with concurrency ${concurrency}...`);
 	await runWithConcurrency(parallelTasks, concurrency);
+
+	// The in-tree glass module, which npm does not build (see `glass.ts`); a forced install rebuilds it too
+	buildGlass({ force: !!process.env['VSCODE_FORCE_INSTALL'], log: message => log('native/glass', message) });
 
 	child_process.execSync('git config pull.rebase merges');
 	child_process.execSync('git config blame.ignoreRevsFile .git-blame-ignore-revs');
